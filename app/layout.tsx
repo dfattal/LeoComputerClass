@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import UserBadge from "@/components/UserBadge";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,24 +30,32 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+        <header className="sticky top-0 z-50 border-b border-indigo-900/30 shadow-sm" style={{ background: 'var(--header-bg)' }}>
           <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
             <Link
               href="/course/week-01"
-              className="text-lg font-semibold tracking-tight"
+              className="flex items-center gap-2.5 text-lg font-semibold tracking-tight"
+              style={{ color: 'var(--header-fg)' }}
             >
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-500/20 text-sm">
+                01
+              </span>
               Build a Computer From Physics
             </Link>
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-3">
+              <Suspense fallback={null}>
+                <UserBadge />
+              </Suspense>
+              <div className="h-5 w-px bg-indigo-700/50" />
               <Link
                 href="/dashboard"
-                className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                className="rounded-md px-3 py-1.5 text-sm text-indigo-200/70 transition-colors hover:bg-indigo-800/40 hover:text-indigo-100"
               >
                 Dashboard
               </Link>
               <Link
                 href="/admin"
-                className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                className="rounded-md px-3 py-1.5 text-sm text-indigo-200/70 transition-colors hover:bg-indigo-800/40 hover:text-indigo-100"
               >
                 Admin
               </Link>

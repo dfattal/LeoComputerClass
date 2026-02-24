@@ -15,7 +15,7 @@ export default function TestResults({
   return (
     <div>
       <div className="mb-3 flex items-center gap-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
           Test Results
         </h4>
         <span

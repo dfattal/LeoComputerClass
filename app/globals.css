@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --header-bg: #1e1b4b;
+  --header-fg: #e0e7ff;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-subtle: #eef2ff;
+  --warm: #f59e0b;
+  --warm-subtle: #fffbeb;
 }
 
 @theme inline {
@@ -14,59 +21,87 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0c0a09;
+    --foreground: #e7e5e4;
+    --header-bg: #0f0d2e;
+    --header-fg: #c7d2fe;
+    --accent: #818cf8;
+    --accent-hover: #6366f1;
+    --accent-subtle: #1e1b4b;
+    --warm: #fbbf24;
+    --warm-subtle: #451a03;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* MDX truth-table styling — explicit CSS so Tailwind resets don't strip borders */
+/* Sticky header offset for body content */
+.sticky-offset {
+  scroll-padding-top: 7.5rem;
+}
+
+/* MDX truth-table styling */
 .mdx-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 .mdx-thead {
-  background: #f4f4f5; /* zinc-100 */
+  background: var(--accent-subtle);
+}
+
+.mdx-tr {
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.mdx-tr:hover {
+  background: rgba(79, 70, 229, 0.03);
 }
 
 @media (prefers-color-scheme: dark) {
   .mdx-thead {
-    background: #27272a; /* zinc-800 */
+    background: var(--accent-subtle);
   }
-}
-
-.mdx-tr {
-  border-bottom: 1px solid #d4d4d8; /* zinc-300 */
-}
-
-@media (prefers-color-scheme: dark) {
   .mdx-tr {
-    border-bottom-color: #3f3f46; /* zinc-700 */
+    border-bottom-color: #292524;
+  }
+  .mdx-tr:hover {
+    background: rgba(129, 140, 248, 0.05);
   }
 }
 
 .mdx-th,
 .mdx-td {
-  border: 1px solid #d4d4d8; /* zinc-300 */
+  border: 1px solid #d6d3d1;
   padding: 0.5rem 1rem;
   text-align: center;
 }
 
 .mdx-th {
   font-weight: 600;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 @media (prefers-color-scheme: dark) {
   .mdx-th,
   .mdx-td {
-    border-color: #3f3f46; /* zinc-700 */
+    border-color: #292524;
   }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7.5rem;
 }

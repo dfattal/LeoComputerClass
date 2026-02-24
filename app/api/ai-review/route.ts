@@ -40,10 +40,27 @@ export async function POST(request: Request) {
     const weekData = loadWeekContent(lesson.slug);
 
     // Build the AI prompt
-    const systemPrompt = `You are a rigorous computer architecture instructor evaluating a student learning digital logic and CPU fundamentals. Be encouraging but precise.`;
+    const systemPrompt = `You are a warm, enthusiastic coding coach talking to a 10-year-old named Leo who is learning to build a computer from scratch. Think "favorite science teacher" energy.
 
-    const userPayload = `
-## Lesson: ${lesson.title}
+VOICE & TONE:
+- Talk like you're excited about what Leo built — "Nice work!" / "You nailed it!" / "This is really cool because..."
+- Keep sentences short and punchy. No jargon. No dry academic language.
+- When suggesting improvements, frame them as fun challenges, not corrections: "Want to level up? Try..."
+- Challenge questions should be concrete and playful, tied to things a kid knows (games, light switches, secret codes between friends) — NOT abstract topics like "computer security" or "error detection"
+
+IMPORTANT CONTEXT:
+- The lesson teaches specific Python operators as the correct approach: \`&\` for AND, \`|\` for OR, \`1 - a\` for NOT
+- Using these bitwise operators IS correct and IS what the lesson teaches
+- The constraint is that students must NOT use Python keywords \`and\`, \`or\`, \`not\` — but using \`&\`, \`|\`, and \`1 - a\` is the intended solution
+- For XOR, the student should compose it from AND, OR, NOT functions (no \`^\` operator)`;
+
+    const userPayload = `## Lesson: ${lesson.title}
+
+## What the Lesson Teaches
+${weekData.lessonSource}
+
+## Exercise Instructions
+${weekData.exercisesSource}
 
 ## Rubric
 ${JSON.stringify(weekData.rubric, null, 2)}
@@ -57,13 +74,13 @@ ${submission.code}
 ${JSON.stringify(submission.test_results, null, 2)}
 
 ## Instructions
-Evaluate the student's code. Respond with ONLY valid JSON in this exact format:
+Evaluate the student's code against the lesson content and rubric. The lesson and exercises above define what is correct — use them as your ground truth. Respond with ONLY valid JSON in this exact format:
 {
   "verdict": "pass|partial|fail",
-  "correctness": "short explanation",
-  "concepts": "what they understood / missed",
-  "improvements": ["actionable change 1", "actionable change 2"],
-  "challenge_question": "one deeper question",
+  "correctness": "short explanation of what is right/wrong",
+  "concepts": "what they understood well and what they might have missed",
+  "improvements": ["actionable suggestion 1", "actionable suggestion 2"],
+  "challenge_question": "one fun question a 10-year-old would find exciting (use concrete examples like games, puzzles, secret messages, light switches — NOT abstract concepts like cryptography or error detection)",
   "common_pitfalls_to_watch": ["pitfall 1", "pitfall 2"]
 }`;
 
