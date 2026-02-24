@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<"login" | "signup">("login");
 
   async function handleGoogleLogin() {
     setLoading(true);
@@ -26,54 +24,26 @@ export default function LoginPage() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const supabase = createClient();
-
-    if (mode === "login") {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-    }
-
-    window.location.href = "/course/week-01";
-  }
-
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">
-            {mode === "login" ? "Sign In" : "Create Account"}
-          </h1>
+          <h1 className="text-2xl font-bold">Sign In</h1>
           <p className="mt-1 text-sm text-zinc-500">
             Build a Computer From Physics
           </p>
         </div>
 
+        {error && (
+          <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+            {error}
+          </div>
+        )}
+
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white py-2 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white py-2.5 text-sm font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24">
             <path
@@ -93,97 +63,13 @@ export default function LoginPage() {
               fill="#EA4335"
             />
           </svg>
-          Continue with Google
+          {loading ? "Signing in..." : "Continue with Google"}
         </button>
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-white px-2 text-zinc-500 dark:bg-zinc-950">
-              or
-            </span>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900"
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-zinc-900 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-          >
-            {loading
-              ? "..."
-              : mode === "login"
-                ? "Sign In"
-                : "Create Account"}
-          </button>
-        </form>
-
         <p className="text-center text-sm text-zinc-500">
-          {mode === "login" ? (
-            <>
-              No account?{" "}
-              <button
-                onClick={() => setMode("signup")}
-                className="font-medium text-zinc-900 dark:text-zinc-100"
-              >
-                Sign up
-              </button>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <button
-                onClick={() => setMode("login")}
-                className="font-medium text-zinc-900 dark:text-zinc-100"
-              >
-                Sign in
-              </button>
-            </>
-          )}
+          <Link href="/" className="font-medium text-zinc-900 hover:underline dark:text-zinc-100">
+            &larr; Back to home
+          </Link>
         </p>
       </div>
     </div>

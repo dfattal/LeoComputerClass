@@ -33,6 +33,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect unauthenticated users to login (skip auth pages and static assets)
   const path = request.nextUrl.pathname;
   const isPublicPath =
+    path === "/" ||
     path === "/login" ||
     path.startsWith("/auth/") ||
     path.startsWith("/_next/") ||
