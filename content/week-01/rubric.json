@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "All four gates (AND, OR, NOT, XOR) return correct outputs for all input combinations"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 30,
+    "description": "Does not use Python keywords 'and', 'or', 'not'; XOR does not use the ^ operator"
+  },
+  {
+    "criterion": "XOR derivation",
+    "weight": 20,
+    "description": "XOR is built by composing AND, OR, NOT rather than using a shortcut"
+  },
+  {
+    "criterion": "Code clarity",
+    "weight": 10,
+    "description": "Code is readable and shows understanding of the logic"
+  }
+]

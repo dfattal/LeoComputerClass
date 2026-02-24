@@ -1,0 +1,120 @@
+# Week 2 — Exercises: Combinational Circuits
+
+## Setup
+
+You will need your gates from Week 1. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+```
+
+---
+
+## Warm-Up: Bit Extraction
+
+Before you start building circuits, make sure you understand how to extract bits from a number. (If you need a refresher, go back to the "Multi-Bit Thinking" section in the lesson.)
+
+**Quick quiz — try to answer these before running any code:**
+
+1. What is `(6 >> 0) & 1`? (Hint: 6 in binary is **110**)
+2. What is `(6 >> 1) & 1`?
+3. What is `(6 >> 2) & 1`?
+
+**Answers:** 0, 1, 1 — because 6 = **110** in binary, so bit 0 = 0, bit 1 = 1, bit 2 = 1.
+
+---
+
+## Task 1: `get_bit` Helper
+
+Write a function that extracts a single bit from a number. You'll use this in later tasks.
+
+```python
+def get_bit(x, i):
+    # Return bit number i of x
+    # Example: get_bit(5, 0) → 1, get_bit(5, 1) → 0, get_bit(5, 2) → 1
+    # Hint: use >> and & 1
+    pass
+```
+
+Test it:
+```python
+print(get_bit(5, 0))  # should print 1  (5 = 101, bit 0 is 1)
+print(get_bit(5, 1))  # should print 0  (5 = 101, bit 1 is 0)
+print(get_bit(5, 2))  # should print 1  (5 = 101, bit 2 is 1)
+print(get_bit(6, 0))  # should print 0  (6 = 110, bit 0 is 0)
+print(get_bit(6, 1))  # should print 1  (6 = 110, bit 1 is 1)
+```
+
+---
+
+## Task 2: Multiplexer (MUX)
+
+Implement a 1-bit multiplexer — the "train track switch" from the lesson:
+
+```python
+def mux(a, b, s):
+    # If s == 0, return a
+    # If s == 1, return b
+    # Use only AND, OR, NOT
+    pass
+```
+
+**Need help?** The lesson walks through the formula step by step. The key insight: use NOT(s) to "open the path" for A, and s to "open the path" for B.
+
+---
+
+## Task 3: 2-Bit Equality Comparator
+
+Implement a function that checks if two 2-bit numbers (0 to 3) are equal:
+
+```python
+def equal2(a, b):
+    # a and b are integers 0-3
+    # Return 1 if equal, 0 if not
+    # Step 1: Use get_bit to extract bit 0 and bit 1 from each number
+    # Step 2: Check if each bit position matches using NOT(XOR(...))
+    # Step 3: AND the results — both positions must match
+    pass
+```
+
+**Hint:** The lesson explains the full approach in the "Equality Comparator" section. Remember: XOR finds differences, NOT flips that to find sameness.
+
+---
+
+## Task 4: Majority of Three
+
+Implement a majority vote circuit:
+
+```python
+def majority(a, b, c):
+    # Return 1 if at least 2 of the 3 inputs are 1
+    # Use only AND, OR
+    pass
+```
+
+**Hint:** Think about all the ways to pick a pair from three items. There are three pairs: (a,b), (a,c), and (b,c). If any pair is both 1, the majority wins.
+
+---
+
+## Constraints
+
+- Only use AND, OR, NOT, XOR from Week 1 (plus `get_bit` and `>>`, `& 1` for bit extraction)
+- No Python `and` / `or` / `not` keywords
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `get_bit`, `mux`, `equal2`, `majority` functions
+2. All tests passing

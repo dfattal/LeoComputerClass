@@ -1,0 +1,40 @@
+[
+  {
+    "entry": "AND",
+    "cases": [
+      { "name": "AND(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "AND(0,1)=0", "args": [0, 1], "expected": 0 },
+      { "name": "AND(1,0)=0", "args": [1, 0], "expected": 0 },
+      { "name": "AND(1,1)=1", "args": [1, 1], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not "] }
+  },
+  {
+    "entry": "OR",
+    "cases": [
+      { "name": "OR(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "OR(0,1)=1", "args": [0, 1], "expected": 1 },
+      { "name": "OR(1,0)=1", "args": [1, 0], "expected": 1 },
+      { "name": "OR(1,1)=1", "args": [1, 1], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not "] }
+  },
+  {
+    "entry": "NOT",
+    "cases": [
+      { "name": "NOT(0)=1", "args": [0], "expected": 1 },
+      { "name": "NOT(1)=0", "args": [1], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not "] }
+  },
+  {
+    "entry": "XOR",
+    "cases": [
+      { "name": "XOR(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "XOR(0,1)=1", "args": [0, 1], "expected": 1 },
+      { "name": "XOR(1,0)=1", "args": [1, 0], "expected": 1 },
+      { "name": "XOR(1,1)=0", "args": [1, 1], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "^"] }
+  }
+]

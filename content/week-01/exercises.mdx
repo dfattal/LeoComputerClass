@@ -1,0 +1,88 @@
+# Week 1 — Exercises: Boolean Gates
+
+## Warm-Up: How Functions Work
+
+Before we jump into gates, let's make sure you're comfortable writing and testing a Python function.
+
+Here's a silly example — a function that always returns 1, no matter what:
+
+```python
+def always_one(a, b):
+    return 1
+
+# Test it:
+print(always_one(0, 0))  # → 1
+print(always_one(0, 1))  # → 1
+print(always_one(1, 0))  # → 1
+print(always_one(1, 1))  # → 1
+```
+
+See the pattern? You **define** a function with `def`, you **return** a value, and you **test** it with `print()`. You'll do exactly this for each gate below.
+
+---
+
+## Coding the Gates
+
+**Rules:**
+- You may NOT use Python's `and`, `or`, `not` keywords
+- Use only the bitwise operators you learned in the lesson: `&`, `|`, and `1 - a`
+
+### Task 1: AND
+
+```python
+def AND(a, b):
+    # Return 1 only if both a and b are 1
+    # Remember: & is Python's bitwise AND operator
+    pass
+```
+
+Test it with:
+```python
+print(AND(0, 0))  # should print 0
+print(AND(0, 1))  # should print 0
+print(AND(1, 0))  # should print 0
+print(AND(1, 1))  # should print 1
+```
+
+### Task 2: OR
+
+```python
+def OR(a, b):
+    # Return 1 if either a or b is 1
+    # Remember: | is Python's bitwise OR operator
+    pass
+```
+
+### Task 3: NOT
+
+```python
+def NOT(a):
+    # Return the opposite of a (flip the bit)
+    # Remember: 1 - a flips a 0 to 1 and a 1 to 0
+    pass
+```
+
+---
+
+## Challenge: Derive XOR
+
+Now build XOR using **only** the AND, OR, and NOT functions you just wrote. No `^` operator allowed!
+
+```python
+def XOR(a, b):
+    # Output 1 only if a and b are different
+    # Must use AND, OR, NOT — no ^ allowed
+    pass
+```
+
+**Need help?** Go back to the lesson and look at the "Deriving XOR — Step by Step" section. It walks you through the exact logic and gives you the formula. Your job is to turn that formula into code.
+
+---
+
+## Deliverables
+
+You should submit:
+
+1. Working `AND`, `OR`, `NOT` functions
+2. `XOR` built from your basic gates
+3. All tests passing

@@ -1,0 +1,44 @@
+[
+  {
+    "entry": "mux",
+    "cases": [
+      { "name": "mux(0,0,0)=0", "args": [0, 0, 0], "expected": 0 },
+      { "name": "mux(1,0,0)=1", "args": [1, 0, 0], "expected": 1 },
+      { "name": "mux(0,1,0)=0", "args": [0, 1, 0], "expected": 0 },
+      { "name": "mux(1,1,0)=1", "args": [1, 1, 0], "expected": 1 },
+      { "name": "mux(0,0,1)=0", "args": [0, 0, 1], "expected": 0 },
+      { "name": "mux(1,0,1)=0", "args": [1, 0, 1], "expected": 0 },
+      { "name": "mux(0,1,1)=1", "args": [0, 1, 1], "expected": 1 },
+      { "name": "mux(1,1,1)=1", "args": [1, 1, 1], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if "] }
+  },
+  {
+    "entry": "equal2",
+    "cases": [
+      { "name": "equal2(0,0)=1", "args": [0, 0], "expected": 1 },
+      { "name": "equal2(1,1)=1", "args": [1, 1], "expected": 1 },
+      { "name": "equal2(2,2)=1", "args": [2, 2], "expected": 1 },
+      { "name": "equal2(3,3)=1", "args": [3, 3], "expected": 1 },
+      { "name": "equal2(0,1)=0", "args": [0, 1], "expected": 0 },
+      { "name": "equal2(1,2)=0", "args": [1, 2], "expected": 0 },
+      { "name": "equal2(2,3)=0", "args": [2, 3], "expected": 0 },
+      { "name": "equal2(3,0)=0", "args": [3, 0], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "=="] }
+  },
+  {
+    "entry": "majority",
+    "cases": [
+      { "name": "majority(0,0,0)=0", "args": [0, 0, 0], "expected": 0 },
+      { "name": "majority(1,0,0)=0", "args": [1, 0, 0], "expected": 0 },
+      { "name": "majority(0,1,0)=0", "args": [0, 1, 0], "expected": 0 },
+      { "name": "majority(0,0,1)=0", "args": [0, 0, 1], "expected": 0 },
+      { "name": "majority(1,1,0)=1", "args": [1, 1, 0], "expected": 1 },
+      { "name": "majority(1,0,1)=1", "args": [1, 0, 1], "expected": 1 },
+      { "name": "majority(0,1,1)=1", "args": [0, 1, 1], "expected": 1 },
+      { "name": "majority(1,1,1)=1", "args": [1, 1, 1], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not "] }
+  }
+]

@@ -1,0 +1,245 @@
+# Week 2 — Gates as Circuits & Building Small Systems
+
+## Phase 1: Digital Logic Foundation
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Build bigger circuits by snapping smaller gates together
+- Understand that complex behavior comes from combining simple parts
+- Design circuits from truth tables
+- Know how to extract individual bits from a number
+
+---
+
+## Big Idea
+
+Last week you built tiny Lego pieces: AND, OR, NOT, and XOR. Each one is small and does one simple thing.
+
+This week, you **snap them together** to build something bigger — real circuits that make decisions.
+
+Think of it like Lego: one brick isn't very exciting, but connect enough bricks and you can build a castle.
+
+The circuits you'll build this week are called **"instant deciders"** — they look at the inputs right now and immediately produce an output. They don't remember anything from before and they don't wait for anything. Inputs go in, output comes out, done.
+
+(The fancy engineering name for this is "combinational logic," but "instant deciders" is a better way to think about it.)
+
+---
+
+## Build a Multiplexer (MUX)
+
+### What's a MUX?
+
+A MUX is like a **train track switch**. Imagine a spot where two tracks merge into one. There's a lever that the operator pulls to choose which track the train comes from.
+
+A 1-bit MUX works the same way:
+- **Two inputs come in:** A and B (the two tracks)
+- **One selector:** S (the lever)
+- **One output:** whichever input the selector picks
+
+The rule is simple:
+- If S = 0, the output is **A**
+- If S = 1, the output is **B**
+
+### Walking Through Examples
+
+Let's think through a few cases:
+
+- S=0, A=1, B=0 → S says "pick A," and A is 1, so output is **1**
+- S=1, A=1, B=0 → S says "pick B," and B is 0, so output is **0**
+- S=0, A=0, B=1 → S says "pick A," and A is 0, so output is **0**
+
+### Full Truth Table
+
+| S | A | B | OUT |
+|---|---|---|-----|
+| 0 | 0 | 0 |  0  |
+| 0 | 0 | 1 |  0  |
+| 0 | 1 | 0 |  1  |
+| 0 | 1 | 1 |  1  |
+| 1 | 0 | 0 |  0  |
+| 1 | 0 | 1 |  1  |
+| 1 | 1 | 0 |  0  |
+| 1 | 1 | 1 |  1  |
+
+Look at the pattern: when S=0, the OUT column matches A. When S=1, the OUT column matches B. The selector really is just picking!
+
+### How to Build It from Gates
+
+Let's figure out the formula:
+
+- When S=0, we want A to come through. That's: **NOT(S) AND A** — the selector is off, so A's path is open.
+- When S=1, we want B to come through. That's: **S AND B** — the selector is on, so B's path is open.
+- The output is one OR the other: **OR(AND(NOT(S), A), AND(S, B))**
+
+In Python:
+```python
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+```
+
+This is your first **composed circuit** — built entirely from the basic gates you made last week!
+
+---
+
+## Build a 2-Bit Equality Comparator
+
+### The Goal
+
+Given two numbers (each between 0 and 3), output 1 if they're equal and 0 if they're not.
+
+### Step 1: Start with 1 Bit
+
+First, how do you check if two **single bits** are the same?
+
+Think about XOR: it outputs 1 when the bits are **different**. So if we flip that with NOT, we get 1 when the bits are the **same**!
+
+```
+NOT(XOR(a, b))
+```
+
+- a=0, b=0 → XOR = 0 → NOT = **1** (same! ✓)
+- a=0, b=1 → XOR = 1 → NOT = **0** (different! ✓)
+- a=1, b=0 → XOR = 1 → NOT = **0** (different! ✓)
+- a=1, b=1 → XOR = 0 → NOT = **1** (same! ✓)
+
+### Step 2: Extend to 2 Bits
+
+A 2-bit number has two bit positions: bit 0 (the ones place) and bit 1 (the twos place).
+
+Two 2-bit numbers are equal only if **both** bit positions match. That's an AND!
+
+```
+bit0_same = NOT(XOR(a_bit0, b_bit0))
+bit1_same = NOT(XOR(a_bit1, b_bit1))
+result = AND(bit0_same, bit1_same)
+```
+
+But wait — how do we extract individual bits from a number? You'll learn that in the "Multi-Bit Thinking" section below!
+
+---
+
+## Majority of Three
+
+### The Idea
+
+Imagine three friends are voting: pizza or tacos? Each person votes 1 (pizza!) or 0 (tacos). **Majority wins** — at least 2 out of 3 must vote the same way.
+
+So `majority(a, b, c)` outputs 1 if **at least two** of the inputs are 1.
+
+### Working Through the Cases
+
+When do at least 2 out of 3 equal 1? There are four ways:
+
+| a | b | c | At least 2 are 1? | Which pair(s)? |
+|---|---|---|-------------------|----------------|
+| 0 | 0 | 0 | No                |                |
+| 0 | 0 | 1 | No                |                |
+| 0 | 1 | 0 | No                |                |
+| 0 | 1 | 1 | **Yes**           | b AND c        |
+| 1 | 0 | 0 | No                |                |
+| 1 | 0 | 1 | **Yes**           | a AND c        |
+| 1 | 1 | 0 | **Yes**           | a AND b        |
+| 1 | 1 | 1 | **Yes**           | all three!     |
+
+Look at the pattern: the output is 1 whenever **any pair** is both 1. The three possible pairs are (a,b), (a,c), and (b,c). So:
+
+> majority(a, b, c) = OR(OR(AND(a, b), AND(a, c)), AND(b, c))
+
+Or in English: "a and b agree, OR a and c agree, OR b and c agree."
+
+This kind of "voting" circuit shows up later when we build parts of a CPU that need to make reliable decisions.
+
+---
+
+## Multi-Bit Thinking: Extracting Bits from a Number
+
+So far, we've worked with single bits (0 or 1). But real numbers in a computer use **multiple bits**. Let's learn how that works.
+
+### What IS a Multi-Bit Number?
+
+You know that in normal (decimal) numbers, each position has a value:
+- 352 = **3** hundreds + **5** tens + **2** ones
+
+Binary works the same way, but with powers of 2:
+- 101 in binary = **1** four + **0** twos + **1** one = **5** in decimal
+
+Each digit in a binary number is called a **bit**. We number them from the right, starting at 0:
+
+| Bit position | 2 | 1 | 0 |
+|-------------|---|---|---|
+| Binary of 5 | 1 | 0 | 1 |
+| Value       | 4 | 2 | 1 |
+
+So the number 5 has: bit 0 = **1**, bit 1 = **0**, bit 2 = **1**.
+
+### The `>>` Operator: Shifting Bits Right
+
+The `>>` operator slides all the bits to the right. Imagine digits written on cards on a table — `>>` pushes them all to the right, and the ones that fall off the edge disappear.
+
+Let's see this with the number 5 (binary: **101**):
+
+**`5 >> 0`** — shift by 0 (don't move anything):
+```
+1 0 1  →  1 0 1  = 5
+```
+
+**`5 >> 1`** — shift right by 1 (everything slides one spot right, the rightmost bit falls off):
+```
+1 0 1  →  _ 1 0  = 2
+```
+
+**`5 >> 2`** — shift right by 2:
+```
+1 0 1  →  _ _ 1  = 1
+```
+
+### The `& 1` Trick: Grabbing the Last Bit
+
+After shifting, we just want the rightmost bit. The expression `& 1` does exactly that — it keeps only the last bit and throws away everything else.
+
+### Putting It Together: `get_bit`
+
+To extract bit number `i` from a number `x`:
+
+```python
+bit_i = (x >> i) & 1
+```
+
+**Translation:** "Shift x right by i positions, then grab the last bit."
+
+### Complete Example: Extracting All Bits of 5
+
+| Expression     | Shift result (binary) | `& 1` | Meaning       |
+|----------------|----------------------|-------|---------------|
+| `(5 >> 0) & 1` | 101                 | **1** | Bit 0 of 5 = 1 |
+| `(5 >> 1) & 1` | 10                  | **0** | Bit 1 of 5 = 0 |
+| `(5 >> 2) & 1` | 1                   | **1** | Bit 2 of 5 = 1 |
+
+And indeed, 5 in binary is **101** — bit 0 is 1, bit 1 is 0, bit 2 is 1. It works!
+
+### Why Do We Need This?
+
+Remember the equality comparator? To compare two 2-bit numbers, we need to check each bit position separately. `get_bit` lets us pull out individual bits so we can feed them into our gates.
+
+---
+
+## Concept Reflection
+
+1. **Why does combining simple gates create complex behavior?** (Think about Lego — how can identical simple bricks build completely different things?)
+2. **Why is the MUX important inside CPUs?** (Hint: a CPU constantly needs to choose between different values — "should I use this number or that number?")
+3. **Where might majority logic appear later?** (Think about when you add three things together — two bits plus a carry...)
+4. **Why does equality require bit-level comparison?** (Can you check if two multi-bit numbers are equal without looking at each bit? What if only one bit is different?)
+
+---
+
+## What You Just Built
+
+You are no longer just writing single gates. **You are designing circuits** — connecting simple pieces to solve real problems.
+
+This is exactly how hardware engineers think. A real CPU is just thousands of these small circuits, all snapped together.
+
+Next week, you'll go even further and build circuits that can do math!

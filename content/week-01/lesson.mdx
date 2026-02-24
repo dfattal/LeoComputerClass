@@ -1,0 +1,219 @@
+# Week 1 — Boolean Algebra & Truth Tables
+
+## Phase 1: Digital Logic Foundation
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand what a Boolean variable is
+- Know AND, OR, NOT operations deeply
+- Be able to build full truth tables
+- Understand that logic is math
+- Implement logic gates in Python using integers (0/1 only)
+- Derive XOR from basic gates
+
+---
+
+## Big Idea
+
+Imagine a light switch on the wall. It's either **ON** or **OFF**. That's it — no "kinda on," no "halfway." Just ON or OFF.
+
+Now here's the wild part: **a computer is built from billions of tiny switches just like that.** Each one is either on (1) or off (0). There's no 2, no 3, no 0.5 — just 1 and 0.
+
+These tiny switches follow simple rules to make decisions. Those rules have a name: **Boolean algebra**. It's the math of ON and OFF, True and False, 1 and 0.
+
+This week, you'll learn those rules — and then write Python code that follows them.
+
+---
+
+## Boolean Variables
+
+A Boolean variable is a value that can only be one of two things:
+
+| Real World         | Boolean |
+|--------------------|---------|
+| Light switch ON    | **1**   |
+| Light switch OFF   | **0**   |
+| Door open          | **1**   |
+| Door closed        | **0**   |
+| Answer is "yes"    | **1**   |
+| Answer is "no"     | **0**   |
+
+We'll use **1** to mean True/On and **0** to mean False/Off.
+
+**IMPORTANT:** From now on, 0 and 1 don't represent numbers you add or multiply. They represent the state of a switch — **off** or **on**.
+
+---
+
+## Truth Tables
+
+A truth table is a chart that shows **every** possible combination of inputs and what the output is for each one. It's like a complete answer key for a gate.
+
+### AND Gate
+
+Picture two light switches connected **in a row** (in series). The light bulb is at the end. For electricity to reach the bulb, it has to flow through **both** switches. So the light only turns on if **both** switches are flipped on.
+
+| A | B | A AND B |
+|---|---|---------|
+| 0 | 0 |    0    |
+| 0 | 1 |    0    |
+| 1 | 0 |    0    |
+| 1 | 1 |    1    |
+
+**Rule:** AND outputs 1 **only** if BOTH inputs are 1. If either switch is off, the light stays off.
+
+### OR Gate
+
+Now picture two switches side by side (**in parallel**). The electricity can flow through **either** path to reach the bulb. So the light turns on if **either** switch (or both!) is flipped on.
+
+| A | B | A OR B |
+|---|---|--------|
+| 0 | 0 |   0    |
+| 0 | 1 |   1    |
+| 1 | 0 |   1    |
+| 1 | 1 |   1    |
+
+**Rule:** OR outputs 1 if **any** input is 1. The only way the light stays off is if both switches are off.
+
+### NOT Gate
+
+A NOT gate is like a **backwards switch** — when you flip it ON, the light goes OFF. When you flip it OFF, the light turns ON. It always does the opposite.
+
+| A | NOT A |
+|---|-------|
+| 0 |   1   |
+| 1 |   0   |
+
+**Rule:** NOT flips the input. 0 becomes 1, and 1 becomes 0.
+
+---
+
+## From Ideas to Python Code
+
+OK, so you understand AND, OR, and NOT as ideas. But how do we actually write them as Python code?
+
+Python has special symbols called **bitwise operators** that work on individual bits (0s and 1s). Here they are:
+
+### `a & b` — Bitwise AND
+
+The `&` symbol does AND on bits. It follows the exact same rule as our truth table:
+
+```python
+1 & 1   # → 1  (both on → on)
+1 & 0   # → 0  (one off → off)
+0 & 1   # → 0  (one off → off)
+0 & 0   # → 0  (both off → off)
+```
+
+### `a | b` — Bitwise OR
+
+The `|` symbol (the tall line, usually above the Enter key) does OR on bits:
+
+```python
+1 | 1   # → 1  (at least one on → on)
+1 | 0   # → 1  (at least one on → on)
+0 | 1   # → 1  (at least one on → on)
+0 | 0   # → 0  (both off → off)
+```
+
+### `1 - a` — A Trick to Flip a Bit
+
+There's no single "NOT" symbol for bits in our system, but there's a clever math trick. Since our values are always 0 or 1:
+
+- If `a` is 0: `1 - 0 = 1` (flipped!)
+- If `a` is 1: `1 - 1 = 0` (flipped!)
+
+So `1 - a` works perfectly as NOT for single bits.
+
+### Putting It All Together
+
+Here's what AND looks like as a complete Python function:
+
+```python
+def AND(a, b):
+    return a & b
+```
+
+That's it! The function takes two bits and returns their AND using `&`.
+
+### Wait — why can't we just use Python's `and` / `or` / `not`?
+
+Great question! Python has English words `and`, `or`, and `not` built in. But we're **not** going to use them. Here's why:
+
+The whole point of this course is to **build logic gates from scratch**, using only math on 0s and 1s. We want to understand exactly how a computer's circuits work at the lowest level. Using Python's built-in `and`/`or`/`not` would be like using a calculator to learn multiplication — it gives you the answer, but you don't learn how it works.
+
+So our rule is: **only use `&`, `|`, and `1 - a`** (and later, functions you build from them).
+
+---
+
+## Deriving XOR — Step by Step
+
+XOR means "exclusive or." It outputs 1 **only if the inputs are different**.
+
+| A | B | XOR |
+|---|---|-----|
+| 0 | 0 |  0  |
+| 0 | 1 |  1  |
+| 1 | 0 |  1  |
+| 1 | 1 |  0  |
+
+Your challenge is to build XOR using only AND, OR, and NOT. But let's think through it together so you know how to approach it.
+
+**Step 1: When is XOR equal to 1?**
+
+Look at the truth table. XOR = 1 in two rows:
+- Row 2: A=0, B=1 — "A is OFF and B is ON"
+- Row 3: A=1, B=0 — "A is ON and B is OFF"
+
+**Step 2: Write each case in logic**
+
+- Case 1 (A=0, B=1): This means NOT(A) AND B — "A is off" AND "B is on"
+- Case 2 (A=1, B=0): This means A AND NOT(B) — "A is on" AND "B is off"
+
+**Step 3: Combine the cases**
+
+XOR is 1 if **either** case is true. "Either" means OR! So:
+
+> XOR(A, B) = (NOT(A) AND B) **OR** (A AND NOT(B))
+
+**Step 4: Write it in Python using our functions**
+
+```python
+def XOR(a, b):
+    return OR(AND(NOT(a), b), AND(a, NOT(b)))
+```
+
+**Step 5: Verify it works!**
+
+Let's check every row of the truth table:
+
+- A=0, B=0: `OR(AND(1, 0), AND(0, 1))` → `OR(0, 0)` → **0** ✓
+- A=0, B=1: `OR(AND(1, 1), AND(0, 0))` → `OR(1, 0)` → **1** ✓
+- A=1, B=0: `OR(AND(0, 0), AND(1, 1))` → `OR(0, 1)` → **1** ✓
+- A=1, B=1: `OR(AND(0, 1), AND(1, 0))` → `OR(0, 0)` → **0** ✓
+
+It matches! You just built a new gate out of simpler gates.
+
+---
+
+## Concept Reflection Questions
+
+Now that you've learned the analogies, see if you can answer these:
+
+1. **Why is AND like two switches in series?** (Think back to the light bulb — what happens if one switch is off?)
+2. **Why is OR like two switches in parallel?** (What happens if there are two paths for electricity?)
+3. **Why is logic enough to build arithmetic?** (Hint: addition is really just a pattern of XOR and AND — you'll see this in a future week!)
+4. **Why is XOR important for addition?** (Look at the XOR truth table and compare it to adding two single-digit binary numbers: 0+0=0, 0+1=1, 1+0=1, 1+1=10. What do you notice about the last digit?)
+
+---
+
+## What You Just Built
+
+You built the **atomic building blocks** of a CPU.
+
+Every processor on Earth — from a phone to a supercomputer — is made from AND, OR, NOT, and XOR gates. And now you can build them in Python!
+
+Next week, you'll snap these blocks together to build bigger, more powerful circuits.
