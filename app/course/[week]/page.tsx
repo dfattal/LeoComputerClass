@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { getWeekSlugs, loadWeekContent } from "@/lib/lessons/loadLesson";
 import { mdxComponents } from "@/lib/lessons/mdxComponents";
 import LessonSidebar from "@/components/LessonSidebar";
-import WeekTabs from "@/components/WeekTabs";
+import ContentPanel from "@/components/ContentPanel";
+import SplitLayout from "@/components/SplitLayout";
 import CodeWorkspace from "@/components/CodeWorkspace";
 
 export function generateStaticParams() {
@@ -41,10 +42,14 @@ export default async function WeekPage({
   return (
     <>
       <LessonSidebar currentWeek={week} />
-      <WeekTabs
-        lessonContent={lessonContent}
-        exercisesContent={exercisesContent}
-        codeWorkspace={
+      <SplitLayout
+        leftPanel={
+          <ContentPanel
+            lessonContent={lessonContent}
+            exercisesContent={exercisesContent}
+          />
+        }
+        rightPanel={
           <CodeWorkspace weekSlug={week} tests={weekData.tests} />
         }
       />

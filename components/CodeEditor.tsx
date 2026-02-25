@@ -51,16 +51,16 @@ export default function CodeEditor({
 
   if (!mounted) {
     return (
-      <div className="flex h-[400px] items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex h-full items-center justify-center border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
         <span className="text-sm text-zinc-500">Loading editor...</span>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
+    <div className="h-full overflow-hidden">
       <Editor
-        height="400px"
+        height="100%"
         defaultLanguage="python"
         value={code}
         onChange={handleChange}

@@ -41,7 +41,7 @@ body {
 
 /* Sticky header offset for body content */
 .sticky-offset {
-  scroll-padding-top: 7.5rem;
+  scroll-padding-top: 3.5rem;
 }
 
 /* MDX truth-table styling */
@@ -103,5 +103,5 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 7.5rem;
+  scroll-padding-top: 3.5rem;
 }

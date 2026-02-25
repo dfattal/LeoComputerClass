@@ -4,7 +4,7 @@ export default function CourseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
+    <div className="flex h-[calc(100dvh-3.5rem)]">
       {children}
     </div>
   );

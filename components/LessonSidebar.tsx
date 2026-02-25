@@ -13,8 +13,8 @@ export default function LessonSidebar({
   const weeks = getWeekSlugs();
 
   return (
-    <aside className="w-48 shrink-0">
-      <nav className="sticky top-20 space-y-1.5">
+    <aside className="w-48 shrink-0 overflow-y-auto border-r border-stone-200 dark:border-stone-800">
+      <nav className="space-y-1.5 p-4">
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-400">
           Weeks
         </h2>
