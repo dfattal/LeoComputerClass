@@ -2,50 +2,77 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-function weekNum(slug: string): number {
-  return parseInt(slug.replace("week-", ""), 10);
-}
+import {
+  phases,
+  weeks as syllabusWeeks,
+  getWeeksForPhase,
+} from "@/content/syllabus";
 
 function SidebarNav({
-  weeks,
   currentWeek,
   onSelect,
 }: {
-  weeks: string[];
   currentWeek: string;
   onSelect?: () => void;
 }) {
   return (
-    <nav className="space-y-1.5 p-4">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-400">
-        Weeks
-      </h2>
-      {weeks.map((slug) => {
-        const num = weekNum(slug);
-        const isActive = slug === currentWeek;
+    <nav className="space-y-4 p-4">
+      {phases.map((phase) => {
+        const phaseWeeks = getWeeksForPhase(phase.phase);
         return (
-          <Link
-            key={slug}
-            href={`/course/${slug}`}
-            onClick={onSelect}
-            className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-all ${
-              isActive
-                ? "bg-indigo-600 font-medium text-white shadow-sm shadow-indigo-600/25"
-                : "text-stone-600 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800"
-            }`}
-          >
-            <span
-              className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-bold ${
-                isActive
-                  ? "bg-white/20 text-white"
-                  : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400"
-              }`}
-            >
-              {num}
-            </span>
-            Week {num}
-          </Link>
+          <div key={phase.phase}>
+            {/* Phase header */}
+            <h2 className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+              Phase {phase.phase}: {phase.name}
+            </h2>
+
+            <div className="space-y-0.5">
+              {phaseWeeks.map((w) => {
+                const isActive = w.slug === currentWeek;
+                const isPlanned = w.status === "planned";
+
+                if (isPlanned) {
+                  return (
+                    <div
+                      key={w.slug}
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-stone-400 dark:text-stone-500"
+                      title={w.title}
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-stone-100 text-xs font-bold text-stone-400 dark:bg-stone-800 dark:text-stone-500">
+                        {w.week}
+                      </span>
+                      <span className="truncate">{w.title}</span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={w.slug}
+                    href={`/course/${w.slug}`}
+                    onClick={onSelect}
+                    className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all ${
+                      isActive
+                        ? "bg-indigo-600 font-medium text-white shadow-sm shadow-indigo-600/25"
+                        : "text-stone-600 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800"
+                    }`}
+                    title={w.title}
+                  >
+                    <span
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-bold ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400"
+                      }`}
+                    >
+                      {w.week}
+                    </span>
+                    <span className="truncate">{w.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         );
       })}
     </nav>
@@ -54,10 +81,9 @@ function SidebarNav({
 
 export default function LessonSidebar({
   currentWeek,
-  weeks,
 }: {
   currentWeek: string;
-  weeks: string[];
+  weeks?: string[]; // kept for backward compat but no longer used
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -85,8 +111,8 @@ export default function LessonSidebar({
       </button>
 
       {/* Desktop sidebar — always visible on lg+ */}
-      <aside className="hidden w-48 shrink-0 overflow-y-auto border-r border-stone-200 dark:border-stone-800 lg:block">
-        <SidebarNav weeks={weeks} currentWeek={currentWeek} />
+      <aside className="hidden w-56 shrink-0 overflow-y-auto border-r border-stone-200 dark:border-stone-800 lg:block">
+        <SidebarNav currentWeek={currentWeek} />
       </aside>
 
       {/* Mobile overlay */}
@@ -98,7 +124,7 @@ export default function LessonSidebar({
             onClick={() => setMobileOpen(false)}
           />
           {/* Slide-over sidebar */}
-          <aside className="fixed inset-y-0 left-0 z-50 w-64 overflow-y-auto bg-white shadow-xl dark:bg-stone-950 lg:hidden">
+          <aside className="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto bg-white shadow-xl dark:bg-stone-950 lg:hidden">
             <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3 dark:border-stone-800">
               <span className="text-sm font-semibold text-stone-700 dark:text-stone-200">
                 Navigation
@@ -124,7 +150,6 @@ export default function LessonSidebar({
               </button>
             </div>
             <SidebarNav
-              weeks={weeks}
               currentWeek={currentWeek}
               onSelect={() => setMobileOpen(false)}
             />

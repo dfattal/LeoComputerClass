@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { getWeekSlugs } from "@/lib/lessons/loadLesson";
+import { phases, getWeeksForPhase } from "@/content/syllabus";
 
 export default async function DashboardPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,18 +14,45 @@ export default async function DashboardPage() {
         <p className="mb-6 text-stone-500">
           Connect Supabase to track your progress. For now, explore the lessons:
         </p>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {weeks.map((slug) => {
-            const num = parseInt(slug.replace("week-", ""), 10);
+        <div className="space-y-6">
+          {phases.map((phase) => {
+            const phaseWeeks = getWeeksForPhase(phase.phase);
             return (
-              <Link
-                key={slug}
-                href={`/course/${slug}`}
-                className="rounded-lg border border-stone-200 p-4 transition-colors hover:bg-stone-50 dark:border-stone-800 dark:hover:bg-stone-900"
-              >
-                <h2 className="font-semibold">Week {num}</h2>
-                <p className="text-sm text-stone-500">Start lesson</p>
-              </Link>
+              <div key={phase.phase}>
+                <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                  Phase {phase.phase}: {phase.name}
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {phaseWeeks.map((w) => {
+                    const isPlanned = w.status === "planned";
+                    if (isPlanned) {
+                      return (
+                        <div
+                          key={w.slug}
+                          className="rounded-lg border border-stone-200 p-4 dark:border-stone-800"
+                        >
+                          <h3 className="font-semibold text-stone-400">
+                            Week {w.week}: {w.title}
+                          </h3>
+                          <p className="text-sm text-stone-400">Coming soon</p>
+                        </div>
+                      );
+                    }
+                    return (
+                      <Link
+                        key={w.slug}
+                        href={`/course/${w.slug}`}
+                        className="rounded-lg border border-stone-200 p-4 transition-colors hover:bg-stone-50 dark:border-stone-800 dark:hover:bg-stone-900"
+                      >
+                        <h3 className="font-semibold">
+                          Week {w.week}: {w.title}
+                        </h3>
+                        <p className="text-sm text-stone-500">Start lesson</p>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </div>

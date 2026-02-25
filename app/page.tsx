@@ -1,12 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
+import { phases, getWeeksForPhase } from "@/content/syllabus";
 
-const milestones = [
-  { week: "1–2", title: "Logic Gates", desc: "AND, OR, NOT, XOR — the building blocks" },
-  { week: "3–4", title: "Arithmetic", desc: "Adders and subtractors from gates" },
-  { week: "5–6", title: "Memory", desc: "Flip-flops, registers, and RAM" },
-  { week: "7–8", title: "CPU", desc: "Assemble a working processor" },
-];
+function phaseStatus(phaseNum: number): "Complete" | "In Progress" | "Coming Soon" {
+  const phaseWeeks = getWeeksForPhase(phaseNum);
+  const publishedCount = phaseWeeks.filter((w) => w.status === "published").length;
+  if (publishedCount === phaseWeeks.length) return "Complete";
+  if (publishedCount > 0) return "In Progress";
+  return "Coming Soon";
+}
+
+const statusStyles = {
+  Complete:
+    "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+  "In Progress":
+    "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+  "Coming Soon":
+    "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400",
+} as const;
 
 export default function Home() {
   return (
@@ -67,21 +78,55 @@ export default function Home() {
           <h2 className="mb-8 text-center text-sm font-semibold uppercase tracking-widest text-stone-400">
             What you&apos;ll build
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {milestones.map((m) => (
-              <div
-                key={m.week}
-                className="rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900"
-              >
-                <span className="mb-2 inline-block rounded-md bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
-                  Weeks {m.week}
-                </span>
-                <h3 className="mb-1 font-semibold text-stone-900 dark:text-stone-100">
-                  {m.title}
-                </h3>
-                <p className="text-sm text-stone-500">{m.desc}</p>
-              </div>
-            ))}
+          <div className="space-y-4">
+            {phases.map((phase) => {
+              const phaseWeeks = getWeeksForPhase(phase.phase);
+              const status = phaseStatus(phase.phase);
+              return (
+                <div
+                  key={phase.phase}
+                  className="rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900"
+                >
+                  <div className="mb-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-stone-900 dark:text-stone-100">
+                        {phase.name}
+                      </h3>
+                      <span className="rounded-md bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                        Weeks {phase.weeks[0]}–{phase.weeks[phase.weeks.length - 1]}
+                      </span>
+                    </div>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyles[status]}`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {phaseWeeks.map((w) => (
+                      <li key={w.slug} className="flex items-center gap-2 text-sm">
+                        <span
+                          className={`h-2 w-2 shrink-0 rounded-full ${
+                            w.status === "published"
+                              ? "bg-indigo-500"
+                              : "bg-stone-300 dark:bg-stone-600"
+                          }`}
+                        />
+                        <span
+                          className={
+                            w.status === "published"
+                              ? "text-stone-700 dark:text-stone-300"
+                              : "text-stone-400 dark:text-stone-500"
+                          }
+                        >
+                          Week {w.week}: {w.summary}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
