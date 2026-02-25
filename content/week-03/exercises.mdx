@@ -1,0 +1,136 @@
+# Week 3 — Exercises: Binary Numbers & The Half Adder
+
+## Setup
+
+You will need your gates from Week 1 and `get_bit` from Week 2. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+```
+
+---
+
+## Warm-Up: Binary Brainteaser
+
+Try to answer these in your head — no code allowed yet!
+
+1. What is **0110** in decimal? (Hint: 0×8 + 1×4 + 1×2 + 0×1)
+2. What is **1010** in decimal?
+3. What is **7** in 4-bit binary?
+4. What is **1 + 1** in binary? (Careful — it's not 2!)
+
+**Answers:** 6, 10, 0111, 10 (which means "sum digit = 0, carry = 1" — just like the odometer rolling over!)
+
+---
+
+## Task 1: `bits_to_decimal(b3, b2, b1, b0)`
+
+Time to go from bits back to a regular number! Write a function that takes four individual bits and assembles them into a decimal value.
+
+```python
+def bits_to_decimal(b3, b2, b1, b0):
+    # b3 is the eights place (bit 3)
+    # b2 is the fours place (bit 2)
+    # b1 is the twos place (bit 1)
+    # b0 is the ones place (bit 0)
+    #
+    # Use << (left shift) and | (bitwise OR) to assemble the number
+    # Remember: b3 << 3 puts b3 into position 3 (worth 8)
+    #
+    # Example: bits_to_decimal(1, 1, 0, 1) should return 13
+    #          because 1×8 + 1×4 + 0×2 + 1×1 = 13
+    pass
+```
+
+Test it:
+```python
+print(bits_to_decimal(0, 0, 0, 0))  # should print 0
+print(bits_to_decimal(0, 0, 0, 1))  # should print 1
+print(bits_to_decimal(1, 1, 0, 1))  # should print 13
+print(bits_to_decimal(1, 1, 1, 1))  # should print 15
+```
+
+---
+
+## Task 2: `half_adder(a, b)`
+
+Here's the big one! Build a half adder that adds two single bits and returns both the sum and the carry as a tuple — your first combo meal.
+
+```python
+def half_adder(a, b):
+    # SUM = XOR(a, b) — 1 when inputs are different
+    # CARRY = AND(a, b) — 1 when both inputs are 1
+    # Return them packed together as (sum, carry)
+    #
+    # Example: half_adder(1, 1) should return (0, 1)
+    #          because 1+1 = 10 in binary (sum=0, carry=1)
+    pass
+```
+
+Test it:
+```python
+s, c = half_adder(0, 0)
+print(s, c)  # should print 0 0
+
+s, c = half_adder(0, 1)
+print(s, c)  # should print 1 0
+
+s, c = half_adder(1, 0)
+print(s, c)  # should print 1 0
+
+s, c = half_adder(1, 1)
+print(s, c)  # should print 0 1
+```
+
+---
+
+## Task 3: `decimal_to_4bit(x)`
+
+Now do the reverse — take a regular number (0 to 15) and break it apart into its four binary digits. You'll need this next week to feed numbers into your adder!
+
+```python
+def decimal_to_4bit(x):
+    # Use get_bit to extract each bit position
+    # Return (b3, b2, b1, b0) — eights, fours, twos, ones
+    #
+    # Example: decimal_to_4bit(13) should return (1, 1, 0, 1)
+    #          because 13 in binary is 1101
+    pass
+```
+
+Test it:
+```python
+print(decimal_to_4bit(0))   # should print (0, 0, 0, 0)
+print(decimal_to_4bit(5))   # should print (0, 1, 0, 1)
+print(decimal_to_4bit(10))  # should print (1, 0, 1, 0)
+print(decimal_to_4bit(15))  # should print (1, 1, 1, 1)
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- You may NOT use the `+` operator (this is about building addition from gates!)
+- Use only your gate functions (AND, OR, NOT, XOR), `get_bit`, and the bitwise operators `&`, `|`, `<<`, `>>`
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `bits_to_decimal`, `half_adder`, `decimal_to_4bit` functions
+2. All tests passing

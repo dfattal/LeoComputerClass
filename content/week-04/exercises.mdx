@@ -1,0 +1,177 @@
+# Week 4 — Exercises: Full Adder, Ripple-Carry & Subtraction
+
+## Setup
+
+You will need your gates from Week 1, `get_bit` from Week 2, and `half_adder` from Week 3. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+
+def half_adder(a, b):
+    s = XOR(a, b)
+    c = AND(a, b)
+    return (s, c)
+```
+
+---
+
+## Warm-Up: Tuple Unpacking Practice
+
+Before you start building, let's make sure you've got tuples down cold. Trace through each line and predict what prints — **don't run it yet!**
+
+```python
+s, c = half_adder(1, 0)
+print(s, c)   # what prints?
+
+s, c = half_adder(1, 1)
+print(s, c)   # what prints?
+
+result = half_adder(0, 1)
+print(result)       # what prints? (hint: it's a tuple)
+print(result[0])    # what prints? (first item)
+print(result[1])    # what prints? (second item)
+```
+
+**Answers:** `1 0`, then `0 1`, then `(1, 0)`, then `1`, then `0`.
+
+---
+
+## Task 1: `full_adder(a, b, c_in)`
+
+This is the upgrade! Build a full adder that adds **three** single bits (two inputs plus a carry-in) and returns `(sum, carry_out)`.
+
+```python
+def full_adder(a, b, c_in):
+    # Step 1: Use half_adder to add a and b
+    #         Unpack into partial_sum and carry1
+    #
+    # Step 2: Use half_adder to add partial_sum and c_in
+    #         Unpack into sum and carry2
+    #
+    # Step 3: carry_out = OR(carry1, carry2)
+    #
+    # Return (sum, carry_out)
+    pass
+```
+
+Test it:
+```python
+print(full_adder(0, 0, 0))  # should print (0, 0) — 0+0+0 = 0
+print(full_adder(1, 0, 0))  # should print (1, 0) — 1+0+0 = 1
+print(full_adder(1, 1, 0))  # should print (0, 1) — 1+1+0 = 2 (binary 10)
+print(full_adder(1, 1, 1))  # should print (1, 1) — 1+1+1 = 3 (binary 11)
+```
+
+---
+
+## Task 2: `add4(a, b)`
+
+Now for the big one! Chain four full adders together to build a 4-bit ripple-carry adder. Give it two numbers (0-15) and it gives back their sum (0-30). A real calculator, built from gates!
+
+```python
+def add4(a, b):
+    # Step 1: Extract bits from a and b using get_bit
+    #   a0 = get_bit(a, 0)   ... up to a3 = get_bit(a, 3)
+    #   b0 = get_bit(b, 0)   ... up to b3 = get_bit(b, 3)
+    #
+    # Step 2: Chain full adders, column by column
+    #   s0, c0 = full_adder(a0, b0, 0)    ← no carry into first column
+    #   s1, c1 = full_adder(a1, b1, c0)   ← carry from column 0
+    #   s2, c2 = full_adder(a2, b2, c1)   ← carry from column 1
+    #   s3, c3 = full_adder(a3, b3, c2)   ← carry from column 2
+    #
+    # Step 3: Reassemble the result
+    #   return (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+    pass
+```
+
+Test it:
+```python
+print(add4(0, 0))    # should print 0
+print(add4(1, 1))    # should print 2
+print(add4(5, 3))    # should print 8
+print(add4(7, 8))    # should print 15
+print(add4(15, 15))  # should print 30
+```
+
+---
+
+## Task 3: `negate4(a)`
+
+Time for the backwards odometer trick! Build two's complement negation: flip all the bits, then add 1 using your shiny new `add4`, and mask to 4 bits.
+
+```python
+def negate4(a):
+    # Step 1: Extract each bit using get_bit
+    # Step 2: Flip each bit using NOT
+    # Step 3: Reassemble the flipped number:
+    #         flipped = (NOT(b3) << 3) | (NOT(b2) << 2) | (NOT(b1) << 1) | NOT(b0)
+    # Step 4: Add 1 using add4(flipped, 1)
+    # Step 5: Mask to 4 bits: result & 0xF  (0xF = 15 = 1111 in binary)
+    #
+    # Example: negate4(3) → flip 0011 to 1100 → add 1 → 1101 → 13
+    pass
+```
+
+Test it:
+```python
+print(negate4(0))   # should print 0  (negating 0 wraps back to 0)
+print(negate4(1))   # should print 15 (1111 = -1 in two's complement)
+print(negate4(3))   # should print 13 (1101 = -3)
+print(negate4(7))   # should print 9  (1001 = -7)
+print(negate4(8))   # should print 8  (1000 = -8, its own negative!)
+```
+
+---
+
+## Task 4: `sub4(a, b)`
+
+The grand finale! Build subtraction — without ever using a minus sign. Just negate and add.
+
+```python
+def sub4(a, b):
+    # Subtraction = addition of the negated number!
+    # sub4(a, b) = add4(a, negate4(b)) & 0xF
+    #
+    # The & 0xF masks to 4 bits (keeps only the lowest 4 bits)
+    #
+    # Example: sub4(5, 3) = add4(5, negate4(3)) = add4(5, 13) = 18 & 0xF = 2
+    pass
+```
+
+Test it:
+```python
+print(sub4(5, 3))   # should print 2
+print(sub4(7, 7))   # should print 0
+print(sub4(10, 6))  # should print 4
+print(sub4(0, 1))   # should print 15 (wraps around — like the odometer going backwards!)
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- You may NOT use the `+` or `-` operators — all arithmetic must go through your gates!
+- Use only your gate functions, `get_bit`, `half_adder`, and the bitwise operators `&`, `|`, `<<`, `>>`
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `full_adder`, `add4`, `negate4`, `sub4` functions
+2. All tests passing

@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "All functions (full_adder, add4, negate4, sub4) return correct outputs for all test cases"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 25,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'; does not use + or - operators"
+  },
+  {
+    "criterion": "Composition and chaining",
+    "weight": 25,
+    "description": "full_adder is built from two half_adders + OR; add4 chains four full_adders; sub4 uses negate4 + add4"
+  },
+  {
+    "criterion": "Code clarity",
+    "weight": 10,
+    "description": "Clear variable names (s0/c0, s1/c1, etc.) that show the signal flow through the ripple-carry chain"
+  }
+]

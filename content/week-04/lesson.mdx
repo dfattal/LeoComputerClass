@@ -1,0 +1,267 @@
+# Week 4 — Full Adder, Ripple-Carry Addition & Subtraction
+
+## Phase 2: Arithmetic from Gates
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand why the half adder isn't enough for multi-digit addition
+- Build a full adder from two half adders and an OR gate
+- Chain full adders into a 4-bit ripple-carry adder
+- Understand two's complement negation (the backwards odometer)
+- Build subtraction using addition of a negated number
+
+---
+
+## Big Idea — Column-by-Column Addition
+
+You know how you add two numbers by hand, right? You go column by column, right to left. Let's do 347 + 285:
+
+```
+    1 1        ← carries
+    3 4 7
+  + 2 8 5
+  -------
+    6 3 2
+```
+
+Start from the right: 7 + 5 = 12. Write down 2, carry the 1. Next column: 4 + 8 + 1 (the carry!) = 13. Write down 3, carry the 1. Last column: 3 + 2 + 1 = 6.
+
+Notice something important: every column except the first has **three** inputs — the two digits **plus the carry from the previous column**. That sneaky carry changes everything!
+
+Last week, you built a half adder that adds two inputs. But it can't handle that third input — the carry coming in. That's why it's only "half" an adder. This week, you'll build the other half — and then things get really cool.
+
+---
+
+## Why the Half Adder Isn't Enough
+
+Let's see the problem in action. Try adding 3 + 3 in binary (both are 11):
+
+```
+Column:    1   0
+           1   1
+         + 1   1
+         ------
+```
+
+**Column 0** (rightmost): 1 + 1 = 0, carry 1. The half adder handles this fine — two inputs, two outputs.
+
+**Column 1**: We need to add 1 + 1 + **1** (the carry from column 0). That's **three** inputs. The half adder only takes two! It's stuck!
+
+We need something bigger. Time for an upgrade.
+
+---
+
+## The Full Adder — Chain of Students Analogy
+
+Picture this: a line of students sitting at desks, shoulder to shoulder. They're going to add a big binary number together — one column each, like a team.
+
+Each student:
+1. Gets **two digits** (one from each number being added) — that's **a** and **b**
+2. Gets a **note from the student on their right** — that's **carry_in** (c_in)
+3. Writes down their answer digit — that's **sum**
+4. Passes a note to the student on their left — that's **carry_out** (c_out)
+
+The first student (rightmost column) gets no note from the right, so their carry_in is 0. Every other student has all three inputs.
+
+### Full Truth Table
+
+Here are all 8 possible combinations of three binary inputs:
+
+| a | b | c_in | sum | c_out |
+|---|---|------|-----|-------|
+| 0 | 0 |  0   |  0  |   0   |
+| 0 | 0 |  1   |  1  |   0   |
+| 0 | 1 |  0   |  1  |   0   |
+| 0 | 1 |  1   |  0  |   1   |
+| 1 | 0 |  0   |  1  |   0   |
+| 1 | 0 |  1   |  0  |   1   |
+| 1 | 1 |  0   |  0  |   1   |
+| 1 | 1 |  1   |  1  |   1   |
+
+Pick any row and check: the sum and c_out columns represent a + b + c_in written in binary. Try the last row: 1 + 1 + 1 = 3, and 3 in binary is **11** (c_out=1, sum=1). It works!
+
+---
+
+## Building a Full Adder from Two Half Adders + OR
+
+Here's the really clever part: you don't need to start from scratch. You can build a full adder by using your half adder **twice** and one OR gate. That's it!
+
+**Step 1:** Use a half adder on inputs a and b:
+```
+partial_sum, carry1 = half_adder(a, b)
+```
+This adds the first two inputs, giving a partial sum and a possible carry.
+
+**Step 2:** Use a half adder on partial_sum and c_in:
+```
+sum, carry2 = half_adder(partial_sum, c_in)
+```
+This adds the carry-in to the partial sum, giving the final sum and another possible carry.
+
+**Step 3:** OR the two carries together:
+```
+carry_out = OR(carry1, carry2)
+```
+If **either** half adder produced a carry, there's a carry out. (They can never both carry at the same time — think about why!)
+
+### Tracing the Hardest Case: `full_adder(1, 1, 1)`
+
+Let's trace through 1 + 1 + 1 = 3 (binary 11):
+
+1. `half_adder(1, 1)` → `(0, 1)` — partial_sum=0, carry1=1
+2. `half_adder(0, 1)` → `(1, 0)` — sum=1, carry2=0
+3. `OR(1, 0)` → `1` — carry_out=1
+
+Result: sum=1, carry_out=1 → that's binary 11 = decimal 3. Nailed it!
+
+Let's check an easier case too: `full_adder(1, 0, 1)` — should be 1+0+1 = 2 (binary 10):
+
+1. `half_adder(1, 0)` → `(1, 0)` — partial_sum=1, carry1=0
+2. `half_adder(1, 1)` → `(0, 1)` — sum=0, carry2=1
+3. `OR(0, 1)` → `1` — carry_out=1
+
+Result: sum=0, carry_out=1 → binary 10 = decimal 2. Boom!
+
+---
+
+## Ripple-Carry 4-Bit Adder
+
+OK, now we're going big. We chain **four full adders** together to add two whole 4-bit numbers (0 to 15).
+
+Think of it like our line of four students:
+
+```
+Student 3 ← Student 2 ← Student 1 ← Student 0
+(eights)    (fours)      (twos)      (ones)
+```
+
+Each student passes their carry note to the student on their left:
+
+```
+s0, c0 = full_adder(a0, b0, 0)      ← first column, no carry in
+s1, c1 = full_adder(a1, b1, c0)     ← carry from column 0
+s2, c2 = full_adder(a2, b2, c1)     ← carry from column 1
+s3, c3 = full_adder(a3, b3, c2)     ← carry from column 2
+```
+
+The final answer is assembled from all the sum bits plus the last carry:
+
+```
+result = (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+```
+
+### Worked Example: `add4(5, 3)` = 8
+
+First, break into bits:
+- 5 in binary: 0101 → a3=0, a2=1, a1=0, a0=1
+- 3 in binary: 0011 → b3=0, b2=0, b1=1, b0=1
+
+Now add column by column:
+
+| Column | a | b | c_in | sum | c_out |
+|--------|---|---|------|-----|-------|
+| 0 (ones)   | 1 | 1 | 0 | 0 | 1 |
+| 1 (twos)   | 0 | 1 | 1 | 0 | 1 |
+| 2 (fours)  | 1 | 0 | 1 | 0 | 1 |
+| 3 (eights) | 0 | 0 | 1 | 1 | 0 |
+
+Result bits: c3=0, s3=1, s2=0, s1=0, s0=0 → **01000** = **8**. It works! Your gates just did 5 + 3 without any `+` sign!
+
+---
+
+## Subtraction: The Backwards Odometer
+
+Now for something mind-bending. You just built addition — but can you build **subtraction** too? Without a minus sign? Sounds impossible, right?
+
+### The Backwards Odometer Trick
+
+Remember our odometer from Week 3? Imagine it reads **0000**. Now drive **backwards** one mile. What does it show?
+
+It can't show -1 — there's no minus sign on an odometer! Instead, all the wheels roll backwards: 0 becomes 1, and each wheel borrows from the next. You get **1111**.
+
+So in 4-bit binary, going backwards 1 from 0 gives you 15 (1111). This means **1111 acts like -1** — if you add 1111 + 0001, the odometer rolls over back to 0000!
+
+This is called **two's complement** — a clever trick that lets you represent negative numbers using the same binary system.
+
+### How to Negate a Number
+
+So how do you actually make a negative number in binary? It's a two-step recipe:
+
+1. **Flip every bit** — turn each 0 to 1 and each 1 to 0 (use NOT on each bit)
+2. **Add 1** to the result
+
+### Worked Example: Negating 3
+
+```
+Start:   0011   (3 in binary)
+Flip:    1100   (NOT each bit)
+Add 1:   1101   (that's 13 in unsigned, but it represents -3)
+```
+
+Check: 3 + (-3) should equal 0. Let's verify:
+```
+  0011   (3)
++ 1101   (-3, which is 13 unsigned)
+------
+ 10000   → but we only keep 4 bits → 0000 = 0  ✓
+```
+
+The extra 1 on the left (the 5th bit) overflows and disappears — just like an odometer rolling past its maximum back to zero. Magic!
+
+### Subtraction = Addition of the Negative
+
+And here's the grand punchline: to compute `a - b`, you just compute `a + negate(b)`!
+
+```
+sub4(a, b) = add4(a, negate4(b))   — mask to 4 bits
+```
+
+**You just built subtraction without ever using a minus sign!** The computer does the exact same thing inside — it has adders, and it reuses them for subtraction by negating one input.
+
+---
+
+## Why "Ripple Carry"?
+
+The carries in our 4-bit adder move like a wave — from right to left, one column at a time. Student 1 can't start until Student 0 passes the note. Student 2 is sitting there waiting for Student 1. Student 3 is drumming their fingers waiting for Student 2.
+
+This "rippling" is why it's called a **ripple-carry adder**.
+
+**Think about it:** Imagine you had 32 students in the chain (for a 32-bit number). Student #32 would have to wait for ALL 31 students before them to finish passing notes, one by one. That's super slow! Can you think of a way to speed this up — maybe by letting some students peek ahead and start early?
+
+(Real CPUs use a clever trick called "carry lookahead" to solve exactly this problem. You don't need to know how it works yet — just know that engineers figured it out!)
+
+---
+
+## Think About It
+
+You've built a lot this week. Take a step back and chew on these:
+
+1. **Why is it called a "full" adder vs a "half" adder?** (How many inputs does each handle?)
+
+2. **Could you build a full adder without using half adders?** (Yes — you could write the XOR/AND/OR formula directly. But why is snapping half adders together cleaner and easier to understand?)
+
+3. **What if you chained 8 full adders? 16? 64?** (What range of numbers could each one add? See the pattern?)
+
+4. **Why does the first full adder get carry_in = 0?** (What column is to the right of the rightmost column? Nothing! So no carry comes in.)
+
+5. **You built addition AND subtraction from nothing but AND, OR, NOT, and XOR gates. Does the computer use `+` or `-` anywhere inside?** (Nope! It's gates all the way down.)
+
+---
+
+## What You Just Built
+
+Look at what you've done. Starting from nothing but simple AND/OR/NOT/XOR gates, you've now built:
+
+- A **half adder** (adds two bits)
+- A **full adder** (adds three bits — two inputs plus carry)
+- A **4-bit ripple-carry adder** (adds two whole numbers!)
+- **Two's complement negation** (makes negative numbers using a backwards odometer trick)
+- A **4-bit subtractor** (subtracts by adding!)
+
+Think about that. A computer doesn't need a `+` or `-` button at the hardware level. It just needs tiny switches arranged in the right pattern. And you now know that pattern.
+
+This is one of the most beautiful ideas in all of computer science: **complex arithmetic comes from simple logic**. Everything your calculator does? It's AND, OR, NOT, and XOR gates all the way down.

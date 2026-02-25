@@ -1,0 +1,216 @@
+# Week 3 — Binary Numbers & The Half Adder
+
+## Phase 2: Arithmetic from Gates
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand how binary counting works (the binary odometer)
+- Convert between binary and decimal in both directions
+- Know the four cases of single-column binary addition
+- Build a half adder from XOR and AND
+- Return two values from a function using Python tuples
+
+---
+
+## Big Idea — The Odometer Analogy
+
+Have you ever watched an odometer on a car — the thing that counts miles? It has a row of little wheels, each with the digits 0 through 9. When a wheel passes 9, it rolls back to 0 and the wheel to its left clicks up by 1.
+
+That's how counting works: **when you run out of digits, you roll over and carry**.
+
+Now here's the fun part. Imagine a **binary odometer**. Each wheel only has two digits: **0** and **1**. That means it rolls over way more often!
+
+- Start at **0**
+- Click! **1** (used up all the digits already!)
+- Click! The 1 rolls to 0, carry to the left → **10** (that's "two" in binary)
+- Click! **11** ("three")
+- Click! Both wheels roll over, carry again → **100** ("four")
+
+This is exactly how computers count. Each "wheel" is a bit — a tiny switch that's either 0 or 1.
+
+---
+
+## Binary Place Values
+
+OK so how do you figure out what a binary number is worth? It works just like decimal, but with 2s instead of 10s.
+
+In decimal, each position is worth 10× more than the one to its right:
+
+| Position | Hundreds | Tens | Ones |
+|----------|----------|------|------|
+| Value    | ×100     | ×10  | ×1   |
+
+In binary, each position is worth **2×** more:
+
+| Position | Eights | Fours | Twos | Ones |
+|----------|--------|-------|------|------|
+| Value    | ×8     | ×4    | ×2   | ×1   |
+
+### Worked Example
+
+What is **1101** in decimal?
+
+```
+1    1    0    1
+×8   ×4   ×2   ×1
+= 8 + 4 + 0 + 1 = 13
+```
+
+### 4-Bit Counting Table
+
+Here's every 4-bit number:
+
+| Binary | Decimal | Binary | Decimal |
+|--------|---------|--------|---------|
+| 0000   | 0       | 1000   | 8       |
+| 0001   | 1       | 1001   | 9       |
+| 0010   | 2       | 1010   | 10      |
+| 0011   | 3       | 1011   | 11      |
+| 0100   | 4       | 1100   | 12      |
+| 0101   | 5       | 1101   | 13      |
+| 0110   | 6       | 1110   | 14      |
+| 0111   | 7       | 1111   | 15      |
+
+Whoa — 4 bits give you 16 values (0 through 15). Every time you add a bit, you **double** the number of values you can count to. That means 8 bits can count to 255, and 32 bits can count past 4 billion!
+
+---
+
+## Adding in Binary — Only 4 Cases
+
+Here's something really cool. Remember how in school you had to memorize all those addition facts? In decimal, there are 100 single-digit additions (0+0 all the way up to 9+9). In binary? There are only **four**:
+
+| A | B | Sum digit | Carry |
+|---|---|-----------|-------|
+| 0 | 0 |     0     |   0   |
+| 0 | 1 |     1     |   0   |
+| 1 | 0 |     1     |   0   |
+| 1 | 1 |     0     |   1   |
+
+The last row is the wild one: **1 + 1 = 10 in binary**! The sum digit is 0 and we carry a 1 to the next column. It's exactly like 5 + 5 = 10 in decimal — the ones digit is 0 and you carry a 1. Same idea, different base!
+
+Notice that each column gives us **two** outputs:
+- The **sum** digit (stays in this column)
+- The **carry** digit (goes to the next column on the left)
+
+---
+
+## The Half Adder
+
+Now let's look at those two outputs more carefully and see if you spot something familiar:
+
+| A | B | SUM | CARRY |
+|---|---|-----|-------|
+| 0 | 0 |  0  |   0   |
+| 0 | 1 |  1  |   0   |
+| 1 | 0 |  1  |   0   |
+| 1 | 1 |  0  |   1   |
+
+Wait — does the SUM column look familiar? It's exactly the **XOR** truth table! Output is 1 when the inputs are different!
+
+And the CARRY column? That's just **AND** — output is 1 only when both inputs are 1!
+
+No way. A half adder is just two gates you already built:
+
+```
+SUM   = XOR(a, b)
+CARRY = AND(a, b)
+```
+
+That's it! You already know everything you need to build a circuit that does addition. The only new trick is that this circuit produces **two** outputs instead of one.
+
+---
+
+## Returning Two Values — Tuples
+
+So here's a new problem: up until now, every function you wrote returned one value. But a half adder needs to return two values: the sum AND the carry. How do we do that?
+
+### The Combo Meal Analogy
+
+Think of ordering a combo meal at a restaurant. You don't get a burger in one bag and fries in another — you get **one bag with both items inside**. When you open the bag, you take out the burger and the fries separately.
+
+Python has the same idea. It's called a **tuple** (rhymes with "couple"). You pack multiple values together, and then unpack them when you need them.
+
+### Packing: Return Two Values
+
+```python
+def half_adder(a, b):
+    s = XOR(a, b)
+    c = AND(a, b)
+    return (s, c)       # pack sum and carry into one "bag"
+```
+
+The parentheses `(s, c)` create a tuple — a combo meal with two items.
+
+### Unpacking: Get the Values Out
+
+```python
+s, c = half_adder(1, 1)   # open the bag: s gets the sum, c gets the carry
+print(s)                    # → 0
+print(c)                    # → 1
+```
+
+The `s, c =` on the left side "opens the bag" and puts each item into its own variable.
+
+### Trace It Through
+
+Let's trace `half_adder(1, 1)`:
+
+1. `s = XOR(1, 1)` → **0** (inputs are the same → XOR gives 0)
+2. `c = AND(1, 1)` → **1** (both inputs are 1 → AND gives 1)
+3. `return (0, 1)` — the combo meal is (sum=0, carry=1)
+
+And `half_adder(1, 0)`:
+
+1. `s = XOR(1, 0)` → **1** (inputs are different → XOR gives 1)
+2. `c = AND(1, 0)` → **0** (not both 1 → AND gives 0)
+3. `return (1, 0)` — sum=1, carry=0
+
+---
+
+## Helper: `decimal_to_4bit`
+
+Next week, you'll build a 4-bit adder that works with real numbers like 5 and 3. But your gates only understand individual bits! So you need a way to break a number into its bits.
+
+Good news — you already have `get_bit(x, i)` from Week 2. Now you'll write a function that extracts all four bits at once and packs them into a tuple:
+
+```python
+def decimal_to_4bit(x):
+    b0 = get_bit(x, 0)   # ones place
+    b1 = get_bit(x, 1)   # twos place
+    b2 = get_bit(x, 2)   # fours place
+    b3 = get_bit(x, 3)   # eights place
+    return (b3, b2, b1, b0)
+```
+
+This returns a tuple of 4 bits, from most significant (b3) to least significant (b0). For example:
+
+- `decimal_to_4bit(13)` → `(1, 1, 0, 1)` because 13 = 1101 in binary
+- `decimal_to_4bit(5)` → `(0, 1, 0, 1)` because 5 = 0101 in binary
+
+---
+
+## Think About It
+
+Now that you've built your first arithmetic circuit, chew on these:
+
+1. **Why is binary addition simpler than decimal?** (Think about how many cases you need to memorize: 4 vs 100.)
+
+2. **Why does 1+1 = 10 in binary?** (Think about place values. What does the "1" in "10" actually represent?)
+
+3. **Why is it called a "half" adder?** (Hint: it handles two inputs. But when you add multi-digit numbers by hand, each column after the first actually has THREE inputs — what's the third one?)
+
+4. **Why does XOR keep showing up?** (It appeared in Week 1 as a "different detector." Why does "are these bits different?" also mean "what's the sum digit"? Weird, right?)
+
+---
+
+## What You Just Built
+
+You now understand how computers represent numbers (binary) and how to add a single column. The half adder is your first **arithmetic circuit** — and you built it entirely from gates you already had! XOR + AND = addition. That's wild.
+
+But there's a catch: when you add multi-digit numbers, each column (except the first) needs to handle a carry coming in from the right. The half adder can't do that — it only has two inputs.
+
+Next week, you'll fix this with the **full adder**, chain four of them together, and build a circuit that can add real numbers. And then — plot twist — you'll use it to do subtraction too.

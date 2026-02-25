@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "All functions (bits_to_decimal, half_adder, decimal_to_4bit) return correct outputs for all input combinations"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 25,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'; does not use the + operator"
+  },
+  {
+    "criterion": "Composition from gates",
+    "weight": 20,
+    "description": "half_adder is built from XOR and AND gate functions, not shortcut operators"
+  },
+  {
+    "criterion": "Tuple usage",
+    "weight": 15,
+    "description": "Correct use of (sum, carry) return pattern in half_adder and (b3, b2, b1, b0) in decimal_to_4bit"
+  }
+]
