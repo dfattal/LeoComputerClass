@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import CodeEditor from "./CodeEditor";
 import RunPanel from "./RunPanel";
 import TestResults from "./TestResults";
 import AIFeedback from "./AIFeedback";
+import VerticalResizeHandle from "./VerticalResizeHandle";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
 import type { TestEntry } from "@/lib/lessons/loadLesson";
+
+const V_STORAGE_KEY = "code-workspace-v-ratio";
+const DEFAULT_V_RATIO = 0.6;
+const MIN_EDITOR_PX = 150;
+const MIN_OUTPUT_PX = 80;
 
 interface ExistingSubmission {
   id: string;
@@ -32,13 +38,67 @@ export default function CodeWorkspace({
   const [existingSubmission, setExistingSubmission] =
     useState<ExistingSubmission | null>(null);
 
-  // Submit state (lifted from SubmitPanel)
+  // Submit state
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [aiFeedback, setAiFeedback] = useState<Record<string, unknown> | null>(
     null
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Vertical resize state
+  const [vRatio, setVRatio] = useState(DEFAULT_V_RATIO);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [vMounted, setVMounted] = useState(false);
+
+  // Load saved vertical ratio
+  useEffect(() => {
+    const saved = localStorage.getItem(V_STORAGE_KEY);
+    if (saved) {
+      const parsed = parseFloat(saved);
+      if (!isNaN(parsed) && parsed > 0 && parsed < 1) {
+        setVRatio(parsed);
+      }
+    }
+    setVMounted(true);
+  }, []);
+
+  const clampVRatio = useCallback((r: number, height: number) => {
+    const minTop = MIN_EDITOR_PX / height;
+    const maxTop = 1 - MIN_OUTPUT_PX / height;
+    return Math.min(Math.max(r, minTop), maxTop);
+  }, []);
+
+  const handleVResize = useCallback(
+    (deltaY: number) => {
+      if (!containerRef.current) return;
+      const height = containerRef.current.offsetHeight;
+      if (height === 0) return;
+      setVRatio((prev) => clampVRatio(prev + deltaY / height, height));
+    },
+    [clampVRatio]
+  );
+
+  const handleVResizeEnd = useCallback(() => {
+    setVRatio((current) => {
+      localStorage.setItem(V_STORAGE_KEY, current.toString());
+      return current;
+    });
+  }, []);
+
+  const handleVStepResize = useCallback(
+    (direction: number) => {
+      if (!containerRef.current) return;
+      const height = containerRef.current.offsetHeight;
+      if (height === 0) return;
+      setVRatio((prev) => {
+        const newRatio = clampVRatio(prev + direction * 0.02, height);
+        localStorage.setItem(V_STORAGE_KEY, newRatio.toString());
+        return newRatio;
+      });
+    },
+    [clampVRatio]
+  );
 
   // Fetch existing submission on mount
   useEffect(() => {
@@ -140,9 +200,16 @@ export default function CodeWorkspace({
   const displayInstructorFeedback = existingSubmission?.instructor_feedback;
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Code editor — grows to fill available space */}
-      <div className="min-h-[200px] flex-1">
+    <div ref={containerRef} className="flex h-full flex-col">
+      {/* Code editor — resizable */}
+      <div
+        className="min-h-0 overflow-hidden"
+        style={
+          vMounted
+            ? { flex: `0 0 ${vRatio * 100}%` }
+            : { flex: "0 0 60%" }
+        }
+      >
         <CodeEditor weekSlug={weekSlug} onChange={handleCodeChange} />
       </div>
 
@@ -180,8 +247,16 @@ export default function CodeWorkspace({
         )}
       </div>
 
-      {/* Output area — scrollable */}
-      <div className="min-h-[100px] flex-[0.4] space-y-3 overflow-y-auto border-t border-stone-200 p-3 dark:border-stone-800">
+      {/* Vertical resize handle */}
+      <VerticalResizeHandle
+        onResize={handleVResize}
+        onResizeEnd={handleVResizeEnd}
+        onStepResize={handleVStepResize}
+        ratio={vRatio}
+      />
+
+      {/* Output area — fills remaining space */}
+      <div className="flex min-h-0 flex-1 flex-col space-y-3 overflow-y-auto p-3">
         <RunPanel stdout={stdout} stderr={stderr} />
         <TestResults results={testResults} />
 

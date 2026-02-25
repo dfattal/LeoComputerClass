@@ -41,7 +41,7 @@ export default async function WeekPage({
 
   return (
     <>
-      <LessonSidebar currentWeek={week} />
+      <LessonSidebar currentWeek={week} weeks={slugs} />
       <SplitLayout
         leftPanel={
           <ContentPanel

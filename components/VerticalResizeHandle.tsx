@@ -2,29 +2,29 @@
 
 import { useCallback, useRef } from "react";
 
-export default function ResizeHandle({
+export default function VerticalResizeHandle({
   onResize,
   onResizeEnd,
   onStepResize,
   ratio,
 }: {
-  onResize: (deltaX: number) => void;
+  onResize: (deltaY: number) => void;
   onResizeEnd: () => void;
   onStepResize?: (direction: number) => void;
   ratio?: number;
 }) {
-  const startX = useRef(0);
+  const startY = useRef(0);
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
-      startX.current = e.clientX;
+      startY.current = e.clientY;
       const target = e.currentTarget as HTMLElement;
       target.setPointerCapture(e.pointerId);
 
       const onMove = (ev: PointerEvent) => {
-        const delta = ev.clientX - startX.current;
-        startX.current = ev.clientX;
+        const delta = ev.clientY - startY.current;
+        startY.current = ev.clientY;
         onResize(delta);
       };
 
@@ -43,10 +43,10 @@ export default function ResizeHandle({
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (!onStepResize) return;
-      if (e.key === "ArrowLeft") {
+      if (e.key === "ArrowUp") {
         e.preventDefault();
         onStepResize(-1);
-      } else if (e.key === "ArrowRight") {
+      } else if (e.key === "ArrowDown") {
         e.preventDefault();
         onStepResize(1);
       }
@@ -60,17 +60,17 @@ export default function ResizeHandle({
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="separator"
-      aria-orientation="vertical"
+      aria-orientation="horizontal"
       aria-valuenow={ratio !== undefined ? Math.round(ratio * 100) : undefined}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Resize panels"
-      className="group relative z-10 flex w-0 shrink-0 cursor-col-resize items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+      aria-label="Resize editor and output"
+      className="group relative z-10 flex h-0 shrink-0 cursor-row-resize items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
     >
       {/* Visible bar */}
-      <div className="h-full w-px bg-stone-200 transition-colors group-hover:bg-indigo-400 dark:bg-stone-700 dark:group-hover:bg-indigo-500" />
+      <div className="h-px w-full bg-stone-200 transition-colors group-hover:bg-indigo-400 dark:bg-stone-700 dark:group-hover:bg-indigo-500" />
       {/* Wider invisible hit area */}
-      <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
+      <div className="absolute inset-x-0 -bottom-1.5 -top-1.5" />
     </div>
   );
 }
