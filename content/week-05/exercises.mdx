@@ -1,0 +1,137 @@
+# Week 5 — Exercises: Latches & Flip-Flops
+
+## Setup
+
+You will need your gates from Week 1 and MUX from Week 2. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+```
+
+---
+
+## Warm-Up: State Thinking
+
+These questions test whether you understand the difference between "instant deciders" and "memory circuits." Answer without code!
+
+1. You have a D latch with Enable=0 and Q=1. What does it output if D changes to 0? (Hint: Enable is off — the latch is locked!)
+2. A D flip-flop has Q=0. The clock goes from 0 to 1 with D=1. What's the new Q?
+3. Same flip-flop, now Q=1. The clock stays at 1 (no rising edge). D changes to 0. What's Q?
+
+**Answers:** 1 (locked, holds Q), 1 (rising edge captures D=1), 1 (no edge, holds Q)
+
+---
+
+## Task 1: `sr_latch(s, r, q)`
+
+Build an SR latch — the simplest memory circuit. It takes three inputs — set, reset, and the current stored value — and returns the new stored value.
+
+```python
+def sr_latch(s, r, q):
+    # S=1: set the output to 1
+    # R=1: reset the output to 0
+    # Both 0: hold the current value q
+    #
+    # Formula: OR(s, AND(NOT(r), q))
+    #
+    # Example: sr_latch(1, 0, 0) should return 1 (set!)
+    # Example: sr_latch(0, 0, 1) should return 1 (hold!)
+    # Example: sr_latch(0, 1, 1) should return 0 (reset!)
+    #
+    # Note: S=1 and R=1 at the same time is invalid — the tests won't check it!
+    pass
+```
+
+Test it:
+```python
+print(sr_latch(0, 0, 0))  # should print 0 (hold 0)
+print(sr_latch(0, 0, 1))  # should print 1 (hold 1)
+print(sr_latch(1, 0, 0))  # should print 1 (set!)
+print(sr_latch(0, 1, 1))  # should print 0 (reset!)
+```
+
+---
+
+## Task 2: `d_latch(d, enable, q)`
+
+Build a D latch. When enable is 1, the output copies D (transparent). When enable is 0, the output holds its previous value Q (locked).
+
+Here's the big reveal: this is just a MUX!
+
+```python
+def d_latch(d, enable, q):
+    # Enable=1: output follows D (transparent)
+    # Enable=0: output holds Q (locked)
+    #
+    # Think: mux(hold_value, new_value, selector)
+    #
+    # Example: d_latch(1, 1, 0) should return 1 (enabled, copy D)
+    # Example: d_latch(1, 0, 0) should return 0 (disabled, hold Q)
+    pass
+```
+
+Test it:
+```python
+print(d_latch(0, 0, 0))  # should print 0 (locked, hold 0)
+print(d_latch(1, 0, 0))  # should print 0 (locked, hold 0)
+print(d_latch(0, 0, 1))  # should print 1 (locked, hold 1)
+print(d_latch(1, 0, 1))  # should print 1 (locked, hold 1)
+print(d_latch(0, 1, 1))  # should print 0 (transparent, copy D=0)
+print(d_latch(1, 1, 0))  # should print 1 (transparent, copy D=1)
+```
+
+---
+
+## Task 3: `d_flip_flop(d, clk, clk_prev, q)`
+
+Build a D flip-flop — it captures D **only** on the rising edge of the clock (when clk goes from 0 to 1). Otherwise, it holds Q.
+
+```python
+def d_flip_flop(d, clk, clk_prev, q):
+    # Step 1: Detect the rising edge
+    #         rising = AND(clk, NOT(clk_prev))
+    #
+    # Step 2: Use a MUX to pick between hold (q) and capture (d)
+    #         return mux(q, d, rising)
+    #
+    # Example: d_flip_flop(1, 1, 0, 0) should return 1 (rising edge, capture D=1)
+    # Example: d_flip_flop(1, 1, 1, 0) should return 0 (no edge, hold Q=0)
+    pass
+```
+
+Test it:
+```python
+print(d_flip_flop(1, 0, 0, 0))  # should print 0 (no edge, hold)
+print(d_flip_flop(1, 1, 0, 0))  # should print 1 (rising edge! capture D=1)
+print(d_flip_flop(1, 1, 1, 0))  # should print 0 (clock high but no edge, hold)
+print(d_flip_flop(0, 1, 0, 1))  # should print 0 (rising edge, capture D=0)
+print(d_flip_flop(1, 0, 1, 1))  # should print 1 (falling edge, hold)
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Use only your gate functions (AND, OR, NOT, XOR) and `mux`
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `sr_latch`, `d_latch`, `d_flip_flop` functions
+2. All tests passing

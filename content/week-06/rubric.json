@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "All functions (reg_bit, reg4, mux4, reg_file_read) return correct outputs for all test cases"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 20,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'"
+  },
+  {
+    "criterion": "Composition from gates",
+    "weight": 25,
+    "description": "reg_bit uses mux; reg4 applies reg_bit per bit; mux4 uses three mux calls; reg_file_read uses mux4"
+  },
+  {
+    "criterion": "Bit manipulation",
+    "weight": 15,
+    "description": "Correct use of get_bit to extract bits and shift/OR to reassemble in reg4"
+  }
+]

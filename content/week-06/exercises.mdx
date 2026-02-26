@@ -1,0 +1,178 @@
+# Week 6 — Exercises: Registers & Register File
+
+## Setup
+
+You will need your gates from Week 1, MUX from Week 2, and `get_bit` from Week 2. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+```
+
+---
+
+## Warm-Up: List Practice
+
+Try these in your head first, then check with code:
+
+```python
+regs = [5, 10, 15, 0]
+print(regs[0])    # what prints?
+print(regs[2])    # what prints?
+print(regs[3])    # what prints?
+```
+
+**Answers:** 5, 15, 0
+
+---
+
+## Task 1: `reg_bit(d, load, q)`
+
+Build a 1-bit register. When load=1, it stores the new data d. When load=0, it holds the old value q. (This is the valve from the lesson — open lets data through, closed keeps the old value.)
+
+```python
+def reg_bit(d, load, q):
+    # load=1: output the new data d
+    # load=0: output the held value q
+    #
+    # This is just a MUX! Think: mux(hold_value, new_value, selector)
+    #
+    # Example: reg_bit(1, 1, 0) should return 1 (load new data)
+    # Example: reg_bit(1, 0, 0) should return 0 (hold old value)
+    pass
+```
+
+Test it:
+```python
+print(reg_bit(0, 0, 0))  # should print 0 (hold 0)
+print(reg_bit(1, 0, 0))  # should print 0 (hold 0)
+print(reg_bit(0, 0, 1))  # should print 1 (hold 1)
+print(reg_bit(1, 1, 0))  # should print 1 (load 1)
+print(reg_bit(0, 1, 1))  # should print 0 (load 0)
+```
+
+---
+
+## Task 2: `reg4(d, load, q)`
+
+Build a 4-bit register. It takes two numbers (d and q, both 0–15) and a load signal. When load=1, it stores the new number d. When load=0, it holds the old number q.
+
+Use the same bit-extract → process → reassemble pattern from Week 4's `add4`.
+
+```python
+def reg4(d, load, q):
+    # Step 1: Extract bits from d and q using get_bit
+    #         d0 = get_bit(d, 0) ... d3 = get_bit(d, 3)
+    #         q0 = get_bit(q, 0) ... q3 = get_bit(q, 3)
+    #
+    # Step 2: Run each bit pair through reg_bit
+    #         new0 = reg_bit(d0, load, q0)
+    #         ... up to new3
+    #
+    # Step 3: Reassemble into a number
+    #         return (new3 << 3) | (new2 << 2) | (new1 << 1) | new0
+    #
+    # Example: reg4(9, 1, 5) should return 9 (load new value)
+    # Example: reg4(9, 0, 5) should return 5 (hold old value)
+    pass
+```
+
+Test it:
+```python
+print(reg4(0, 0, 0))    # should print 0 (hold 0)
+print(reg4(15, 0, 0))   # should print 0 (hold 0, ignore d)
+print(reg4(9, 1, 5))    # should print 9 (load 9)
+print(reg4(9, 0, 5))    # should print 5 (hold 5)
+print(reg4(0, 1, 15))   # should print 0 (load 0)
+print(reg4(15, 1, 0))   # should print 15 (load 15)
+```
+
+---
+
+## Task 3: `mux4(a, b, c, d, s1, s0)`
+
+Build a 4-way multiplexer — the tournament bracket! It picks one of four values based on a 2-bit selector (s1, s0).
+
+```python
+def mux4(a, b, c, d, s1, s0):
+    # Use three mux calls — like a tournament bracket!
+    #
+    # Round 1: s0 picks between a/b and between c/d
+    #   top = mux(a, b, s0)     — picks a if s0=0, b if s0=1
+    #   bottom = mux(c, d, s0)  — picks c if s0=0, d if s0=1
+    #
+    # Final: s1 picks between the two round-1 winners
+    #   return mux(top, bottom, s1)
+    #
+    # Address map: (s1=0,s0=0)→a, (s1=0,s0=1)→b, (s1=1,s0=0)→c, (s1=1,s0=1)→d
+    #
+    # Example: mux4(10, 20, 30, 40, 1, 0) should return 30 (address 2 = c)
+    pass
+```
+
+Test it:
+```python
+print(mux4(10, 20, 30, 40, 0, 0))  # should print 10 (address 0)
+print(mux4(10, 20, 30, 40, 0, 1))  # should print 20 (address 1)
+print(mux4(10, 20, 30, 40, 1, 0))  # should print 30 (address 2)
+print(mux4(10, 20, 30, 40, 1, 1))  # should print 40 (address 3)
+```
+
+---
+
+## Task 4: `reg_file_read(regs, addr)`
+
+Build the read port of a register file. Given a list of 4 register values and a 2-bit address (0–3), return the value at that address.
+
+```python
+def reg_file_read(regs, addr):
+    # Step 1: Extract address bits
+    #         s0 = get_bit(addr, 0)
+    #         s1 = get_bit(addr, 1)
+    #
+    # Step 2: Use mux4 to select the register
+    #         return mux4(regs[0], regs[1], regs[2], regs[3], s1, s0)
+    #
+    # Example: reg_file_read([5, 10, 15, 0], 2) should return 15
+    pass
+```
+
+Test it:
+```python
+regs = [5, 10, 15, 0]
+print(reg_file_read(regs, 0))  # should print 5
+print(reg_file_read(regs, 1))  # should print 10
+print(reg_file_read(regs, 2))  # should print 15
+print(reg_file_read(regs, 3))  # should print 0
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Use only your gate functions (AND, OR, NOT, XOR), `mux`, `get_bit`, and the bitwise operators `&`, `|`, `<<`, `>>`
+- For `reg_file_read`, you may use list indexing (`regs[0]`, etc.) to extract register values
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `reg_bit`, `reg4`, `mux4`, `reg_file_read` functions
+2. All tests passing

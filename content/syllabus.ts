@@ -63,7 +63,7 @@ export const weeks: Week[] = [
     title: "Latches & Flip-Flops",
     summary: "Circuits that remember — introducing state",
     phase: 3,
-    status: "planned",
+    status: "published",
   },
   {
     week: 6,
@@ -71,7 +71,7 @@ export const weeks: Week[] = [
     title: "Registers & Register File",
     summary: "Named storage bins the CPU can read and write",
     phase: 3,
-    status: "planned",
+    status: "published",
   },
   {
     week: 7,

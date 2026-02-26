@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# reference docs (not part of the site)
+Leo-David-Computer-Architecture-Syllabus-and-Site-Guide.md

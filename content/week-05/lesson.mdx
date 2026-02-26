@@ -1,0 +1,270 @@
+# Week 5 — Latches & Flip-Flops
+
+## Phase 3: Memory
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand why circuits need memory (and what changes without it)
+- Build an SR latch — the simplest memory circuit
+- Build a D latch using the MUX you already know
+- Understand what a clock signal does
+- Build a D flip-flop that only updates on the clock's rising edge
+- Model "state" as a function parameter in Python
+
+---
+
+## Big Idea — The Etch A Sketch Problem
+
+Every circuit you've built so far is like a calculator with no memory. You type 5 + 3, it shows 8 — and the moment you change the inputs, the 8 vanishes. It doesn't remember anything.
+
+(Remember Week 2? We called those **"instant deciders"** — inputs in, output out, done.)
+
+But think about your actual calculator app. It shows your answer even after you let go of the buttons. It **remembers**.
+
+Or think about an Etch A Sketch. You draw a line, lift the knobs, and the line **stays**. The screen remembers where you drew. That's fundamentally different from a magnifying glass, which only shows what's there right now.
+
+This week, you'll build the first circuit that can **remember** — a tiny 1-bit sticky note inside a computer.
+
+---
+
+## Why Memory Matters
+
+Without memory, a computer can only do one calculation at a time, and the result instantly disappears. It can't:
+
+- **Count** — counting means remembering what number you're on
+- **Follow steps** — following step 2 means remembering you finished step 1
+- **Store results** — if you add two numbers, where does the answer go?
+
+Every program you've ever used — games, browsers, apps — needs memory. Your circuits from Weeks 1–4 are the "thinking" part of a computer. This week, you start building the "remembering" part.
+
+---
+
+## The SR Latch — Simplest Memory
+
+### The Sticky Note Analogy
+
+Imagine a sticky note on your desk. It says either "0" or "1." Two buttons control it:
+
+- **S button (Set):** Press it, and the note changes to **1**
+- **R button (Reset):** Press it, and the note changes to **0**
+- **Neither button:** The note stays as it is — it **holds** its value
+
+That's an SR latch! **S** for "set to 1," **R** for "reset to 0."
+
+### How It Works
+
+The SR latch takes three inputs:
+- `s` — the set signal (1 = set the output to 1)
+- `r` — the reset signal (1 = reset the output to 0)
+- `q` — the current stored value (what the sticky note says right now)
+
+And it outputs the **new** value of q.
+
+| S | R | Q (current) | New Q | What happened? |
+|---|---|-------------|-------|----------------|
+| 0 | 0 | 0           |   0   | Hold (stayed 0) |
+| 0 | 0 | 1           |   1   | Hold (stayed 1) |
+| 1 | 0 | 0           |   1   | Set! (changed to 1) |
+| 1 | 0 | 1           |   1   | Set! (already 1) |
+| 0 | 1 | 0           |   0   | Reset! (already 0) |
+| 0 | 1 | 1           |   0   | Reset! (changed to 0) |
+
+**The rule:** Set turns it on. Reset turns it off. Neither = hold.
+
+### Building It from Gates
+
+Think about what the formula needs to do:
+- If S=1, output 1 (set wins)
+- If S=0 and R=0, output Q (hold)
+- If S=0 and R=1, output 0 (reset)
+
+Can you see it? The output is 1 if **either** S is 1 (we're setting it) **or** the note already says 1 AND we're not resetting:
+
+> new_q = OR(S, AND(NOT(R), Q))
+
+Let's verify every row:
+
+- S=0, R=0, Q=0: OR(0, AND(1, 0)) = OR(0, 0) = **0** (hold 0 ✓)
+- S=0, R=0, Q=1: OR(0, AND(1, 1)) = OR(0, 1) = **1** (hold 1 ✓)
+- S=1, R=0, Q=0: OR(1, AND(1, 0)) = OR(1, 0) = **1** (set! ✓)
+- S=0, R=1, Q=1: OR(0, AND(0, 1)) = OR(0, 0) = **0** (reset! ✓)
+
+It works! Three gates — OR, AND, NOT — and you've got memory.
+
+**Important rule:** You should never set S=1 and R=1 at the same time. That's like pressing "on" and "off" simultaneously — it doesn't make sense! In real circuits, this creates unpredictable behavior.
+
+---
+
+## The D Latch — A Simpler, Safer Design
+
+The SR latch has that annoying rule: "don't press S and R at the same time." Engineers got tired of worrying about this and invented the **D latch** (D for "Data").
+
+### How It Works
+
+Instead of separate Set and Reset buttons, the D latch has:
+- **D (Data):** The value you want to store (0 or 1)
+- **Enable:** A switch that controls whether the latch is listening
+
+The rule is beautifully simple:
+- **Enable = 1:** The output copies D (the latch is "transparent" — data flows straight through)
+- **Enable = 0:** The output holds its previous value (the latch is "locked" — ignores D)
+
+| D | Enable | Q (current) | New Q | What happened? |
+|---|--------|-------------|-------|----------------|
+| 0 | 0      | 0           |   0   | Locked (hold 0) |
+| 0 | 0      | 1           |   1   | Locked (hold 1) |
+| 1 | 0      | 0           |   0   | Locked (hold 0) |
+| 1 | 0      | 1           |   1   | Locked (hold 1) |
+| 0 | 1      | 0           |   0   | Transparent (copy D=0) |
+| 0 | 1      | 1           |   0   | Transparent (copy D=0) |
+| 1 | 1      | 0           |   1   | Transparent (copy D=1) |
+| 1 | 1      | 1           |   1   | Transparent (copy D=1) |
+
+Notice: when Enable=0, New Q always equals current Q (hold). When Enable=1, New Q always equals D (copy).
+
+### Building It — The MUX Surprise!
+
+Here's the coolest part. Look at the D latch rule again:
+- Enable = 0 → output = Q (the old value)
+- Enable = 1 → output = D (the new data)
+
+Wait a second... "pick one of two values based on a selector signal." That's a **MUX!** You built this in Week 2!
+
+```
+new_q = mux(q, d, enable)
+```
+
+When enable=0, the MUX picks q (hold). When enable=1, it picks d (transparent). **That's the entire D latch!**
+
+The D latch is literally just a MUX where one input is "what I had before" and the other is "new data." All that fancy memory behavior? It's a MUX with a feedback loop. Mind-blowing, right?
+
+---
+
+## The Clock — The Heartbeat of a Computer
+
+Alright, there's one more piece of the puzzle. Right now, our D latch copies data whenever Enable is 1. But in a real computer, you need more precise control — you want everything to update at **exactly the same instant**.
+
+### The Metronome Analogy
+
+Think of an orchestra. All the musicians need to play in sync. So there's a conductor waving a baton: tick... tick... tick. Everyone moves to the next note at the same time.
+
+A computer has its own conductor — the **clock signal**. It's a signal that goes: 0, 1, 0, 1, 0, 1... over and over, like a heartbeat.
+
+```
+Clock: _____       _____       _____
+      |     |     |     |     |     |
+______|     |_____|     |_____|     |______
+
+      ↑           ↑           ↑
+  rising       rising      rising
+  edge         edge        edge
+```
+
+When the clock goes from 0 to 1 — that quick upward moment — it's called a **rising edge**. That's the "tick." The circuit updates on the tick and holds still the rest of the time.
+
+Your phone's processor has a clock that ticks **billions** of times per second. But the concept is the same: tick, update, hold, tick, update, hold.
+
+---
+
+## The D Flip-Flop — Edge-Triggered Memory
+
+A D flip-flop is like a D latch, but stricter. Instead of being transparent whenever Enable is 1, a flip-flop only looks at D during the **rising edge** of the clock — the exact moment the clock goes from 0 to 1.
+
+### Why Bother With Edges?
+
+With a D latch, if Enable is held at 1, the output keeps changing every time D wiggles. That's messy — it's like a classroom where kids can shout answers anytime.
+
+A flip-flop is like a teacher who says: "I'll only listen when I ring this bell." **Ring!** Everyone answers once. Then the teacher stops listening until the next bell. Much more orderly!
+
+### Detecting the Rising Edge
+
+How do we detect the moment the clock goes from 0 to 1? We need two pieces of information:
+- `clk` — what the clock is **right now**
+- `clk_prev` — what the clock was **a moment ago**
+
+A rising edge happens when: **clk is 1 AND clk_prev was 0**
+
+```
+rising_edge = AND(clk, NOT(clk_prev))
+```
+
+Let's check:
+- clk=0, clk_prev=0 → AND(0, 1) = 0 (clock is low, no edge)
+- clk=0, clk_prev=1 → AND(0, 0) = 0 (falling edge, not rising)
+- clk=1, clk_prev=0 → AND(1, 1) = **1** (rising edge! ✓)
+- clk=1, clk_prev=1 → AND(1, 0) = 0 (clock is high but no edge)
+
+### The D Flip-Flop Formula
+
+Once you detect the rising edge, the flip-flop is just a MUX (just like the D latch):
+
+```python
+def d_flip_flop(d, clk, clk_prev, q):
+    rising = AND(clk, NOT(clk_prev))
+    return mux(q, d, rising)
+```
+
+- Rising edge (rising=1): MUX picks d → capture new data!
+- No rising edge (rising=0): MUX picks q → hold old value!
+
+### Tracing Through Time
+
+Let's say D=1, and the clock goes 0 → 1 → 1 → 0 → 1:
+
+| Step | D | clk | clk_prev | rising? | Q (before) | Q (after) |
+|------|---|-----|----------|---------|-----------|-----------|
+| 1    | 1 |  0  |    0     |   No    |     0     |     0     |
+| 2    | 1 |  1  |    0     | **Yes** |     0     |   **1**   |
+| 3    | 1 |  1  |    1     |   No    |     1     |     1     |
+| 4    | 1 |  0  |    1     |   No    |     1     |     1     |
+| 5    | 1 |  1  |    0     | **Yes** |     1     |     1     |
+
+See? Q only changes on the rising edges (steps 2 and 5). The rest of the time, it holds steady.
+
+---
+
+## Python Concept: State as an Input
+
+Something new happened this week. In Weeks 1–4, every function was **stateless** — the output depended only on the current inputs. Plug in the same inputs, get the same output, every time.
+
+This week, functions have a new kind of input: **Q, the current state**. The output depends on the inputs AND what happened before.
+
+```python
+# Week 1-4 style: stateless (instant decider)
+AND(1, 0)  # always returns 0, no matter what happened before
+
+# Week 5 style: stateful (remembers)
+d_latch(1, 0, q=0)  # returns 0 (hold, previous was 0)
+d_latch(1, 0, q=1)  # returns 1 (hold, previous was 1)
+# Same D and Enable, but different output because of different history!
+```
+
+This is a fundamental shift. Combinational circuits (Weeks 1–4) are like asking "what's 2+2?" — the answer is always 4. Sequential circuits (this week) are like asking "what's next?" — the answer depends on where you are right now.
+
+---
+
+## Think About It
+
+1. **Why can't a computer work without memory?** (What would happen if your calculator forgot the result the instant after computing it?)
+
+2. **Why did engineers invent the D latch to replace the SR latch?** (Hint: what problem does having a single "D" input eliminate?)
+
+3. **How is a D latch just a MUX?** (Draw the connection between "pick between two values" and "hold or update.")
+
+4. **Why do flip-flops use edges instead of levels?** (What goes wrong if a latch is transparent for a long time while its input is changing?)
+
+5. **The rising edge detector `AND(clk, NOT(clk_prev))` is itself a combinational circuit — an "instant decider." But it enables sequential behavior. How does something with no memory help create memory?**
+
+---
+
+## What You Just Built
+
+This is a huge milestone. You just crossed from **combinational** circuits (that only compute) to **sequential** circuits (that remember). Everything that makes a computer feel like a computer — saving files, running programs step by step, counting — depends on this ability to hold onto a value.
+
+Your D flip-flop is the fundamental building block of all computer memory. A single flip-flop stores 1 bit. Line up 4 of them, and you can store a 4-bit number. Line up 64 of them, and you can store a number big enough for most video games.
+
+Next week, you'll do exactly that — build **registers** (multi-bit storage) and a **register file** (a small bank of named storage bins that the CPU can read and write).

@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "All functions (sr_latch, d_latch, d_flip_flop) return correct outputs for all input combinations"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 25,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'"
+  },
+  {
+    "criterion": "Composition from gates",
+    "weight": 20,
+    "description": "d_latch uses mux; d_flip_flop detects rising edge with AND/NOT and uses mux; sr_latch uses OR/AND/NOT"
+  },
+  {
+    "criterion": "State modeling",
+    "weight": 15,
+    "description": "Correct use of q parameter as current state, with functions returning new state based on inputs and current state"
+  }
+]
