@@ -120,7 +120,7 @@ export default function SplitLayout({
       </div>
 
       {/* Right: code panel */}
-      <div className="flex min-h-[50vh] flex-1 flex-col overflow-hidden lg:min-h-0">
+      <div className="flex flex-1 flex-col overflow-hidden">
         {rightPanel}
       </div>
     </div>

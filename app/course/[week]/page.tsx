@@ -3,10 +3,7 @@ import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
 import { getWeekSlugs, loadWeekContent } from "@/lib/lessons/loadLesson";
 import { mdxComponents } from "@/lib/lessons/mdxComponents";
-import LessonSidebar from "@/components/LessonSidebar";
-import ContentPanel from "@/components/ContentPanel";
-import SplitLayout from "@/components/SplitLayout";
-import CodeWorkspace from "@/components/CodeWorkspace";
+import CourseShell from "@/components/CourseShell";
 
 export function generateStaticParams() {
   return getWeekSlugs().map((week) => ({ week }));
@@ -40,19 +37,12 @@ export default async function WeekPage({
   });
 
   return (
-    <>
-      <LessonSidebar currentWeek={week} weeks={slugs} />
-      <SplitLayout
-        leftPanel={
-          <ContentPanel
-            lessonContent={lessonContent}
-            exercisesContent={exercisesContent}
-          />
-        }
-        rightPanel={
-          <CodeWorkspace weekSlug={week} tests={weekData.tests} />
-        }
-      />
-    </>
+    <CourseShell
+      weekSlug={week}
+      tests={weekData.tests}
+      lessonContent={lessonContent}
+      exercisesContent={exercisesContent}
+      currentWeek={week}
+    />
   );
 }
