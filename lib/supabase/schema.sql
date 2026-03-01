@@ -103,10 +103,14 @@ create policy "Instructors can update progress"
     exists (select 1 from profiles where id = auth.uid() and role = 'instructor')
   );
 
--- Seed initial lessons
+-- Seed initial lessons (keep in sync with content/syllabus.ts published weeks)
 insert into lessons (week_number, slug, title) values
   (1, 'week-01', 'Boolean Algebra & Truth Tables'),
-  (2, 'week-02', 'Gates as Circuits')
+  (2, 'week-02', 'Gates as Circuits'),
+  (3, 'week-03', 'Binary Numbers & The Half Adder'),
+  (4, 'week-04', 'Full Adder, Ripple-Carry & Subtraction'),
+  (5, 'week-05', 'Latches & Flip-Flops'),
+  (6, 'week-06', 'Registers & Register File')
 on conflict (slug) do nothing;
 
 -- Create a trigger to auto-create profile on signup

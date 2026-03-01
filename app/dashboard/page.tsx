@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { getWeekSlugs } from "@/lib/lessons/loadLesson";
-import { phases, getWeeksForPhase } from "@/content/syllabus";
+import { weeks as syllabusWeeks, phases, getWeeksForPhase } from "@/content/syllabus";
 
 export default async function DashboardPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const weeks = getWeekSlugs();
 
   if (!supabaseUrl || supabaseUrl === "your-supabase-url") {
     return (
@@ -80,6 +78,19 @@ export default async function DashboardPage() {
   }
 
   const serviceClient = await createServiceClient();
+
+  // Sync published syllabus weeks into DB (idempotent upsert)
+  const publishedWeeks = syllabusWeeks.filter((w) => w.status === "published");
+  if (publishedWeeks.length > 0) {
+    await serviceClient.from("lessons").upsert(
+      publishedWeeks.map((w) => ({
+        week_number: w.week,
+        slug: w.slug,
+        title: w.title,
+      })),
+      { onConflict: "slug" }
+    );
+  }
 
   // Fetch lessons
   const { data: lessons } = await serviceClient
