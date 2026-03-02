@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     // Fetch latest submission for this user + lesson
     const { data: submission } = await serviceClient
       .from("submissions")
-      .select("id, ai_feedback, instructor_feedback, status, test_results")
+      .select("id, code, ai_feedback, instructor_feedback, status, test_results")
       .eq("user_id", user.id)
       .eq("lesson_id", lesson.id)
       .order("created_at", { ascending: false })

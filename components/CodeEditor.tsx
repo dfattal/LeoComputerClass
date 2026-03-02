@@ -26,9 +26,11 @@ print("NOT(0) =", NOT(0))
 export default function CodeEditor({
   weekSlug,
   onChange,
+  fallbackCode,
 }: {
   weekSlug: string;
   onChange: (code: string) => void;
+  fallbackCode?: string;
 }) {
   const storageKey = `code-draft-${weekSlug}`;
   const [code, setCode] = useState<string>("");
@@ -36,11 +38,11 @@ export default function CodeEditor({
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
-    const initial = saved || STARTER_CODE;
+    const initial = saved || fallbackCode || STARTER_CODE;
     setCode(initial);
     onChange(initial);
     setMounted(true);
-  }, [storageKey, onChange]);
+  }, [storageKey, onChange, fallbackCode]);
 
   function handleChange(value: string | undefined) {
     const newCode = value || "";

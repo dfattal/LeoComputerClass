@@ -20,6 +20,7 @@ const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
 
 interface ExistingSubmission {
   id: string;
+  code: string;
   ai_feedback: Record<string, unknown> | null;
   instructor_feedback: string | null;
   status: string;
@@ -159,6 +160,7 @@ export default function CourseShell({
 
       setExistingSubmission({
         id: submissionId,
+        code,
         ai_feedback: feedback,
         instructor_feedback: null,
         status: feedback ? "reviewed" : "submitted",
@@ -296,6 +298,7 @@ export default function CourseShell({
               <EditorPanel
                 weekSlug={weekSlug}
                 onCodeChange={handleCodeChange}
+                fallbackCode={existingSubmission?.code}
               />
             }
           />
