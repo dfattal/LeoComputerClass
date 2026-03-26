@@ -46,7 +46,7 @@ export default async function AdminPage() {
   // Fetch all submissions with lesson and profile info
   const { data: submissions } = await serviceClient
     .from("submissions")
-    .select("*, lessons(slug, title), profiles(display_name)")
+    .select("*, lessons(slug, title, class_slug), profiles(display_name)")
     .order("created_at", { ascending: false });
 
   // Fetch all users via admin API for display names and avatars

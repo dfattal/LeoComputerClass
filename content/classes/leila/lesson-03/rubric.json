@@ -1,0 +1,5 @@
+[
+  {"criterion": "Correct complement", "weight": 40, "description": "Base pairing is correct"},
+  {"criterion": "Correct reversal", "weight": 40, "description": "String is properly reversed after complementing"},
+  {"criterion": "Code reuse", "weight": 20, "description": "Ideally reuses complement logic"}
+]

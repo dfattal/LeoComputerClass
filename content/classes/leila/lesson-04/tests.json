@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "transcribe",
+    "cases": [
+      {"name": "transcribe('ATCG')", "args": ["ATCG"], "expected": "AUCG"},
+      {"name": "transcribe('TTTT')", "args": ["TTTT"], "expected": "UUUU"},
+      {"name": "transcribe('ACGACG')", "args": ["ACGACG"], "expected": "ACGACG"},
+      {"name": "transcribe('GATTACA')", "args": ["GATTACA"], "expected": "GAUUACA"}
+    ]
+  }
+]

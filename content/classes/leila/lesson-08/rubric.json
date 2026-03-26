@@ -1,0 +1,6 @@
+[
+  {"criterion": "Finds target", "weight": 25, "description": "Correctly locates the target sequence"},
+  {"criterion": "Replaces correctly", "weight": 35, "description": "Replaces only the first occurrence"},
+  {"criterion": "Handles not found", "weight": 20, "description": "Returns original DNA when target not found"},
+  {"criterion": "Different lengths", "weight": 20, "description": "Works when replacement is different length than target"}
+]

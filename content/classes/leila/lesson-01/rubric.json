@@ -1,0 +1,5 @@
+[
+  {"criterion": "Correct base counting", "weight": 50, "description": "Returns correct counts for all four bases"},
+  {"criterion": "Returns dictionary", "weight": 30, "description": "Returns a dictionary with keys A, T, C, G"},
+  {"criterion": "Handles edge cases", "weight": 20, "description": "Works for strings with zero of some base"}
+]

@@ -1,0 +1,14 @@
+{
+  "type": "crispr",
+  "scenario": {
+    "title": "Edit the Fur Gene",
+    "mission": "Replace the fur target to turn the mountain cat into a snow cat.",
+    "dna": "AATCGGTTACGA",
+    "target": "CGG",
+    "replacement": "AAA",
+    "traitsBefore": {"fur": "brown", "eyes": "green", "tail": "long"},
+    "traitsAfter": {"fur": "white", "eyes": "green", "tail": "long"}
+  },
+  "resultFn": "crispr_edit",
+  "demoArgs": ["AATCGGTTACGA", "CGG", "AAA"]
+}

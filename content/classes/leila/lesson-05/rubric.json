@@ -1,0 +1,6 @@
+[
+  {"criterion": "Reads codons correctly", "weight": 40, "description": "Reads RNA 3 letters at a time"},
+  {"criterion": "Uses codon table", "weight": 30, "description": "Correctly looks up amino acids from codons"},
+  {"criterion": "Stops at stop codon", "weight": 20, "description": "Stops translating when hitting a stop codon"},
+  {"criterion": "Returns protein string", "weight": 10, "description": "Returns a clean string of amino acid letters"}
+]

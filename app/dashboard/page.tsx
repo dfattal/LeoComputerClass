@@ -1,9 +1,34 @@
 import Link from "next/link";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { weeks as syllabusWeeks, phases, getWeeksForPhase } from "@/content/syllabus";
+import { classes } from "@/content/classes";
 
 export default async function DashboardPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  // Load all class syllabi
+  const classSyllabi: Record<
+    string,
+    {
+      phases: { phase: number; name: string; weeks: number[] }[];
+      weeks: {
+        week: number;
+        slug: string;
+        title: string;
+        status: string;
+        phase: number;
+        summary?: string;
+      }[];
+    }
+  > = {};
+  for (const cls of classes) {
+    if (cls.comingSoon) continue;
+    try {
+      const mod = await import(`@/content/classes/${cls.slug}/syllabus`);
+      classSyllabi[cls.slug] = { phases: mod.phases, weeks: mod.weeks };
+    } catch {
+      // Skip classes without syllabus
+    }
+  }
 
   if (!supabaseUrl || supabaseUrl === "your-supabase-url") {
     return (
@@ -12,48 +37,67 @@ export default async function DashboardPage() {
         <p className="mb-6 text-stone-500">
           Connect Supabase to track your progress. For now, explore the lessons:
         </p>
-        <div className="space-y-6">
-          {phases.map((phase) => {
-            const phaseWeeks = getWeeksForPhase(phase.phase);
+        {classes
+          .filter((cls) => !cls.comingSoon)
+          .map((cls) => {
+            const syllabus = classSyllabi[cls.slug];
+            if (!syllabus) return null;
+            const getWeeksForPhase = (phaseNum: number) =>
+              syllabus.weeks.filter((w) => w.phase === phaseNum);
             return (
-              <div key={phase.phase}>
-                <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
-                  Phase {phase.phase}: {phase.name}
+              <div key={cls.slug} className="mb-10">
+                <h2 className="mb-4 text-lg font-bold text-stone-800 dark:text-stone-200">
+                  {cls.name}
                 </h2>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {phaseWeeks.map((w) => {
-                    const isPlanned = w.status === "planned";
-                    if (isPlanned) {
-                      return (
-                        <div
-                          key={w.slug}
-                          className="rounded-lg border border-stone-200 p-4 dark:border-stone-800"
-                        >
-                          <h3 className="font-semibold text-stone-400">
-                            Week {w.week}: {w.title}
-                          </h3>
-                          <p className="text-sm text-stone-400">Coming soon</p>
-                        </div>
-                      );
-                    }
+                <div className="space-y-6">
+                  {syllabus.phases.map((phase) => {
+                    const phaseWeeks = getWeeksForPhase(phase.phase);
                     return (
-                      <Link
-                        key={w.slug}
-                        href={`/course/${w.slug}`}
-                        className="rounded-lg border border-stone-200 p-4 transition-colors hover:bg-stone-50 dark:border-stone-800 dark:hover:bg-stone-900"
-                      >
-                        <h3 className="font-semibold">
-                          Week {w.week}: {w.title}
+                      <div key={phase.phase}>
+                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                          Phase {phase.phase}: {phase.name}
                         </h3>
-                        <p className="text-sm text-stone-500">Start lesson</p>
-                      </Link>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {phaseWeeks.map((w) => {
+                            const isPlanned = w.status === "planned";
+                            if (isPlanned) {
+                              return (
+                                <div
+                                  key={w.slug}
+                                  className="rounded-lg border border-stone-200 p-4 dark:border-stone-800"
+                                >
+                                  <h4 className="font-semibold text-stone-400">
+                                    Week {w.week}: {w.title}
+                                  </h4>
+                                  <p className="text-sm text-stone-400">
+                                    Coming soon
+                                  </p>
+                                </div>
+                              );
+                            }
+                            return (
+                              <Link
+                                key={w.slug}
+                                href={`/classes/${cls.slug}/${w.slug}`}
+                                className="rounded-lg border border-stone-200 p-4 transition-colors hover:bg-stone-50 dark:border-stone-800 dark:hover:bg-stone-900"
+                              >
+                                <h4 className="font-semibold">
+                                  Week {w.week}: {w.title}
+                                </h4>
+                                <p className="text-sm text-stone-500">
+                                  Start lesson
+                                </p>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
               </div>
             );
           })}
-        </div>
       </div>
     );
   }
@@ -79,20 +123,28 @@ export default async function DashboardPage() {
 
   const serviceClient = await createServiceClient();
 
-  // Sync published syllabus weeks into DB (idempotent upsert)
-  const publishedWeeks = syllabusWeeks.filter((w) => w.status === "published");
-  if (publishedWeeks.length > 0) {
-    await serviceClient.from("lessons").upsert(
-      publishedWeeks.map((w) => ({
-        week_number: w.week,
-        slug: w.slug,
-        title: w.title,
-      })),
-      { onConflict: "slug" }
+  // Sync published syllabus weeks into DB for all active classes
+  for (const cls of classes) {
+    if (cls.comingSoon) continue;
+    const syllabus = classSyllabi[cls.slug];
+    if (!syllabus) continue;
+    const publishedWeeks = syllabus.weeks.filter(
+      (w) => w.status === "published"
     );
+    if (publishedWeeks.length > 0) {
+      await serviceClient.from("lessons").upsert(
+        publishedWeeks.map((w) => ({
+          class_slug: cls.slug,
+          week_number: w.week,
+          slug: w.slug,
+          title: w.title,
+        })),
+        { onConflict: "class_slug,slug" }
+      );
+    }
   }
 
-  // Fetch lessons
+  // Fetch all lessons
   const { data: lessons } = await serviceClient
     .from("lessons")
     .select("*")
@@ -104,7 +156,7 @@ export default async function DashboardPage() {
     .select("*")
     .eq("user_id", user.id);
 
-  // Fetch submissions with test results and feedback
+  // Fetch submissions
   const { data: submissions } = await serviceClient
     .from("submissions")
     .select(
@@ -117,7 +169,6 @@ export default async function DashboardPage() {
     (progress || []).map((p) => [p.lesson_id, p])
   );
 
-  // Build a map of latest submission per lesson
   const submissionMap = new Map<
     string,
     {
@@ -134,9 +185,21 @@ export default async function DashboardPage() {
     }
   }
 
+  // Group lessons by class
+  const lessonsByClass = new Map<string, typeof lessons>();
+  for (const lesson of lessons || []) {
+    const classSlug = lesson.class_slug || "leo";
+    if (!lessonsByClass.has(classSlug)) {
+      lessonsByClass.set(classSlug, []);
+    }
+    lessonsByClass.get(classSlug)!.push(lesson);
+  }
+
   // Overall stats
   const totalLessons = lessons?.length ?? 0;
-  const completedLessons = (progress || []).filter((p) => p.is_complete).length;
+  const completedLessons = (progress || []).filter(
+    (p) => p.is_complete
+  ).length;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
@@ -147,9 +210,10 @@ export default async function DashboardPage() {
             <div
               className="h-full rounded-full bg-indigo-500 transition-all"
               style={{
-                width: totalLessons > 0
-                  ? `${(completedLessons / totalLessons) * 100}%`
-                  : "0%",
+                width:
+                  totalLessons > 0
+                    ? `${(completedLessons / totalLessons) * 100}%`
+                    : "0%",
               }}
             />
           </div>
@@ -159,121 +223,152 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {(lessons || []).map((lesson) => {
-          const prog = progressMap.get(lesson.id);
-          const sub = submissionMap.get(lesson.id);
-          const isComplete = !!prog?.is_complete;
-
-          // Compute test stats
-          const tests = sub?.test_results ?? [];
-          const passed = tests.filter((t) => t.passed).length;
-          const total = tests.length;
-
-          // Determine progress steps
-          const hasSubmitted = !!sub;
-          const allTestsPass = total > 0 && passed === total;
-          const hasAiFeedback = !!sub?.ai_feedback;
-          const hasInstructorFeedback = !!sub?.instructor_feedback;
-
-          // Progress steps: 1=submitted, 2=tests pass, 3=reviewed, 4=instructor feedback
-          let stepsCompleted = 0;
-          if (hasSubmitted) stepsCompleted = 1;
-          if (allTestsPass) stepsCompleted = 2;
-          if (hasAiFeedback) stepsCompleted = 3;
-          if (hasInstructorFeedback) stepsCompleted = 4;
-          const totalSteps = 4;
-
+      {classes
+        .filter((cls) => !cls.comingSoon)
+        .map((cls) => {
+          const classLessons = lessonsByClass.get(cls.slug) || [];
+          if (classLessons.length === 0) return null;
           return (
-            <Link
-              key={lesson.id}
-              href={`/course/${lesson.slug}`}
-              className="group rounded-xl border border-stone-200 p-5 transition-all hover:border-indigo-300 hover:shadow-md dark:border-stone-800 dark:hover:border-indigo-700"
-            >
-              {/* Header */}
-              <div className="mb-3 flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-stone-400">
-                    Week {lesson.week_number}
-                  </p>
-                  <h2 className="mt-0.5 font-semibold text-stone-900 dark:text-stone-100">
-                    {lesson.title}
-                  </h2>
-                </div>
-                {isComplete ? (
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                ) : hasSubmitted ? (
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
-                      <circle cx="12" cy="12" r="9" strokeWidth={2} />
-                    </svg>
-                  </span>
-                ) : (
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-stone-400 dark:bg-stone-800">
-                    <span className="text-xs font-bold">{lesson.week_number}</span>
-                  </span>
-                )}
-              </div>
+            <div key={cls.slug} className="mb-10">
+              <h2 className="mb-4 text-lg font-bold text-stone-800 dark:text-stone-200">
+                {cls.name}
+              </h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {classLessons.map((lesson) => {
+                  const prog = progressMap.get(lesson.id);
+                  const sub = submissionMap.get(lesson.id);
+                  const isComplete = !!prog?.is_complete;
 
-              {/* Progress bar */}
-              <div className="mb-3 flex gap-1">
-                {Array.from({ length: totalSteps }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 flex-1 rounded-full transition-colors ${
-                      i < stepsCompleted
-                        ? isComplete
-                          ? "bg-green-400 dark:bg-green-500"
-                          : "bg-indigo-400 dark:bg-indigo-500"
-                        : "bg-stone-200 dark:bg-stone-800"
-                    }`}
-                  />
-                ))}
-              </div>
+                  const tests = sub?.test_results ?? [];
+                  const passed = tests.filter((t) => t.passed).length;
+                  const total = tests.length;
 
-              {/* Status details */}
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                {!hasSubmitted && (
-                  <span className="text-stone-400">Not started yet</span>
-                )}
-                {hasSubmitted && total > 0 && (
-                  <span
-                    className={`rounded-full px-2 py-0.5 font-medium ${
-                      allTestsPass
-                        ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                        : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
-                    }`}
-                  >
-                    {passed}/{total} tests
-                  </span>
-                )}
-                {hasAiFeedback && (
-                  <span className="rounded-full bg-indigo-100 px-2 py-0.5 font-medium text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
-                    AI reviewed
-                  </span>
-                )}
-                {hasInstructorFeedback && (
-                  <span className="rounded-full bg-violet-100 px-2 py-0.5 font-medium text-violet-700 dark:bg-violet-900 dark:text-violet-300">
-                    Instructor feedback
-                  </span>
-                )}
-              </div>
+                  const hasSubmitted = !!sub;
+                  const allTestsPass = total > 0 && passed === total;
+                  const hasAiFeedback = !!sub?.ai_feedback;
+                  const hasInstructorFeedback = !!sub?.instructor_feedback;
 
-              {/* Last submitted date */}
-              {sub && (
-                <p className="mt-2 text-xs text-stone-400">
-                  Submitted {new Date(sub.created_at).toLocaleDateString()}
-                </p>
-              )}
-            </Link>
+                  let stepsCompleted = 0;
+                  if (hasSubmitted) stepsCompleted = 1;
+                  if (allTestsPass) stepsCompleted = 2;
+                  if (hasAiFeedback) stepsCompleted = 3;
+                  if (hasInstructorFeedback) stepsCompleted = 4;
+                  const totalSteps = 4;
+
+                  return (
+                    <Link
+                      key={lesson.id}
+                      href={`/classes/${cls.slug}/${lesson.slug}`}
+                      className="group rounded-xl border border-stone-200 p-5 transition-all hover:border-indigo-300 hover:shadow-md dark:border-stone-800 dark:hover:border-indigo-700"
+                    >
+                      <div className="mb-3 flex items-start justify-between">
+                        <div>
+                          <p className="text-xs font-medium uppercase tracking-wider text-stone-400">
+                            Week {lesson.week_number}
+                          </p>
+                          <h3 className="mt-0.5 font-semibold text-stone-900 dark:text-stone-100">
+                            {lesson.title}
+                          </h3>
+                        </div>
+                        {isComplete ? (
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300">
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          </span>
+                        ) : hasSubmitted ? (
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300">
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2.5}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 8v4l3 3"
+                              />
+                              <circle cx="12" cy="12" r="9" strokeWidth={2} />
+                            </svg>
+                          </span>
+                        ) : (
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-stone-400 dark:bg-stone-800">
+                            <span className="text-xs font-bold">
+                              {lesson.week_number}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mb-3 flex gap-1">
+                        {Array.from({ length: totalSteps }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`h-1.5 flex-1 rounded-full transition-colors ${
+                              i < stepsCompleted
+                                ? isComplete
+                                  ? "bg-green-400 dark:bg-green-500"
+                                  : "bg-indigo-400 dark:bg-indigo-500"
+                                : "bg-stone-200 dark:bg-stone-800"
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 text-xs">
+                        {!hasSubmitted && (
+                          <span className="text-stone-400">
+                            Not started yet
+                          </span>
+                        )}
+                        {hasSubmitted && total > 0 && (
+                          <span
+                            className={`rounded-full px-2 py-0.5 font-medium ${
+                              allTestsPass
+                                ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                                : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+                            }`}
+                          >
+                            {passed}/{total} tests
+                          </span>
+                        )}
+                        {hasAiFeedback && (
+                          <span className="rounded-full bg-indigo-100 px-2 py-0.5 font-medium text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                            AI reviewed
+                          </span>
+                        )}
+                        {hasInstructorFeedback && (
+                          <span className="rounded-full bg-violet-100 px-2 py-0.5 font-medium text-violet-700 dark:bg-violet-900 dark:text-violet-300">
+                            Instructor feedback
+                          </span>
+                        )}
+                      </div>
+
+                      {sub && (
+                        <p className="mt-2 text-xs text-stone-400">
+                          Submitted{" "}
+                          {new Date(sub.created_at).toLocaleDateString()}
+                        </p>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
-      </div>
     </div>
   );
 }

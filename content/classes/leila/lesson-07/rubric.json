@@ -1,0 +1,5 @@
+[
+  {"criterion": "Correct slicing", "weight": 30, "description": "Extracts the right 3-letter regions from genome"},
+  {"criterion": "Correct trait lookup", "weight": 50, "description": "Maps each region to the correct trait value"},
+  {"criterion": "Returns dictionary", "weight": 20, "description": "Returns dictionary with fur, eyes, tail keys"}
+]

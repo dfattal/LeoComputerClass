@@ -1,0 +1,12 @@
+[
+  {
+    "entry": "crispr_edit",
+    "cases": [
+      {"name": "basic edit", "args": ["AATCGGTTACGA", "CGG", "AAA"], "expected": "AATAAATTACGA"},
+      {"name": "edit at start", "args": ["TTTACGCCC", "TTT", "GGG"], "expected": "GGGACGCCC"},
+      {"name": "edit at end", "args": ["AATCGG", "CGG", "TTT"], "expected": "AATTTT"},
+      {"name": "target not found", "args": ["AAATTT", "CCC", "GGG"], "expected": "AAATTT"},
+      {"name": "different lengths", "args": ["AATCGGTTACGA", "CGG", "T"], "expected": "AATTTACGA"}
+    ]
+  }
+]

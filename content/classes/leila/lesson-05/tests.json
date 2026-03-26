@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "translate",
+    "cases": [
+      {"name": "translate('AUGUUUUAA')", "args": ["AUGUUUUAA"], "expected": "MF"},
+      {"name": "translate('AUGCCCGCUUGA')", "args": ["AUGCCCGCUUGA"], "expected": "MPA"},
+      {"name": "translate('AUGGCUGAA')", "args": ["AUGGCUGAA"], "expected": "MA"},
+      {"name": "translate('AUGUAA')", "args": ["AUGUAA"], "expected": "M"}
+    ]
+  }
+]

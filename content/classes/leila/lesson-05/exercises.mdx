@@ -1,0 +1,54 @@
+# Exercise: Translate RNA to Protein
+
+## Your Task
+
+Write a function called `translate(rna)` that reads an RNA string and returns the protein it codes for.
+
+### How It Works
+
+1. **Read 3 letters at a time** from the RNA string (these are codons)
+2. **Look up** each codon in the `CODON_TABLE` dictionary to find the amino acid
+3. **If you find `"*"`** (a stop codon), stop immediately — don't include the `*` in your result
+4. **If you run out of letters**, stop (some RNA strings don't end with a stop codon)
+5. **Return** all the amino acid letters joined together as a string
+
+### Examples
+
+| Input | Codons | Amino Acids | Output |
+|-------|--------|-------------|--------|
+| `"AUGUUUUAA"` | AUG, UUU, UAA | M, F, STOP | `"MF"` |
+| `"AUGCCCGCUUGA"` | AUG, CCC, GCU, UGA | M, P, A, STOP | `"MPA"` |
+| `"AUGUAA"` | AUG, UAA | M, STOP | `"M"` |
+
+### The Codon Table
+
+Copy this dictionary into your code — it maps every codon to its amino acid:
+
+```python
+CODON_TABLE = {
+    "UUU": "F", "UUC": "F", "UUA": "L", "UUG": "L",
+    "CUU": "L", "CUC": "L", "CUA": "L", "CUG": "L",
+    "AUU": "I", "AUC": "I", "AUA": "I", "AUG": "M",
+    "GUU": "V", "GUC": "V", "GUA": "V", "GUG": "V",
+    "UCU": "S", "UCC": "S", "UCA": "S", "UCG": "S",
+    "CCU": "P", "CCC": "P", "CCA": "P", "CCG": "P",
+    "ACU": "T", "ACC": "T", "ACA": "T", "ACG": "T",
+    "GCU": "A", "GCC": "A", "GCA": "A", "GCG": "A",
+    "UAU": "Y", "UAC": "Y", "UAA": "*", "UAG": "*",
+    "CAU": "H", "CAC": "H", "CAA": "Q", "CAG": "Q",
+    "AAU": "N", "AAC": "N", "AAA": "K", "AAG": "K",
+    "GAU": "D", "GAC": "D", "GAA": "E", "GAG": "E",
+    "UGU": "C", "UGC": "C", "UGA": "*", "UGG": "W",
+    "CGU": "R", "CGC": "R", "CGA": "R", "CGG": "R",
+    "AGU": "S", "AGC": "S", "AGA": "R", "AGG": "R",
+    "GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G",
+}
+```
+
+### Hints
+
+- Use `range(0, len(rna), 3)` to step through the string 3 characters at a time
+- Grab each codon with slicing: `rna[i:i+3]`
+- Use the dictionary to look up what amino acid each codon makes
+- Build up your protein string one amino acid at a time
+- Check if the amino acid is `"*"` — if so, break out of the loop!

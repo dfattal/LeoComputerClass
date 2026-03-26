@@ -1,0 +1,5 @@
+[
+  {"criterion": "Correct pairing", "weight": 60, "description": "A→T, T→A, C→G, G→C all correct"},
+  {"criterion": "Returns string", "weight": 20, "description": "Returns a string, not a list"},
+  {"criterion": "Preserves length", "weight": 20, "description": "Output is same length as input"}
+]

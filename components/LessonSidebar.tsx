@@ -2,23 +2,38 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  phases,
-  weeks as syllabusWeeks,
-  getWeeksForPhase,
-} from "@/content/syllabus";
+
+export interface SidebarPhase {
+  phase: number;
+  name: string;
+  weeks: number[];
+}
+
+export interface SidebarWeek {
+  week: number;
+  slug: string;
+  title: string;
+  status: "published" | "planned";
+  phase: number;
+}
 
 function SidebarNav({
-  currentWeek,
+  phases,
+  weeks,
+  classSlug,
+  currentLesson,
   onSelect,
 }: {
-  currentWeek: string;
+  phases: SidebarPhase[];
+  weeks: SidebarWeek[];
+  classSlug: string;
+  currentLesson: string;
   onSelect?: () => void;
 }) {
   return (
     <nav className="space-y-4 p-4">
       {phases.map((phase) => {
-        const phaseWeeks = getWeeksForPhase(phase.phase);
+        const phaseWeeks = weeks.filter((w) => w.phase === phase.phase);
         return (
           <div key={phase.phase}>
             {/* Phase header */}
@@ -28,7 +43,7 @@ function SidebarNav({
 
             <div className="space-y-0.5">
               {phaseWeeks.map((w) => {
-                const isActive = w.slug === currentWeek;
+                const isActive = w.slug === currentLesson;
                 const isPlanned = w.status === "planned";
 
                 if (isPlanned) {
@@ -49,7 +64,7 @@ function SidebarNav({
                 return (
                   <Link
                     key={w.slug}
-                    href={`/course/${w.slug}`}
+                    href={`/classes/${classSlug}/${w.slug}`}
                     onClick={onSelect}
                     className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all ${
                       isActive
@@ -80,10 +95,15 @@ function SidebarNav({
 }
 
 export default function LessonSidebar({
-  currentWeek,
+  phases,
+  weeks,
+  classSlug,
+  currentLesson,
 }: {
-  currentWeek: string;
-  weeks?: string[]; // kept for backward compat but no longer used
+  phases: SidebarPhase[];
+  weeks: SidebarWeek[];
+  classSlug: string;
+  currentLesson: string;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -112,7 +132,12 @@ export default function LessonSidebar({
 
       {/* Desktop sidebar — always visible on lg+ */}
       <aside className="hidden w-56 shrink-0 overflow-y-auto border-r border-stone-200 dark:border-stone-800 lg:block">
-        <SidebarNav currentWeek={currentWeek} />
+        <SidebarNav
+          phases={phases}
+          weeks={weeks}
+          classSlug={classSlug}
+          currentLesson={currentLesson}
+        />
       </aside>
 
       {/* Mobile overlay */}
@@ -150,7 +175,10 @@ export default function LessonSidebar({
               </button>
             </div>
             <SidebarNav
-              currentWeek={currentWeek}
+              phases={phases}
+              weeks={weeks}
+              classSlug={classSlug}
+              currentLesson={currentLesson}
               onSelect={() => setMobileOpen(false)}
             />
           </aside>

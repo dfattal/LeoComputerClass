@@ -1,0 +1,60 @@
+# RNA to Protein: Translation
+
+## From Instructions to Action
+
+Last lesson, you learned how cells copy DNA into RNA. But RNA is still just *instructions* — a message written in a code. Now it's time for the cell to actually **read** that message and build something with it!
+
+This process is called **translation** — turning the RNA language into the protein language.
+
+## Codons: Three-Letter Words
+
+Here's the cool part: the cell reads RNA **three letters at a time**. Each group of three letters is called a **codon**.
+
+Think of it like this:
+- RNA is a **sentence**
+- Codons are **words** (always exactly 3 letters long)
+- Each word has a **meaning** — an amino acid
+
+```
+RNA:     A U G U U U G C U U A A
+Codons:  AUG | UUU | GCU | UAA
+Meaning:  M  |  F  |  A  | STOP!
+```
+
+## Amino Acids: Building Blocks of Proteins
+
+Each codon tells the cell to add one **amino acid** to a growing chain. Amino acids are like LEGO bricks — snap enough of them together and you get a **protein**!
+
+Proteins do almost everything in your body:
+- **Muscles** are made of protein
+- **Enzymes** that digest your food are proteins
+- **Antibodies** that fight germs are proteins
+- Even your **hair** and **fingernails** are mostly protein!
+
+## The Start and Stop Signals
+
+Two special rules:
+
+1. **AUG = START** (and also codes for methionine, "M") — this codon says "begin reading here!"
+2. **UAA, UAG, UGA = STOP** — these codons say "we're done, stop building!"
+
+When the cell hits a stop codon, it releases the finished protein.
+
+## A Simplified Codon Table
+
+Here are some important codons to know:
+
+| Codon(s) | Amino Acid | Letter |
+|----------|-----------|--------|
+| AUG | Methionine (START) | M |
+| UUU, UUC | Phenylalanine | F |
+| UUA, UUG | Leucine | L |
+| GCU, GCC, GCA, GCG | Alanine | A |
+| GAU, GAC | Aspartic acid | D |
+| UAA, UAG, UGA | **STOP** | * |
+
+Notice that some amino acids have multiple codons? That's like having different spellings for the same word. Nature built in backup options!
+
+## Your Mission
+
+Write a `translate()` function that reads RNA three letters at a time, looks up each codon in a table, and builds a protein string. Stop when you hit a stop codon!

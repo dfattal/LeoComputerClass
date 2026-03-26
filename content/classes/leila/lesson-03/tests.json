@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "reverse_complement",
+    "cases": [
+      {"name": "reverse_complement('ATCG')", "args": ["ATCG"], "expected": "CGAT"},
+      {"name": "reverse_complement('AAAA')", "args": ["AAAA"], "expected": "TTTT"},
+      {"name": "reverse_complement('AATTCCGG')", "args": ["AATTCCGG"], "expected": "CCGGAATT"},
+      {"name": "reverse_complement('GCTA')", "args": ["GCTA"], "expected": "TAGC"}
+    ]
+  }
+]

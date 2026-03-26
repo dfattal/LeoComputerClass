@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 
+/** Resolve a lesson by class + lesson slug, falling back to slug-only for backward compat. */
+async function resolveLesson(
+  serviceClient: Awaited<ReturnType<typeof createServiceClient>>,
+  classSlug: string | null,
+  lessonSlug: string
+) {
+  if (classSlug) {
+    const { data } = await serviceClient
+      .from("lessons")
+      .select("id")
+      .eq("class_slug", classSlug)
+      .eq("slug", lessonSlug)
+      .single();
+    if (data) return data;
+  }
+  // Fallback: slug-only lookup (backward compat for old clients)
+  const { data } = await serviceClient
+    .from("lessons")
+    .select("id")
+    .eq("slug", lessonSlug)
+    .single();
+  return data;
+}
+
 export async function GET(request: Request) {
   try {
     const supabase = await createClient();
@@ -13,19 +37,19 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const weekSlug = searchParams.get("weekSlug");
-    if (!weekSlug) {
-      return NextResponse.json({ error: "Missing weekSlug" }, { status: 400 });
+    // Support both new (classSlug+lessonSlug) and old (weekSlug) param names
+    const classSlug = searchParams.get("classSlug");
+    const lessonSlug =
+      searchParams.get("lessonSlug") || searchParams.get("weekSlug");
+    if (!lessonSlug) {
+      return NextResponse.json(
+        { error: "Missing lessonSlug" },
+        { status: 400 }
+      );
     }
 
     const serviceClient = await createServiceClient();
-
-    // Resolve lesson
-    const { data: lesson } = await serviceClient
-      .from("lessons")
-      .select("id")
-      .eq("slug", weekSlug)
-      .single();
+    const lesson = await resolveLesson(serviceClient, classSlug, lessonSlug);
 
     if (!lesson) {
       return NextResponse.json({ submission: null });
@@ -34,7 +58,9 @@ export async function GET(request: Request) {
     // Fetch latest submission for this user + lesson
     const { data: submission } = await serviceClient
       .from("submissions")
-      .select("id, code, ai_feedback, instructor_feedback, status, test_results")
+      .select(
+        "id, code, ai_feedback, instructor_feedback, status, test_results"
+      )
       .eq("user_id", user.id)
       .eq("lesson_id", lesson.id)
       .order("created_at", { ascending: false })
@@ -56,13 +82,19 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Not authenticated" },
+        { status: 401 }
+      );
     }
 
     const body = await request.json();
-    const { weekSlug, code, stdout, stderr, testResults } = body;
+    // Support both new and old field names
+    const classSlug: string | null = body.classSlug ?? null;
+    const lessonSlug: string = body.lessonSlug ?? body.weekSlug;
+    const { code, stdout, stderr, testResults } = body;
 
-    if (!weekSlug || !code) {
+    if (!lessonSlug || !code) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -70,16 +102,13 @@ export async function POST(request: Request) {
     }
 
     const serviceClient = await createServiceClient();
+    const lesson = await resolveLesson(serviceClient, classSlug, lessonSlug);
 
-    // Resolve lesson by slug
-    const { data: lesson, error: lessonError } = await serviceClient
-      .from("lessons")
-      .select("id")
-      .eq("slug", weekSlug)
-      .single();
-
-    if (lessonError || !lesson) {
-      return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
+    if (!lesson) {
+      return NextResponse.json(
+        { error: "Lesson not found" },
+        { status: 404 }
+      );
     }
 
     // Delete any existing submissions for this user + lesson (keep only latest)
@@ -147,7 +176,10 @@ export async function PATCH(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Not authenticated" },
+        { status: 401 }
+      );
     }
 
     // Verify instructor role
@@ -164,7 +196,10 @@ export async function PATCH(request: Request) {
 
     const { submissionId, instructorFeedback } = await request.json();
     if (!submissionId) {
-      return NextResponse.json({ error: "Missing submissionId" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing submissionId" },
+        { status: 400 }
+      );
     }
 
     const { error: updateError } = await serviceClient

@@ -1,0 +1,31 @@
+# Exercise: Transcribe DNA to RNA
+
+## Your Task
+
+Write a function called `transcribe(dna)` that takes a DNA string and returns the RNA version.
+
+The rule is simple: **replace every T with U**. All other letters (A, C, G) stay exactly the same.
+
+### Examples
+
+| Input | Output |
+|-------|--------|
+| `"ATCG"` | `"AUCG"` |
+| `"TTTT"` | `"UUUU"` |
+| `"GATTACA"` | `"GAUUACA"` |
+
+### Hints
+
+- Python strings have a handy `.replace()` method that swaps one character for another
+- `"hello".replace("l", "r")` gives you `"herro"`
+- You only need to replace **one** letter — T becomes U!
+
+### Bonus Challenge
+
+After you get it working, try running your function on this DNA sequence and see what RNA you get:
+
+```python
+print(transcribe("ATGCTTGAA"))
+```
+
+That RNA will come in handy next lesson...

@@ -1,0 +1,26 @@
+# Exercise: Build a CRISPR Gene Editor
+
+## Your Task
+
+Write a function called `crispr_edit(dna, target, replacement)` that works like a simplified CRISPR tool:
+
+1. **Find** the first place where `target` appears in `dna`
+2. **Cut** out the target sequence
+3. **Replace** it with the `replacement` sequence
+4. Return the edited DNA string
+
+If the target sequence is **not found** in the DNA, return the original DNA unchanged.
+
+## Hints
+
+- Use `dna.find(target)` to find where the target starts. It returns the position number, or `-1` if not found.
+- Use `len(target)` to know how many letters to cut out
+- Use string slicing to build the result: everything before the target + replacement + everything after the target
+
+## Examples
+
+```python
+crispr_edit("AATCGGTTACGA", "CGG", "AAA")  # → "AATAAATTACGA"
+crispr_edit("TTTACGCCC", "TTT", "GGG")     # → "GGGACGCCC"
+crispr_edit("AAATTT", "CCC", "GGG")        # → "AAATTT" (not found!)
+```

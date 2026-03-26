@@ -1,0 +1,5 @@
+[
+  {"criterion": "T to U replacement", "weight": 60, "description": "All T bases are correctly replaced with U"},
+  {"criterion": "Other bases unchanged", "weight": 30, "description": "A, C, G bases are not modified"},
+  {"criterion": "Returns string", "weight": 10, "description": "Returns a string result"}
+]

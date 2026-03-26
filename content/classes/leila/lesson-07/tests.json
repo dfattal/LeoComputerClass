@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "decode_traits",
+    "cases": [
+      {"name": "all AAA", "args": ["AAAAAAAAA"], "expected": {"fur": "white", "eyes": "blue", "tail": "long"}},
+      {"name": "mixed", "args": ["GGGCCCAAA"], "expected": {"fur": "black", "eyes": "brown", "tail": "long"}},
+      {"name": "all TTT", "args": ["TTTTTTTTT"], "expected": {"fur": "golden", "eyes": "red", "tail": "fluffy"}},
+      {"name": "another mix", "args": ["CCCAAAGGG"], "expected": {"fur": "brown", "eyes": "blue", "tail": "short"}}
+    ]
+  }
+]

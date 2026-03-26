@@ -1,0 +1,14 @@
+{
+  "type": "crispr",
+  "scenario": {
+    "title": "Creature Trait Decoder",
+    "mission": "Decode this creature's genome to reveal its traits!",
+    "dna": "GGGCCCAAA",
+    "target": "GGG",
+    "replacement": "AAA",
+    "traitsBefore": {"fur": "black", "eyes": "brown", "tail": "long"},
+    "traitsAfter": {"fur": "white", "eyes": "brown", "tail": "long"}
+  },
+  "resultFn": "decode_traits",
+  "demoArgs": ["GGGCCCAAA"]
+}

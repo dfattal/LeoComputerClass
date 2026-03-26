@@ -1,0 +1,24 @@
+# Exercise: Creature Trait Decoder
+
+## Your Task
+
+Write a function called `decode_traits(genome)` that takes a 9-character genome string and returns a dictionary with three keys: `"fur"`, `"eyes"`, and `"tail"`.
+
+Use these lookup tables (they're already in your starter code):
+
+- **FUR_CODES** (positions 0-2): `AAA` = white, `GGG` = black, `CCC` = brown, `TTT` = golden
+- **EYE_CODES** (positions 3-5): `AAA` = blue, `GGG` = green, `CCC` = brown, `TTT` = red
+- **TAIL_CODES** (positions 6-8): `AAA` = long, `GGG` = short, `CCC` = curly, `TTT` = fluffy
+
+## Hints
+
+- Use **string slicing** to grab each 3-letter chunk: `genome[0:3]`, `genome[3:6]`, `genome[6:9]`
+- Use the chunk as a **key** to look it up in the right dictionary
+- Build and return a new dictionary with the three trait values
+
+## Examples
+
+```python
+decode_traits("AAAAAAAAA")  # → {"fur": "white", "eyes": "blue", "tail": "long"}
+decode_traits("GGGCCCAAA")  # → {"fur": "black", "eyes": "brown", "tail": "long"}
+```

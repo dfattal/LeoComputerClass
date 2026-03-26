@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Project Is
 
-"Build a Computer From Physics" — an educational platform that teaches a 10-year-old (Leo) computer architecture from first principles through interactive Python coding lessons. Students progress week by week, building logic gates, then arithmetic circuits, all the way up toward a working computer.
+**Family Classroom** — a multi-class educational platform that teaches kids through interactive Python coding lessons. Currently supports two classes:
+
+- **Leo's Computer Class** — computer architecture from first principles (logic gates → CPU)
+- **Leila's Bio Lab** — biology through code (DNA, mutations, CRISPR) *(coming soon)*
 
 **Audience matters:** All lesson content (MDX files, AI feedback prompts, exercise descriptions) must be written for a 10-year-old. Use simple language, concrete analogies, and an encouraging tone. Avoid jargon unless it's being explicitly taught.
 
@@ -17,7 +20,7 @@ npm run lint     # ESLint (no auto-fix)
 npm start        # Serve production build
 ```
 
-No test runner is configured. Tests are student-facing (defined in `content/week-XX/tests.json`) and run in-browser via Pyodide.
+No test runner is configured. Tests are student-facing (defined in `content/classes/<class>/*/tests.json`) and run in-browser via Pyodide.
 
 ## Tech Stack
 
@@ -31,21 +34,41 @@ No test runner is configured. Tests are student-facing (defined in `content/week
 
 ## Architecture
 
-### Routing & Rendering
+### Multi-Class Structure
 
-App Router with Server Components by default. Pages in `app/` are server-rendered; interactive components in `components/` use `"use client"`. Course pages (`app/course/[week]/page.tsx`) are statically generated via `generateStaticParams()`.
+The app is **one platform, multiple classes, one shared engine**. Each class has its own content, syllabus, theme, and AI coaching prompt. Shared infrastructure: code editor, test runner, submission system, AI review, dashboard, admin panel.
+
+**Class registry:** `content/classes.ts` defines all classes (slug, name, accent color, hero image, etc.). To add a new class, add an entry here and create its content directory.
+
+### Routing
+
+```
+/                                    → Class selector (home page)
+/classes/[classSlug]                → Class landing page (hero + roadmap)
+/classes/[classSlug]/[lessonSlug]   → Lesson page (editor + tests + content)
+/course/[week]                       → Redirects to /classes/leo/[week] (backward compat)
+/dashboard                           → Student progress (all classes)
+/admin                               → Instructor panel
+```
+
+App Router with Server Components by default. Pages in `app/` are server-rendered; interactive components in `components/` use `"use client"`. Lesson pages are statically generated via `generateStaticParams()`.
 
 Path alias: `@/*` maps to project root (e.g., `@/lib/supabase/client`).
 
 ### Lesson Content Pipeline
 
-Each week lives in `content/week-XX/` with four files:
+Each lesson lives in `content/classes/<classSlug>/<lessonSlug>/` with these files:
 - `lesson.mdx` — Theory (MDX, rendered server-side)
 - `exercises.mdx` — Coding exercises (MDX)
 - `tests.json` — Array of `TestEntry` objects: `{ entry, cases: [{name, args, expected}], constraints?: { forbidTokens } }`
 - `rubric.json` — Grading criteria for AI review
+- `starter.py` — (optional) Starter code for the editor
 
-`lib/lessons/loadLesson.ts` reads these at build time. `getWeekSlugs()` discovers weeks by scanning the `content/` directory for `week-*` folders.
+Each class also has:
+- `content/classes/<classSlug>/syllabus.ts` — Phases, weeks/lessons, status
+- `content/classes/<classSlug>/ai-prompt.ts` — Class-specific AI coaching system prompt
+
+`lib/lessons/loadLesson.ts` reads these at build time. `getLessonSlugs(classSlug)` discovers lessons by scanning the class content directory.
 
 ### Auth Flow
 
@@ -64,7 +87,7 @@ Student Python code runs in a **Web Worker** via Pyodide (not on the server). Th
 
 Four tables in Supabase (schema in `lib/supabase/schema.sql`):
 - `profiles` — Extends auth.users (display_name, role: student|instructor)
-- `lessons` — Week metadata (week_number, slug, title)
+- `lessons` — Lesson metadata (class_slug, week_number, slug, title). Unique on (class_slug, slug).
 - `submissions` — Student code, stdout/stderr, test_results (JSONB), ai_feedback (JSONB)
 - `lesson_progress` — Completion tracking per user per lesson
 
@@ -72,7 +95,7 @@ RLS enforces: students see only their own data; instructors see all submissions.
 
 ### UI Layout
 
-Split-pane layout for course pages: lesson content on the left, code editor + output on the right. Both horizontal and vertical splits are resizable (custom `ResizeHandle`/`VerticalResizeHandle` components, no library). Split ratios persist in localStorage. Mobile collapses to stacked layout at the `lg:` breakpoint (1024px).
+Split-pane layout for lesson pages: lesson content on the left, code editor + output on the right. Both horizontal and vertical splits are resizable (custom `ResizeHandle`/`VerticalResizeHandle` components, no library). Split ratios persist in localStorage. Mobile collapses to stacked layout at the `lg:` breakpoint (1024px).
 
 ## Environment Variables
 
@@ -83,9 +106,16 @@ SUPABASE_SERVICE_ROLE_KEY      # Server-only, elevated permissions
 OPENAI_API_KEY                 # For AI feedback (server-only)
 ```
 
-## Adding a New Week
+## Adding a New Lesson (to an existing class)
 
-1. Create `content/week-XX/` with `lesson.mdx`, `exercises.mdx`, `tests.json`, `rubric.json`
-2. Update `content/syllabus.ts` — change the week's status from `"planned"` to `"published"`
-3. The build auto-discovers it via `getWeekSlugs()` — no config changes needed
-4. Add a corresponding row to the `lessons` table in Supabase for submission tracking
+1. Create `content/classes/<classSlug>/<lessonSlug>/` with `lesson.mdx`, `exercises.mdx`, `tests.json`, `rubric.json`
+2. Update `content/classes/<classSlug>/syllabus.ts` — add the week/lesson entry with status `"published"`
+3. The build auto-discovers it via `getLessonSlugs()` — no config changes needed
+4. The dashboard auto-syncs published lessons into the `lessons` DB table on load
+
+## Adding a New Class
+
+1. Create `content/classes/<newSlug>/` with `syllabus.ts` and `ai-prompt.ts`
+2. Add lesson directories under it
+3. Add the class to `content/classes.ts` (set `comingSoon: true` until content is ready)
+4. Remove `comingSoon` when lessons are published

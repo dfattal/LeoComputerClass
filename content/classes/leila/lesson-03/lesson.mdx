@@ -1,0 +1,52 @@
+# Reverse Complement
+
+## DNA Strands Run in Opposite Directions
+
+You already know that DNA has two strands that pair up (A with T, C with G). But here's something wild: the two strands run in **opposite directions**!
+
+Think of it like a two-lane road. Cars on one side drive north, and cars on the other side drive south. DNA works the same way -- the two strands point in opposite directions.
+
+```
+Strand 1 (→):  A  T  C  G  A  T
+                |  |  |  |  |  |
+Strand 2 (←):  T  A  G  C  T  A
+```
+
+## What Is the Reverse Complement?
+
+When scientists want to describe the second strand, they don't write it backwards. Instead, they use the **reverse complement**:
+
+1. **First**, find the complement (swap A/T and C/G -- you already know how to do this!)
+2. **Then**, reverse the whole thing (flip it around)
+
+### Example
+
+Starting with: `ATCG`
+
+- Step 1 -- Complement: `TAGC`
+- Step 2 -- Reverse: `CGAT`
+
+So the reverse complement of `ATCG` is `CGAT`.
+
+## Why Do Scientists Care?
+
+The reverse complement is used **all the time** in real biology labs:
+
+- **Reading DNA sequences** -- machines often read one strand, and scientists need the other
+- **Designing experiments** -- when scientists want to find a specific spot on DNA, they need to know what both strands look like
+- **Searching genomes** -- a gene could be on either strand, so you have to check both!
+
+## A Python Superpower: Reversing Strings
+
+Python has a neat trick for reversing strings using `[::-1]`:
+
+```python
+"hello"[::-1]    # Returns "olleh"
+"TAGC"[::-1]     # Returns "CGAT"
+```
+
+It looks a little funny, but it's super powerful!
+
+## Your Mission
+
+Combine what you learned in Lesson 2 (complement) with string reversing to build the **reverse complement**. You're doing real science now, Leila!

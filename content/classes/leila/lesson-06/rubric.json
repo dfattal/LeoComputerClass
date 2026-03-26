@@ -1,0 +1,5 @@
+[
+  {"criterion": "Substitution works", "weight": 35, "description": "Correctly replaces base at position"},
+  {"criterion": "Insertion works", "weight": 35, "description": "Correctly inserts base at position"},
+  {"criterion": "Deletion works", "weight": 30, "description": "Correctly removes base at position"}
+]

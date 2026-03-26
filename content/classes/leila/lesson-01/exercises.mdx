@@ -1,0 +1,49 @@
+# Exercise: Count the DNA Bases
+
+## Your Task
+
+Write a function called `count_bases(dna)` that takes a DNA string and returns a **dictionary** with the count of each base.
+
+### Wait -- What's a Dictionary?
+
+A dictionary in Python is like a labeled collection of boxes. Each box has a **label** (called a "key") and something **inside it** (called a "value").
+
+```python
+# This is a dictionary!
+my_pet = {"name": "Buddy", "animal": "dog", "age": 3}
+```
+
+For our DNA counter, the labels are the bases (A, T, C, G) and the values are how many times each one appears:
+
+```python
+{"A": 3, "T": 2, "C": 1, "G": 4}
+```
+
+## Example
+
+```python
+count_bases("ATCG")     # Returns {"A": 1, "T": 1, "C": 1, "G": 1}
+count_bases("AAATTT")   # Returns {"A": 3, "T": 3, "C": 0, "G": 0}
+```
+
+## Hints
+
+**Hint 1:** Python strings have a handy `.count()` method:
+```python
+"AATCG".count("A")  # Returns 2
+```
+
+**Hint 2:** You can build a dictionary step by step:
+```python
+result = {}
+result["A"] = dna.count("A")
+# ... keep going for T, C, G!
+```
+
+**Hint 3:** Make sure you include **all four bases**, even if their count is 0!
+
+## Rules
+
+- Your function must be called `count_bases`
+- It takes one argument: a string of DNA letters
+- It returns a dictionary with keys `"A"`, `"T"`, `"C"`, `"G"`

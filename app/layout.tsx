@@ -16,17 +16,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Build a Computer From Physics",
-  description: "A hands-on course building a computer from first principles",
+  title: "Family Classroom",
+  description: "Interactive coding classes for curious kids",
   openGraph: {
-    title: "Build a Computer From Physics",
-    description: "A hands-on course building a computer from first principles",
+    title: "Family Classroom",
+    description: "Interactive coding classes for curious kids",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Build a Computer From Physics",
-    description: "A hands-on course building a computer from first principles",
+    title: "Family Classroom",
+    description: "Interactive coding classes for curious kids",
     images: ["/og-image.jpg"],
   },
 };
@@ -49,9 +49,9 @@ export default function RootLayout({
               style={{ color: 'var(--header-fg)' }}
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-500/20 text-sm">
-                01
+                FC
               </span>
-              Build a Computer From Physics
+              Family Classroom
             </Link>
             <Suspense fallback={null}>
               <HeaderAuth />

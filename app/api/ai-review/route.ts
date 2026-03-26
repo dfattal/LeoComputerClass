@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { loadWeekContent } from "@/lib/lessons/loadLesson";
+import { loadLessonContent } from "@/lib/lessons/loadLesson";
+
+// Fallback prompt if no class-specific prompt is found
+const DEFAULT_SYSTEM_PROMPT = `You are a warm, enthusiastic coding coach talking to a kid. Think "favorite science teacher" energy. Keep sentences short and punchy. No jargon.`;
+
+async function getSystemPrompt(classSlug: string): Promise<string> {
+  try {
+    const mod = await import(`@/content/classes/${classSlug}/ai-prompt`);
+    return mod.systemPrompt;
+  } catch {
+    return DEFAULT_SYSTEM_PROMPT;
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -22,10 +34,10 @@ export async function POST(request: Request) {
 
     const supabase = await createServiceClient();
 
-    // Fetch submission with lesson info
+    // Fetch submission with lesson info (including class_slug)
     const { data: submission, error: subError } = await supabase
       .from("submissions")
-      .select("*, lessons(slug, title)")
+      .select("*, lessons(slug, title, class_slug)")
       .eq("id", submissionId)
       .single();
 
@@ -36,23 +48,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const lesson = submission.lessons as { slug: string; title: string };
-    const weekData = loadWeekContent(lesson.slug);
+    const lesson = submission.lessons as {
+      slug: string;
+      title: string;
+      class_slug: string;
+    };
+    const classSlug = lesson.class_slug || "leo";
+    const weekData = loadLessonContent(classSlug, lesson.slug);
 
-    // Build the AI prompt
-    const systemPrompt = `You are a warm, enthusiastic coding coach talking to a 10-year-old named Leo who is learning to build a computer from scratch. Think "favorite science teacher" energy.
-
-VOICE & TONE:
-- Talk like you're excited about what Leo built — "Nice work!" / "You nailed it!" / "This is really cool because..."
-- Keep sentences short and punchy. No jargon. No dry academic language.
-- When suggesting improvements, frame them as fun challenges, not corrections: "Want to level up? Try..."
-- Challenge questions should be concrete and playful, tied to things a kid knows (games, light switches, secret codes between friends) — NOT abstract topics like "computer security" or "error detection"
-
-IMPORTANT CONTEXT:
-- The lesson teaches specific Python operators as the correct approach: \`&\` for AND, \`|\` for OR, \`1 - a\` for NOT
-- Using these bitwise operators IS correct and IS what the lesson teaches
-- The constraint is that students must NOT use Python keywords \`and\`, \`or\`, \`not\` — but using \`&\`, \`|\`, and \`1 - a\` is the intended solution
-- For XOR, the student should compose it from AND, OR, NOT functions (no \`^\` operator)`;
+    // Load class-specific AI prompt
+    const systemPrompt = await getSystemPrompt(classSlug);
 
     const userPayload = `## Lesson: ${lesson.title}
 

@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "complement",
+    "cases": [
+      {"name": "complement('ATCG')", "args": ["ATCG"], "expected": "TAGC"},
+      {"name": "complement('AAAA')", "args": ["AAAA"], "expected": "TTTT"},
+      {"name": "complement('GCGC')", "args": ["GCGC"], "expected": "CGCG"},
+      {"name": "complement('AATTCCGG')", "args": ["AATTCCGG"], "expected": "TTAAGGCC"}
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+# Exercise: DNA Mutation Machine
+
+## Your Task
+
+Write a function called `mutate(dna, position, mutation_type, new_base=None)` that performs a mutation on a DNA string.
+
+Your function should handle three mutation types:
+
+- **"substitution"** — Replace the base at `position` with `new_base`
+- **"insertion"** — Insert `new_base` at `position` (the DNA gets longer!)
+- **"deletion"** — Remove the base at `position` (the DNA gets shorter!)
+
+Return the mutated DNA string.
+
+## Hints
+
+- Use **string slicing** to break the DNA into two parts: `dna[:position]` (everything before) and `dna[position:]` (everything from that spot onward)
+- For substitution, skip over the old base: `dna[:position] + new_base + dna[position + 1:]`
+- For insertion, don't skip anything — just squeeze the new base in between the two halves
+- For deletion, skip over one base at the position
+
+## Examples
+
+```python
+mutate("ATCG", 1, "substitution", "G")  # → "AGCG"
+mutate("ATCG", 2, "insertion", "T")     # → "ATTCG"
+mutate("ATCG", 0, "deletion")           # → "TCG"
+```

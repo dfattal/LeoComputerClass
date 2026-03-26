@@ -3,46 +3,32 @@
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 
-const STARTER_CODE = `# Write your code here
-
-def AND(a, b):
-    pass
-
-def OR(a, b):
-    pass
-
-def NOT(a):
-    pass
-
-def XOR(a, b):
-    pass
-
-# Test your functions
-print("AND(1,1) =", AND(1,1))
-print("OR(0,1) =", OR(0,1))
-print("NOT(0) =", NOT(0))
-`;
+const DEFAULT_STARTER = `# Write your code here\n`;
 
 export default function CodeEditor({
-  weekSlug,
+  classSlug,
+  lessonSlug,
   onChange,
   fallbackCode,
+  starterCode,
 }: {
-  weekSlug: string;
+  classSlug: string;
+  lessonSlug: string;
   onChange: (code: string) => void;
   fallbackCode?: string;
+  starterCode?: string;
 }) {
-  const storageKey = `code-draft-${weekSlug}`;
+  const storageKey = `code-draft-${classSlug}-${lessonSlug}`;
   const [code, setCode] = useState<string>("");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
-    const initial = saved || fallbackCode || STARTER_CODE;
+    const initial = saved || fallbackCode || starterCode || DEFAULT_STARTER;
     setCode(initial);
     onChange(initial);
     setMounted(true);
-  }, [storageKey, onChange, fallbackCode]);
+  }, [storageKey, onChange, fallbackCode, starterCode]);
 
   function handleChange(value: string | undefined) {
     const newCode = value || "";

@@ -11,10 +11,13 @@ create table if not exists profiles (
 -- Lessons table
 create table if not exists lessons (
   id uuid primary key default gen_random_uuid(),
-  week_number int not null unique,
-  slug text not null unique,
+  class_slug text not null default 'leo',
+  week_number int not null,
+  slug text not null,
   title text not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  unique(class_slug, slug),
+  unique(class_slug, week_number)
 );
 
 -- Submissions table
@@ -103,15 +106,15 @@ create policy "Instructors can update progress"
     exists (select 1 from profiles where id = auth.uid() and role = 'instructor')
   );
 
--- Seed initial lessons (keep in sync with content/syllabus.ts published weeks)
-insert into lessons (week_number, slug, title) values
-  (1, 'week-01', 'Boolean Algebra & Truth Tables'),
-  (2, 'week-02', 'Gates as Circuits'),
-  (3, 'week-03', 'Binary Numbers & The Half Adder'),
-  (4, 'week-04', 'Full Adder, Ripple-Carry & Subtraction'),
-  (5, 'week-05', 'Latches & Flip-Flops'),
-  (6, 'week-06', 'Registers & Register File')
-on conflict (slug) do nothing;
+-- Seed initial lessons (keep in sync with content/classes/leo/syllabus.ts published weeks)
+insert into lessons (class_slug, week_number, slug, title) values
+  ('leo', 1, 'week-01', 'Boolean Algebra & Truth Tables'),
+  ('leo', 2, 'week-02', 'Gates as Circuits'),
+  ('leo', 3, 'week-03', 'Binary Numbers & The Half Adder'),
+  ('leo', 4, 'week-04', 'Full Adder, Ripple-Carry & Subtraction'),
+  ('leo', 5, 'week-05', 'Latches & Flip-Flops'),
+  ('leo', 6, 'week-06', 'Registers & Register File')
+on conflict (class_slug, slug) do nothing;
 
 -- Create a trigger to auto-create profile on signup
 create or replace function public.handle_new_user()
@@ -126,3 +129,10 @@ $$ language plpgsql security definer;
 create or replace trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Migration for existing databases:
+-- ALTER TABLE lessons ADD COLUMN class_slug text NOT NULL DEFAULT 'leo';
+-- ALTER TABLE lessons DROP CONSTRAINT IF EXISTS lessons_week_number_key;
+-- ALTER TABLE lessons DROP CONSTRAINT IF EXISTS lessons_slug_key;
+-- ALTER TABLE lessons ADD CONSTRAINT lessons_class_slug_unique UNIQUE (class_slug, slug);
+-- ALTER TABLE lessons ADD CONSTRAINT lessons_class_week_unique UNIQUE (class_slug, week_number);

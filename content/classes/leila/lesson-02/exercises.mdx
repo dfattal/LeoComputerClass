@@ -1,0 +1,54 @@
+# Exercise: Build the Complementary Strand
+
+## Your Task
+
+Write a function called `complement(dna)` that takes a DNA string and returns its **complementary strand**.
+
+### The Pairing Rules
+
+| Base | Partner |
+|------|---------|
+| A    | T       |
+| T    | A       |
+| C    | G       |
+| G    | C       |
+
+## Example
+
+```python
+complement("ATCG")      # Returns "TAGC"
+complement("AAAA")      # Returns "TTTT"
+complement("AATTCCGG")  # Returns "TTAAGGCC"
+```
+
+## Hints
+
+**Hint 1:** Go through the DNA string one letter at a time and swap each letter for its partner.
+
+**Hint 2:** You can build a new string by starting empty and adding to it:
+```python
+result = ""
+result = result + "T"  # now result is "T"
+result = result + "A"  # now result is "TA"
+```
+
+**Hint 3:** Use `if`/`elif` to check each letter:
+```python
+for letter in dna:
+    if letter == "A":
+        result = result + "T"
+    elif letter == "T":
+        # ... you fill in the rest!
+```
+
+**Hint 4 (bonus):** You can also use a dictionary as a lookup table:
+```python
+pairs = {"A": "T", "T": "A", "C": "G", "G": "C"}
+pairs["A"]  # Returns "T"
+```
+
+## Rules
+
+- Your function must be called `complement`
+- It takes one argument: a DNA string
+- It returns a **string** (not a list!) with the complementary bases

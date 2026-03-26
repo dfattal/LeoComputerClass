@@ -1,0 +1,11 @@
+[
+  {
+    "entry": "mutate",
+    "cases": [
+      {"name": "substitution", "args": ["ATCG", 1, "substitution", "G"], "expected": "AGCG"},
+      {"name": "insertion", "args": ["ATCG", 2, "insertion", "T"], "expected": "ATTCG"},
+      {"name": "deletion", "args": ["ATCG", 0, "deletion"], "expected": "TCG"},
+      {"name": "sub at end", "args": ["AAAA", 3, "substitution", "T"], "expected": "AAAT"}
+    ]
+  }
+]

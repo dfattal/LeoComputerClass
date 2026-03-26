@@ -1,0 +1,53 @@
+# CRISPR: Find-and-Replace for DNA
+
+Imagine you could open up a living creature's DNA like a text document, search for a specific word, and replace it with a different one. Sounds like science fiction, right?
+
+Well, it's real. It's called **CRISPR**, and it's one of the most amazing tools scientists have ever invented.
+
+## What Is CRISPR?
+
+CRISPR (say "crisper") is a gene-editing tool that lets scientists **change DNA inside living cells**. The scientists who discovered it won the Nobel Prize in 2020 — it's that big of a deal.
+
+Think of it like the **find-and-replace** feature in a word processor:
+
+1. **Find** — A "guide RNA" searches through the DNA to find a specific target sequence
+2. **Cut** — CRISPR snips the DNA right at that spot, removing the target
+3. **Replace** — A new sequence gets inserted where the old one was
+
+It's like molecular scissors with a GPS!
+
+## What Can CRISPR Do?
+
+Scientists are using CRISPR for some incredible things:
+
+- **Curing diseases** — Fixing the mutations that cause sickle cell disease and some types of blindness
+- **Stronger crops** — Making plants that can survive droughts or resist bugs
+- **Fighting mosquitoes** — Editing mosquito DNA so they can't carry malaria
+- **De-extinction** — Some scientists are even trying to bring back the woolly mammoth!
+
+## How Our Simplified CRISPR Works
+
+In our Python version, we'll keep it simple:
+
+1. **Find** the target sequence in the DNA string (using Python's `.find()` method)
+2. **Check** if it was found (`.find()` returns `-1` if the target isn't there)
+3. **Cut and replace** using string slicing — remove the target and insert the replacement
+
+Here's the key idea with string slicing:
+
+```python
+pos = dna.find(target)
+result = dna[:pos] + replacement + dna[pos + len(target):]
+```
+
+That's it! You take everything before the target, add the replacement, then add everything after the target.
+
+## Important Details
+
+- We only replace the **first** occurrence of the target (just like real CRISPR targets one spot)
+- If the target isn't found, we return the DNA unchanged (no edit needed!)
+- The replacement can be a **different length** than the target — the DNA string might get longer or shorter
+
+## Your Mission
+
+Build your own CRISPR editor! You'll write a function that finds a target sequence in DNA and replaces it with a new sequence. Then watch the CRISPR simulator show your edit in action!

@@ -1,0 +1,50 @@
+# Exercise: Reverse Complement
+
+## Your Task
+
+Write a function called `reverse_complement(dna)` that returns the **reverse complement** of a DNA string.
+
+### The Two Steps
+
+1. **Complement** -- swap each base for its partner (A/T, C/G)
+2. **Reverse** -- flip the string backwards
+
+## Example
+
+```python
+reverse_complement("ATCG")
+# Step 1 - complement: "TAGC"
+# Step 2 - reverse:    "CGAT"
+# Returns "CGAT"
+
+reverse_complement("AAAA")     # Returns "TTTT"
+reverse_complement("GCTA")     # Returns "TAGC"
+```
+
+## Hints
+
+**Hint 1:** You already wrote a complement function in Lesson 2! You can write that same logic again inside this function, or copy it in above and call it.
+
+**Hint 2:** To reverse a string in Python, use `[::-1]`:
+```python
+"HELLO"[::-1]  # Returns "OLLEH"
+```
+
+**Hint 3:** You can do it in two lines:
+```python
+def reverse_complement(dna):
+    comp = # ... get the complement somehow
+    return comp[::-1]
+```
+
+**Hint 4:** Or even in one line if you're feeling fancy:
+```python
+# complement the string, then reverse it right away
+```
+
+## Rules
+
+- Your function must be called `reverse_complement`
+- It takes one argument: a DNA string
+- It returns a string that is the reverse complement
+- The complement step must happen **before** the reversal

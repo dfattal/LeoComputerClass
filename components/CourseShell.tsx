@@ -4,8 +4,17 @@ import { useState, useCallback, useEffect, type ReactNode } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
-import type { TestEntry } from "@/lib/lessons/loadLesson";
-import LessonSidebar from "./LessonSidebar";
+import type { TestEntry, VizConfig } from "@/lib/lessons/loadLesson";
+import dynamic from "next/dynamic";
+
+const CrisprSimulator = dynamic(
+  () => import("./classes/leila/CrisprSimulator"),
+  { ssr: false }
+);
+import LessonSidebar, {
+  type SidebarPhase,
+  type SidebarWeek,
+} from "./LessonSidebar";
 import ContentPanel from "./ContentPanel";
 import EditorPanel from "./EditorPanel";
 import SplitLayout from "./SplitLayout";
@@ -28,17 +37,25 @@ interface ExistingSubmission {
 }
 
 export default function CourseShell({
-  weekSlug,
+  classSlug,
+  lessonSlug,
   tests,
   lessonContent,
   exercisesContent,
-  currentWeek,
+  phases,
+  weeks,
+  starterCode,
+  vizConfig,
 }: {
-  weekSlug: string;
+  classSlug: string;
+  lessonSlug: string;
   tests: TestEntry[];
   lessonContent: ReactNode;
   exercisesContent: ReactNode;
-  currentWeek: string;
+  phases: SidebarPhase[];
+  weeks: SidebarWeek[];
+  starterCode?: string;
+  vizConfig?: VizConfig;
 }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [mounted, setMounted] = useState(false);
@@ -51,6 +68,9 @@ export default function CourseShell({
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [existingSubmission, setExistingSubmission] =
     useState<ExistingSubmission | null>(null);
+
+  // Viz state — captures result from the student's function for the simulator
+  const [vizResult, setVizResult] = useState<string | undefined>(undefined);
 
   // Submit state
   const [submitting, setSubmitting] = useState(false);
@@ -80,7 +100,7 @@ export default function CourseShell({
     async function fetchExisting() {
       try {
         const res = await fetch(
-          `/api/submit?weekSlug=${encodeURIComponent(weekSlug)}`
+          `/api/submit?classSlug=${encodeURIComponent(classSlug)}&lessonSlug=${encodeURIComponent(lessonSlug)}`
         );
         if (res.ok) {
           const { submission } = await res.json();
@@ -91,7 +111,7 @@ export default function CourseShell({
       }
     }
     fetchExisting();
-  }, [weekSlug]);
+  }, [classSlug, lessonSlug]);
 
   const handleCodeChange = useCallback((newCode: string) => {
     setCode(newCode);
@@ -106,7 +126,24 @@ export default function CourseShell({
     const result = await run(code);
     setStdout(result.stdout);
     setStderr(result.stderr);
-  }, [run, code]);
+
+    // If there's a viz config, run the student's function with demo args to get the result
+    if (vizConfig && !result.error) {
+      try {
+        const argsStr = vizConfig.demoArgs.map((a) => JSON.stringify(a)).join(", ");
+        const vizCode = `${code}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
+        const vizRun = await run(vizCode);
+        const vizLine = vizRun.stdout
+          .split("\n")
+          .find((l: string) => l.startsWith("__VIZ__:"));
+        if (vizLine) {
+          setVizResult(JSON.parse(vizLine.slice(8)));
+        }
+      } catch {
+        // Viz extraction failed — not critical
+      }
+    }
+  }, [run, code, vizConfig]);
 
   const handleRunTests = useCallback(async () => {
     setTestResults([]);
@@ -115,7 +152,24 @@ export default function CourseShell({
     localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
     const result = await runTests(code, tests);
     setTestResults(result.testResults);
-  }, [runTests, code, tests]);
+
+    // Also capture viz result
+    if (vizConfig && !result.error) {
+      try {
+        const argsStr = vizConfig.demoArgs.map((a) => JSON.stringify(a)).join(", ");
+        const vizCode = `${code}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
+        const vizRun = await run(vizCode);
+        const vizLine = vizRun.stdout
+          .split("\n")
+          .find((l: string) => l.startsWith("__VIZ__:"));
+        if (vizLine) {
+          setVizResult(JSON.parse(vizLine.slice(8)));
+        }
+      } catch {
+        // Viz extraction failed — not critical
+      }
+    }
+  }, [runTests, run, code, tests, vizConfig]);
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
@@ -128,7 +182,8 @@ export default function CourseShell({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          weekSlug,
+          classSlug,
+          lessonSlug,
           code,
           stdout,
           stderr,
@@ -177,7 +232,7 @@ export default function CourseShell({
     } finally {
       setSubmitting(false);
     }
-  }, [weekSlug, code, stdout, stderr, testResults]);
+  }, [classSlug, lessonSlug, code, stdout, stderr, testResults]);
 
   const hasSubmittedBefore = submitted || !!existingSubmission;
   const displayAiFeedback =
@@ -266,11 +321,26 @@ export default function CourseShell({
     </>
   );
 
+  // CRISPR simulator panel (rendered in drawer "Lab" tab when viz config exists)
+  const labContent = vizConfig?.type === "crispr" ? (
+    <CrisprSimulator
+      scenario={vizConfig.scenario}
+      studentResult={vizResult}
+    />
+  ) : undefined;
+
+  const sidebarProps = {
+    phases,
+    weeks,
+    classSlug,
+    currentLesson: lessonSlug,
+  };
+
   // SSR / pre-mount: render a minimal placeholder to avoid hydration mismatch
   if (!mounted) {
     return (
       <>
-        <LessonSidebar currentWeek={currentWeek} />
+        <LessonSidebar {...sidebarProps} />
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex min-w-0 flex-1">
             <div className="flex-1" />
@@ -284,7 +354,7 @@ export default function CourseShell({
   if (isDesktop) {
     return (
       <>
-        <LessonSidebar currentWeek={currentWeek} />
+        <LessonSidebar {...sidebarProps} />
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Top: split lesson + editor */}
           <SplitLayout
@@ -296,9 +366,11 @@ export default function CourseShell({
             }
             rightPanel={
               <EditorPanel
-                weekSlug={weekSlug}
+                classSlug={classSlug}
+                lessonSlug={lessonSlug}
                 onCodeChange={handleCodeChange}
                 fallbackCode={existingSubmission?.code}
+                starterCode={starterCode}
               />
             }
           />
@@ -311,6 +383,7 @@ export default function CourseShell({
             outputContent={outputContent}
             testsContent={testsContent}
             reviewContent={reviewContent}
+            labContent={labContent}
             actionButtons={actionButtons}
           />
         </div>
@@ -321,7 +394,7 @@ export default function CourseShell({
   // --- MOBILE LAYOUT ---
   return (
     <>
-      <LessonSidebar currentWeek={currentWeek} />
+      <LessonSidebar {...sidebarProps} />
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobile tab bar */}
         <MobileTabBar active={activeView} onChange={setActiveView} />
@@ -346,8 +419,10 @@ export default function CourseShell({
             aria-labelledby="mobile-tab-code"
           >
             <EditorPanel
-              weekSlug={weekSlug}
+              classSlug={classSlug}
+              lessonSlug={lessonSlug}
               onCodeChange={handleCodeChange}
+              starterCode={starterCode}
             />
           </div>
         </div>

@@ -1,0 +1,43 @@
+# Decode Creature Traits: Your Genome Secret Decoder Ring
+
+In real life, your DNA is like a massive instruction manual. Different sections of the manual tell your body how to build different things — what color your eyes should be, how tall you'll grow, whether your hair is curly or straight.
+
+Scientists call these sections **genes**. Each gene is a chunk of DNA that codes for a specific **trait**.
+
+## Our Toy Genome
+
+Real genomes are billions of letters long (yours has about 3 billion!). That's way too many to work with, so we're going to use a tiny **toy genome** — just 9 letters long.
+
+Our toy genome is split into three **gene regions**, and each region controls one trait:
+
+| Positions | Trait      | AAA    | GGG    | CCC    | TTT     |
+|-----------|-----------|--------|--------|--------|---------|
+| 0 - 2     | Fur color | white  | black  | brown  | golden  |
+| 3 - 5     | Eye color | blue   | green  | brown  | red     |
+| 6 - 8     | Tail type | long   | short  | curly  | fluffy  |
+
+Think of it like a **secret decoder ring** for creatures! You look at 3 letters, check the table, and discover what trait they code for.
+
+## How to Read a Genome
+
+Let's decode the genome `GGGCCCAAA`:
+
+1. **Positions 0-2:** `GGG` — look up the fur table — that's **black** fur!
+2. **Positions 3-5:** `CCC` — look up the eye table — that's **brown** eyes!
+3. **Positions 6-8:** `AAA` — look up the tail table — that's a **long** tail!
+
+So this creature has black fur, brown eyes, and a long tail. Cool, right?
+
+## Dictionaries to the Rescue
+
+In Python, we can store each code table as a **dictionary** — a way to look up values by their key. For example:
+
+```python
+FUR_CODES = {"AAA": "white", "GGG": "black", "CCC": "brown", "TTT": "golden"}
+```
+
+Then `FUR_CODES["GGG"]` gives you `"black"`. Easy!
+
+## Your Mission
+
+Write a function that takes a 9-letter genome string, slices it into three 3-letter chunks, looks up each chunk in the right table, and returns a dictionary of traits.
