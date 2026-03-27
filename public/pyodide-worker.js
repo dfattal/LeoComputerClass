@@ -87,11 +87,16 @@ sys.stderr = io.StringIO()
       for (const testEntry of tests) {
         for (const tc of testEntry.cases) {
           try {
-            const argsStr = tc.args.map(String).join(", ");
+            const argsStr = tc.args.map((a) => JSON.stringify(a)).join(", ");
             const callCode = `${testEntry.entry}(${argsStr})`;
             const result = py.runPython(callCode);
 
-            const actual = typeof result === "object" ? result.toJs() : result;
+            let actual;
+            if (result && typeof result === "object" && typeof result.toJs === "function") {
+              actual = result.toJs({ dict_converter: Object.fromEntries });
+            } else {
+              actual = result;
+            }
             const passed =
               JSON.stringify(actual) === JSON.stringify(tc.expected);
 
