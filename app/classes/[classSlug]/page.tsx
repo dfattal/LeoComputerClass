@@ -7,26 +7,6 @@ export function generateStaticParams() {
   return getClassSlugs().map((classSlug) => ({ classSlug }));
 }
 
-function phaseStatus(
-  phaseWeeks: { status: string }[]
-): "Complete" | "In Progress" | "Coming Soon" {
-  const publishedCount = phaseWeeks.filter(
-    (w) => w.status === "published"
-  ).length;
-  if (publishedCount === phaseWeeks.length) return "Complete";
-  if (publishedCount > 0) return "In Progress";
-  return "Coming Soon";
-}
-
-const statusStyles = {
-  Complete:
-    "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-  "In Progress":
-    "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
-  "Coming Soon":
-    "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400",
-} as const;
-
 export default async function ClassHomePage({
   params,
 }: {
@@ -141,72 +121,88 @@ export default async function ClassHomePage({
         </div>
       </section>
 
-      {/* Roadmap */}
+      {/* Lessons */}
       <section className="border-t border-stone-200 bg-stone-50 px-4 py-16 dark:border-stone-800 dark:bg-stone-900/50">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-8 text-center text-sm font-semibold uppercase tracking-widest text-stone-400">
-            What you&apos;ll build
+            Lessons
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {phases.map(
               (phase: { phase: number; name: string; weeks: number[] }) => {
                 const phaseWeeks = getWeeksForPhase(phase.phase);
-                const status = phaseStatus(phaseWeeks);
                 return (
-                  <div
-                    key={phase.phase}
-                    className="rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900"
-                  >
-                    <div className="mb-3 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-stone-900 dark:text-stone-100">
-                          {phase.name}
-                        </h3>
-                        <span
-                          className={`rounded-md px-2 py-0.5 text-xs font-bold ${accent.badge}`}
-                        >
-                          Weeks {phase.weeks[0]}–
-                          {phase.weeks[phase.weeks.length - 1]}
-                        </span>
-                      </div>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyles[status]}`}
-                      >
-                        {status}
-                      </span>
-                    </div>
-                    <ul className="space-y-1.5">
+                  <div key={phase.phase}>
+                    <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-400">
+                      {phase.name}
+                    </h3>
+                    <div className="space-y-2">
                       {phaseWeeks.map(
                         (w: {
                           slug: string;
                           status: string;
                           week: number;
+                          title: string;
                           summary: string;
-                        }) => (
-                          <li
-                            key={w.slug}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            <span
-                              className={`h-2 w-2 shrink-0 rounded-full ${
-                                w.status === "published"
-                                  ? accent.bg
-                                  : "bg-stone-300 dark:bg-stone-600"
-                              }`}
-                            />
-                            <span
-                              className={
-                                w.status === "published"
-                                  ? "text-stone-700 dark:text-stone-300"
-                                  : "text-stone-400 dark:text-stone-500"
-                              }
+                        }) => {
+                          const isPublished = w.status === "published";
+                          if (isPublished) {
+                            return (
+                              <Link
+                                key={w.slug}
+                                href={`/classes/${classSlug}/${w.slug}`}
+                                className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-4 transition-all hover:border-stone-300 hover:shadow-md dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700"
+                              >
+                                <span
+                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${accent.bg} text-sm font-bold text-white`}
+                                >
+                                  {w.week}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-semibold text-stone-900 dark:text-stone-100">
+                                    {w.title}
+                                  </p>
+                                  <p className="text-sm text-stone-500 dark:text-stone-400">
+                                    {w.summary}
+                                  </p>
+                                </div>
+                                <svg
+                                  className="h-5 w-5 shrink-0 text-stone-300 dark:text-stone-600"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={2}
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                                  />
+                                </svg>
+                              </Link>
+                            );
+                          }
+                          return (
+                            <div
+                              key={w.slug}
+                              className="flex items-center gap-3 rounded-xl border border-stone-100 bg-stone-50 p-4 dark:border-stone-800 dark:bg-stone-900/50"
                             >
-                              Week {w.week}: {w.summary}
-                            </span>
-                          </li>
-                        )
+                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-stone-200 text-sm font-bold text-stone-400 dark:bg-stone-800 dark:text-stone-500">
+                                {w.week}
+                              </span>
+                              <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-stone-400 dark:text-stone-500">
+                                  {w.title}
+                                </p>
+                                <p className="text-sm text-stone-400 dark:text-stone-600">
+                                  Coming soon
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        }
                       )}
-                    </ul>
+                    </div>
                   </div>
                 );
               }
