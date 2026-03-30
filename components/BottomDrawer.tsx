@@ -5,8 +5,8 @@ import VerticalResizeHandle from "./VerticalResizeHandle";
 
 const DRAWER_HEIGHT_KEY = "drawer-height";
 const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
-const DEFAULT_HEIGHT = 240;
-const MIN_HEIGHT = 120;
+const DEFAULT_HEIGHT = 160;
+const MIN_HEIGHT = 80;
 const COLLAPSED_HEADER_HEIGHT = 40;
 
 const baseDrawerTabs = ["Output", "Tests", "Review"] as const;
@@ -43,7 +43,7 @@ export default function BottomDrawer({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const clampHeight = useCallback((h: number) => {
-    const maxH = window.innerHeight * 0.6;
+    const maxH = window.innerHeight * 0.4;
     return Math.min(Math.max(h, MIN_HEIGHT), maxH);
   }, []);
 
