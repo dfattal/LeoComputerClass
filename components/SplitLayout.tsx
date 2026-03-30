@@ -103,7 +103,7 @@ export default function SplitLayout({
   }
 
   return (
-    <div ref={containerRef} className="flex min-w-0 flex-1 flex-col lg:flex-row">
+    <div ref={containerRef} className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
       {/* Left: content panel */}
       <div className="overflow-y-auto lg:overflow-y-auto" style={leftStyle}>
         {leftPanel}

@@ -334,36 +334,6 @@ function CourseShellInner({
     </div>
   );
 
-  const actionButtons = (
-    <>
-      <button
-        onClick={handleRun}
-        disabled={loading}
-        className={`rounded-md ${accent.bg} px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
-      >
-        {loading ? "Running..." : "Run"}
-      </button>
-      <button
-        onClick={handleRunTests}
-        disabled={loading}
-        className="rounded-md border border-stone-300 px-3 py-1 text-xs font-medium transition-colors hover:bg-stone-100 disabled:opacity-50 dark:border-stone-700 dark:hover:bg-stone-800"
-      >
-        {loading ? "Testing..." : "Run Tests"}
-      </button>
-      <button
-        onClick={handleSubmit}
-        disabled={submitting || !code.trim()}
-        className={`rounded-md ${accent.bg} px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
-      >
-        {submitting
-          ? "Submitting..."
-          : hasSubmittedBefore
-            ? "Resubmit"
-            : "Submit"}
-      </button>
-    </>
-  );
-
   // CRISPR simulator panel (rendered in drawer "Lab" tab when viz config exists)
   const labContent = vizConfig?.type === "crispr" ? (
     <CrisprSimulator
@@ -414,6 +384,13 @@ function CourseShellInner({
                 onCodeChange={handleCodeChange}
                 fallbackCode={existingSubmission?.code}
                 starterCode={starterCode}
+                onRun={handleRun}
+                onRunTests={handleRunTests}
+                onSubmit={handleSubmit}
+                loading={loading}
+                submitting={submitting}
+                hasCode={!!code.trim()}
+                hasSubmittedBefore={hasSubmittedBefore}
               />
             }
           />
@@ -427,7 +404,6 @@ function CourseShellInner({
             testsContent={testsContent}
             reviewContent={reviewContent}
             labContent={labContent}
-            actionButtons={actionButtons}
           />
         </div>
       </>

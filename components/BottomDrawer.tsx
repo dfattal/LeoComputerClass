@@ -21,7 +21,6 @@ export default function BottomDrawer({
   testsContent,
   reviewContent,
   labContent,
-  actionButtons,
 }: {
   activeTab: DrawerTab;
   onTabChange: (tab: DrawerTab) => void;
@@ -31,7 +30,6 @@ export default function BottomDrawer({
   testsContent: ReactNode;
   reviewContent: ReactNode;
   labContent?: ReactNode;
-  actionButtons?: ReactNode;
 }) {
   // Safe to use lazy init: this component only renders client-side (behind CourseShell's mounted guard)
   const [height, setHeight] = useState(() => {
@@ -139,13 +137,6 @@ export default function BottomDrawer({
 
         {/* Spacer */}
         <div className="flex-1" />
-
-        {/* Action buttons (desktop only) */}
-        {actionButtons && (
-          <div className="hidden items-center gap-2 lg:flex">
-            {actionButtons}
-          </div>
-        )}
 
         {/* Collapse toggle */}
         <button
