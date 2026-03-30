@@ -1,0 +1,6 @@
+[
+  {"criterion": "While loops used correctly", "weight": 30, "description": "Uses while loops with proper termination conditions"},
+  {"criterion": "Bitwise operators used correctly", "weight": 30, "description": "Uses &, |, ^, <<, >> operators properly"},
+  {"criterion": "Correct output", "weight": 30, "description": "Returns the right values for all test cases"},
+  {"criterion": "Clean code", "weight": 10, "description": "Proper indentation and readable code"}
+]

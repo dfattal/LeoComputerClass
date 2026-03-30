@@ -1,0 +1,64 @@
+# Exercises: While Loops & Bit Magic
+
+---
+
+## Exercise 1: Treasure Hunt
+
+You're searching for buried treasure! You have a list of spots, where `0` means "nothing here" and `1` means "treasure!"
+
+Write a function called `find_treasure(spots)` that searches through the list and returns the **position** (index) of the treasure. If there's no treasure at all, return `-1`.
+
+**You must use a `while` loop!**
+
+**Examples:**
+```python
+find_treasure([0, 0, 1, 0])      # returns 2 (treasure at position 2)
+find_treasure([1, 0, 0])          # returns 0 (treasure at the very start!)
+find_treasure([0, 0, 0])          # returns -1 (no treasure found)
+find_treasure([0, 0, 0, 0, 1])   # returns 4 (treasure at the end)
+```
+
+> **Hint:** Start at position 0. While you haven't gone past the end of the list, check if `spots[i]` is 1. If it is, you found the treasure — return that position! If you finish the whole list without finding anything, return -1.
+
+---
+
+## Exercise 2: Bitwise Spy Encoder
+
+You're a secret agent and need to encode two numbers into a secret code! Here are the steps:
+
+1. **XOR** `a` and `b` (the `^` operator) — this mixes the numbers together
+2. **Shift the result left by 1** (the `<< 1` operator) — this scrambles it further
+3. **OR with the original `a`** (the `|` operator) — this stamps your signature on it
+
+Write a function called `secret_code(a, b)` that does all three steps and returns the final result.
+
+**Examples:**
+```python
+secret_code(5, 3)   # returns 13
+# Step by step: 5 ^ 3 = 6, then 6 << 1 = 12, then 12 | 5 = 13
+
+secret_code(0, 0)   # returns 0
+secret_code(7, 2)   # returns 15
+secret_code(1, 1)   # returns 1
+```
+
+> **Hint:** Do it step by step! Save each result in a variable: `mixed = a ^ b`, then `shifted = mixed << 1`, then `return shifted | a`.
+
+---
+
+## Exercise 3: Bit Counter
+
+Computers store numbers in binary (1s and 0s). Can you count how many **1-bits** a number has?
+
+Write a function called `count_ones(n)` that returns how many 1s are in the binary version of `n`.
+
+**Examples:**
+```python
+count_ones(7)     # returns 3 (7 = 111 in binary → three 1s)
+count_ones(8)     # returns 1 (8 = 1000 in binary → one 1)
+count_ones(0)     # returns 0 (no 1s at all)
+count_ones(15)    # returns 4 (15 = 1111 in binary → four 1s)
+count_ones(255)   # returns 8 (255 = 11111111 in binary → eight 1s!)
+```
+
+> **Hint:** Use a while loop that keeps going while `n > 0`. Each time through: check the last bit with `n & 1` (if it's 1, add to your count!), then shift `n` right by 1 with `n = n >> 1` to look at the next bit.

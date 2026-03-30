@@ -1,0 +1,342 @@
+# Lesson 1 — Say Hello to Python
+
+## Phase 1: Python Basics
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Know what Python is and why it's awesome
+- Use `print()` to make the computer talk
+- Create variables to store information
+- Know the difference between strings and integers
+- Do math with Python
+- Build your own functions with `def` and `return`
+- Use `len()` to measure strings
+- Write functions that take more than one input
+
+---
+
+## Big Idea
+
+Right now, you can talk to people. You can say "Hey, pass me that pencil" and a human understands you. But what if you wanted to talk to a **computer**? Computers don't speak English — they need their own language.
+
+**Python** is one of those languages. It's one of the most popular programming languages in the world, and here's the best part: it reads almost like English. That makes it a perfect first language to learn.
+
+When you write Python code, you're giving the computer a list of instructions — like a recipe. The computer follows your recipe step by step, exactly as you wrote it. No guessing, no shortcuts. If your recipe says "add 5 and 3," the computer adds 5 and 3. Every. Single. Time.
+
+Let's learn how to write those recipes!
+
+---
+
+## Talking to the Computer: `print()`
+
+The very first thing most programmers learn is how to make the computer say something. In Python, you use `print()`:
+
+```python
+print("Hello, world!")
+```
+
+When you run this, the computer displays:
+
+```
+Hello, world!
+```
+
+Think of `print()` like **sending a text message** — but instead of texting a friend, you're telling the computer to display something on the screen. Whatever you put inside the parentheses shows up.
+
+```python
+print("My name is Leo")
+print("I am learning Python!")
+print(42)
+```
+
+**Important:** When you print text, you need to put it in **quotes** (either `"double quotes"` or `'single quotes'`). Numbers don't need quotes.
+
+---
+
+## Variables: Labeled Jars
+
+Imagine you have a bunch of jars in your kitchen. Each jar has a **label** on it and **something inside**. One jar says "cookies" and has cookies in it. Another says "sugar" and has sugar in it.
+
+**Variables** work the same way. A variable is a **name** that holds a **value**.
+
+```python
+name = "Leo"
+age = 10
+favorite_color = "blue"
+```
+
+Here's what just happened:
+- We created a jar labeled `name` and put `"Leo"` inside it
+- We created a jar labeled `age` and put `10` inside it
+- We created a jar labeled `favorite_color` and put `"blue"` inside it
+
+Now, whenever we use that name, Python looks inside the jar:
+
+```python
+print(name)            # prints: Leo
+print(age)             # prints: 10
+print(favorite_color)  # prints: blue
+```
+
+You can also **change** what's inside a jar at any time:
+
+```python
+age = 10
+print(age)   # prints: 10
+
+age = 11
+print(age)   # prints: 11
+```
+
+The old value is gone — the jar now holds the new value.
+
+---
+
+## Types: Strings and Integers
+
+Not everything is the same kind of stuff. In Python, there are different **types** of values:
+
+| Type | What it is | Examples |
+|------|-----------|----------|
+| **String** (`str`) | Text — always in quotes | `"hello"`, `"Leo"`, `"123"` |
+| **Integer** (`int`) | A whole number — no quotes | `10`, `0`, `-5`, `365` |
+
+This matters because Python treats them differently:
+
+```python
+# This is a number — you can do math with it
+age = 10
+
+# This is a string — it's text, even though it looks like a number!
+phone = "555-1234"
+```
+
+**Quick tip:** If it's in quotes, it's a string. If it's not, and it's a whole number, it's an integer.
+
+---
+
+## Math Time!
+
+Python is an awesome calculator. Here are the math operators you can use:
+
+| Operator | What it does | Example | Result |
+|----------|-------------|---------|--------|
+| `+` | Addition | `5 + 3` | `8` |
+| `-` | Subtraction | `10 - 4` | `6` |
+| `*` | Multiplication | `6 * 7` | `42` |
+| `//` | Integer division (whole number answer) | `17 // 5` | `3` |
+| `%` | Remainder (what's left over) | `17 % 5` | `2` |
+
+Let's try some:
+
+```python
+print(5 + 3)      # 8
+print(10 - 4)     # 6
+print(6 * 7)      # 42
+print(17 // 5)    # 3 (17 divided by 5 is 3 with remainder 2)
+print(17 % 5)     # 2 (the remainder!)
+```
+
+You can also use variables in math:
+
+```python
+cookies = 12
+friends = 4
+cookies_each = cookies // friends
+print(cookies_each)  # 3
+```
+
+**What about `//` and `%`?** Think of it like sharing cookies:
+- You have 17 cookies and 5 friends
+- `17 // 5` = **3** — each friend gets 3 cookies
+- `17 % 5` = **2** — there are 2 cookies left over
+
+---
+
+## String Tricks
+
+You can do cool things with strings too!
+
+**Joining strings together** (called "concatenation" — fancy word, simple idea):
+
+```python
+first = "Leo"
+last = "Fattal"
+full_name = first + " " + last
+print(full_name)  # Leo Fattal
+```
+
+The `+` operator works differently for strings — instead of adding numbers, it **glues text together**.
+
+**Getting a single character** from a string:
+
+```python
+name = "Python"
+print(name[0])  # P
+print(name[1])  # y
+print(name[2])  # t
+```
+
+Wait, why is the first letter at position `0` and not `1`? Great question! In programming, we **start counting from 0**. It's weird at first, but you'll get used to it.
+
+**Measuring a string** with `len()`:
+
+```python
+word = "hello"
+print(len(word))  # 5
+
+name = "Leo"
+print(len(name))  # 3
+```
+
+`len()` tells you how many characters are in a string. Think of it like a ruler for text.
+
+---
+
+## Functions: Build Your Own Machine
+
+Here's where it gets really fun. So far, you've been using **built-in** functions that Python already knows — like `print()` and `len()`. But what if you could build your **own** functions?
+
+Think of a function like a **vending machine**:
+1. You **put something in** (the input)
+2. The machine **does something** with it
+3. You **get something out** (the output)
+
+Here's how you build one in Python:
+
+```python
+def double(number):
+    result = number * 2
+    return result
+```
+
+Let's break this down:
+- `def` means "I'm **defining** a new function" — like building a new machine
+- `double` is the **name** of our function (you pick the name!)
+- `number` is the **parameter** — it's the input slot on our machine
+- The indented lines are the **body** — what the machine does inside
+- `return` **sends back** the answer
+
+Now you can use it:
+
+```python
+print(double(5))   # 10
+print(double(100)) # 200
+print(double(0))   # 0
+```
+
+### Indentation: Python is Picky About Spaces!
+
+See how the lines inside the function are pushed to the right? That's called **indentation**, and in Python it's **super important**. Python uses indentation to know which lines belong inside the function.
+
+```python
+# CORRECT — the body is indented
+def greet(name):
+    message = "Hello, " + name
+    return message
+
+# WRONG — Python will give you an error!
+def greet(name):
+message = "Hello, " + name
+return message
+```
+
+Use **4 spaces** (or press Tab) to indent. Every line inside the function must be indented the same amount.
+
+### What Does `return` Do?
+
+`return` is how your function **sends a value back** to whoever called it. Without `return`, your function does the work but doesn't give you the answer.
+
+```python
+# This function RETURNS a value — you can use the result
+def add_ten(x):
+    return x + 10
+
+result = add_ten(5)
+print(result)  # 15
+
+# This function PRINTS but doesn't RETURN — you can't save the result
+def show_ten(x):
+    print(x + 10)
+
+result = show_ten(5)  # prints 15, but...
+print(result)          # prints None — oops!
+```
+
+For the exercises in this class, always use `return` so the tests can check your answers.
+
+---
+
+## Multiple Parameters
+
+Functions can take **more than one input**. Just separate them with commas:
+
+```python
+def add(a, b):
+    return a + b
+
+print(add(3, 7))    # 10
+print(add(100, 1))  # 101
+```
+
+Think of it like a machine with **two input slots** instead of one. You put a value into each slot, and the machine uses both to make the output.
+
+Here's another example:
+
+```python
+def full_name(first, last):
+    return first + " " + last
+
+print(full_name("Ada", "Lovelace"))  # Ada Lovelace
+```
+
+---
+
+## Putting It All Together
+
+Let's write a slightly bigger function that uses several things we learned:
+
+```python
+def describe(name, age):
+    days = age * 365
+    message = name + " is about " + str(days) + " days old!"
+    return message
+
+print(describe("Leo", 10))
+# Leo is about 3650 days old!
+```
+
+Notice `str(days)` — that converts the number `3650` into the string `"3650"` so we can glue it together with the other text. You can't mix numbers and strings with `+` without converting first!
+
+---
+
+## Recap
+
+Here's everything you learned today:
+
+| Concept | What it does | Example |
+|---------|-------------|---------|
+| `print()` | Shows something on screen | `print("Hi!")` |
+| Variables | Store values with a name | `x = 10` |
+| Strings | Text in quotes | `"hello"` |
+| Integers | Whole numbers | `42` |
+| Math operators | `+`, `-`, `*`, `//`, `%` | `17 % 5` gives `2` |
+| `def` | Define a function | `def greet(name):` |
+| `return` | Send a value back | `return x + 1` |
+| `len()` | Length of a string | `len("hi")` gives `2` |
+| String indexing | Get one character | `"hi"[0]` gives `"h"` |
+| Concatenation | Join strings with `+` | `"a" + "b"` gives `"ab"` |
+
+---
+
+## You're Ready!
+
+That was a LOT of new stuff, and you made it through! You now know enough Python to write real functions that do real things.
+
+Head over to the exercises and try building three functions on your own. Don't worry if you get stuck — that's totally normal. Read the error messages, re-read the lesson, and try again. Every programmer in the world started exactly where you are right now.
+
+Let's go!

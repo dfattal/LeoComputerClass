@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { useAccent } from "./AccentContext";
 
 export default function VerticalResizeHandle({
   onResize,
@@ -13,6 +14,7 @@ export default function VerticalResizeHandle({
   onStepResize?: (direction: number) => void;
   ratio?: number;
 }) {
+  const accent = useAccent();
   const startY = useRef(0);
 
   const handlePointerDown = useCallback(
@@ -65,10 +67,10 @@ export default function VerticalResizeHandle({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label="Resize editor and output"
-      className="group relative z-10 flex h-0 shrink-0 cursor-row-resize items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+      className={`group relative z-10 flex h-0 shrink-0 cursor-row-resize items-center justify-center focus:outline-none focus-visible:ring-2 ${accent.ring}`}
     >
       {/* Visible bar */}
-      <div className="h-px w-full bg-stone-200 transition-colors group-hover:bg-indigo-400 dark:bg-stone-700 dark:group-hover:bg-indigo-500" />
+      <div className={`h-px w-full bg-stone-200 transition-colors ${accent.handleHover} dark:bg-stone-700`} />
       {/* Wider invisible hit area */}
       <div className="absolute inset-x-0 -bottom-1.5 -top-1.5" />
     </div>

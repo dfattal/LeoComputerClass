@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useAccent } from "./AccentContext";
 
 export interface SidebarPhase {
   phase: number;
@@ -30,6 +31,7 @@ function SidebarNav({
   currentLesson: string;
   onSelect?: () => void;
 }) {
+  const accent = useAccent();
   return (
     <nav className="space-y-4 p-4">
       {phases.map((phase) => {
@@ -68,7 +70,7 @@ function SidebarNav({
                     onClick={onSelect}
                     className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all ${
                       isActive
-                        ? "bg-indigo-600 font-medium text-white shadow-sm shadow-indigo-600/25"
+                        ? accent.sidebar
                         : "text-stone-600 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-800"
                     }`}
                     title={w.title}

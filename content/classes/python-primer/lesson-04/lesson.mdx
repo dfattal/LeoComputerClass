@@ -1,0 +1,161 @@
+# Making Decisions & Repeating Things
+
+So far, your programs run every line from top to bottom, no matter what. But real programs need to **make choices** and **repeat things**. Today you'll teach your code to think for itself!
+
+---
+
+## If / Elif / Else — Teaching Your Code to Choose
+
+Imagine a **traffic light**:
+- If the light is **green** → go!
+- Elif (else if) the light is **yellow** → slow down!
+- Else (it must be red) → stop!
+
+That's exactly how `if`/`elif`/`else` works in Python:
+
+```python
+light = "green"
+
+if light == "green":
+    print("Go!")
+elif light == "yellow":
+    print("Slow down!")
+else:
+    print("Stop!")
+```
+
+### How it works
+
+1. Python checks the `if` condition first. If it's `True`, it runs that block and **skips the rest**.
+2. If the `if` was `False`, Python checks each `elif` in order.
+3. If **nothing** matched, the `else` block runs (it catches everything left over).
+
+### Comparison operators
+
+You compare things using these symbols:
+
+| Symbol | Meaning             | Example        |
+|--------|---------------------|----------------|
+| `==`   | equals              | `5 == 5` → True  |
+| `!=`   | not equal           | `5 != 3` → True  |
+| `<`    | less than           | `3 < 5` → True   |
+| `>`    | greater than        | `5 > 3` → True   |
+| `<=`   | less than or equal  | `5 <= 5` → True  |
+| `>=`   | greater than or equal | `5 >= 3` → True |
+
+> **Watch out!** A single `=` means "put this value in a variable." A double `==` means "are these two things equal?" They're very different!
+
+### Indentation matters!
+
+Just like with functions, the code inside an `if` block **must be indented**. Python uses indentation to know what belongs inside each block:
+
+```python
+score = 85
+
+if score >= 90:
+    print("A")       # indented = inside the if
+elif score >= 80:
+    print("B")       # indented = inside the elif
+else:
+    print("C")       # indented = inside the else
+
+print("Done!")        # NOT indented = runs no matter what
+```
+
+---
+
+## For Loops — Doing Something Over and Over
+
+Imagine a recipe that says: *"Stir 10 times."* You don't need 10 separate instructions — you just **repeat** the same step. That's a **for loop**!
+
+### Looping through a string
+
+You can visit each letter in a string, one at a time:
+
+```python
+for letter in "hello":
+    print(letter)
+# prints: h, e, l, l, o (each on its own line)
+```
+
+### Looping through a list
+
+Same idea works for lists:
+
+```python
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+```
+
+### Using range() — Loop with numbers
+
+`range()` gives you a sequence of numbers. It's like a countdown timer you can customize!
+
+```python
+for i in range(5):
+    print(i)
+# prints: 0, 1, 2, 3, 4
+```
+
+Notice it starts at **0** and stops **before** 5. (Just like list indexes!)
+
+You can also control the start, stop, and step:
+
+```python
+# range(start, stop) — from start up to (but not including) stop
+for i in range(2, 6):
+    print(i)
+# prints: 2, 3, 4, 5
+
+# range(start, stop, step) — skip by step each time
+for i in range(0, 10, 3):
+    print(i)
+# prints: 0, 3, 6, 9
+
+# Count backwards with a negative step!
+for i in range(5, 0, -1):
+    print(i)
+# prints: 5, 4, 3, 2, 1
+```
+
+### Building a string in a loop
+
+A super useful trick: start with an empty string and add to it each time through the loop:
+
+```python
+result = ""
+for i in range(5, 0, -1):
+    result = result + str(i) + " "
+result = result + "Blastoff!"
+print(result)   # "5 4 3 2 1 Blastoff!"
+```
+
+> **Tip:** `str(i)` turns a number into a string so you can glue it onto other text.
+
+---
+
+## Default Parameters — A Function's "Usual" Value
+
+Sometimes a function has a parameter that's *usually* the same value, but you want to be able to change it sometimes. That's a **default parameter**:
+
+```python
+def greet(name, greeting="Hello"):
+    return greeting + ", " + name + "!"
+
+print(greet("Leo"))              # "Hello, Leo!"
+print(greet("Leo", "Hey there")) # "Hey there, Leo!"
+```
+
+If you don't pass a `greeting`, Python uses `"Hello"`. If you do pass one, it uses yours instead. It's like ordering your "usual" at a restaurant — you *could* order something different, but if you don't say anything, you get the usual!
+
+---
+
+## Putting It All Together
+
+Now you have some serious **power tools**:
+- **`if`/`elif`/`else`** — your code can make decisions
+- **`for` loops** — your code can repeat things
+- **Default parameters** — your functions can have smart defaults
+
+Time to put these to work in the exercises!

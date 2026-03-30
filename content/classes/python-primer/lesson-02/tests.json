@@ -1,0 +1,29 @@
+[
+  {
+    "entry": "secret_message",
+    "cases": [
+      {"name": "secret_message('olleh')", "args": ["olleh"], "expected": "hello"},
+      {"name": "secret_message('!edoc terces')", "args": ["!edoc terces"], "expected": "secret code!"},
+      {"name": "secret_message('yps')", "args": ["yps"], "expected": "spy"},
+      {"name": "secret_message('a')", "args": ["a"], "expected": "a"}
+    ]
+  },
+  {
+    "entry": "censor",
+    "cases": [
+      {"name": "censor('cats are great cats', 'cats')", "args": ["cats are great cats", "cats"], "expected": "**** are great ****"},
+      {"name": "censor('oh no oh no', 'no')", "args": ["oh no oh no", "no"], "expected": "oh ** oh **"},
+      {"name": "censor('hello world', 'xyz')", "args": ["hello world", "xyz"], "expected": "hello world"},
+      {"name": "censor('aaa', 'a')", "args": ["aaa", "a"], "expected": "***"}
+    ]
+  },
+  {
+    "entry": "vowel_count",
+    "cases": [
+      {"name": "vowel_count('hello')", "args": ["hello"], "expected": 2},
+      {"name": "vowel_count('AEIOU')", "args": ["AEIOU"], "expected": 5},
+      {"name": "vowel_count('rhythm')", "args": ["rhythm"], "expected": 0},
+      {"name": "vowel_count('Beautiful')", "args": ["Beautiful"], "expected": 5}
+    ]
+  }
+]

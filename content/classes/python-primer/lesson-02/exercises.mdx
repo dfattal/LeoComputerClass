@@ -1,0 +1,67 @@
+# Exercises: Strings Are Superpowers
+
+## Exercise 1: The Spy Decoder -- `secret_message(text)`
+
+A spy sent you a message, but they wrote it **backwards** to keep it secret! Your job is to reverse the text so you can read it.
+
+### Examples
+
+```python
+secret_message("olleh")          # Returns "hello"
+secret_message("!edoc terces")   # Returns "secret code!"
+```
+
+### Hints
+
+**Hint 1:** Remember the magic backwards trick? `text[::-1]` reverses any string!
+
+**Hint 2:** This one is simpler than you think -- just one line of code inside the function.
+
+---
+
+## Exercise 2: The Word Censor -- `censor(text, banned)`
+
+You're building a message filter! Replace every time the **banned word** appears with stars (`*`) of the **same length**.
+
+For example, if the banned word is `"cats"` (4 letters), replace it with `"****"` (4 stars).
+
+### Examples
+
+```python
+censor("cats are great cats", "cats")   # Returns "**** are great ****"
+censor("oh no oh no", "no")             # Returns "oh ** oh **"
+```
+
+### Hints
+
+**Hint 1:** Use `len(banned)` to find out how many stars you need.
+
+**Hint 2:** You can make a string of stars like this: `"*" * 4` gives you `"****"`.
+
+**Hint 3:** Use `.replace()` to swap the banned word for the stars.
+
+---
+
+## Exercise 3: The Vowel Counter -- `vowel_count(text)`
+
+Count all the **vowels** in the text. Vowels are the letters **a, e, i, o, u**. Both uppercase and lowercase count!
+
+### Examples
+
+```python
+vowel_count("hello")       # Returns 2  (e and o)
+vowel_count("AEIOU")       # Returns 5  (all five vowels!)
+vowel_count("rhythm")      # Returns 0  (no vowels at all)
+```
+
+### Hints
+
+**Hint 1:** Use `.lower()` to make the text all lowercase first -- then you only need to check for lowercase vowels.
+
+**Hint 2:** The `.count()` method can count how many times a letter appears. Use it for each vowel and add them up!
+
+**Hint 3:** Your answer will look something like:
+```python
+lower_text = text.lower()
+total = lower_text.count("a") + lower_text.count("e") + ...
+```

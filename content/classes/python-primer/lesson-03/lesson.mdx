@@ -1,0 +1,144 @@
+# Containers: Tuples, Lists & Dicts
+
+So far you know how to store one thing in a variable — a number, a string, a boolean.
+But what if you want to store a *bunch* of things together? That's where **containers** come in!
+
+Python has three awesome containers we'll learn today. Each one works a little differently, kind of like three different ways to carry your stuff.
+
+---
+
+## Tuples — The Sealed Envelope
+
+A **tuple** is like a sealed envelope. You put items inside, seal it shut, and nobody can change what's in there. You can *look* at what's inside, but you can't swap things out.
+
+You make a tuple with **parentheses** `()`:
+
+```python
+point = (3, 5)
+print(point)        # (3, 5)
+```
+
+### Reading items from a tuple
+
+Each item has an **index** — its position number, starting from **0** (not 1!):
+
+```python
+point = (3, 5)
+print(point[0])     # 3  (the first item)
+print(point[1])     # 5  (the second item)
+```
+
+### Unpacking a tuple
+
+Here's a cool trick — you can pull items out into separate variables all at once:
+
+```python
+point = (3, 5)
+x, y = point
+print(x)   # 3
+print(y)   # 5
+```
+
+### Returning tuples from functions
+
+Tuples are super handy when a function needs to send back *more than one thing*:
+
+```python
+def min_max(a, b):
+    if a < b:
+        return (a, b)
+    else:
+        return (b, a)
+
+smallest, biggest = min_max(7, 2)
+print(smallest)   # 2
+print(biggest)    # 7
+```
+
+---
+
+## Lists — The Backpack
+
+A **list** is like a backpack. You can toss items in, take them out, and rearrange them whenever you want. Unlike a sealed envelope, a list is totally flexible!
+
+You make a list with **square brackets** `[]`:
+
+```python
+snacks = ["apple", "cookie", "banana"]
+print(snacks)    # ['apple', 'cookie', 'banana']
+```
+
+### Reading items from a list
+
+Just like tuples, you use an index starting from 0:
+
+```python
+snacks = ["apple", "cookie", "banana"]
+print(snacks[0])     # apple   (first item)
+print(snacks[1])     # cookie  (second item)
+print(snacks[-1])    # banana  (last item — negative numbers count from the end!)
+```
+
+### How many items?
+
+Use `len()` to count the items in a list:
+
+```python
+snacks = ["apple", "cookie", "banana"]
+print(len(snacks))   # 3
+```
+
+### Counting items
+
+Want to know how many times something appears? Use `.count()`:
+
+```python
+snacks = ["apple", "cookie", "apple", "banana"]
+print(snacks.count("apple"))   # 2
+```
+
+---
+
+## Dictionaries — The Labeled Jars
+
+A **dictionary** (or **dict**) is like a shelf of labeled jars. Each jar has a **label** (called a **key**) and something **inside** (called a **value**). You look things up by their label, not by position.
+
+You make a dict with **curly braces** `{}`:
+
+```python
+pet = {"name": "Buddy", "age": 3, "type": "dog"}
+print(pet)   # {'name': 'Buddy', 'age': 3, 'type': 'dog'}
+```
+
+### Looking up a value
+
+Use the key inside square brackets:
+
+```python
+pet = {"name": "Buddy", "age": 3}
+print(pet["name"])   # Buddy
+print(pet["age"])    # 3
+```
+
+### Building a dict piece by piece
+
+You can start with an empty dict and add items one at a time:
+
+```python
+scores = {}
+scores["math"] = 95
+scores["science"] = 88
+print(scores)   # {'math': 95, 'science': 88}
+```
+
+---
+
+## Quick Comparison
+
+| Container  | Symbol | Can change it? | Best for |
+|-----------|--------|---------------|----------|
+| Tuple     | `( )`  | No (sealed!)  | Fixed groups like coordinates |
+| List      | `[ ]`  | Yes           | Collections you might change |
+| Dict      | `{ }`  | Yes           | Looking things up by name |
+
+Now let's practice using all three in the exercises!

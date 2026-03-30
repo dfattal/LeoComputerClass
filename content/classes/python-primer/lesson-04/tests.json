@@ -1,0 +1,32 @@
+[
+  {
+    "entry": "grade",
+    "cases": [
+      {"name": "grade(95)", "args": [95], "expected": "A"},
+      {"name": "grade(85)", "args": [85], "expected": "B"},
+      {"name": "grade(72)", "args": [72], "expected": "C"},
+      {"name": "grade(50)", "args": [50], "expected": "Try again!"},
+      {"name": "grade(90)", "args": [90], "expected": "A"},
+      {"name": "grade(80)", "args": [80], "expected": "B"},
+      {"name": "grade(70)", "args": [70], "expected": "C"}
+    ]
+  },
+  {
+    "entry": "countdown",
+    "cases": [
+      {"name": "countdown(5)", "args": [5], "expected": "5 4 3 2 1 Blastoff!"},
+      {"name": "countdown(3)", "args": [3], "expected": "3 2 1 Blastoff!"},
+      {"name": "countdown(10, 3)", "args": [10, 3], "expected": "10 7 4 1 Blastoff!"},
+      {"name": "countdown(1)", "args": [1], "expected": "1 Blastoff!"}
+    ]
+  },
+  {
+    "entry": "every_other",
+    "cases": [
+      {"name": "every_other('abcdef')", "args": ["abcdef"], "expected": "ace"},
+      {"name": "every_other('hello!')", "args": ["hello!"], "expected": "hlo"},
+      {"name": "every_other('Python')", "args": ["Python"], "expected": "Pto"},
+      {"name": "every_other('a')", "args": ["a"], "expected": "a"}
+    ]
+  }
+]

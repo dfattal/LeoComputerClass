@@ -1,0 +1,5 @@
+[
+  {"criterion": "String operations used correctly", "weight": 40, "description": "Uses slicing, replace, count, and other string methods properly"},
+  {"criterion": "Correct output", "weight": 40, "description": "Returns the right values for all test cases"},
+  {"criterion": "Clean code", "weight": 20, "description": "Readable code with proper indentation"}
+]

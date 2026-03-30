@@ -1,0 +1,49 @@
+# Exercises: Containers
+
+Time to practice with tuples, lists, and dicts! You've got three challenges below.
+
+---
+
+## Exercise 1: The Tuple Swapper
+
+Write a function called `swap` that takes a tuple with two items and returns a new tuple with them flipped around.
+
+```
+swap((3, 7))            → (7, 3)
+swap(("left", "right")) → ("right", "left")
+```
+
+**How to think about it:** Imagine someone hands you a sealed envelope with two things inside. You open it, read both items, then put them into a *new* envelope in reverse order.
+
+> **Hint:** You can get the first item with `pair[0]` and the second with `pair[1]`. Then build a new tuple with them swapped!
+
+---
+
+## Exercise 2: Bookends
+
+Write a function called `first_and_last` that takes a list and returns a tuple containing the **first** and **last** items.
+
+```
+first_and_last([10, 20, 30, 40]) → (10, 40)
+first_and_last(["a", "b", "c"])  → ("a", "c")
+first_and_last([99])             → (99, 99)
+```
+
+**How to think about it:** Think of a row of books on a shelf. You only care about the two bookends — the first one and the last one.
+
+> **Hint:** The first item is at index `[0]`. The last item is at index `[-1]` (remember, negative numbers count from the end!). If there's only one item, it's both the first *and* the last.
+
+---
+
+## Exercise 3: Snack Inventory
+
+Write a function called `inventory` that takes a list of snack names and returns a dictionary showing how many of each snack there are.
+
+```
+inventory(["apple", "cookie", "apple"]) → {"apple": 2, "cookie": 1}
+inventory(["a", "b", "a", "b", "a"])    → {"a": 3, "b": 2}
+```
+
+**How to think about it:** Imagine you dump out your backpack full of snacks and want to organize them. You grab some labeled jars and count how many of each snack you have.
+
+> **Hint:** Here's a neat trick! Use `set(items)` to get the unique snack names (no duplicates). Then loop through each unique name and use `items.count(name)` to see how many times it appears. Store each count in your dictionary!

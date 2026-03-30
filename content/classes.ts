@@ -16,6 +16,18 @@ export interface ClassDef {
 
 export const classes: ClassDef[] = [
   {
+    slug: "python-primer",
+    name: "Python Primer",
+    tagline: "Learn Python in 5 Fun Lessons",
+    description:
+      "Variables, functions, strings, loops, and more — everything you need to start coding in Python. No experience required!",
+    accentColor: "emerald",
+    heroImage: "/hero-python.webp",
+    studentName: "Student",
+    contentDir: "python-primer",
+    language: "python",
+  },
+  {
     slug: "leo",
     name: "Leo's Computer Class",
     tagline: "Build a Computer From Physics",

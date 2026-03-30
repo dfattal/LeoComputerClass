@@ -1,0 +1,176 @@
+# While Loops & Bit Magic
+
+Welcome to your final Python Primer lesson! Today you'll learn two awesome things: **while loops** (loops that keep going until you say stop) and **bitwise operators** (the secret language computers use to think). Let's go!
+
+---
+
+## While Loops — Keep Going Until You're Done
+
+You already know `for` loops, which repeat a set number of times. A **while loop** is different — it keeps going **as long as a condition is true**.
+
+Think of it like stirring pancake batter: *"Keep stirring **while** there are still lumps."* You don't know exactly how many stirs it will take — you just keep going until the batter is smooth!
+
+```python
+count = 1
+while count <= 5:
+    print(count)
+    count = count + 1
+# prints: 1, 2, 3, 4, 5
+```
+
+### How it works
+
+1. Python checks the condition (`count <= 5`). Is it `True`?
+2. If yes, it runs the indented code inside the loop.
+3. Then it goes **back to step 1** and checks again.
+4. When the condition becomes `False`, the loop stops and Python moves on.
+
+### The counter pattern
+
+The most common while loop uses a **counter** — a variable that changes each time through the loop:
+
+```python
+i = 0
+while i < 3:
+    print("Loop number", i)
+    i = i + 1
+# Loop number 0
+# Loop number 1
+# Loop number 2
+```
+
+> **Watch out!** You **must** change something inside the loop that eventually makes the condition `False`. Otherwise, you get an **infinite loop** — a loop that never ends! (Don't worry, you can always stop your program if that happens.)
+
+---
+
+## Break — The Emergency Exit
+
+Sometimes you want to leave a loop early — like searching through a drawer and stopping the moment you find your toy. That's what `break` does!
+
+```python
+numbers = [4, 7, 2, 9, 1]
+i = 0
+while i < len(numbers):
+    if numbers[i] == 9:
+        print("Found 9 at position", i)
+        break    # Stop searching — we found it!
+    i = i + 1
+```
+
+A popular pattern is `while True:` with a `break` inside. The loop runs forever *unless* something triggers the break:
+
+```python
+while True:
+    guess = 7  # imagine this comes from a player
+    if guess == 7:
+        print("You got it!")
+        break   # Exit the loop!
+```
+
+---
+
+## Bitwise Operators — The Secret Language of Computers
+
+Here's something cool: **computers don't think in regular numbers like we do.** Deep down, everything is **binary** — just 1s and 0s. Each digit is called a **bit**.
+
+Think of a row of **lightbulbs**. Each bulb is either ON (1) or OFF (0):
+
+```
+Number 7 =  1  1  1     (three bulbs ON)
+Number 5 =  1  0  1     (first and last ON, middle OFF)
+Number 8 =  1  0  0  0  (only the first bulb ON)
+Number 3 =    0  1  1   (last two ON)
+```
+
+Python has special operators that work directly on these bits — like spy encoding tricks!
+
+### AND (`&`) — Both bits must be ON
+
+Compare two numbers bit by bit. A bit in the result is 1 **only if both** bits are 1:
+
+```
+  5  →  1 0 1
+& 3  →  0 1 1
+  ─────────
+  1  →  0 0 1   (only the last column has two 1s)
+```
+
+```python
+print(5 & 3)   # 1
+```
+
+### OR (`|`) — At least one bit must be ON
+
+A bit in the result is 1 if **either or both** bits are 1:
+
+```
+  5  →  1 0 1
+| 3  →  0 1 1
+  ─────────
+  7  →  1 1 1   (every column has at least one 1)
+```
+
+```python
+print(5 | 3)   # 7
+```
+
+### XOR (`^`) — Exactly one bit must be ON
+
+XOR is the "spy operator." A bit is 1 only if the two bits are **different**:
+
+```
+  5  →  1 0 1
+^ 3  →  0 1 1
+  ─────────
+  6  →  1 1 0   (columns where bits differ)
+```
+
+```python
+print(5 ^ 3)   # 6
+```
+
+### Left Shift (`<<`) — Multiply by 2
+
+Sliding all the bits to the left is the same as **multiplying by 2**:
+
+```
+  3    →  0 1 1
+  3<<1 →  1 1 0  = 6   (everything moved left, a 0 fills in)
+```
+
+```python
+print(3 << 1)   # 6
+```
+
+### Right Shift (`>>`) — Divide by 2
+
+Sliding bits to the right is like **dividing by 2** (dropping the remainder):
+
+```
+  6    →  1 1 0
+  6>>1 →  0 1 1  = 3   (everything moved right)
+```
+
+```python
+print(6 >> 1)   # 3
+```
+
+### The odd/even trick
+
+Here's a neat trick: `n & 1` checks the **last bit**. If it's 1, the number is **odd**. If it's 0, the number is **even**:
+
+```python
+print(7 & 1)   # 1 → odd!
+print(8 & 1)   # 0 → even!
+```
+
+---
+
+## Putting It All Together
+
+Today you learned:
+- **`while` loops** — keep repeating as long as a condition is true
+- **`break`** — the emergency exit that stops a loop immediately
+- **Bitwise operators** (`&`, `|`, `^`, `<<`, `>>`) — the secret language of binary
+
+**You now know enough Python to tackle Leo's Computer Class and Leila's Bio Lab! You're ready!** Time to put these skills to work in the exercises.

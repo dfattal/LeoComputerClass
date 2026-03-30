@@ -1,0 +1,60 @@
+# Exercises: Making Decisions & Repeating Things
+
+---
+
+## Exercise 1: The Grade Machine
+
+Write a function called `grade(score)` that takes a number from 0 to 100 and returns the letter grade:
+
+| Score        | Grade          |
+|-------------|----------------|
+| 90 or above | `"A"`          |
+| 80 to 89    | `"B"`          |
+| 70 to 79    | `"C"`          |
+| Below 70    | `"Try again!"` |
+
+**Examples:**
+```python
+grade(95)  # returns "A"
+grade(85)  # returns "B"
+grade(72)  # returns "C"
+grade(50)  # returns "Try again!"
+```
+
+> **Hint:** Start with the highest grade and work your way down using `if`, `elif`, and `else`. Remember: if someone scores exactly 90, they get an "A"!
+
+---
+
+## Exercise 2: Rocket Countdown
+
+Write a function called `countdown(start, step=1)` that counts down from `start` to 1, skipping by `step`, and ends with `"Blastoff!"`.
+
+- Numbers should be separated by **spaces**
+- The default step is 1 (counts down by 1 each time)
+- Always ends with `"Blastoff!"`
+
+**Examples:**
+```python
+countdown(5)       # returns "5 4 3 2 1 Blastoff!"
+countdown(3)       # returns "3 2 1 Blastoff!"
+countdown(10, 3)   # returns "10 7 4 1 Blastoff!"
+countdown(1)       # returns "1 Blastoff!"
+```
+
+> **Hint:** Use `range(start, 0, -step)` to count backwards. Build up a string by starting with `result = ""` and adding each number plus a space. Don't forget to add `"Blastoff!"` at the end! Use `str(number)` to turn a number into text.
+
+---
+
+## Exercise 3: Skip Letters
+
+Write a function called `every_other(text)` that returns every other letter from the text — the 0th, 2nd, 4th, and so on.
+
+**Examples:**
+```python
+every_other("abcdef")  # returns "ace"
+every_other("hello!")   # returns "hlo"
+every_other("Python")   # returns "Pto"
+every_other("a")        # returns "a"
+```
+
+> **Hint:** Use `range(0, len(text), 2)` to get the positions 0, 2, 4, etc. Then use `text[i]` to grab the letter at each position and build up your result string.

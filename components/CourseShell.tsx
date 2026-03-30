@@ -5,6 +5,8 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
 import type { TestEntry, VizConfig } from "@/lib/lessons/loadLesson";
+import { getClassBySlug } from "@/content/classes";
+import { AccentProvider, useAccent } from "./AccentContext";
 import dynamic from "next/dynamic";
 
 const CrisprSimulator = dynamic(
@@ -57,6 +59,47 @@ export default function CourseShell({
   starterCode?: string;
   vizConfig?: VizConfig;
 }) {
+  const accentColor = getClassBySlug(classSlug)?.accentColor ?? "indigo";
+
+  return (
+    <AccentProvider color={accentColor}>
+      <CourseShellInner
+        classSlug={classSlug}
+        lessonSlug={lessonSlug}
+        tests={tests}
+        lessonContent={lessonContent}
+        exercisesContent={exercisesContent}
+        phases={phases}
+        weeks={weeks}
+        starterCode={starterCode}
+        vizConfig={vizConfig}
+      />
+    </AccentProvider>
+  );
+}
+
+function CourseShellInner({
+  classSlug,
+  lessonSlug,
+  tests,
+  lessonContent,
+  exercisesContent,
+  phases,
+  weeks,
+  starterCode,
+  vizConfig,
+}: {
+  classSlug: string;
+  lessonSlug: string;
+  tests: TestEntry[];
+  lessonContent: ReactNode;
+  exercisesContent: ReactNode;
+  phases: SidebarPhase[];
+  weeks: SidebarWeek[];
+  starterCode?: string;
+  vizConfig?: VizConfig;
+}) {
+  const accent = useAccent();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [mounted, setMounted] = useState(false);
 
@@ -272,13 +315,13 @@ export default function CourseShell({
       )}
       {displayAiFeedback && <AIFeedback feedback={displayAiFeedback} />}
       {displayInstructorFeedback && (
-        <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950/40">
+        <div className={`rounded-lg border ${accent.feedback.border} ${accent.feedback.bg} p-4`}>
           <div className="mb-2 flex items-center gap-2">
-            <span className="text-sm font-semibold text-indigo-800 dark:text-indigo-200">
+            <span className={`text-sm font-semibold ${accent.feedback.title}`}>
               Instructor Feedback
             </span>
           </div>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-indigo-900 dark:text-indigo-100">
+          <p className={`whitespace-pre-wrap text-sm leading-relaxed ${accent.feedback.body}`}>
             {displayInstructorFeedback}
           </p>
         </div>
@@ -296,7 +339,7 @@ export default function CourseShell({
       <button
         onClick={handleRun}
         disabled={loading}
-        className="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:opacity-50"
+        className={`rounded-md ${accent.bg} px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
       >
         {loading ? "Running..." : "Run"}
       </button>
@@ -310,7 +353,7 @@ export default function CourseShell({
       <button
         onClick={handleSubmit}
         disabled={submitting || !code.trim()}
-        className="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:opacity-50"
+        className={`rounded-md ${accent.bg} px-3 py-1 text-xs font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
       >
         {submitting
           ? "Submitting..."

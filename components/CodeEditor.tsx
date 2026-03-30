@@ -39,8 +39,8 @@ export default function CodeEditor({
 
   if (!mounted) {
     return (
-      <div className="flex h-full items-center justify-center border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-        <span className="text-sm text-zinc-500">Loading editor...</span>
+      <div className="flex h-full items-center justify-center border-b border-stone-200 bg-stone-50 dark:border-stone-800 dark:bg-stone-900">
+        <span className="text-sm text-stone-500">Loading editor...</span>
       </div>
     );
   }

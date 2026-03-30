@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { useAccent } from "./AccentContext";
 
 export default function ResizeHandle({
   onResize,
@@ -13,6 +14,7 @@ export default function ResizeHandle({
   onStepResize?: (direction: number) => void;
   ratio?: number;
 }) {
+  const accent = useAccent();
   const startX = useRef(0);
 
   const handlePointerDown = useCallback(
@@ -65,10 +67,10 @@ export default function ResizeHandle({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label="Resize panels"
-      className="group relative z-10 flex w-0 shrink-0 cursor-col-resize items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+      className={`group relative z-10 flex w-0 shrink-0 cursor-col-resize items-center justify-center focus:outline-none focus-visible:ring-2 ${accent.ring}`}
     >
       {/* Visible bar */}
-      <div className="h-full w-px bg-stone-200 transition-colors group-hover:bg-indigo-400 dark:bg-stone-700 dark:group-hover:bg-indigo-500" />
+      <div className={`h-full w-px bg-stone-200 transition-colors ${accent.handleHover} dark:bg-stone-700`} />
       {/* Wider invisible hit area */}
       <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
     </div>

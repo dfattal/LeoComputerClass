@@ -23,7 +23,12 @@ export default async function ClassHomePage({
           {classDef.name}
         </h1>
         <p className="mb-6 text-lg text-stone-500">{classDef.description}</p>
-        <span className="rounded-full bg-violet-100 px-4 py-2 text-sm font-semibold text-violet-700 dark:bg-violet-900 dark:text-violet-300">
+        <span className={`rounded-full px-4 py-2 text-sm font-semibold ${
+          { indigo: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
+            violet: "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
+            emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
+          }[classDef.accentColor] ?? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
+        }`}>
           Coming Soon
         </span>
         <Link
@@ -51,18 +56,27 @@ export default async function ClassHomePage({
   );
 
   // Accent color mapping
-  const accentClasses: Record<string, { bg: string; text: string; overlay: string; badge: string }> = {
+  const accentClasses: Record<string, { bg: string; text: string; subtitleText: string; overlay: string; badge: string }> = {
     indigo: {
       bg: "bg-indigo-500",
       text: "text-indigo-400",
+      subtitleText: "text-indigo-300",
       overlay: "from-indigo-950/80 via-stone-950/75 to-stone-950/90",
       badge: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
     },
     violet: {
       bg: "bg-violet-500",
       text: "text-violet-400",
+      subtitleText: "text-violet-300",
       overlay: "from-violet-950/80 via-stone-950/75 to-stone-950/90",
       badge: "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
+    },
+    emerald: {
+      bg: "bg-emerald-500",
+      text: "text-emerald-400",
+      subtitleText: "text-emerald-300",
+      overlay: "from-emerald-950/80 via-stone-950/75 to-stone-950/90",
+      badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
     },
   };
   const accent = accentClasses[classDef.accentColor] ?? accentClasses.indigo;
@@ -70,7 +84,7 @@ export default async function ClassHomePage({
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
       {/* Hero */}
-      <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 py-24 text-center">
+      <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 pb-24 pt-32 text-center">
         <Image
           src={classDef.heroImage}
           alt=""
@@ -83,7 +97,7 @@ export default async function ClassHomePage({
         />
 
         <div className="relative z-10">
-          <p className={`mb-4 text-sm font-medium uppercase tracking-widest ${accent.text.replace("text-", "text-").replace("-400", "-300")}`}>
+          <p className={`mb-4 text-sm font-medium uppercase tracking-widest ${accent.subtitleText}`}>
             A course for curious kids
           </p>
           <h1 className="mb-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">

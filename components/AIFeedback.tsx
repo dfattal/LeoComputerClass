@@ -24,9 +24,9 @@ export default function AIFeedback({
         : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 
   return (
-    <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+    <div className="rounded-lg border border-stone-200 p-4 dark:border-stone-800">
       <div className="mb-3 flex items-center gap-2">
-        <h4 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        <h4 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
           AI Review
         </h4>
         {f.verdict && (
@@ -40,10 +40,10 @@ export default function AIFeedback({
 
       {f.correctness && (
         <div className="mb-3">
-          <h5 className="text-xs font-semibold uppercase text-zinc-500">
+          <h5 className="text-xs font-semibold uppercase text-stone-500">
             Correctness
           </h5>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">
+          <p className="text-sm text-stone-700 dark:text-stone-300">
             {f.correctness}
           </p>
         </div>
@@ -51,10 +51,10 @@ export default function AIFeedback({
 
       {f.concepts && (
         <div className="mb-3">
-          <h5 className="text-xs font-semibold uppercase text-zinc-500">
+          <h5 className="text-xs font-semibold uppercase text-stone-500">
             Concepts
           </h5>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">
+          <p className="text-sm text-stone-700 dark:text-stone-300">
             {f.concepts}
           </p>
         </div>
@@ -62,10 +62,10 @@ export default function AIFeedback({
 
       {f.improvements && f.improvements.length > 0 && (
         <div className="mb-3">
-          <h5 className="text-xs font-semibold uppercase text-zinc-500">
+          <h5 className="text-xs font-semibold uppercase text-stone-500">
             Improvements
           </h5>
-          <ul className="ml-4 list-disc space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+          <ul className="ml-4 list-disc space-y-1 text-sm text-stone-700 dark:text-stone-300">
             {f.improvements.map((item, i) => (
               <li key={i}>{item}</li>
             ))}
@@ -75,10 +75,10 @@ export default function AIFeedback({
 
       {f.challenge_question && (
         <div className="mb-3">
-          <h5 className="text-xs font-semibold uppercase text-zinc-500">
+          <h5 className="text-xs font-semibold uppercase text-stone-500">
             Challenge Question
           </h5>
-          <p className="text-sm italic text-zinc-700 dark:text-zinc-300">
+          <p className="text-sm italic text-stone-700 dark:text-stone-300">
             {f.challenge_question}
           </p>
         </div>
@@ -86,10 +86,10 @@ export default function AIFeedback({
 
       {f.common_pitfalls_to_watch && f.common_pitfalls_to_watch.length > 0 && (
         <div>
-          <h5 className="text-xs font-semibold uppercase text-zinc-500">
+          <h5 className="text-xs font-semibold uppercase text-stone-500">
             Watch Out For
           </h5>
-          <ul className="ml-4 list-disc space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+          <ul className="ml-4 list-disc space-y-1 text-sm text-stone-700 dark:text-stone-300">
             {f.common_pitfalls_to_watch.map((item, i) => (
               <li key={i}>{item}</li>
             ))}

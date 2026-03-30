@@ -1,0 +1,83 @@
+# Lesson 1 — Exercises: Say Hello to Python
+
+## How This Works
+
+For each exercise, you'll write a **function** in the code editor on the right. When you click **Run Tests**, the computer will call your function with different inputs and check if it gives the right answers.
+
+Remember the pattern:
+
+```python
+def function_name(input):
+    # do something
+    return answer
+```
+
+Every function needs `def`, the right **indentation** (4 spaces), and a `return` statement. Let's go!
+
+---
+
+## Exercise 1: The Shouting Machine
+
+Write a function called `shout` that takes a word and makes it loud by adding `"!!!"` to the end.
+
+```python
+def shout(word):
+    # Return the word with "!!!" stuck on the end
+    pass
+```
+
+**Examples:**
+- `shout("hello")` should return `"hello!!!"`
+- `shout("wow")` should return `"wow!!!"`
+- `shout("Python")` should return `"Python!!!"`
+
+**Hint:** Remember how `+` glues strings together? `"hi" + "!!!"` gives you `"hi!!!"`. Your function just needs to take `word`, add `"!!!"` to it, and `return` the result.
+
+---
+
+## Exercise 2: How Many Days Old Are You?
+
+Write a function called `years_to_days` that converts years into days. Use 365 days per year (don't worry about leap years).
+
+```python
+def years_to_days(years):
+    # Return the number of days
+    pass
+```
+
+**Examples:**
+- `years_to_days(1)` should return `365`
+- `years_to_days(10)` should return `3650`
+- `years_to_days(0)` should return `0`
+
+**Hint:** If 1 year is 365 days, then 10 years is 10 times 365. Which math operator multiplies things together?
+
+---
+
+## Exercise 3: Name Badge Maker
+
+Write a function called `initials` that takes a first name and a last name, and returns the initials with dots.
+
+```python
+def initials(first, last):
+    # Return the first letter of each name with dots
+    pass
+```
+
+**Examples:**
+- `initials("Leo", "Fattal")` should return `"L.F."`
+- `initials("Ada", "Lovelace")` should return `"A.L."`
+- `initials("Guido", "Rossum")` should return `"G.R."`
+
+**Hint:** To get the first letter of a string, use `[0]`. So `"Leo"[0]` gives you `"L"`. Then use `+` to glue the letters and dots together. The pattern is: first letter + `"."` + second letter + `"."`.
+
+---
+
+## Tips If You're Stuck
+
+1. **IndentationError?** Make sure every line inside your function is indented with 4 spaces (or one Tab press).
+2. **Returning `None`?** You probably forgot the `return` keyword. `print()` shows something on screen but doesn't send it back.
+3. **TypeError about strings and numbers?** You might be trying to add a number to a string. Use `str()` to convert numbers to text first.
+4. **Still stuck?** Re-read the matching section in the lesson. The examples there will help!
+
+Good luck — you've got this!

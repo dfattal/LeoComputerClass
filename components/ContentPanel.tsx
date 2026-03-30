@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, type ReactNode } from "react";
+import { useAccent } from "./AccentContext";
 
 const tabs = ["Lesson", "Exercises"] as const;
 type Tab = (typeof tabs)[number];
@@ -15,6 +16,7 @@ export default function ContentPanel({
   lessonContent: ReactNode;
   exercisesContent: ReactNode;
 }) {
+  const accent = useAccent();
   const [active, setActive] = useState<Tab>("Lesson");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -55,13 +57,13 @@ export default function ContentPanel({
               tabIndex={active === tab ? 0 : -1}
               className={`relative py-2.5 text-sm font-medium transition-colors ${
                 active === tab
-                  ? "text-indigo-600 dark:text-indigo-400"
+                  ? accent.text
                   : "text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
               }`}
             >
               {tab}
               {active === tab && (
-                <span className="absolute inset-x-0 -bottom-px h-0.5 bg-indigo-600 dark:bg-indigo-400" />
+                <span className={`absolute inset-x-0 -bottom-px h-0.5 ${accent.underline}`} />
               )}
             </button>
           ))}
@@ -76,10 +78,10 @@ export default function ContentPanel({
         aria-labelledby={tabId(active)}
       >
         {active === "Lesson" && (
-          <article className="prose-custom">{lessonContent}</article>
+          <article>{lessonContent}</article>
         )}
         {active === "Exercises" && (
-          <article className="prose-custom">{exercisesContent}</article>
+          <article>{exercisesContent}</article>
         )}
       </div>
     </div>

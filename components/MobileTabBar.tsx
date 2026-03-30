@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useCallback } from "react";
+import { useAccent } from "./AccentContext";
 
 const tabs = ["Learn", "Code"] as const;
 export type MobileView = (typeof tabs)[number];
@@ -15,6 +16,7 @@ export default function MobileTabBar({
   active: MobileView;
   onChange: (view: MobileView) => void;
 }) {
+  const accent = useAccent();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const handleKeyDown = useCallback(
@@ -57,13 +59,13 @@ export default function MobileTabBar({
             tabIndex={active === tab ? 0 : -1}
             className={`relative flex-1 py-2.5 text-center text-sm font-medium transition-colors ${
               active === tab
-                ? "text-indigo-600 dark:text-indigo-400"
+                ? accent.text
                 : "text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
             }`}
           >
             {tab}
             {active === tab && (
-              <span className="absolute inset-x-0 -bottom-px h-0.5 bg-indigo-600 dark:bg-indigo-400" />
+              <span className={`absolute inset-x-0 -bottom-px h-0.5 ${accent.underline}`} />
             )}
           </button>
         ))}

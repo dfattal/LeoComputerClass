@@ -8,12 +8,20 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
   const accentBorder: Record<string, string> = {
     indigo: "hover:border-indigo-400 dark:hover:border-indigo-500",
     violet: "hover:border-violet-400 dark:hover:border-violet-500",
+    emerald: "hover:border-emerald-400 dark:hover:border-emerald-500",
   };
   const accentBadge: Record<string, string> = {
     indigo:
       "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
     violet:
       "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
+    emerald:
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
+  };
+  const accentLink: Record<string, string> = {
+    indigo: "text-indigo-600 dark:text-indigo-400",
+    violet: "text-violet-600 dark:text-violet-400",
+    emerald: "text-emerald-600 dark:text-emerald-400",
   };
 
   const cardClassName = `group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900 ${
@@ -34,7 +42,9 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
         />
         {isComingSoon && (
           <div className="absolute inset-0 flex items-center justify-center bg-stone-950/50">
-            <span className="rounded-full bg-violet-600 px-4 py-1.5 text-sm font-semibold text-white shadow-lg">
+            <span className={`rounded-full px-4 py-1.5 text-sm font-semibold text-white shadow-lg ${
+              cls.accentColor === "violet" ? "bg-violet-600" : cls.accentColor === "emerald" ? "bg-emerald-600" : "bg-indigo-600"
+            }`}>
               Coming Soon
             </span>
           </div>
@@ -59,9 +69,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
         {!isComingSoon && (
           <span
             className={`mt-auto inline-flex items-center gap-1 text-sm font-medium ${
-              cls.accentColor === "violet"
-                ? "text-violet-600 dark:text-violet-400"
-                : "text-indigo-600 dark:text-indigo-400"
+              accentLink[cls.accentColor] ?? accentLink.indigo
             }`}
           >
             Start Learning
@@ -89,7 +97,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
   }
 
   return (
-    <Link href={`/classes/${cls.slug}`} className={cardClassName}>
+    <Link href={`/classes/${cls.slug}`} className={`${cardClassName} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-400`}>
       {cardContent}
     </Link>
   );
@@ -105,7 +113,7 @@ export default function Home() {
         Pick your class and start learning
       </p>
 
-      <div className="grid w-full max-w-3xl gap-6 sm:grid-cols-2">
+      <div className="grid w-full max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {classes.map((cls) => (
           <ClassCard key={cls.slug} cls={cls} />
         ))}

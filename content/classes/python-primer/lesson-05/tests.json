@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "find_treasure",
+    "cases": [
+      {"name": "find_treasure([0, 0, 1, 0])", "args": [[0, 0, 1, 0]], "expected": 2},
+      {"name": "find_treasure([1, 0, 0])", "args": [[1, 0, 0]], "expected": 0},
+      {"name": "find_treasure([0, 0, 0])", "args": [[0, 0, 0]], "expected": -1},
+      {"name": "find_treasure([0, 0, 0, 0, 1])", "args": [[0, 0, 0, 0, 1]], "expected": 4}
+    ]
+  },
+  {
+    "entry": "secret_code",
+    "cases": [
+      {"name": "secret_code(5, 3)", "args": [5, 3], "expected": 13},
+      {"name": "secret_code(0, 0)", "args": [0, 0], "expected": 0},
+      {"name": "secret_code(7, 2)", "args": [7, 2], "expected": 15},
+      {"name": "secret_code(1, 1)", "args": [1, 1], "expected": 1}
+    ]
+  },
+  {
+    "entry": "count_ones",
+    "cases": [
+      {"name": "count_ones(7)", "args": [7], "expected": 3},
+      {"name": "count_ones(8)", "args": [8], "expected": 1},
+      {"name": "count_ones(0)", "args": [0], "expected": 0},
+      {"name": "count_ones(15)", "args": [15], "expected": 4},
+      {"name": "count_ones(255)", "args": [255], "expected": 8}
+    ]
+  }
+]

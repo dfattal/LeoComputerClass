@@ -1,0 +1,29 @@
+[
+  {
+    "entry": "shout",
+    "cases": [
+      {"name": "shout('hello')", "args": ["hello"], "expected": "hello!!!"},
+      {"name": "shout('wow')", "args": ["wow"], "expected": "wow!!!"},
+      {"name": "shout('Python')", "args": ["Python"], "expected": "Python!!!"},
+      {"name": "shout('')", "args": [""], "expected": "!!!"}
+    ]
+  },
+  {
+    "entry": "years_to_days",
+    "cases": [
+      {"name": "years_to_days(1)", "args": [1], "expected": 365},
+      {"name": "years_to_days(10)", "args": [10], "expected": 3650},
+      {"name": "years_to_days(0)", "args": [0], "expected": 0},
+      {"name": "years_to_days(100)", "args": [100], "expected": 36500}
+    ]
+  },
+  {
+    "entry": "initials",
+    "cases": [
+      {"name": "initials('Leo', 'Fattal')", "args": ["Leo", "Fattal"], "expected": "L.F."},
+      {"name": "initials('Leila', 'Fattal')", "args": ["Leila", "Fattal"], "expected": "L.F."},
+      {"name": "initials('Ada', 'Lovelace')", "args": ["Ada", "Lovelace"], "expected": "A.L."},
+      {"name": "initials('Guido', 'Rossum')", "args": ["Guido", "Rossum"], "expected": "G.R."}
+    ]
+  }
+]
