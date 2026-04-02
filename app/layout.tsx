@@ -56,9 +56,7 @@ export default function RootLayout({
               className="flex items-center gap-2.5 text-lg font-semibold tracking-tight"
               style={{ color: 'var(--header-fg)' }}
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-stone-500/20 text-sm">
-                FC
-              </span>
+              <img src="/logo.png" alt="Family Classroom" className="h-8 w-8" />
               Family Classroom
             </Link>
             <div className="flex items-center gap-2">
