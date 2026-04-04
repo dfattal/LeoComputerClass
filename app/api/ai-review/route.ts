@@ -79,7 +79,9 @@ ${submission.code}
 ${JSON.stringify(submission.test_results, null, 2)}
 
 ## Instructions
-Evaluate the student's code against the lesson content and rubric. The lesson and exercises above define what is correct — use them as your ground truth. Respond with ONLY valid JSON in this exact format:
+Evaluate the student's code against the lesson content and rubric. The lesson and exercises above define what is correct — use them as your ground truth.
+IMPORTANT: Judge the code by what it actually DOES, not by leftover comments like "# Your code here". If a function has a valid return statement or working logic, it IS implemented — even if placeholder comments remain or there are blank lines. Trust the test results as ground truth for whether the code works.
+Respond with ONLY valid JSON in this exact format:
 {
   "verdict": "pass|partial|fail",
   "correctness": "short explanation of what is right/wrong",
