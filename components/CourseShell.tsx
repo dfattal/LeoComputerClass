@@ -115,6 +115,9 @@ function CourseShellInner({
   // Viz state — captures result from the student's function for the simulator
   const [vizResult, setVizResult] = useState<string | undefined>(undefined);
 
+  // Reset state
+  const [resetKey, setResetKey] = useState(0);
+
   // Submit state
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -158,6 +161,11 @@ function CourseShellInner({
 
   const handleCodeChange = useCallback((newCode: string) => {
     setCode(newCode);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    if (!window.confirm("Reset editor to the original starter code?")) return;
+    setResetKey((k) => k + 1);
   }, []);
 
   const handleRun = useCallback(async () => {
@@ -387,10 +395,12 @@ function CourseShellInner({
                 onRun={handleRun}
                 onRunTests={handleRunTests}
                 onSubmit={handleSubmit}
+                onReset={handleReset}
                 loading={loading}
                 submitting={submitting}
                 hasCode={!!code.trim()}
                 hasSubmittedBefore={hasSubmittedBefore}
+                resetKey={resetKey}
               />
             }
           />
@@ -442,6 +452,7 @@ function CourseShellInner({
               lessonSlug={lessonSlug}
               onCodeChange={handleCodeChange}
               starterCode={starterCode}
+              resetKey={resetKey}
             />
           </div>
         </div>
@@ -462,6 +473,7 @@ function CourseShellInner({
           onRun={handleRun}
           onRunTests={handleRunTests}
           onSubmit={handleSubmit}
+          onReset={handleReset}
           loading={loading}
           submitting={submitting}
           hasCode={!!code.trim()}

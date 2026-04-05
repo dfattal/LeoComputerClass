@@ -6,6 +6,7 @@ export default function MobileActionBar({
   onRun,
   onRunTests,
   onSubmit,
+  onReset,
   loading,
   submitting,
   hasCode,
@@ -14,6 +15,7 @@ export default function MobileActionBar({
   onRun: () => void;
   onRunTests: () => void;
   onSubmit: () => void;
+  onReset: () => void;
   loading: boolean;
   submitting: boolean;
   hasCode: boolean;
@@ -37,6 +39,24 @@ export default function MobileActionBar({
           className="rounded-md border border-stone-300 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-stone-100 disabled:opacity-50 dark:border-stone-700 dark:hover:bg-stone-800"
         >
           {loading ? "Testing..." : "Run Tests"}
+        </button>
+        <button
+          onClick={onReset}
+          disabled={loading || submitting}
+          className="rounded-md border border-stone-300 p-1.5 text-sm transition-colors hover:bg-stone-100 disabled:opacity-50 dark:border-stone-700 dark:hover:bg-stone-800"
+          title="Reset to starter code"
+        >
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-3.5 w-3.5"
+            aria-hidden="true"
+          >
+            <path d="M2 2v5h5" />
+            <path d="M3 8a5.5 5.5 0 1 1 1-3" />
+          </svg>
         </button>
         <button
           onClick={onSubmit}

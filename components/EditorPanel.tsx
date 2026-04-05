@@ -12,10 +12,12 @@ export default function EditorPanel({
   onRun,
   onRunTests,
   onSubmit,
+  onReset,
   loading,
   submitting,
   hasCode,
   hasSubmittedBefore,
+  resetKey,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -25,18 +27,21 @@ export default function EditorPanel({
   onRun?: () => void;
   onRunTests?: () => void;
   onSubmit?: () => void;
+  onReset?: () => void;
   loading?: boolean;
   submitting?: boolean;
   hasCode?: boolean;
   hasSubmittedBefore?: boolean;
+  resetKey?: number;
 }) {
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {onRun && onRunTests && onSubmit && (
+      {onRun && onRunTests && onSubmit && onReset && (
         <EditorToolbar
           onRun={onRun}
           onRunTests={onRunTests}
           onSubmit={onSubmit}
+          onReset={onReset}
           loading={loading ?? false}
           submitting={submitting ?? false}
           hasCode={hasCode ?? false}
@@ -50,6 +55,7 @@ export default function EditorPanel({
           onChange={onCodeChange}
           fallbackCode={fallbackCode}
           starterCode={starterCode}
+          resetKey={resetKey}
         />
       </div>
     </div>

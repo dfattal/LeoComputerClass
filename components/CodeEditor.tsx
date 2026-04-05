@@ -11,12 +11,14 @@ export default function CodeEditor({
   onChange,
   fallbackCode,
   starterCode,
+  resetKey,
 }: {
   classSlug: string;
   lessonSlug: string;
   onChange: (code: string) => void;
   fallbackCode?: string;
   starterCode?: string;
+  resetKey?: number;
 }) {
   const storageKey = `code-draft-${classSlug}-${lessonSlug}`;
   const [code, setCode] = useState<string>("");
@@ -29,6 +31,15 @@ export default function CodeEditor({
     onChange(initial);
     setMounted(true);
   }, [storageKey, onChange, fallbackCode, starterCode]);
+
+  // Reset editor to starter code when resetKey changes
+  useEffect(() => {
+    if (resetKey === undefined || resetKey === 0) return;
+    const initial = starterCode || DEFAULT_STARTER;
+    setCode(initial);
+    localStorage.removeItem(storageKey);
+    onChange(initial);
+  }, [resetKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleChange(value: string | undefined) {
     const newCode = value || "";
