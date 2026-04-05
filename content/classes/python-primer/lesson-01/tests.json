@@ -20,8 +20,7 @@
   {
     "entry": "initials",
     "cases": [
-      {"name": "initials('Leo', 'Fattal')", "args": ["Leo", "Fattal"], "expected": "L.F."},
-      {"name": "initials('Leila', 'Fattal')", "args": ["Leila", "Fattal"], "expected": "L.F."},
+      {"name": "initials('{{FIRST_NAME}}', '{{LAST_NAME}}')", "args": ["{{FIRST_NAME}}", "{{LAST_NAME}}"], "expected": "{{FIRST_INITIAL}}.{{LAST_INITIAL}}."},
       {"name": "initials('Ada', 'Lovelace')", "args": ["Ada", "Lovelace"], "expected": "A.L."},
       {"name": "initials('Guido', 'Rossum')", "args": ["Guido", "Rossum"], "expected": "G.R."}
     ]

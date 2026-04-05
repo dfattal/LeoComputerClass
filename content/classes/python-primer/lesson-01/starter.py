@@ -23,10 +23,10 @@ print(years_to_days(10))
 
 # Exercise 3: Name Badge Maker
 # Return the first letter of each name with dots
-# Example: initials("Leo", "Fattal") returns "L.F."
+# Example: initials("{{FIRST_NAME}}", "{{LAST_NAME}}") returns "{{FIRST_INITIAL}}.{{LAST_INITIAL}}."
 def initials(first, last):
     # Your code here
     pass
 
 # Try it out!
-print(initials("Leo", "Fattal"))
+print(initials("{{FIRST_NAME}}", "{{LAST_NAME}}"))

@@ -48,7 +48,7 @@ Hello, world!
 Think of `print()` like **sending a text message** — but instead of texting a friend, you're telling the computer to display something on the screen. Whatever you put inside the parentheses shows up.
 
 ```python
-print("My name is Leo")
+print("My name is {{FIRST_NAME}}")
 print("I am learning Python!")
 print(42)
 ```
@@ -64,20 +64,20 @@ Imagine you have a bunch of jars in your kitchen. Each jar has a **label** on it
 **Variables** work the same way. A variable is a **name** that holds a **value**.
 
 ```python
-name = "Leo"
+name = "{{FIRST_NAME}}"
 age = 10
 favorite_color = "blue"
 ```
 
 Here's what just happened:
-- We created a jar labeled `name` and put `"Leo"` inside it
+- We created a jar labeled `name` and put `"{{FIRST_NAME}}"` inside it
 - We created a jar labeled `age` and put `10` inside it
 - We created a jar labeled `favorite_color` and put `"blue"` inside it
 
 Now, whenever we use that name, Python looks inside the jar:
 
 ```python
-print(name)            # prints: Leo
+print(name)            # prints: {{FIRST_NAME}}
 print(age)             # prints: 10
 print(favorite_color)  # prints: blue
 ```
@@ -102,7 +102,7 @@ Not everything is the same kind of stuff. In Python, there are different **types
 
 | Type | What it is | Examples |
 |------|-----------|----------|
-| **String** (`str`) | Text — always in quotes | `"hello"`, `"Leo"`, `"123"` |
+| **String** (`str`) | Text — always in quotes | `"hello"`, `"{{FIRST_NAME}}"`, `"123"` |
 | **Integer** (`int`) | A whole number — no quotes | `10`, `0`, `-5`, `365` |
 
 This matters because Python treats them differently:
@@ -164,10 +164,10 @@ You can do cool things with strings too!
 **Joining strings together** (called "concatenation" — fancy word, simple idea):
 
 ```python
-first = "Leo"
-last = "Fattal"
+first = "{{FIRST_NAME}}"
+last = "{{LAST_NAME}}"
 full_name = first + " " + last
-print(full_name)  # Leo Fattal
+print(full_name)  # {{FIRST_NAME}} {{LAST_NAME}}
 ```
 
 The `+` operator works differently for strings — instead of adding numbers, it **glues text together**.
@@ -189,8 +189,8 @@ Wait, why is the first letter at position `0` and not `1`? Great question! In pr
 word = "hello"
 print(len(word))  # 5
 
-name = "Leo"
-print(len(name))  # 3
+pet = "cat"
+print(len(pet))  # 3
 ```
 
 `len()` tells you how many characters are in a string. Think of it like a ruler for text.
@@ -306,8 +306,8 @@ def describe(name, age):
     message = name + " is about " + str(days) + " days old!"
     return message
 
-print(describe("Leo", 10))
-# Leo is about 3650 days old!
+print(describe("{{FIRST_NAME}}", 10))
+# {{FIRST_NAME}} is about 3650 days old!
 ```
 
 Notice `str(days)` — that converts the number `3650` into the string `"3650"` so we can glue it together with the other text. You can't mix numbers and strings with `+` without converting first!

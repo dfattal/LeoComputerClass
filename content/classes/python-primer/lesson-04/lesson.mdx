@@ -143,8 +143,8 @@ Sometimes a function has a parameter that's *usually* the same value, but you wa
 def greet(name, greeting="Hello"):
     return greeting + ", " + name + "!"
 
-print(greet("Leo"))              # "Hello, Leo!"
-print(greet("Leo", "Hey there")) # "Hey there, Leo!"
+print(greet("{{FIRST_NAME}}"))              # "Hello, {{FIRST_NAME}}!"
+print(greet("{{FIRST_NAME}}", "Hey there")) # "Hey there, {{FIRST_NAME}}!"
 ```
 
 If you don't pass a `greeting`, Python uses `"Hello"`. If you do pass one, it uses yours instead. It's like ordering your "usual" at a restaurant — you *could* order something different, but if you don't say anything, you get the usual!

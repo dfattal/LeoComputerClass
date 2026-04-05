@@ -65,11 +65,11 @@ def initials(first, last):
 ```
 
 **Examples:**
-- `initials("Leo", "Fattal")` should return `"L.F."`
+- `initials("{{FIRST_NAME}}", "{{LAST_NAME}}")` should return `"{{FIRST_INITIAL}}.{{LAST_INITIAL}}."`
 - `initials("Ada", "Lovelace")` should return `"A.L."`
 - `initials("Guido", "Rossum")` should return `"G.R."`
 
-**Hint:** To get the first letter of a string, use `[0]`. So `"Leo"[0]` gives you `"L"`. Then use `+` to glue the letters and dots together. The pattern is: first letter + `"."` + second letter + `"."`.
+**Hint:** To get the first letter of a string, use `[0]`. So `"{{FIRST_NAME}}"[0]` gives you `"{{FIRST_INITIAL}}"`. Then use `+` to glue the letters and dots together. The pattern is: first letter + `"."` + second letter + `"."`.
 
 ---
 

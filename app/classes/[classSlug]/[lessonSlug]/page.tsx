@@ -8,6 +8,12 @@ import {
 import { mdxComponents } from "@/lib/lessons/mdxComponents";
 import { getClassBySlug, getClassSlugs } from "@/content/classes";
 import CourseShell from "@/components/CourseShell";
+import { createClient } from "@/lib/supabase/server";
+import {
+  getStudentName,
+  personalizeText,
+  personalizeTests,
+} from "@/lib/lessons/personalize";
 
 export function generateStaticParams() {
   const params: { classSlug: string; lessonSlug: string }[] = [];
@@ -36,6 +42,27 @@ export default async function LessonPage({
 
   const lessonData = loadLessonContent(classSlug, lessonSlug);
 
+  // Get authenticated user's name for content personalization
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const studentName = getStudentName(user);
+
+  // Personalize content with the student's actual name
+  const lessonSource = personalizeText(
+    lessonData.lessonSource,
+    studentName,
+  );
+  const exercisesSource = personalizeText(
+    lessonData.exercisesSource,
+    studentName,
+  );
+  const tests = personalizeTests(lessonData.tests, studentName);
+  const starterCode = lessonData.starterCode
+    ? personalizeText(lessonData.starterCode, studentName)
+    : undefined;
+
   // Load class-specific syllabus
   const syllabus = await import(
     `@/content/classes/${classSlug}/syllabus`
@@ -47,13 +74,13 @@ export default async function LessonPage({
   };
 
   const { content: lessonContent } = await compileMDX({
-    source: lessonData.lessonSource,
+    source: lessonSource,
     components: mdxComponents,
     options: mdxOptions,
   });
 
   const { content: exercisesContent } = await compileMDX({
-    source: lessonData.exercisesSource,
+    source: exercisesSource,
     components: mdxComponents,
     options: mdxOptions,
   });
@@ -62,12 +89,12 @@ export default async function LessonPage({
     <CourseShell
       classSlug={classSlug}
       lessonSlug={lessonSlug}
-      tests={lessonData.tests}
+      tests={tests}
       lessonContent={lessonContent}
       exercisesContent={exercisesContent}
       phases={phases}
       weeks={weeks}
-      starterCode={lessonData.starterCode}
+      starterCode={starterCode}
       vizConfig={lessonData.vizConfig}
     />
   );
