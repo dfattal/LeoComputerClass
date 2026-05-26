@@ -1,0 +1,121 @@
+# Lesson 4 — Exercises: Range, Height & Hang Time
+
+## How This Works
+
+You'll turn your drag simulator into a measuring-and-searching tool. Use `g = 9.8`, keep **up positive**, `import math`, and use the **drag model from Lesson 3**:
+
+```python
+spd = math.sqrt(vx*vx + vy*vy)
+ax  = -(k/m) * spd * vx
+ay  = -g - (k/m) * spd * vy
+```
+
+Update velocities first, then positions. Answers are approximations — the tests accept anything **close enough**.
+
+---
+
+## Exercise 1: Measure the Whole Shot
+
+Write `simulate_shot(speed, angle_deg, k, m, dt)` that flies the dart and returns **three** measurements as a list: `[range, peak_height, hang_time]`.
+
+- **range** — `x` when it lands
+- **peak_height** — the highest `y` it reaches
+- **hang_time** — total seconds in the air
+
+```python
+def simulate_shot(speed, angle_deg, k, m, dt):
+    g = 9.8
+    angle_rad = math.radians(angle_deg)
+    vx = speed * math.cos(angle_rad)
+    vy = speed * math.sin(angle_rad)
+    x = 0.0
+    y = 0.0
+    t = 0.0
+    peak = 0.0
+    while True:
+        # drag physics -> update vx, vy, then x, y
+        # tick the clock: t = t + dt
+        # track the highest y in peak
+        # stop when y <= 0
+        pass
+    return [x, peak, t]
+```
+
+**Examples:**
+- `simulate_shot(20, 45, 0.01, 0.05, 0.002)` → about `[7.48, 3.18, 1.58]`
+- `simulate_shot(20, 30, 0.01, 0.05, 0.002)` → about `[7.81, 1.87, 1.21]`
+- `simulate_shot(25, 35, 0.02, 0.05, 0.002)` → about `[5.32, 1.82, 1.18]`
+
+**Hint:** It's your Lesson 3 `range_with_drag` loop, plus two extra trackers: `t = t + dt` every step, and `if y > peak: peak = y`. Return all three in a list.
+
+---
+
+## Exercise 2: Find the Best Angle (the Sweep!)
+
+Write `best_angle(speed, k, m, dt)` that tries every whole-number angle from **10 to 70** and returns the one that flies the **farthest**.
+
+```python
+def best_angle(speed, k, m, dt):
+    best_angle_so_far = None
+    best_range = -1
+    for angle in range(10, 71):
+        r = simulate_shot(speed, angle, k, m, dt)[0]   # the range for this angle
+        # if r beats best_range, update best_range and best_angle_so_far
+        pass
+    return best_angle_so_far
+```
+
+**Examples:**
+- `best_angle(20, 0.01, 0.05, 0.005)` → about `33` (a draggy dart — far below 45°!)
+- `best_angle(25, 0.02, 0.05, 0.005)` → about `30`
+- `best_angle(15, 0.01, 0.05, 0.005)` → about `35`
+
+**Hint:** This uses your `simulate_shot` from Exercise 1 — grab just the range with `[0]`. The pattern: start with `best_range = -1`, and whenever a new angle flies farther, save both its range and its angle.
+
+---
+
+## Exercise 3: How Much Range Does Air Steal?
+
+Write `range_lost_to_air(speed, angle_deg, k, m, dt)` that returns how many meters of range are **lost to drag** — the vacuum range (from the Lesson 2 formula) minus the real drag range.
+
+```python
+def range_lost_to_air(speed, angle_deg, k, m, dt):
+    g = 9.8
+    # vacuum range from the formula:
+    vacuum_range = speed**2 * math.sin(math.radians(2 * angle_deg)) / g
+    # real range from your simulator:
+    drag_range = simulate_shot(speed, angle_deg, k, m, dt)[0]
+    # return how much was lost
+    pass
+```
+
+**Examples:**
+- `range_lost_to_air(20, 45, 0.01, 0.05, 0.002)` → about `33.34` (40.8 m in a vacuum, only ~7.5 m for real!)
+- `range_lost_to_air(20, 30, 0.01, 0.05, 0.002)` → about `27.53`
+- `range_lost_to_air(25, 40, 0.02, 0.05, 0.002)` → about `57.63`
+
+**Hint:** Just `return vacuum_range - drag_range`. The vacuum part is the exact formula; the drag part is your simulation. The gap is drag's bite.
+
+---
+
+## Bonus Challenge (no test — just for fun)
+
+Use `best_angle` to explore the dart-mass tug-of-war from Lesson 3. Try:
+
+```python
+for m in [0.02, 0.05, 0.1, 0.2]:
+    print(m, best_angle(20, 0.01, m, 0.005))
+```
+
+What happens to the best angle as the dart gets heavier? You're previewing the exact kind of design study that wins the capstone.
+
+---
+
+## Tips If You're Stuck
+
+1. **`best_angle` returns `None`?** Make sure you set `best_angle_so_far = angle` inside the `if r > best_range:` block.
+2. **`simulate_shot` list looks wrong?** Check you return `[x, peak, t]` in that order, and that `peak` starts at `0.0` and updates with `if y > peak`.
+3. **Sweep feels slow?** That's normal — it runs 61 simulations! The bigger `dt = 0.005` in Exercise 2 keeps it quick.
+4. **Range too big (like Lesson 2)?** Don't forget to update `vx` with drag — the dart slows sideways too.
+
+Let the computer find your perfect shot!

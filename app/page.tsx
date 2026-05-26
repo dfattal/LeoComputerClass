@@ -9,6 +9,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
     indigo: "hover:border-indigo-400 dark:hover:border-indigo-500",
     violet: "hover:border-violet-400 dark:hover:border-violet-500",
     emerald: "hover:border-emerald-400 dark:hover:border-emerald-500",
+    amber: "hover:border-amber-400 dark:hover:border-amber-500",
   };
   const accentBadge: Record<string, string> = {
     indigo:
@@ -17,11 +18,14 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
       "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
     emerald:
       "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
+    amber:
+      "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
   };
   const accentLink: Record<string, string> = {
     indigo: "text-indigo-600 dark:text-indigo-400",
     violet: "text-violet-600 dark:text-violet-400",
     emerald: "text-emerald-600 dark:text-emerald-400",
+    amber: "text-amber-600 dark:text-amber-400",
   };
 
   const cardClassName = `group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900 ${

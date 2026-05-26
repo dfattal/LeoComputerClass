@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "velocity_components",
+    "tol": 0.01,
+    "cases": [
+      {"name": "velocity_components(10, 30)", "args": [10, 30], "expected": [8.6603, 5.0]},
+      {"name": "velocity_components(20, 45)", "args": [20, 45], "expected": [14.1421, 14.1421]},
+      {"name": "velocity_components(10, 90)", "args": [10, 90], "expected": [0.0, 10.0]},
+      {"name": "velocity_components(5, 0)", "args": [5, 0], "expected": [5.0, 0.0]}
+    ]
+  },
+  {
+    "entry": "peak_height",
+    "tol": 0.05,
+    "cases": [
+      {"name": "peak_height(20, 90, 0.001) straight up", "args": [20, 90, 0.001], "expected": 20.41},
+      {"name": "peak_height(20, 45, 0.001)", "args": [20, 45, 0.001], "expected": 10.2},
+      {"name": "peak_height(10, 30, 0.001)", "args": [10, 30, 0.001], "expected": 1.28}
+    ]
+  },
+  {
+    "entry": "throw_range",
+    "tol": 0.1,
+    "cases": [
+      {"name": "throw_range(20, 45, 0.001) the magic angle", "args": [20, 45, 0.001], "expected": 40.82},
+      {"name": "throw_range(15, 30, 0.001)", "args": [15, 30, 0.001], "expected": 19.88},
+      {"name": "throw_range(10, 60, 0.001)", "args": [10, 60, 0.001], "expected": 8.84}
+    ]
+  }
+]

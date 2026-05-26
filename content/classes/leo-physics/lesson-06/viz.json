@@ -1,0 +1,14 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    300000,
+    0.0002,
+    0.02,
+    0.0002
+  ],
+  "title": "Muzzle speed vs barrel length — find the sweet spot",
+  "xLabel": "barrel length (m)",
+  "yLabel": "muzzle speed (m/s)",
+  "setup": "# --- plot helper (hidden) — muzzle speed vs barrel length ---\n__PATM = 100000.0\n\ndef __gp(P0, V0, A, d):\n    return P0 * V0 / (V0 + A * d)\n\ndef __muzzle(P0, V0, A, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    for _ in range(2000000):\n        a = (__gp(P0, V0, A, d) - __PATM) * A / m\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            break\n        if v <= 0:\n            break\n    return v\n\ndef __sweep(P0, V0, A, m, dt):\n    pts = []\n    b = 0.05\n    while b <= 1.0 + 1e-9:\n        pts.append([round(b, 3), round(__muzzle(P0, V0, A, m, b, dt), 3)])\n        b += 0.025\n    return pts\n\ndef __plot(P0, A, m, dt):\n    series = []\n    for V0, label, hot in ((0.00004, \"tank 40 cm³\", True), (0.00008, \"tank 80 cm³\", False)):\n        series.append({\"name\": label, \"points\": __sweep(P0, V0, A, m, dt), \"highlight\": hot})\n    return series\n"
+}

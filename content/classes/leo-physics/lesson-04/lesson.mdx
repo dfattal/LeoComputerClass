@@ -1,0 +1,145 @@
+# Lesson 4 — Range, Height & Hang Time
+
+## Phase 2: The Real World Fights Back
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- **Measure** a shot: pull range, peak height, and hang time out of one simulation
+- Return several numbers at once from a function
+- Run a **parameter sweep**: try many launch angles and let the computer pick the winner
+- Find the **best angle** for a real (draggy) dart — and see how far it is from $45°$
+- Put a number on exactly how much range the air **steals** from you
+
+---
+
+## Big Idea
+
+In Lesson 3 you built a flight that's actually realistic — drag and all. But a simulation you can't *measure* and *search* is just a pretty arc. This lesson adds the two skills that turn your simulator into an **engineering tool**:
+
+1. **Measuring** — reading real numbers off the flight: How far? How high? How long in the air?
+2. **Searching** — trying lots of designs automatically and keeping the best one.
+
+That second skill is the big one. Instead of *guessing* the best launch angle, you'll have the computer **try every angle and tell you the winner**. That's exactly what real engineers do — and it's a tiny version of the design optimizer you'll build in the capstone.
+
+---
+
+## Measuring a Shot
+
+Every measurement you want is hiding in the same loop you already wrote. You just watch for it as the dart flies:
+
+- **Range** — the horizontal distance `x` at the moment it lands.
+- **Peak height** — the largest `y` the dart ever reaches. Track it with "is this the highest so far?"
+- **Hang time** — how long it stays airborne. Add `dt` to a running total every step.
+
+```python
+x = 0.0
+y = 0.0
+t = 0.0          # running clock
+peak = 0.0       # highest point so far
+
+while True:
+    # ... drag physics, update vx, vy, x, y ...
+    t = t + dt                  # the clock ticks
+    if y > peak:
+        peak = y                # new record height!
+    if y <= 0:
+        break
+
+# range = x, peak height = peak, hang time = t
+```
+
+### Returning more than one number
+
+A Python function can hand back **several values at once** — just put them in a list:
+
+```python
+return [x, peak, t]
+```
+
+Now one call to your simulator gives you the whole story of the shot. (You could also return a *tuple* `(x, peak, t)` — both work.)
+
+---
+
+## The Parameter Sweep: Let the Computer Choose
+
+Here's the heart of the lesson. You want the launch angle that flies **farthest**. With drag there's no formula for it (remember Lesson 3!). So instead of solving, we **search**: try a whole range of angles, simulate each one, and keep track of the best.
+
+In math we'd write this as "the angle that maximizes the range":
+
+$$
+\theta^\star = \arg\max_{\theta}\; R(\theta)
+$$
+
+In code, that fancy symbol is just a loop with a "best so far" tracker — the same pattern as finding the tallest kid in class:
+
+```python
+best_angle = None
+best_range = -1            # nothing beats this yet
+
+for angle in range(10, 71):        # try every angle from 10 to 70
+    r = simulate_shot(speed, angle, k, m, dt)[0]   # how far did THIS angle fly?
+    if r > best_range:             # a new winner?
+        best_range = r
+        best_angle = angle
+
+# best_angle now holds the champion
+```
+
+Read it slowly: we start with no winner, try each angle, and every time we find one that flies farther than our current record, it becomes the new champion. After the loop, `best_angle` holds the answer. **You didn't solve an equation — you let the computer test 61 designs and report back.**
+
+---
+
+## The Payoff: Where's the Best Angle Now?
+
+Run that sweep on our dart (`speed = 20`, `k = 0.01`, `m = 0.05`) and the winner comes back around **33°** — way below the textbook $45°$!
+
+This is the cliffhanger from Lesson 2 fully resolved. In a vacuum, $45°$ wins. But a draggy dart spends *too long* fighting the air on a high, loopy $45°$ shot. A flatter shot in the low 30s gets to the target before the air can rob all its speed. **No formula told you that — your search did.**
+
+> Try it yourself in the exercises: sweep the angles and watch the winner land in the low 30s. Then change the mass `m` and watch the best angle move. That's real design exploration.
+
+---
+
+## How Much Does Air Cost You?
+
+Now that you can measure range, you can put a hard number on drag's damage. Compare the **vacuum** range (which *does* have a formula from Lesson 2) to the **drag** range from your simulator:
+
+$$
+R_\text{vac} = \frac{v_0^2 \sin(2\theta)}{g}
+\qquad
+\text{range lost} = R_\text{vac} - R_\text{drag}
+$$
+
+For that 20 m/s, 45° shot: the vacuum says **40.8 m**, your simulator says about **7.5 m** — so the air **steals over 33 meters**. That's not a rounding error; for a light dart, drag is the single biggest thing shaping the flight.
+
+---
+
+## Why This Matters for Your Blaster
+
+You just leveled up from *simulating* a blaster to *interrogating* one. You can now ask design questions and let the computer answer them:
+
+- "What angle should I aim?" → sweep angles, take the max.
+- "How much range am I losing to air?" → compare to the vacuum formula.
+- "What if my dart were heavier?" → change `m` and re-run the sweep.
+
+That last one is the whole game in Phase 4: sweep over dart **mass**, spring **stiffness**, and barrel **length** to find the best blaster. Today's angle sweep is the exact same pattern, just over one knob. You've built the engine of the optimizer.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Range | horizontal distance at landing | `x` when `y <= 0` |
+| Peak height | highest point reached | `if y > peak: peak = y` |
+| Hang time | total time aloft | `t = t + dt` each step |
+| Return many values | hand back a list | `return [x, peak, t]` |
+| Parameter sweep | try many designs, keep the best | `for angle in range(...)` + "best so far" |
+| Find the max | $\theta^\star = \arg\max_\theta R(\theta)$ | compare each `r` to `best_range` |
+| Range lost to air | $R_\text{vac} - R_\text{drag}$ | formula minus simulation |
+| Best angle (with drag) | low 30s — **well below** $45°$ | found by the sweep |
+
+Head to the exercises and let the computer find your perfect shot!

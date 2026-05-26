@@ -1,0 +1,157 @@
+# Lesson 3 — Air Resistance
+
+## Phase 2: The Real World Fights Back
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand **drag**: the force the air pushes back with, and why it grows with speed
+- Write drag as an acceleration that always **opposes motion**
+- Discover **terminal velocity** — why a falling thing reaches a top speed and stops speeding up
+- Add drag to your 2D launcher and see how much shorter a real dart flies
+- See *first-hand* why there's **no formula** here — only the simulator knows the answer
+
+---
+
+## Big Idea
+
+So far our darts have flown through a perfect vacuum. But a real Nerf dart pushes through **air**, and air pushes right back. That push is called **drag**, and it changes everything.
+
+Here's why this lesson is the most important one yet:
+
+> Gravity is **constant** — always $-9.8$. That's why Lessons 1 and 2 had tidy formulas. But drag **depends on how fast you're going**: the faster you move, the harder the air shoves back. So the acceleration is *different at every instant*. There is **no constant-acceleration formula** anymore. No pencil-and-paper answer exists.
+
+This is exactly the moment your Euler loop earns its keep. The loop never cared whether the acceleration was constant — it just asks "what's the acceleration *right now*?" at every step. So we can throw the messiest, speed-dependent force at it and it just works. **This is why we learned to simulate.**
+
+---
+
+## What Drag Looks Like
+
+Two facts about drag:
+
+1. **It always opposes motion.** Moving right? Drag points left. Falling down? Drag points up. It's the air trying to slow you down, whichever way you go.
+2. **It grows with speed — fast.** We'll use the *quadratic* model, which is accurate for a dart-sized object zipping through air: the drag force grows with the **square** of speed.
+
+$$
+F_\text{drag} = k\, v^2
+$$
+
+The $k$ is a single **drag constant** that bundles together the air's thickness, the dart's size, and its shape — bigger, blunter darts have a bigger $k$. The key idea is the $v^2$: **double the speed and you get four times the drag.** That's why going faster gets hard so quickly.
+
+To put drag into our loop we need it as an **acceleration** (because Euler updates velocity with $a\,dt$). Newton says $a = F/m$, so dividing by the dart's mass $m$:
+
+$$
+a_\text{drag} = -\frac{k}{m}\,\lvert v\rvert\,v
+$$
+
+That $\lvert v\rvert\, v$ looks odd — why not just $v^2$? Because $v^2$ is always positive, but drag has to **flip direction** depending on which way you're moving. Writing it as $\lvert v\rvert \cdot v$ keeps the size ($\lvert v\rvert \cdot \lvert v\rvert = v^2$) but borrows the **sign** of $v$, and the minus sign out front makes it point the *opposite* way. Moving up ($v>0$)? Drag is negative (down). Moving down ($v<0$)? Drag is positive (up). 
+
+In Python that's exactly:
+
+```python
+def drag_accel(v, k, m):
+    return -(k / m) * abs(v) * v
+```
+
+---
+
+## Terminal Velocity: When Drag Wins
+
+Drop a heavy ball in a vacuum and it speeds up *forever*. But with air, something cool happens. As the ball falls faster, drag grows (remember, $v^2$). Eventually the upward drag grows until it **exactly cancels** gravity. At that point the acceleration is zero — the ball stops speeding up and falls at a steady **terminal velocity**.
+
+Setting the two forces equal, $m g = k\, v_\text{term}^2$, and solving:
+
+$$
+v_\text{term} = \sqrt{\frac{m g}{k}}
+$$
+
+This is the one spot in this lesson with a formula — and we only get it because we asked a special question ("when is the acceleration zero?"). For the *whole motion*, you still need the loop.
+
+To find terminal velocity by simulation, drop the object from rest and keep stepping until the acceleration shrinks to almost nothing:
+
+```python
+def terminal_velocity(k, m, dt):
+    g = 9.8
+    v = 0.0
+    while True:
+        a = -g + drag_accel(v, k, m)   # gravity down + drag (pointing up as it falls)
+        v = v + a * dt
+        if abs(a) < 0.001:             # acceleration ~ 0: it stopped speeding up
+            break
+    return abs(v)                      # the terminal SPEED
+```
+
+Notice we loop **until an event** again — just like waiting for the dart to land in Lesson 2, here we wait for the acceleration to fade to zero.
+
+---
+
+## Drag in 2D: Opposing the Whole Velocity
+
+For a flying dart, drag opposes the **direction of travel** — which is the combination of sideways and vertical motion. First we need the dart's actual speed through the air, from the Pythagorean theorem:
+
+$$
+\lvert \vec v\rvert = \sqrt{v_x^2 + v_y^2}
+$$
+
+Then drag pulls back along *both* directions, sharing itself out in proportion to how much of the motion is sideways vs. vertical:
+
+$$
+a_x = -\frac{k}{m}\,\lvert \vec v\rvert\, v_x
+\qquad
+a_y = -g - \frac{k}{m}\,\lvert \vec v\rvert\, v_y
+$$
+
+See how gravity ($-g$) only shows up in $a_y$, but drag shows up in **both**? Sideways has no gravity, but the air still fights it. Here's the loop:
+
+```python
+import math
+
+speed = math.sqrt(vx*vx + vy*vy)
+ax = -(k/m) * speed * vx
+ay = -g - (k/m) * speed * vy
+
+vx = vx + ax * dt      # now BOTH velocities change every step
+vy = vy + ay * dt
+x = x + vx * dt
+y = y + vy * dt
+```
+
+The big change from Lesson 2: `vx` is **no longer constant**. Air slows the dart sideways too, so we have to update it every step.
+
+---
+
+## The Shocking Result
+
+Remember Lesson 2? A 20 m/s shot at 45° flew **40.8 m** in a vacuum. Add realistic drag to a light dart and that same shot flies only about **7.5 m**. Air doesn't just nibble at the range — for a light, fast projectile it **devours** it.
+
+And the cliffhanger from Lesson 2 finally pays off:
+
+> In a vacuum the best angle is exactly $45°$. **With drag, the best angle drops** — closer to $34°$ for our dart. A flatter shot spends less time plowing through the air. There's no formula for that magic angle anymore. The only way to find it is to **try a bunch of angles in your simulator and see which wins** — which is exactly what real engineers do.
+
+---
+
+## Why This Matters for Your Blaster
+
+This is huge for your design. A real foam dart is *light*, so drag dominates its flight — which tells you two things you'll use in the capstone:
+
+- **Aim lower than you'd think.** The vacuum-perfect $45°$ wastes range on a draggy dart.
+- **Heavier darts punch through air better.** Look at the $\frac{k}{m}$ in the drag term: more mass $m$ means *less* drag deceleration. A heavier dart slows down less — but a heavier dart is also harder to get moving fast in the first place. That tug-of-war is the heart of the design puzzle you'll solve later.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Drag force | grows with speed squared: $F = k\,v^2$ | — |
+| Drag acceleration | opposes motion: $a = -\frac{k}{m}\lvert v\rvert v$ | `-(k/m)*abs(v)*v` |
+| Why $\lvert v\rvert v$? | size of $v^2$, but the sign flips with direction | `abs(v) * v` |
+| Terminal velocity | when drag cancels gravity, $v_\text{term}=\sqrt{\frac{mg}{k}}$ | loop until `abs(a) < 0.001` |
+| Speed in 2D | $\lvert \vec v\rvert = \sqrt{v_x^2+v_y^2}$ | `math.sqrt(vx*vx+vy*vy)` |
+| Drag in 2D | pulls back on both $v_x$ and $v_y$ | update **both** each step |
+| Best angle with drag | **less than** $45°$ | found by simulation, no formula |
+
+Head to the exercises and feel the air fight back!

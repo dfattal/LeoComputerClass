@@ -1,0 +1,111 @@
+# Lesson 8 — Exercises: Design Optimizer (Capstone)
+
+## How This Works
+
+You've built the simulator; now use it to **design**. We've given you the complete blaster as `blast_range(m, x0, k, angle_deg, kdrag, dt)` in the editor — it returns how far a dart of mass `m` flies (muzzle velocity from the energy formula, then the drag flight). Your job is to **search** for the best design.
+
+To keep everyone's answers matching, use the exact sweeps given in each exercise. As always, the tests accept anything **close enough**.
+
+---
+
+## Exercise 1: The Best Dart Mass
+
+Write `best_mass(x0, k, angle_deg, kdrag, dt)` that tries dart masses from `0.005` kg to `0.06` kg in steps of `0.005` kg and returns the one that flies **farthest**.
+
+```python
+def best_mass(x0, k, angle_deg, kdrag, dt):
+    best_m = 0.0
+    best_range = -1
+    m = 0.005
+    while m <= 0.06 + 1e-9:
+        r = blast_range(m, x0, k, angle_deg, kdrag, dt)
+        # if r > best_range: save best_range and best_m
+        m = m + 0.005
+    return best_m
+```
+
+**Examples:**
+- `best_mass(0.1, 200, 35, 0.002, 0.002)` → `0.015` (not the lightest dart — the *just-right* one!)
+- `best_mass(0.12, 300, 30, 0.002, 0.002)` → `0.02`
+- `best_mass(0.1, 200, 35, 0.004, 0.002)` → `0.02` (more air resistance → a *heavier* dart wins)
+
+**Hint:** The "best so far" pattern from Lesson 4. Inside the `if r > best_range:` block, save both `best_range = r` and `best_m = m`.
+
+---
+
+## Exercise 2: How Far Does the Best Dart Fly?
+
+Write `max_range(x0, k, angle_deg, kdrag, dt)` that returns the range of the **best** dart — find the best mass, then fly it.
+
+```python
+def max_range(x0, k, angle_deg, kdrag, dt):
+    m = best_mass(x0, k, angle_deg, kdrag, dt)
+    # return blast_range(m, x0, k, angle_deg, kdrag, dt)
+    pass
+```
+
+**Examples:**
+- `max_range(0.1, 200, 35, 0.002, 0.002)` → about `6.22`
+- `max_range(0.12, 300, 30, 0.002, 0.002)` → about `8.94`
+- `max_range(0.1, 200, 35, 0.004, 0.002)` → about `4.41`
+
+**Hint:** Two lines — call your `best_mass`, then return `blast_range(...)` for that mass.
+
+---
+
+## Exercise 3: The Perfect Blaster (tune two knobs)
+
+Write `best_possible_range(x0, k, kdrag, dt)` that tries **every combination** of dart mass (`0.005` to `0.06`, step `0.005`) **and** launch angle (`15` to `60`, step `5`) and returns the farthest range it can find.
+
+```python
+def best_possible_range(x0, k, kdrag, dt):
+    best_range = -1
+    m = 0.005
+    while m <= 0.06 + 1e-9:
+        angle = 15
+        while angle <= 60 + 1e-9:
+            r = blast_range(m, x0, k, angle, kdrag, dt)
+            # if r > best_range: save best_range
+            angle = angle + 5
+        m = m + 0.005
+    return best_range
+```
+
+**Examples:**
+- `best_possible_range(0.1, 200, 0.002, 0.002)` → about `6.27`
+- `best_possible_range(0.12, 300, 0.002, 0.002)` → about `9.23`
+
+**Hint:** A loop inside a loop. The inner loop sweeps the angle; the outer loop sweeps the mass. Keep one `best_range` across both. (Notice it beats Exercise 2 — tuning the angle too gives a little extra reach.)
+
+---
+
+## Bonus Challenge — your blaster's spec sheet
+
+Print the full winning design — the mass, the angle, and the range — for your blaster:
+
+```python
+best_r = -1
+best = None
+m = 0.005
+while m <= 0.06 + 1e-9:
+    for angle in range(15, 61, 5):
+        r = blast_range(m, 0.1, 200, angle, 0.002, 0.002)
+        if r > best_r:
+            best_r = r
+            best = (m, angle)
+    m = m + 0.005
+print("Best design:", best, "flies", round(best_r, 2), "m")
+```
+
+That tuple is *your* answer to "design the best Nerf blaster." You earned it. 🎉
+
+---
+
+## Tips If You're Stuck
+
+1. **`best_mass` returns 0?** Save `best_m = m` *inside* the `if r > best_range:` block.
+2. **Exercise 3 times out or is wrong?** Make sure the inner loop steps the **angle** (`angle = angle + 5`) and the outer loop steps the **mass** (`m = m + 0.005`) — mixing them up is the classic bug.
+3. **`best_possible_range` smaller than `max_range`?** It should be a little *bigger* (more freedom to tune) — check you're keeping `best_range` across both loops, not resetting it.
+4. **Numbers slightly off?** That's fine — they're approximations; the tests allow a little wiggle.
+
+You did it — you designed a blaster from first principles. 🚀

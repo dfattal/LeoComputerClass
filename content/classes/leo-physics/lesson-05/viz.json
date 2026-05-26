@@ -1,0 +1,14 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    0.1,
+    0.05,
+    0.3,
+    0.0002
+  ],
+  "title": "Speed building up the barrel — stiffer spring = faster",
+  "xLabel": "distance down barrel (m)",
+  "yLabel": "dart speed (m/s)",
+  "setup": "# --- plot helper (hidden) — dart speed building up the barrel ---\nimport math\n\ndef __vtrace(x0, k, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        s = x0 - d\n        a = (k * s if s > 0 else 0.0) / m\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            pts.append([round(barrel, 4), round(v, 4)])\n            break\n        pts.append([round(d, 4), round(v, 4)])\n    return pts\n\ndef __plot(x0, m, barrel, dt):\n    series = []\n    for k in (100, 200, 400):\n        series.append({\n            \"name\": \"k=\" + str(k),\n            \"points\": __vtrace(x0, k, m, barrel, dt),\n            \"highlight\": k == 200,\n        })\n    return series\n"
+}

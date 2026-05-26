@@ -78,6 +78,13 @@ export default async function ClassHomePage({
       overlay: "from-emerald-950/80 via-stone-950/75 to-stone-950/90",
       badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
     },
+    amber: {
+      bg: "bg-amber-500",
+      text: "text-amber-400",
+      subtitleText: "text-amber-300",
+      overlay: "from-amber-950/80 via-stone-950/75 to-stone-950/90",
+      badge: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+    },
   };
   const accent = accentClasses[classDef.accentColor] ?? accentClasses.indigo;
 

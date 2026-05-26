@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import HeaderAuth from "@/components/HeaderAuth";
 import ThemeToggle from "@/components/ThemeToggle";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 const geistSans = Geist({

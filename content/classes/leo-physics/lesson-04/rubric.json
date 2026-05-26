@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct measurements", "weight": 35, "description": "simulate_shot returns [range, peak_height, hang_time]: x at landing, the max y, and the accumulated time"},
+  {"criterion": "Parameter sweep", "weight": 35, "description": "best_angle loops over angles, simulates each, and keeps the one with the largest range (a 'best so far' search)"},
+  {"criterion": "Reuses the simulator", "weight": 15, "description": "best_angle and range_lost_to_air call simulate_shot rather than re-deriving the loop"},
+  {"criterion": "Quantifies drag", "weight": 15, "description": "range_lost_to_air subtracts the simulated range from the vacuum formula"}
+]

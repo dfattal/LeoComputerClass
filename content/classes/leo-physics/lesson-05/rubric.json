@@ -1,0 +1,6 @@
+[
+  {"criterion": "Hooke's law + release", "weight": 35, "description": "spring_force returns k*compression while squished and 0 once the spring has released (compression <= 0)"},
+  {"criterion": "Position-dependent loop", "weight": 35, "description": "muzzle_velocity recomputes the fading spring force from the current compression each step (s = x0 - d) and stops at the barrel end"},
+  {"criterion": "Energy formula", "weight": 15, "description": "ideal_muzzle_velocity returns x0 * sqrt(k/m)"},
+  {"criterion": "Force and energy agree", "weight": 15, "description": "The simulated muzzle velocity lands close to the energy formula for a long-enough barrel"}
+]

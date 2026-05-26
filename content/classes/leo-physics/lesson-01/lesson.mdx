@@ -1,0 +1,147 @@
+# Lesson 1 — From Calculus to Simulation
+
+## Phase 1: Motion as Code
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See how **position**, **velocity**, and **acceleration** are linked by calculus
+- Understand the **Euler method**: turning derivatives into a step-by-step loop
+- Write code that updates velocity and position one tiny time step at a time
+- Simulate a falling ball and check your simulation against the exact formula
+- Understand *why* a simulation is only an approximation — and how to make it better
+
+---
+
+## Big Idea
+
+You already know calculus. You know that if you have the position of a ball, its **velocity** is the derivative of position, and its **acceleration** is the derivative of velocity:
+
+$$
+v = \frac{dx}{dt} \qquad\qquad a = \frac{dv}{dt}
+$$
+
+In words: *velocity is how fast position is changing*, and *acceleration is how fast velocity is changing*. (Think of a car: position is where you are, velocity is the speedometer, acceleration is your foot pushing the gas or the brake.)
+
+Here's the thing — in physics class you usually go **backwards**: you know the acceleration (gravity, a spring, air pushing back), and you want to find the position. That means **integrating**, and for the fun problems (a Nerf dart fighting air resistance, a spring whose push fades as it uncoils) the integral has **no clean formula**. You can't solve it with a pencil.
+
+So we do what real scientists and engineers do: we let the **computer** do the calculus for us, one tiny step at a time. That trick is called the **Euler method**, and it's the engine that will power your whole blaster simulator.
+
+---
+
+## The Trick: Take Tiny Steps
+
+A derivative like $a = \dfrac{dv}{dt}$ means "the change in velocity over a *tiny* change in time." The $d$ stands for an *infinitely* small amount.
+
+A computer can't do *infinitely* small. But it can do **really small**. So we replace the tiny $d$ with a small but real time step we'll call $dt$ (say, one-hundredth of a second). The derivative $a = \dfrac{dv}{dt}$ turns into a plain multiplication — *over a small time $dt$, the velocity changes by $a$ times $dt$*:
+
+$$
+\Delta v = a \, dt
+$$
+
+So the **new** velocity is the old velocity plus that change:
+
+```python
+new_v = v + a * dt
+```
+
+The exact same logic works for position, because $v = \dfrac{dx}{dt}$:
+
+$$
+\Delta x = v \, dt
+$$
+
+```python
+new_x = x + v * dt
+```
+
+That's the whole secret. Two lines. **Where you are nudges forward by your velocity; how fast you're going nudges forward by your acceleration.**
+
+> **Flipbook analogy:** A movie isn't really moving — it's a stack of still pictures shown so fast it *looks* smooth. The Euler method draws motion the same way: one frozen frame every $dt$ seconds. Smaller $dt$ = more frames = smoother, more accurate motion.
+
+---
+
+## Putting It in a Loop
+
+One step nudges the ball forward a tiny bit. To watch it move for a whole second, we just **repeat** the nudge many times. Here's a ball dropped from a height, falling under gravity:
+
+```python
+g = 9.8          # gravity pulls down at 9.8 meters per second, every second
+dt = 0.01        # time step: one hundredth of a second
+v = 0.0          # starts at rest (not moving yet)
+h = 100.0        # starts 100 meters up
+
+for _ in range(100):     # 100 steps of 0.01s = 1 second of falling
+    v = v + (-g) * dt    # STEP 1: update velocity (gravity is negative — it points DOWN)
+    h = h + v * dt       # STEP 2: update position using the new velocity
+```
+
+Walk through what happens:
+- **Acceleration is $-g$** because we're calling *up* the positive direction, and gravity pulls *down*. Sign matters!
+- Each loop, the velocity gets a little more negative (the ball speeds up downward), and the height drops a little more.
+- After 100 steps, `h` holds the ball's height after 1 second.
+
+> **Why update velocity first, then position?** We use the *freshly updated* velocity to move the ball. This little ordering choice (called *semi-implicit Euler*) keeps the simulation stable — and it's the same method we'll use later for springs, which bounce forever if you get it wrong. Stick with this order: **velocity, then position.**
+
+---
+
+## Is It Right? Check Against the Formula!
+
+For a simple falling ball, you *do* know the exact answer from calculus. Integrating $a = -g$ twice gives the formula you've seen in physics:
+
+$$
+h(t) = h_0 - \tfrac{1}{2}\, g\, t^2
+$$
+
+```python
+h = h0 - 0.5 * g * t**2
+```
+
+This is the golden rule of simulation: **whenever you can check your code against an exact answer, do it.** If your Euler loop and the formula agree on the easy problem, you can trust your loop on the *hard* problems where no formula exists.
+
+Let's check. Drop a ball from 100 m for 1 second:
+
+$$
+h = 100 - \tfrac{1}{2}(9.8)(1)^2 = 100 - 4.9 = 95.1 \text{ m}
+$$
+
+- **Exact formula:** $95.1$ m
+- **Euler loop (with $dt = 0.01$):** about $95.05$ m
+
+So close! They don't match *perfectly*, and that's expected — Euler takes finite-sized steps, so it's always a tiny bit off. That gap is the **approximation error**.
+
+**How do you shrink the error?** Use a smaller $dt$. With $dt = 0.001$ (ten times more steps), the loop gives about $95.095$ — even closer to $95.1$. Smaller steps, smoother flipbook, better answer. The trade-off: smaller $dt$ means more loops, so the computer does more work.
+
+> Because your answers are approximations, the tests in this class accept anything **close enough** (within a small tolerance). You don't need to match to ten decimal places — you need to do the physics right.
+
+---
+
+## Why This Matters for Your Blaster
+
+Right now we're dropping a boring ball. But this *exact* loop is the engine for everything ahead:
+
+- A **Nerf dart flying through the air** — same loop, but the acceleration also includes air resistance pushing back. (No formula exists for that — only the loop.)
+- A **spring pushing a dart down the barrel** — same loop, but the acceleration comes from the spring's force, which *fades* as it uncoils.
+- **Compressed air** — same loop, but the push comes from gas pressure dropping as it expands.
+
+Master the two-line nudge today, and you've built the heart of your whole blaster simulator. Let's go, {{FIRST_NAME}}.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| $v = \frac{dx}{dt}$ | velocity is the derivative of position | — |
+| $a = \frac{dv}{dt}$ | acceleration is the derivative of velocity | — |
+| Euler step (velocity) | $\Delta v = a\, dt$ | `v = v + a * dt` |
+| Euler step (position) | $\Delta x = v\, dt$ | `x = x + v * dt` |
+| Gravity | pulls down at $9.8\ \text{m/s}^2$, so $a = -9.8$ | `g = 9.8` |
+| Simulation loop | repeat the nudge many times | `for _ in range(steps):` |
+| Checking | compare to the exact formula when you can | `h0 - 0.5*g*t**2` |
+| Shrinking error | smaller $dt$ = more accurate | `dt = 0.001` |
+
+Head to the exercises and build the three pieces of a falling-ball simulator!

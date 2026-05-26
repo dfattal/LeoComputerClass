@@ -40,6 +40,18 @@ export const classes: ClassDef[] = [
     language: "python",
   },
   {
+    slug: "leo-physics",
+    name: "Leo's Motion Lab",
+    tagline: "Engineer a Nerf Blaster",
+    description:
+      "Use calculus and Python to simulate motion from scratch — then design your own spring or air-powered blaster and prove with code why it shoots the farthest.",
+    accentColor: "amber",
+    heroImage: "/hero-physics.webp",
+    studentName: "Leo",
+    contentDir: "leo-physics",
+    language: "python",
+  },
+  {
     slug: "leila",
     name: "Leila's Bio Lab",
     tagline: "Code Your Way Through Biology",

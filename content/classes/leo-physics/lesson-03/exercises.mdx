@@ -1,0 +1,107 @@
+# Lesson 3 — Exercises: Air Resistance
+
+## How This Works
+
+You'll add drag to your simulator in three steps: write the drag force, find a terminal velocity, then launch a dart through real air. Use `g = 9.8`, keep **up as positive**, and `import math`.
+
+As always, answers are **approximations** — the tests accept anything **close enough**.
+
+A quick note on `k` and `m`: `k` is the **drag constant** (bigger = blunter/draggier dart) and `m` is the dart's **mass** in kilograms. Drag *acceleration* is `(k/m)` times speed-squared, pointing against the motion.
+
+---
+
+## Exercise 1: The Drag Force
+
+Write `drag_accel(v, k, m)` that returns the acceleration from drag for an object moving with velocity `v`. Drag opposes motion and grows with speed squared.
+
+```python
+def drag_accel(v, k, m):
+    # return -(k/m) * abs(v) * v
+    pass
+```
+
+**Examples:**
+- `drag_accel(10, 0.1, 0.5)` → `-20.0` (moving up at 10 → drag pushes *down*)
+- `drag_accel(-10, 0.1, 0.5)` → `20.0` (moving down at 10 → drag pushes *up*)
+- `drag_accel(0, 0.1, 0.5)` → `0.0` (not moving → no drag)
+- `drag_accel(20, 0.2, 0.25)` → `-320.0`
+
+**Hint:** It's one line: `-(k/m) * abs(v) * v`. The `abs(v) * v` gives you the size of `v²` while keeping the sign of `v`, and the minus sign flips it so drag always opposes the motion.
+
+---
+
+## Exercise 2: Terminal Velocity
+
+Write `terminal_velocity(k, m, dt)` that drops an object from rest and returns the **top speed** it reaches — the speed where drag balances gravity and it stops speeding up.
+
+Keep up as positive, so the object falls in the **negative** direction. Each step, the acceleration is gravity *plus* drag: `a = -g + drag_accel(v, k, m)`. Loop until the acceleration shrinks to almost nothing, then return the **speed** (`abs(v)`).
+
+```python
+def terminal_velocity(k, m, dt):
+    g = 9.8
+    v = 0.0
+    while True:
+        a = -g + drag_accel(v, k, m)
+        # update v, then stop once abs(a) < 0.001
+        pass
+    return abs(v)
+```
+
+**Examples:**
+- `terminal_velocity(0.1, 0.5, 0.001)` → about `7.0`
+- `terminal_velocity(0.25, 1.0, 0.001)` → about `6.26`
+- `terminal_velocity(0.1, 1.0, 0.001)` → about `9.9` (heavier object → higher terminal speed!)
+
+**Check:** the exact formula is `v_term = math.sqrt(m * 9.8 / k)`.
+
+**Hint:** Inside the loop: `v = v + a * dt`, then `if abs(a) < 0.001: break`. This reuses your `drag_accel` from Exercise 1!
+
+---
+
+## Exercise 3: Launch Through Real Air
+
+Write `range_with_drag(speed, angle_deg, k, m, dt)` — your Lesson 2 launcher, but now with drag fighting the dart the whole way. Return the range (horizontal distance) in meters.
+
+Each step, find the dart's actual speed through the air, then apply drag to **both** directions:
+
+```python
+def range_with_drag(speed, angle_deg, k, m, dt):
+    g = 9.8
+    angle_rad = math.radians(angle_deg)
+    vx = speed * math.cos(angle_rad)
+    vy = speed * math.sin(angle_rad)
+    x = 0.0
+    y = 0.0
+    while True:
+        spd = math.sqrt(vx*vx + vy*vy)   # the dart's speed through the air
+        ax = -(k/m) * spd * vx           # drag, sideways
+        ay = -g - (k/m) * spd * vy       # gravity + drag, vertical
+        # update vx, vy, then x, y
+        # stop when y <= 0 (landed)
+        pass
+    return x
+```
+
+**Examples:**
+- `range_with_drag(20, 45, 0.01, 0.05, 0.001)` → about `7.5` (compare to **40.8** with no air — wow!)
+- `range_with_drag(20, 30, 0.01, 0.05, 0.001)` → about `7.84` (a flatter 30° now beats 45°!)
+- `range_with_drag(25, 40, 0.02, 0.05, 0.001)` → about `5.22`
+
+**Hint:** Unlike Lesson 2, `vx` **does** change now — update both `vx` and `vy` each step, then `x` and `y`. The order: velocities first, then positions.
+
+---
+
+## Bonus Challenge (no test — just for fun)
+
+Sweep the angle like you did in Lesson 2: try `range_with_drag(20, a, 0.01, 0.05, 0.001)` for `a` in `25, 30, 34, 40, 45` and `print` each. The winner is **no longer 45°** — find the new magic angle! This is the exact kind of search you'll automate in the capstone.
+
+---
+
+## Tips If You're Stuck
+
+1. **`drag_accel` wrong sign?** It must be `-(k/m) * abs(v) * v` — the `abs(v)*v`, not `v*v`. With `v*v` drag would never push the right way.
+2. **Loop runs forever (timeout)?** In Exercise 2 make sure you update `v` *inside* the loop. In Exercise 3 make sure gravity is `-g` so the dart comes back down.
+3. **Range looks like Lesson 2 (too far)?** You probably forgot to update `vx` — with drag, the dart slows sideways too.
+4. **Returned `None`?** Don't forget the `return`.
+
+Feel the air fight back — this is the physics that makes your blaster design *real*.

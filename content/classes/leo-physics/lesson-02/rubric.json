@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct decomposition", "weight": 35, "description": "Uses math.radians then cos/sin to split speed into [vx, vy]"},
+  {"criterion": "2D Euler loop", "weight": 30, "description": "Updates vy with -g while keeping vx constant; updates both x and y"},
+  {"criterion": "Event detection", "weight": 20, "description": "Uses a while loop that stops at the apex (vy <= 0) or landing (y <= 0)"},
+  {"criterion": "Matches the formulas", "weight": 15, "description": "Range and peak height land close to the exact vacuum formulas"}
+]

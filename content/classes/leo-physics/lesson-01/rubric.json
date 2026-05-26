@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct physics", "weight": 40, "description": "Velocity uses a*dt, position uses v*dt, and gravity's acceleration is -9.8 (down)"},
+  {"criterion": "Working Euler loop", "weight": 35, "description": "fall() repeats the step the right number of times and updates velocity before position"},
+  {"criterion": "Matches the formula", "weight": 15, "description": "Results land close to the exact answer h0 - 0.5*g*t**2"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names (v, dt, h) and a return statement on every function"}
+]

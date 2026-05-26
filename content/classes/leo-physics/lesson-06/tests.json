@@ -1,0 +1,29 @@
+[
+  {
+    "entry": "gas_pressure",
+    "tol": 1.0,
+    "cases": [
+      {"name": "gas_pressure(300000, 0.00004, 0.0002, 0) full pressure", "args": [300000, 0.00004, 0.0002, 0], "expected": 300000.0},
+      {"name": "gas_pressure(300000, 0.00004, 0.0002, 0.4) down to atmospheric", "args": [300000, 0.00004, 0.0002, 0.4], "expected": 100000.0},
+      {"name": "gas_pressure(200000, 0.00005, 0.0001, 0.5)", "args": [200000, 0.00005, 0.0001, 0.5], "expected": 100000.0}
+    ]
+  },
+  {
+    "entry": "air_muzzle_velocity",
+    "tol": 0.15,
+    "cases": [
+      {"name": "air_muzzle_velocity(...barrel 0.2...) too short", "args": [300000, 0.00004, 0.0002, 0.02, 0.2, 0.00005], "expected": 20.78},
+      {"name": "air_muzzle_velocity(...barrel 0.4...) sweet spot", "args": [300000, 0.00004, 0.0002, 0.02, 0.4, 0.00005], "expected": 22.77},
+      {"name": "air_muzzle_velocity(...barrel 0.6...) too long -> slower", "args": [300000, 0.00004, 0.0002, 0.02, 0.6, 0.00005], "expected": 21.53}
+    ]
+  },
+  {
+    "entry": "best_barrel",
+    "tol": 0.06,
+    "cases": [
+      {"name": "best_barrel(300000, 0.00004, ...) -> ~0.4", "args": [300000, 0.00004, 0.0002, 0.02, 0.0002], "expected": 0.4},
+      {"name": "best_barrel(300000, 0.00008, ...) bigger tank -> ~0.8", "args": [300000, 0.00008, 0.0002, 0.02, 0.0002], "expected": 0.8},
+      {"name": "best_barrel(400000, 0.00004, ...) higher pressure -> ~0.6", "args": [400000, 0.00004, 0.0002, 0.02, 0.0002], "expected": 0.6}
+    ]
+  }
+]

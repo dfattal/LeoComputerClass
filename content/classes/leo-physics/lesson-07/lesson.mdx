@@ -1,0 +1,132 @@
+# Lesson 7 — The Whole Blaster
+
+## Phase 4: Engineering the Blaster
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See a blaster as **two stages**: the engine (inside) and the flight (outside)
+- **Chain** your spring engine into your drag-trajectory simulator
+- Predict a real shot end-to-end: design in, landing spot out
+- Read the full story of a shot — muzzle speed, range, and peak height
+- Spot the clue that sets up the capstone: **dart mass matters in *both* stages**
+
+---
+
+## Big Idea
+
+You've built every piece. Now you snap them together into one machine.
+
+Every blaster shot is really **two stories joined at one number — the muzzle velocity**:
+
+1. **Internal ballistics (the engine):** inside the barrel, a spring (Lesson 5) or compressed air (Lesson 6) pushes the dart. Out comes a *muzzle velocity*.
+2. **External ballistics (the flight):** that muzzle velocity launches the dart, and gravity + drag (Lessons 2–4) shape the arc to a *landing spot*.
+
+The first stage's **output** is the second stage's **input**. Connect them and you have a complete blaster simulator: feed in a design (spring, dart, barrel, angle) and get out exactly where the dart lands.
+
+```
+spring/air  ──►  muzzle velocity  ──►  drag flight  ──►  range
+ (Lesson 5/6)        (the link)         (Lessons 3–4)
+```
+
+This is **composition** — building a big function out of smaller ones you already trust. It's how all real software (and all real engineering) is built.
+
+---
+
+## Two Engines You Already Have
+
+You're not writing new physics today — you're *connecting* two engines you've already built.
+
+**The internal engine** (from Lesson 5) — a spring pushing the dart down the barrel:
+
+```python
+def muzzle_speed(x0, k, m, barrel, dt):
+    d = 0.0
+    v = 0.0
+    while d < barrel:
+        s = x0 - d
+        F = k * s if s > 0 else 0.0
+        v = v + (F / m) * dt
+        d = d + v * dt
+    return v
+```
+
+**The external engine** (from Lessons 3–4) — a dart flying through air. We'll hand you this one, returning the range *and* the peak height as a list `[range, peak]`:
+
+```python
+def drag_flight(speed, angle_deg, m, kdrag, dt):
+    # ... your drag trajectory loop from Lesson 3 ...
+    return [range, peak]
+```
+
+---
+
+## Snapping Them Together
+
+The whole blaster is one line of composition — take the muzzle speed and hand it straight to the flight:
+
+```python
+def blast_range(x0, k, m, barrel, angle_deg, kdrag, dt):
+    speed = muzzle_speed(x0, k, m, barrel, dt)        # stage 1: the engine
+    return drag_flight(speed, angle_deg, m, kdrag, dt)[0]   # stage 2: the flight
+```
+
+That's it. That's a working blaster simulator. Give it a spring (`x0`, `k`), a dart (`m`), a `barrel`, a launch `angle_deg`, and the air's `kdrag`, and it tells you how far the dart flies — pushing through every bit of physics you've learned, with no formula anywhere in sight.
+
+---
+
+## The Full Story of a Shot
+
+Range isn't the only thing you might want. Because `drag_flight` already hands back the peak height too, you can report the **whole shot** at once — how fast it left, how far it went, how high it arced:
+
+```python
+def blast_report(x0, k, m, barrel, angle_deg, kdrag, dt):
+    speed = muzzle_speed(x0, k, m, barrel, dt)
+    flight = drag_flight(speed, angle_deg, m, kdrag, dt)   # [range, peak]
+    return [speed, flight[0], flight[1]]                   # [muzzle, range, peak]
+```
+
+One call, the complete readout. This is your blaster's spec sheet.
+
+---
+
+## The Clue for the Capstone: Mass Is Everywhere
+
+Here's the thing to notice — and it's the whole reason the final project is interesting. Look at where the dart's **mass** `m` shows up:
+
+- In the **engine**: muzzle speed is $v = x_0\sqrt{k/m}$ — a *lighter* dart leaves *faster*.
+- In the **flight**: drag deceleration is $\frac{k_\text{drag}}{m}|\vec v|\,v$ — a *lighter* dart is slowed *more* by the air.
+
+So mass pulls in **opposite directions**. Make the dart lighter and it launches faster but gets eaten by drag. Make it heavier and it launches slower but cuts through the air. Somewhere in between is a dart mass that flies the **farthest** — and there is *no formula* for it. The only way to find it is to try a bunch of masses with your brand-new blaster simulator and see which wins.
+
+That's exactly what you'll do in the capstone. Today you built the machine; next lesson you'll use it to *design* the perfect blaster.
+
+---
+
+## Why This Matters for Your Blaster
+
+This is the payoff of the whole class. You can now answer real questions about a real design:
+
+- "If I use this spring and this dart, how far will it shoot?" → `blast_range(...)`
+- "What's the full spec — speed, range, height?" → `blast_report(...)`
+- "Which dart should I load?" → coming up in Lesson 8.
+
+You turned a pile of physics into an engineering tool. Let's go build the optimizer.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Two stages | engine (inside) + flight (outside) | joined at the muzzle velocity |
+| Composition | build big functions from trusted small ones | `drag_flight(muzzle_speed(...), ...)` |
+| `blast_range` | design in → landing spot out | the whole blaster, one call |
+| `blast_report` | full readout | `[muzzle, range, peak]` |
+| Mass is everywhere | $v=x_0\sqrt{k/m}$ **and** drag $=\frac{k_\text{drag}}{m}\lvert\vec v\rvert v$ | lighter = faster launch *but* more drag |
+| The capstone clue | a **best dart mass** exists, found only by trying | Lesson 8 |
+
+Head to the exercises and build the whole blaster!

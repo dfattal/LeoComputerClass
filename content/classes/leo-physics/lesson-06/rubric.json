@@ -1,0 +1,6 @@
+[
+  {"criterion": "Boyle's law", "weight": 30, "description": "gas_pressure returns P0*V0/(V0 + A*d) — pressure drops as the gas expands"},
+  {"criterion": "Net-force loop", "weight": 35, "description": "air_muzzle_velocity uses (P - PATM)*A each step so the dart accelerates then decelerates once below atmospheric"},
+  {"criterion": "Barrel sweep", "weight": 25, "description": "best_barrel tries barrel lengths and keeps the one with the highest muzzle velocity (the sweet spot)"},
+  {"criterion": "Understands the sweet spot", "weight": 10, "description": "Subtracts atmospheric pressure so a too-long barrel correctly comes out slower"}
+]

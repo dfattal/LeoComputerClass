@@ -1,0 +1,108 @@
+# Lesson 5 — Exercises: Spring-Powered Blasters
+
+## How This Works
+
+You'll build the engine of your blaster: a spring that pushes a dart down the barrel. Work in meters, kilograms, and newtons. The barrel is horizontal, so we ignore gravity here — it's all about the spring.
+
+As always, answers are approximations — the tests accept anything **close enough**.
+
+---
+
+## Exercise 1: The Spring's Push
+
+Write `spring_force(compression, k)` using Hooke's law. The spring pushes with force `k * compression` — but only while it's still squished. Once it reaches its natural length (`compression` is `0` or less), it can't push anymore, so the force is `0`.
+
+```python
+def spring_force(compression, k):
+    # if compression > 0: return k * compression
+    # otherwise the spring has let go: return 0
+    pass
+```
+
+**Examples:**
+- `spring_force(0.1, 200)` → `20.0`
+- `spring_force(0.05, 300)` → `15.0`
+- `spring_force(-0.02, 200)` → `0.0` (spring already released — no pulling back!)
+- `spring_force(0, 200)` → `0.0`
+
+**Hint:** One `if`. `return k * compression` when `compression > 0`, else `return 0.0`.
+
+---
+
+## Exercise 2: Muzzle Velocity
+
+Write `muzzle_velocity(x0, k, m, barrel, dt)` that simulates the dart from rest and returns how fast it's going when it leaves the barrel.
+
+- `x0` — how far the spring starts squished (meters)
+- `k` — spring stiffness, `m` — dart mass
+- `barrel` — barrel length (meters); the dart exits when it has travelled this far
+- `dt` — time step
+
+The dart's distance travelled is `d`. The spring's remaining squish is `s = x0 - d`. Use your `spring_force` each step.
+
+```python
+def muzzle_velocity(x0, k, m, barrel, dt):
+    d = 0.0
+    v = 0.0
+    while d < barrel:
+        s = x0 - d
+        a = spring_force(s, k) / m   # Newton: a = F / m
+        # update v, then d  (velocity first!)
+        pass
+    return v
+```
+
+**Examples:**
+- `muzzle_velocity(0.1, 200, 0.05, 0.3, 0.0001)` → about `6.32` (matches `0.1 * sqrt(200/0.05)`!)
+- `muzzle_velocity(0.15, 300, 0.05, 0.4, 0.0001)` → about `11.62`
+- `muzzle_velocity(0.2, 200, 0.05, 0.1, 0.0001)` → about `10.95` (short barrel — the spring isn't done pushing yet)
+
+**Hint:** Inside the loop: `v = v + a * dt`, then `d = d + v * dt`. The acceleration starts big and fades to zero as `s` shrinks — that's the spring uncoiling. This reuses your `spring_force` from Exercise 1!
+
+---
+
+## Exercise 3: The Ideal Muzzle Velocity (energy check)
+
+Write `ideal_muzzle_velocity(x0, k, m)` that returns the muzzle velocity predicted by **energy** — the fastest the dart can leave if the spring gives up *all* its stored energy.
+
+From `½ m v² = ½ k x0²`, the answer is `v = x0 * sqrt(k / m)`.
+
+```python
+import math
+
+def ideal_muzzle_velocity(x0, k, m):
+    # return x0 * sqrt(k / m)
+    pass
+```
+
+**Examples:**
+- `ideal_muzzle_velocity(0.1, 200, 0.05)` → about `6.32`
+- `ideal_muzzle_velocity(0.15, 300, 0.05)` → about `11.62`
+- `ideal_muzzle_velocity(0.2, 50, 0.1)` → about `4.47`
+
+**Hint:** `return x0 * math.sqrt(k / m)`. Compare it to your Exercise 2 answer with a long barrel — they should match! That's force and energy agreeing.
+
+---
+
+## Bonus Challenge (no test — just for fun)
+
+You're an engineer now. Use your functions to answer real design questions:
+
+```python
+# Which makes a bigger difference — doubling stiffness or doubling compression?
+print(ideal_muzzle_velocity(0.1, 400, 0.05))   # double k
+print(ideal_muzzle_velocity(0.2, 200, 0.05))   # double x0
+```
+
+Why does doubling the compression beat doubling the stiffness? (Hint: look at how `x0` and `k` sit inside the formula.)
+
+---
+
+## Tips If You're Stuck
+
+1. **`muzzle_velocity` runs forever (timeout)?** Make sure you update `d` inside the loop (`d = d + v * dt`) so the dart actually moves down the barrel.
+2. **Muzzle velocity is 0?** Check the order: update `v` first (`v = v + a * dt`), *then* `d`. If you move `d` before `v`, the first step has no speed.
+3. **Exercise 3 way off?** It's `x0 * sqrt(k/m)`, not `sqrt(x0 * k/m)` — the `x0` is outside the square root.
+4. **Spring "pulls back"?** Your `spring_force` must return `0` once `compression <= 0`.
+
+Build the engine — then in Lesson 6 you'll swap the spring for compressed air!

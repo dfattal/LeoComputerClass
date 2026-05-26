@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "drag_accel",
+    "tol": 0.000001,
+    "cases": [
+      {"name": "drag_accel(10, 0.1, 0.5) moving up -> drag down", "args": [10, 0.1, 0.5], "expected": -20.0},
+      {"name": "drag_accel(-10, 0.1, 0.5) moving down -> drag up", "args": [-10, 0.1, 0.5], "expected": 20.0},
+      {"name": "drag_accel(0, 0.1, 0.5) not moving -> no drag", "args": [0, 0.1, 0.5], "expected": 0.0},
+      {"name": "drag_accel(20, 0.2, 0.25)", "args": [20, 0.2, 0.25], "expected": -320.0}
+    ]
+  },
+  {
+    "entry": "terminal_velocity",
+    "tol": 0.05,
+    "cases": [
+      {"name": "terminal_velocity(0.1, 0.5, 0.001)", "args": [0.1, 0.5, 0.001], "expected": 7.0},
+      {"name": "terminal_velocity(0.25, 1.0, 0.001)", "args": [0.25, 1.0, 0.001], "expected": 6.26},
+      {"name": "terminal_velocity(0.1, 1.0, 0.001) heavier -> faster", "args": [0.1, 1.0, 0.001], "expected": 9.9}
+    ]
+  },
+  {
+    "entry": "range_with_drag",
+    "tol": 0.1,
+    "cases": [
+      {"name": "range_with_drag(20, 45, 0.01, 0.05, 0.001) ~ way less than 40.8!", "args": [20, 45, 0.01, 0.05, 0.001], "expected": 7.5},
+      {"name": "range_with_drag(20, 30, 0.01, 0.05, 0.001) ~ flatter flies farther now", "args": [20, 30, 0.01, 0.05, 0.001], "expected": 7.84},
+      {"name": "range_with_drag(25, 40, 0.02, 0.05, 0.001)", "args": [25, 40, 0.02, 0.05, 0.001], "expected": 5.22}
+    ]
+  }
+]

@@ -10,7 +10,7 @@ const MIN_HEIGHT = 80;
 const COLLAPSED_HEADER_HEIGHT = 40;
 
 const baseDrawerTabs = ["Output", "Tests", "Review"] as const;
-export type DrawerTab = (typeof baseDrawerTabs)[number] | "Lab";
+export type DrawerTab = (typeof baseDrawerTabs)[number] | "Lab" | "Graph";
 
 export default function BottomDrawer({
   activeTab,
@@ -21,6 +21,7 @@ export default function BottomDrawer({
   testsContent,
   reviewContent,
   labContent,
+  graphContent,
 }: {
   activeTab: DrawerTab;
   onTabChange: (tab: DrawerTab) => void;
@@ -30,6 +31,7 @@ export default function BottomDrawer({
   testsContent: ReactNode;
   reviewContent: ReactNode;
   labContent?: ReactNode;
+  graphContent?: ReactNode;
 }) {
   // Safe to use lazy init: this component only renders client-side (behind CourseShell's mounted guard)
   const [height, setHeight] = useState(() => {
@@ -79,15 +81,20 @@ export default function BottomDrawer({
     localStorage.setItem(DRAWER_COLLAPSED_KEY, (!collapsed).toString());
   }, [collapsed, onCollapsedChange]);
 
-  const drawerTabs: DrawerTab[] = labContent
-    ? ["Output", "Tests", "Lab", "Review"]
-    : ["Output", "Tests", "Review"];
+  const drawerTabs: DrawerTab[] = [
+    "Output",
+    "Tests",
+    ...(graphContent ? (["Graph"] as const) : []),
+    ...(labContent ? (["Lab"] as const) : []),
+    "Review",
+  ];
 
   const tabContent: Record<DrawerTab, ReactNode> = {
     Output: outputContent,
     Tests: testsContent,
     Review: reviewContent,
     Lab: labContent ?? null,
+    Graph: graphContent ?? null,
   };
 
   return (

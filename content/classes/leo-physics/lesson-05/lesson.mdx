@@ -1,0 +1,139 @@
+# Lesson 5 — Spring-Powered Blasters
+
+## Phase 3: Powering the Shot
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand **Hooke's law**: how a spring's push depends on how far it's squished
+- See why the spring's push **fades** as it uncoils — a force that depends on *position*
+- Simulate a dart accelerating down the barrel and read off its **muzzle velocity**
+- Check your simulation against the **energy** formula for an ideal spring
+- Learn what makes a dart fly faster: stiffness, compression, and dart mass
+
+---
+
+## Big Idea
+
+For four lessons your darts have *already been moving* — you just handed them a launch speed and watched them fly. But where does that speed come from? Time to build the **inside** of the blaster: the part that turns a squished spring into a fast-moving dart.
+
+Here's the pattern you've been building toward:
+
+| Lesson | The force depends on... |
+|--------|--------------------------|
+| 1–2 (gravity) | nothing — it's **constant** ($-g$) |
+| 3 (drag) | **velocity** — faster means more drag |
+| 5 (spring) | **position** — how far the spring is squished |
+
+Same Euler loop every time. The only thing that changes is the rule for "what's the force right now?" A spring's force depends on *where the dart is*, so — just like drag — there's no shortcut. You ask the spring how hard it's pushing at each step, and let the loop do the rest.
+
+---
+
+## Hooke's Law: A Spring's Push
+
+Squish a spring and it pushes back. The harder you squish it, the harder it pushes. That's **Hooke's law**, and it's beautifully simple:
+
+$$
+F = k \, s
+$$
+
+- $s$ is the **compression** — how far the spring is squished from its natural length (in meters).
+- $k$ is the **stiffness** (the "spring constant," in newtons per meter). A stiff spring has a big $k$.
+
+So a spring squished by $s = 0.1$ m with stiffness $k = 200$ N/m pushes with $F = 200 \times 0.1 = 20$ newtons.
+
+**The key twist:** as the dart moves forward, the spring un-squishes, so $s$ gets *smaller*, so the push gets *weaker*. The force **fades** as the dart travels. And once the spring reaches its natural length ($s = 0$), it can't push anymore — it just lets go (it's not glued to the dart, so it can't pull it back either):
+
+```python
+def spring_force(compression, k):
+    if compression > 0:
+        return k * compression   # still pushing
+    return 0.0                    # fully released — no more push
+```
+
+---
+
+## Down the Barrel: Finding Muzzle Velocity
+
+Now put that fading force in your Euler loop. The dart starts squished against the spring at rest. Each step: ask the spring how hard it's pushing *right now*, turn that into acceleration ($a = F/m$), and update velocity and position — exactly like before.
+
+The dart's position is `d` (how far it has travelled down the barrel), so the remaining compression is `s = x0 - d`, where `x0` is the starting compression. The dart keeps going until it leaves the end of the **barrel**:
+
+```python
+# (the barrel is horizontal, so gravity doesn't change the muzzle speed)
+d = 0.0
+v = 0.0
+while d < barrel:
+    s = x0 - d                      # how much squish is left
+    a = spring_force(s, k) / m      # Newton's second law: a = F / m
+    v = v + a * dt                  # the push speeds the dart up...
+    d = d + v * dt                  # ...and the dart moves down the barrel
+# v is now the MUZZLE VELOCITY — how fast the dart leaves the barrel
+```
+
+Watch what happens to the acceleration: it starts big (spring fully squished), then **fades to zero** as the spring releases. The dart speeds up quickly at first, then coasts. The speed it has when it exits the barrel is the **muzzle velocity** — the launch speed you've been feeding into your trajectory simulator since Lesson 2!
+
+---
+
+## Checking It With Energy
+
+Springs have an exact answer waiting — through **energy**, not force. A squished spring stores **elastic potential energy**:
+
+$$
+E = \tfrac{1}{2}\, k\, x_0^2
+$$
+
+If the spring transfers *all* of that energy into the dart's motion (kinetic energy $\tfrac12 m v^2$), then:
+
+$$
+\tfrac{1}{2}\, m\, v^2 = \tfrac{1}{2}\, k\, x_0^2
+\quad\Longrightarrow\quad
+v = x_0 \sqrt{\frac{k}{m}}
+$$
+
+That's the **ideal muzzle velocity** — the fastest the dart can possibly leave, assuming the barrel is long enough for the spring to fully release and there's no friction. Your Euler loop should land right on it. For $x_0 = 0.1$ m, $k = 200$ N/m, $m = 0.05$ kg:
+
+$$
+v = 0.1 \sqrt{\frac{200}{0.05}} = 0.1 \times \sqrt{4000} \approx 6.32 \text{ m/s}
+$$
+
+Run the simulation with a long-enough barrel and you'll get ≈ 6.32 m/s. Force and energy agree — your simulator works.
+
+---
+
+## Why Barrel Length Matters (a little)
+
+What if the barrel is **shorter** than the spring's reach ($\text{barrel} < x_0$)? Then the dart leaves *before* the spring finishes pushing — so it never collects all the stored energy, and the muzzle velocity comes out lower. The spring is still shoving as the dart flies off the end; that leftover push is wasted.
+
+So for a spring blaster the rule is simple: **make the barrel at least as long as the spring's compression**, so the spring can give the dart its full energy. (In the next lesson — compressed air — barrel length becomes a much bigger deal.)
+
+---
+
+## Why This Matters for Your Blaster
+
+You finally control the *power* of your blaster. Look at $v = x_0 \sqrt{k/m}$ — it tells you exactly how to make a dart fly faster:
+
+- **Stiffer spring (bigger $k$):** more push, faster dart. ($v$ grows with $\sqrt{k}$.)
+- **More compression (bigger $x_0$):** squish it further, faster dart. ($v$ grows directly with $x_0$.)
+- **Lighter dart (smaller $m$):** less mass to shove, faster dart. ($v$ grows with $1/\sqrt{m}$.)
+
+But remember Lesson 3 — a lighter dart leaves faster but gets *eaten alive* by air drag. There's the tug-of-war again: light darts launch fast but slow down fast; heavy darts launch slow but cut through the air. Now you can compute **both** halves — the spring sets the launch speed, and your trajectory simulator flies it. That's the whole blaster, and you'll bolt the two together in Lesson 7.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code / formula |
+|---------|---------|----------------|
+| Hooke's law | spring push grows with squish | $F = k\,s$ |
+| Fading force | push weakens as the spring uncoils | `s = x0 - d` shrinks |
+| Spring lets go | no push once released | `return 0` when `compression <= 0` |
+| Muzzle velocity | dart's speed leaving the barrel | Euler loop until `d >= barrel` |
+| Stored energy | energy in a squished spring | $E = \tfrac12 k x_0^2$ |
+| Ideal muzzle velocity | full energy → speed | $v = x_0\sqrt{k/m}$ |
+| Faster dart | stiffer, more squish, lighter | $v \propto \sqrt{k}\,,\ x_0\,,\ 1/\sqrt{m}$ |
+
+Head to the exercises and build the engine of your blaster!

@@ -10,6 +10,25 @@ async function loadPyodideInstance() {
   return pyodide;
 }
 
+// Compare a test result to its expected value.
+// When `tol` is a number, numeric values (and lists of numbers) match if they
+// are within `tol` of each other — needed for physics/float exercises where
+// exact equality never holds. Otherwise falls back to exact structural match.
+function valuesMatch(actual, expected, tol) {
+  if (typeof tol === "number") {
+    if (typeof actual === "number" && typeof expected === "number") {
+      return Math.abs(actual - expected) <= tol;
+    }
+    if (Array.isArray(actual) && Array.isArray(expected)) {
+      return (
+        actual.length === expected.length &&
+        actual.every((v, i) => valuesMatch(v, expected[i], tol))
+      );
+    }
+  }
+  return JSON.stringify(actual) === JSON.stringify(expected);
+}
+
 self.onmessage = async function (e) {
   const { type, code, tests } = e.data;
 
@@ -97,8 +116,8 @@ sys.stderr = io.StringIO()
             } else {
               actual = result;
             }
-            const passed =
-              JSON.stringify(actual) === JSON.stringify(tc.expected);
+            const tol = tc.tol ?? testEntry.tol;
+            const passed = valuesMatch(actual, tc.expected, tol);
 
             results.push({
               entry: testEntry.entry,

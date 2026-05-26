@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    100
+  ],
+  "title": "Your simulation vs the exact answer — smaller steps, closer fit",
+  "xLabel": "time (s)",
+  "yLabel": "height (m)",
+  "setup": "# --- plot helper (hidden) — Euler vs the exact formula for a dropped ball ---\ndef __euler_fall(h0, dt):\n    g = 9.8\n    v = 0.0\n    h = h0\n    t = 0.0\n    pts = [[0.0, round(h0, 3)]]\n    for _ in range(2000000):\n        v = v + (-g) * dt\n        h = h + v * dt\n        t = t + dt\n        if h < 0:\n            break\n        pts.append([round(t, 3), round(h, 3)])\n    return pts\n\ndef __exact_fall(h0, dt):\n    g = 9.8\n    pts = []\n    t = 0.0\n    for _ in range(2000000):\n        h = h0 - 0.5 * g * t * t\n        if h < 0:\n            break\n        pts.append([round(t, 3), round(h, 3)])\n        t = t + dt\n    return pts\n\ndef __plot(h0):\n    return [\n        {\"name\": \"big steps (dt=0.5)\", \"points\": __euler_fall(h0, 0.5), \"highlight\": False},\n        {\"name\": \"small steps (dt=0.05)\", \"points\": __euler_fall(h0, 0.05), \"highlight\": False},\n        {\"name\": \"exact formula\", \"points\": __exact_fall(h0, 0.02), \"highlight\": True},\n    ]\n"
+}

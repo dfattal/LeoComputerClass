@@ -1,0 +1,29 @@
+[
+  {
+    "entry": "simulate_shot",
+    "tol": 0.1,
+    "cases": [
+      {"name": "simulate_shot(20, 45, 0.01, 0.05, 0.002)", "args": [20, 45, 0.01, 0.05, 0.002], "expected": [7.48, 3.18, 1.58]},
+      {"name": "simulate_shot(20, 30, 0.01, 0.05, 0.002)", "args": [20, 30, 0.01, 0.05, 0.002], "expected": [7.81, 1.87, 1.21]},
+      {"name": "simulate_shot(25, 35, 0.02, 0.05, 0.002)", "args": [25, 35, 0.02, 0.05, 0.002], "expected": [5.32, 1.82, 1.18]}
+    ]
+  },
+  {
+    "entry": "best_angle",
+    "tol": 1.0,
+    "cases": [
+      {"name": "best_angle(20, 0.01, 0.05, 0.005) ~ low 30s, not 45!", "args": [20, 0.01, 0.05, 0.005], "expected": 33},
+      {"name": "best_angle(25, 0.02, 0.05, 0.005)", "args": [25, 0.02, 0.05, 0.005], "expected": 30},
+      {"name": "best_angle(15, 0.01, 0.05, 0.005)", "args": [15, 0.01, 0.05, 0.005], "expected": 35}
+    ]
+  },
+  {
+    "entry": "range_lost_to_air",
+    "tol": 0.15,
+    "cases": [
+      {"name": "range_lost_to_air(20, 45, 0.01, 0.05, 0.002) ~ air steals 33m!", "args": [20, 45, 0.01, 0.05, 0.002], "expected": 33.34},
+      {"name": "range_lost_to_air(20, 30, 0.01, 0.05, 0.002)", "args": [20, 30, 0.01, 0.05, 0.002], "expected": 27.53},
+      {"name": "range_lost_to_air(25, 40, 0.02, 0.05, 0.002)", "args": [25, 40, 0.02, 0.05, 0.002], "expected": 57.63}
+    ]
+  }
+]

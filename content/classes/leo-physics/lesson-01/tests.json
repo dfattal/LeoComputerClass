@@ -1,0 +1,32 @@
+[
+  {
+    "entry": "step_velocity",
+    "tol": 0.000001,
+    "cases": [
+      {"name": "step_velocity(0, -9.8, 0.1)", "args": [0, -9.8, 0.1], "expected": -0.98},
+      {"name": "step_velocity(5, -9.8, 0.5)", "args": [5, -9.8, 0.5], "expected": 0.1},
+      {"name": "step_velocity(-2, 3, 0.25)", "args": [-2, 3, 0.25], "expected": -1.25},
+      {"name": "step_velocity(0, 0, 0.1)", "args": [0, 0, 0.1], "expected": 0}
+    ]
+  },
+  {
+    "entry": "step_position",
+    "tol": 0.000001,
+    "cases": [
+      {"name": "step_position(10, -0.98, 0.1)", "args": [10, -0.98, 0.1], "expected": 9.902},
+      {"name": "step_position(0, 5, 0.2)", "args": [0, 5, 0.2], "expected": 1.0},
+      {"name": "step_position(100, -20, 0.5)", "args": [100, -20, 0.5], "expected": 90.0},
+      {"name": "step_position(7, 0, 0.3)", "args": [7, 0, 0.3], "expected": 7}
+    ]
+  },
+  {
+    "entry": "fall",
+    "tol": 0.05,
+    "cases": [
+      {"name": "fall(10, 0.005, 200) ~ after 1s", "args": [10, 0.005, 200], "expected": 5.1},
+      {"name": "fall(20, 0.001, 1000) ~ after 1s", "args": [20, 0.001, 1000], "expected": 15.1},
+      {"name": "fall(100, 0.002, 1000) ~ after 2s", "args": [100, 0.002, 1000], "expected": 80.4},
+      {"name": "fall(50, 0.001, 0) ~ no steps yet", "args": [50, 0.001, 0], "expected": 50}
+    ]
+  }
+]

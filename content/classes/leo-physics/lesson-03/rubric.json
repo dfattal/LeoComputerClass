@@ -1,0 +1,6 @@
+[
+  {"criterion": "Drag opposes motion", "weight": 35, "description": "drag_accel uses -(k/m)*abs(v)*v so drag always points against the velocity and grows with v squared"},
+  {"criterion": "Speed-dependent loop", "weight": 30, "description": "Recomputes the acceleration from the current speed every step (it is no longer constant)"},
+  {"criterion": "2D drag applied to both directions", "weight": 20, "description": "Uses |v| = sqrt(vx^2+vy^2) and slows both vx and vy; gravity only on vy"},
+  {"criterion": "Matches reference results", "weight": 15, "description": "Terminal velocity matches sqrt(m*g/k) and the drag range lands close to the simulated value"}
+]

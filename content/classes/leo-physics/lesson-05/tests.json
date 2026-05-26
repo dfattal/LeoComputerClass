@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "spring_force",
+    "tol": 0.000001,
+    "cases": [
+      {"name": "spring_force(0.1, 200)", "args": [0.1, 200], "expected": 20.0},
+      {"name": "spring_force(0.05, 300)", "args": [0.05, 300], "expected": 15.0},
+      {"name": "spring_force(-0.02, 200) released -> no pull", "args": [-0.02, 200], "expected": 0.0},
+      {"name": "spring_force(0, 200)", "args": [0, 200], "expected": 0.0}
+    ]
+  },
+  {
+    "entry": "muzzle_velocity",
+    "tol": 0.1,
+    "cases": [
+      {"name": "muzzle_velocity(0.1, 200, 0.05, 0.3, 0.0001) full release", "args": [0.1, 200, 0.05, 0.3, 0.0001], "expected": 6.32},
+      {"name": "muzzle_velocity(0.15, 300, 0.05, 0.4, 0.0001)", "args": [0.15, 300, 0.05, 0.4, 0.0001], "expected": 11.62},
+      {"name": "muzzle_velocity(0.2, 200, 0.05, 0.1, 0.0001) short barrel", "args": [0.2, 200, 0.05, 0.1, 0.0001], "expected": 10.95}
+    ]
+  },
+  {
+    "entry": "ideal_muzzle_velocity",
+    "tol": 0.01,
+    "cases": [
+      {"name": "ideal_muzzle_velocity(0.1, 200, 0.05)", "args": [0.1, 200, 0.05], "expected": 6.32},
+      {"name": "ideal_muzzle_velocity(0.15, 300, 0.05)", "args": [0.15, 300, 0.05], "expected": 11.62},
+      {"name": "ideal_muzzle_velocity(0.2, 50, 0.1)", "args": [0.2, 50, 0.1], "expected": 4.47}
+    ]
+  }
+]

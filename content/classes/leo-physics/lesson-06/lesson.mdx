@@ -1,0 +1,138 @@
+# Lesson 6 — Compressed-Air Blasters
+
+## Phase 3: Powering the Shot
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand how **compressed air** pushes a dart: pressure times area
+- Use **Boyle's law** to track how the pressure drops as the gas expands
+- Simulate the dart down the barrel and find its muzzle velocity
+- Discover the **sweet spot**: why a barrel can be too short *and* too long
+- Sweep barrel lengths to find the best one — the heart of blaster design
+
+---
+
+## Big Idea
+
+Last lesson a spring pushed your dart. Now we swap it for a tank of **compressed air** — the other classic way to power a blaster. The physics rhymes with the spring (a push that fades as the dart moves), but the *reason* it fades is different and leads to a surprising design rule about barrel length.
+
+Compressed air is just gas squished into a small space. Squished gas is at high **pressure**, and pressure pushing on the back of the dart is what launches it.
+
+---
+
+## Pressure Pushes on Area
+
+Pressure is force spread over an area. To get the **force** on the dart, multiply the pressure by the area it pushes on — the cross-section of the barrel, $A$:
+
+$$
+F_\text{gas} = P \cdot A
+$$
+
+But the dart also has *outside* air pushing back on its front, at atmospheric pressure $P_\text{atm}$ (about $100{,}000$ Pa). So the **net** push is the difference:
+
+$$
+F_\text{net} = (P - P_\text{atm})\, A
+$$
+
+While the tank pressure $P$ is above atmospheric, the net force is forward and the dart accelerates. That's the launch.
+
+---
+
+## Boyle's Law: The Pressure Drops as the Gas Expands
+
+Here's the twist that makes barrel length matter. As the dart moves forward, the gas behind it has **more room** — so it expands, and expanding gas **loses pressure**. The relationship (for gas that stays the same temperature) is **Boyle's law**:
+
+$$
+P \cdot V = P_0 \cdot V_0 \quad (\text{constant})
+$$
+
+Squeeze gas into half the volume and its pressure doubles; let it expand to double the volume and its pressure halves. If the tank starts with volume $V_0$ at pressure $P_0$, then after the dart has travelled a distance $d$ down a barrel of area $A$, the gas fills $V_0 + A\,d$, so:
+
+$$
+P = \frac{P_0\, V_0}{V_0 + A\, d}
+$$
+
+```python
+def gas_pressure(P0, V0, A, d):
+    return P0 * V0 / (V0 + A * d)
+```
+
+Just like the spring's force faded as it uncoiled, the gas's pressure fades as it expands — but now it can keep fading all the way *below* atmospheric.
+
+---
+
+## Down the Barrel
+
+Same Euler loop, with the gas pressure recomputed every step:
+
+```python
+PATM = 100000.0
+d = 0.0
+v = 0.0
+while d < barrel:
+    P = gas_pressure(P0, V0, A, d)
+    a = (P - PATM) * A / m      # net force / mass
+    v = v + a * dt
+    d = d + v * dt
+# v is the muzzle velocity
+```
+
+The acceleration starts strong (high pressure), fades as the gas expands, and — here's the key — **can go negative**. Once the gas has expanded so much that $P < P_\text{atm}$, the outside air pushes harder than the tank, and the dart actually starts to **slow down**.
+
+---
+
+## The Sweet Spot: Why a Barrel Can Be Too Long
+
+This is the headline of the whole lesson. Think about what happens as you make the barrel longer:
+
+- **Too short:** the dart leaves while the gas is still pushing hard. You wasted pressure that could have done more work — like letting go of a swing too early.
+- **Just right:** the dart leaves exactly when the pressure has dropped to atmospheric ($P = P_\text{atm}$). Every bit of the gas's extra push went into the dart.
+- **Too long:** past that point the gas is below atmospheric, so the extra barrel **brakes** the dart instead of speeding it up. Longer is now *worse*.
+
+So muzzle velocity rises, peaks, and falls as the barrel gets longer. There's a **best barrel length** — and it's exactly where the pressure reaches atmospheric:
+
+$$
+P = P_\text{atm} \;\Longrightarrow\; V_0 + A\, d^\star = \frac{P_0 V_0}{P_\text{atm}}
+\;\Longrightarrow\;
+d^\star = \frac{V_0}{A}\left(\frac{P_0}{P_\text{atm}} - 1\right)
+$$
+
+There's no need to memorize that — your simulator will *find* the peak for you by trying many barrel lengths, exactly like you found the best launch angle in Lesson 4.
+
+---
+
+## Connecting to Work and Energy
+
+If you've met integrals, here's the elegant view: the speed the dart gains comes from the **work** the net force does along the barrel, which is the area under the force curve:
+
+$$
+\tfrac{1}{2} m v^2 = \int_0^{\text{barrel}} (P - P_\text{atm})\, A \; \mathrm{d}d
+$$
+
+The barrel length that maximizes that integral is exactly $d^\star$ — the point where the integrand $(P - P_\text{atm})A$ crosses zero. Stop collecting area while it's still positive and you've left work on the table; keep going past zero and you start *subtracting*. That's calculus telling you the same thing your simulator shows.
+
+---
+
+## Why This Matters for Your Blaster
+
+You now have the second engine for your blaster, and a real engineering rule: **match the barrel length to the tank.** A bigger tank or higher pressure pushes useful pressure for longer, so it wants a *longer* barrel; a small tank wants a short one. There's no single "best barrel" — it depends on your design, and your simulator is how you find it. In the next lesson you'll bolt this (or the spring) onto your trajectory code and predict where a real shot lands.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code / formula |
+|---------|---------|----------------|
+| Force from pressure | pressure × area | $F = P\,A$ |
+| Net push | tank minus atmosphere | $F_\text{net} = (P - P_\text{atm})A$ |
+| Boyle's law | pressure drops as gas expands | $P = \dfrac{P_0 V_0}{V_0 + A d}$ |
+| Muzzle velocity | Euler loop down the barrel | until `d >= barrel` |
+| Too long is bad | gas below atmospheric brakes the dart | $a < 0$ when $P < P_\text{atm}$ |
+| Sweet spot | best barrel length | $d^\star=\dfrac{V_0}{A}\left(\dfrac{P_0}{P_\text{atm}}-1\right)$ |
+| Work–energy | speed from area under the force | $\tfrac12 m v^2 = \int (P-P_\text{atm})A\,\mathrm{d}d$ |
+
+Head to the exercises and find the sweet spot!

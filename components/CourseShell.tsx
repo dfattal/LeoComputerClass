@@ -26,6 +26,8 @@ import MobileActionBar from "./MobileActionBar";
 import RunPanel from "./RunPanel";
 import TestResults from "./TestResults";
 import AIFeedback from "./AIFeedback";
+import LinePlot from "./LinePlot";
+import EditorGraphSplit from "./EditorGraphSplit";
 
 const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
 
@@ -112,8 +114,8 @@ function CourseShellInner({
   const [existingSubmission, setExistingSubmission] =
     useState<ExistingSubmission | null>(null);
 
-  // Viz state — captures result from the student's function for the simulator
-  const [vizResult, setVizResult] = useState<string | undefined>(undefined);
+  // Viz state — parsed JSON returned from the student's (or lesson's) viz function
+  const [vizResult, setVizResult] = useState<unknown>(undefined);
 
   // Reset state
   const [resetKey, setResetKey] = useState(0);
@@ -168,6 +170,35 @@ function CourseShellInner({
     setResetKey((k) => k + 1);
   }, []);
 
+  // Run the lesson's viz function via the __VIZ__ stdout channel and capture
+  // its JSON return value. Shared by Run and Run-Tests.
+  const captureViz = useCallback(
+    async (currentCode: string, mainErrored: boolean) => {
+      // The plot is driven by the student's own code, so skip if it errored.
+      if (!vizConfig || mainErrored) return;
+      try {
+        const argsStr = vizConfig.demoArgs
+          .map((a) => JSON.stringify(a))
+          .join(", ");
+        // A "plot" lesson can ship a hidden `setup` prelude (plot helpers that
+        // call the student's functions); append it after the student's code.
+        const setup =
+          vizConfig.type === "plot" && vizConfig.setup
+            ? `\n${vizConfig.setup}`
+            : "";
+        const vizCode = `${currentCode}${setup}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
+        const vizRun = await run(vizCode);
+        const vizLine = vizRun.stdout
+          .split("\n")
+          .find((l: string) => l.startsWith("__VIZ__:"));
+        if (vizLine) setVizResult(JSON.parse(vizLine.slice(8)));
+      } catch {
+        // Viz extraction failed — not critical
+      }
+    },
+    [run, vizConfig]
+  );
+
   const handleRun = useCallback(async () => {
     setStdout("");
     setStderr("");
@@ -178,23 +209,8 @@ function CourseShellInner({
     setStdout(result.stdout);
     setStderr(result.stderr);
 
-    // If there's a viz config, run the student's function with demo args to get the result
-    if (vizConfig && !result.error) {
-      try {
-        const argsStr = vizConfig.demoArgs.map((a) => JSON.stringify(a)).join(", ");
-        const vizCode = `${code}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
-        const vizRun = await run(vizCode);
-        const vizLine = vizRun.stdout
-          .split("\n")
-          .find((l: string) => l.startsWith("__VIZ__:"));
-        if (vizLine) {
-          setVizResult(JSON.parse(vizLine.slice(8)));
-        }
-      } catch {
-        // Viz extraction failed — not critical
-      }
-    }
-  }, [run, code, vizConfig]);
+    await captureViz(code, !!result.error);
+  }, [run, code, captureViz]);
 
   const handleRunTests = useCallback(async () => {
     setTestResults([]);
@@ -204,23 +220,8 @@ function CourseShellInner({
     const result = await runTests(code, tests);
     setTestResults(result.testResults);
 
-    // Also capture viz result
-    if (vizConfig && !result.error) {
-      try {
-        const argsStr = vizConfig.demoArgs.map((a) => JSON.stringify(a)).join(", ");
-        const vizCode = `${code}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
-        const vizRun = await run(vizCode);
-        const vizLine = vizRun.stdout
-          .split("\n")
-          .find((l: string) => l.startsWith("__VIZ__:"));
-        if (vizLine) {
-          setVizResult(JSON.parse(vizLine.slice(8)));
-        }
-      } catch {
-        // Viz extraction failed — not critical
-      }
-    }
-  }, [runTests, run, code, tests, vizConfig]);
+    await captureViz(code, !!result.error);
+  }, [runTests, code, tests, captureViz]);
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
@@ -346,7 +347,17 @@ function CourseShellInner({
   const labContent = vizConfig?.type === "crispr" ? (
     <CrisprSimulator
       scenario={vizConfig.scenario}
-      studentResult={vizResult}
+      studentResult={vizResult as string | undefined}
+    />
+  ) : undefined;
+
+  // Generic line/trajectory plot (rendered in drawer "Graph" tab)
+  const graphContent = vizConfig?.type === "plot" ? (
+    <LinePlot
+      data={vizResult}
+      title={vizConfig.title}
+      xLabel={vizConfig.xLabel}
+      yLabel={vizConfig.yLabel}
     />
   ) : undefined;
 
@@ -386,25 +397,49 @@ function CourseShellInner({
               />
             }
             rightPanel={
-              <EditorPanel
-                classSlug={classSlug}
-                lessonSlug={lessonSlug}
-                onCodeChange={handleCodeChange}
-                fallbackCode={existingSubmission?.code}
-                starterCode={starterCode}
-                onRun={handleRun}
-                onRunTests={handleRunTests}
-                onSubmit={handleSubmit}
-                onReset={handleReset}
-                loading={loading}
-                submitting={submitting}
-                hasCode={!!code.trim()}
-                hasSubmittedBefore={hasSubmittedBefore}
-                resetKey={resetKey}
-              />
+              graphContent ? (
+                <EditorGraphSplit
+                  editor={
+                    <EditorPanel
+                      classSlug={classSlug}
+                      lessonSlug={lessonSlug}
+                      onCodeChange={handleCodeChange}
+                      fallbackCode={existingSubmission?.code}
+                      starterCode={starterCode}
+                      onRun={handleRun}
+                      onRunTests={handleRunTests}
+                      onSubmit={handleSubmit}
+                      onReset={handleReset}
+                      loading={loading}
+                      submitting={submitting}
+                      hasCode={!!code.trim()}
+                      hasSubmittedBefore={hasSubmittedBefore}
+                      resetKey={resetKey}
+                    />
+                  }
+                  graph={graphContent}
+                />
+              ) : (
+                <EditorPanel
+                  classSlug={classSlug}
+                  lessonSlug={lessonSlug}
+                  onCodeChange={handleCodeChange}
+                  fallbackCode={existingSubmission?.code}
+                  starterCode={starterCode}
+                  onRun={handleRun}
+                  onRunTests={handleRunTests}
+                  onSubmit={handleSubmit}
+                  onReset={handleReset}
+                  loading={loading}
+                  submitting={submitting}
+                  hasCode={!!code.trim()}
+                  hasSubmittedBefore={hasSubmittedBefore}
+                  resetKey={resetKey}
+                />
+              )
             }
           />
-          {/* Bottom: collapsible drawer */}
+          {/* Bottom: collapsible drawer (graph lives in the right column on desktop) */}
           <BottomDrawer
             activeTab={drawerTab}
             onTabChange={setDrawerTab}
@@ -466,6 +501,8 @@ function CourseShellInner({
           outputContent={outputContent}
           testsContent={testsContent}
           reviewContent={reviewContent}
+          labContent={labContent}
+          graphContent={graphContent}
         />
 
         {/* Mobile sticky action bar */}

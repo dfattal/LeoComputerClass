@@ -1,0 +1,169 @@
+# Lesson 2 — Launch! Projectiles in 2D
+
+## Phase 1: Motion as Code
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand that 2D motion is just **two 1D motions sharing one clock**
+- Split a launch speed and angle into **horizontal and vertical velocity** using sine and cosine
+- Convert **degrees to radians** in Python
+- Extend your Euler loop from Lesson 1 into **two dimensions** (x and y)
+- Simulate a full flight: launch, arc, and landing — and measure **range**, **peak height**, and **time of flight**
+- Discover why **45°** gives the farthest throw in a vacuum (and get a hint about why your Nerf dart won't agree later)
+
+---
+
+## Big Idea
+
+In Lesson 1 your ball only went **up and down** — one dimension. But a launched Nerf dart flies **forward and up at the same time**. That's two dimensions: a horizontal one ($x$) and a vertical one ($y$).
+
+Here's the beautiful secret that makes this easy:
+
+> **The two directions don't talk to each other.** Horizontal motion and vertical motion are completely independent — they just happen to share the same clock.
+
+Gravity pulls **straight down**, so it only changes the *vertical* velocity. Sideways, nothing pushes the dart at all (we're ignoring air for now), so its horizontal velocity never changes. You're really just running **two Lesson-1 simulations at once** and reading off both positions at each tick of time.
+
+That means the accelerations are:
+
+$$
+a_x = 0 \qquad\qquad a_y = -g
+$$
+
+Sideways: no push. Vertically: gravity, pulling down.
+
+---
+
+## Splitting the Launch into Components
+
+When you fire the dart, you give it a **speed** (how fast) and an **angle** (how steep). Call them $v_0$ and $\theta$. But our simulation needs the speed split into its sideways part and its upward part.
+
+This is just right-triangle trigonometry. The launch velocity is the hypotenuse; its shadow along the ground is the horizontal part, and its height is the vertical part:
+
+$$
+v_x = v_0 \cos\theta \qquad\qquad v_y = v_0 \sin\theta
+$$
+
+> **Picture it:** Fire **flat** (angle $0°$) and all the speed goes sideways — $\cos 0° = 1$, $\sin 0° = 0$. Fire **straight up** ($90°$) and all of it goes up — $\cos 90° = 0$, $\sin 90° = 1$. Any angle in between splits the speed between the two, and $\cos$/$\sin$ tell you exactly how.
+
+### Watch out: Python thinks in radians!
+
+Python's `math.cos` and `math.sin` don't expect degrees — they expect **radians** (a different way to measure angles, where a half-circle is $\pi$ instead of $180°$). So you must convert first with `math.radians`:
+
+```python
+import math
+
+def velocity_components(speed, angle_deg):
+    angle_rad = math.radians(angle_deg)   # degrees -> radians FIRST
+    vx = speed * math.cos(angle_rad)
+    vy = speed * math.sin(angle_rad)
+    return [vx, vy]
+```
+
+If you forget `math.radians` and pass degrees straight in, your dart will fly in a totally wrong direction. It's the #1 mistake here — so watch for it!
+
+---
+
+## The Euler Loop, Now in 2D
+
+This is your Lesson 1 loop, doubled. Each tick of `dt`, we update **both** velocities, then **both** positions. The only force is gravity, and it only touches $v_y$:
+
+```python
+g = 9.8
+x = 0.0          # start at the launch point
+y = 0.0
+vx, vy = velocity_components(speed, angle_deg)
+
+for _ in range(steps):
+    vy = vy + (-g) * dt    # gravity pulls down -> only vy changes
+    # (vx never changes — nothing pushes sideways)
+    x = x + vx * dt        # move sideways
+    y = y + vy * dt        # move up/down
+```
+
+Notice `vx` has **no update line** — it's constant the whole flight. That's the independence of the two directions, right there in the code.
+
+---
+
+## Simulating a Whole Flight (until it lands)
+
+In Lesson 1 we ran a *fixed number* of steps. But a real shot lasts until the dart **hits the ground** — and we don't know ahead of time how many steps that takes. So instead of `for`, we use a **`while` loop** that keeps going *until an event happens*: the dart's height drops back to zero.
+
+```python
+x = 0.0
+y = 0.0
+vx, vy = velocity_components(speed, angle_deg)
+
+while True:
+    vy = vy + (-g) * dt
+    x = x + vx * dt
+    y = y + vy * dt
+    if y <= 0:        # the dart has landed!
+        break         # stop the loop
+
+# now x holds the horizontal distance — the RANGE
+```
+
+We launch from `y = 0`, the first step lifts the dart up (so `y` becomes positive), and the loop runs until gravity brings it back down to the ground. Whatever `x` is at that moment is how far the dart flew — its **range**.
+
+You can measure other things the same way:
+- **Peak height:** keep track of the largest `y` you ever see (or notice that the top is exactly when `vy` flips from positive to negative).
+- **Time of flight:** add up `dt` each step until it lands.
+
+---
+
+## Check It Against the Formulas
+
+Just like Lesson 1, the no-air case *does* have exact formulas (from integrating the motion). Use them to check your simulator:
+
+$$
+\text{Range: } R = \frac{v_0^2 \sin(2\theta)}{g}
+\qquad
+\text{Peak height: } H = \frac{(v_0 \sin\theta)^2}{2g}
+$$
+
+$$
+\text{Time of flight: } T = \frac{2\,v_0 \sin\theta}{g}
+$$
+
+Fire at $v_0 = 20$ m/s and $\theta = 45°$:
+
+$$
+R = \frac{20^2 \cdot \sin(90°)}{9.8} = \frac{400}{9.8} \approx 40.8 \text{ m}
+$$
+
+Your Euler loop should land right next to $40.8$ m. If it does — your 2D simulator works, and you can trust it on the hard problems coming up.
+
+---
+
+## The Magic Angle: Why 45°?
+
+Try your simulator at a fixed speed but different angles: $15°$, $30°$, $45°$, $60°$, $75°$. You'll find the range is **largest at $45°$**, and angles that are equal distances above and below $45°$ (like $30°$ and $60°$) give the **same** range. That falls right out of the $\sin(2\theta)$ in the formula — it peaks when $2\theta = 90°$.
+
+> **But here's the cliffhanger:** that $45°$ rule is only true *in a vacuum*. Your Nerf dart is light and gets shoved around by **air resistance**, which we add in Lesson 3. Once air is in the picture, the best angle drops **below** $45°$ — and there's no tidy formula anymore. Only your simulator will know the answer. 
+
+---
+
+## Why This Matters for Your Blaster
+
+You now have the **external ballistics** of your blaster: give it a muzzle speed and an angle, and your code predicts exactly where the dart lands. Later you'll figure out that muzzle speed from the spring or the air pressure — and then plug it straight into this loop to aim at a target. The whole blaster simulator is coming together.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| 2D = two 1D motions | $x$ and $y$ are independent, share one clock | two sets of updates |
+| Horizontal accel | nothing pushes sideways | `ax = 0` (no `vx` update) |
+| Vertical accel | gravity pulls down | `vy = vy + (-g)*dt` |
+| Split the launch | $v_x = v_0\cos\theta,\; v_y = v_0\sin\theta$ | `math.cos`, `math.sin` |
+| Degrees → radians | Python trig needs radians | `math.radians(angle_deg)` |
+| Run until landing | stop when $y \le 0$ | `while True: ... if y <= 0: break` |
+| Range formula (check) | $R = \dfrac{v_0^2 \sin(2\theta)}{g}$ | — |
+| Best angle (no air) | $45°$ | — |
+
+Head to the exercises and launch your first dart!

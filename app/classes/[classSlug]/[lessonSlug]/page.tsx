@@ -1,5 +1,7 @@
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { notFound } from "next/navigation";
 import {
   getLessonSlugs,
@@ -70,7 +72,10 @@ export default async function LessonPage({
   const { phases, weeks } = syllabus;
 
   const mdxOptions = {
-    mdxOptions: { remarkPlugins: [remarkGfm] },
+    mdxOptions: {
+      remarkPlugins: [remarkGfm, remarkMath],
+      rehypePlugins: [rehypeKatex],
+    },
   };
 
   const { content: lessonContent } = await compileMDX({

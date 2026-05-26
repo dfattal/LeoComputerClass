@@ -72,6 +72,21 @@ const accentMap: Record<string, AccentClasses> = {
       body: "text-emerald-900 dark:text-emerald-100",
     },
   },
+  amber: {
+    bg: "bg-amber-600",
+    bgHover: "hover:bg-amber-700",
+    text: "text-amber-600 dark:text-amber-400",
+    underline: "bg-amber-600 dark:bg-amber-400",
+    ring: "focus-visible:ring-amber-500",
+    handleHover: "group-hover:bg-amber-400 dark:group-hover:bg-amber-500",
+    sidebar: "bg-amber-600 font-medium text-white shadow-sm shadow-amber-600/25",
+    feedback: {
+      border: "border-amber-200 dark:border-amber-800",
+      bg: "bg-amber-50 dark:bg-amber-950/40",
+      title: "text-amber-800 dark:text-amber-200",
+      body: "text-amber-900 dark:text-amber-100",
+    },
+  },
 };
 
 const AccentContext = createContext<AccentClasses>(accentMap.indigo);

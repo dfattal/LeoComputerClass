@@ -1,0 +1,28 @@
+[
+  {
+    "entry": "best_mass",
+    "tol": 0.003,
+    "cases": [
+      {"name": "best_mass(0.1, 200, 35, 0.002, 0.002) -> the just-right dart", "args": [0.1, 200, 35, 0.002, 0.002], "expected": 0.015},
+      {"name": "best_mass(0.12, 300, 30, 0.002, 0.002)", "args": [0.12, 300, 30, 0.002, 0.002], "expected": 0.02},
+      {"name": "best_mass(0.1, 200, 35, 0.004, 0.002) more drag -> heavier", "args": [0.1, 200, 35, 0.004, 0.002], "expected": 0.02}
+    ]
+  },
+  {
+    "entry": "max_range",
+    "tol": 0.05,
+    "cases": [
+      {"name": "max_range(0.1, 200, 35, 0.002, 0.002)", "args": [0.1, 200, 35, 0.002, 0.002], "expected": 6.22},
+      {"name": "max_range(0.12, 300, 30, 0.002, 0.002)", "args": [0.12, 300, 30, 0.002, 0.002], "expected": 8.94},
+      {"name": "max_range(0.1, 200, 35, 0.004, 0.002)", "args": [0.1, 200, 35, 0.004, 0.002], "expected": 4.41}
+    ]
+  },
+  {
+    "entry": "best_possible_range",
+    "tol": 0.05,
+    "cases": [
+      {"name": "best_possible_range(0.1, 200, 0.002, 0.002) tune mass + angle", "args": [0.1, 200, 0.002, 0.002], "expected": 6.27},
+      {"name": "best_possible_range(0.12, 300, 0.002, 0.002)", "args": [0.12, 300, 0.002, 0.002], "expected": 9.23}
+    ]
+  }
+]

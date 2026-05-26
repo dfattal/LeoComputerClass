@@ -1,0 +1,94 @@
+# Lesson 1 — Exercises: From Calculus to Simulation
+
+## How This Works
+
+You'll write three functions that, together, make a falling-ball simulator. When you click **Run Tests**, the computer calls your functions and checks the answers.
+
+**Important:** Your answers are *physics approximations*, so the tests accept anything **close enough** to the right value (within a small tolerance). Don't stress about matching every decimal — get the physics right and you're golden.
+
+Use `g = 9.8` for gravity, and remember: **up is positive, so gravity's acceleration is `-9.8`.**
+
+---
+
+## Exercise 1: One Velocity Step
+
+Write a function `step_velocity(v, a, dt)` that does a single Euler step for velocity. Given the current velocity `v`, the acceleration `a`, and a time step `dt`, return the **new** velocity after that little step of time.
+
+```python
+def step_velocity(v, a, dt):
+    # Return the new velocity: old velocity plus (acceleration times dt)
+    pass
+```
+
+**Examples:**
+- `step_velocity(0, -9.8, 0.1)` → about `-0.98` (a dropped ball after 0.1 s is falling at 0.98 m/s)
+- `step_velocity(5, -9.8, 0.5)` → about `0.1` (moving up at 5, gravity nearly stopped it)
+- `step_velocity(-2, 3, 0.25)` → `-1.25`
+
+**Hint:** This is the formula `v = v + a * dt`, just wrapped in a function. One line.
+
+---
+
+## Exercise 2: One Position Step
+
+Write a function `step_position(x, v, dt)` that does a single Euler step for position. Given the current position `x`, the current velocity `v`, and a time step `dt`, return the **new** position.
+
+```python
+def step_position(x, v, dt):
+    # Return the new position: old position plus (velocity times dt)
+    pass
+```
+
+**Examples:**
+- `step_position(10, -0.98, 0.1)` → about `9.902` (a ball at 10 m drifting down a touch)
+- `step_position(0, 5, 0.2)` → `1.0`
+- `step_position(100, -20, 0.5)` → `90.0`
+
+**Hint:** Same idea as Exercise 1, but for position: `x = x + v * dt`.
+
+---
+
+## Exercise 3: Drop the Ball!
+
+Now put the two steps together in a **loop** to simulate a falling ball. Write `fall(h0, dt, steps)`:
+
+- `h0` — the starting height (in meters), dropped from **rest** (starting velocity is 0)
+- `dt` — the time step
+- `steps` — how many steps to simulate
+
+Return the ball's height after all the steps. Use `g = 9.8`. Follow the order from the lesson: **update velocity first, then position.**
+
+```python
+def fall(h0, dt, steps):
+    g = 9.8
+    v = 0.0
+    h = h0
+    for _ in range(steps):
+        # 1. update velocity (gravity points down, so the acceleration is -g)
+        # 2. update height using the new velocity
+        pass
+    return h
+```
+
+**Examples:**
+- `fall(10, 0.005, 200)` → about `5.1` (dropped from 10 m, after 1 second — matches `10 - 4.9`!)
+- `fall(20, 0.001, 1000)` → about `15.1` (also 1 second)
+- `fall(100, 0.002, 1000)` → about `80.4` (after 2 seconds — matches `100 - 0.5*9.8*4`)
+
+**Check your work:** Each answer should land right next to the exact formula `h0 - 0.5 * 9.8 * t**2`, where `t = dt * steps`. If it does, your simulator works!
+
+**Hints if you're stuck:**
+- The acceleration to pass into your velocity step is `-g` (negative — it pulls the ball *down*).
+- Update `v` *before* you use it to update `h`. Velocity first, then position.
+- `range(steps)` runs the loop `steps` times. The `_` just means "I don't need the counter."
+
+---
+
+## Tips If You're Stuck
+
+1. **Answer way off (like it's going *up*)?** Check the sign on gravity — it should be `-g`, not `+g`.
+2. **Answer a little off but the test fails?** Make sure you update velocity *first*, then position, inside the loop.
+3. **`None` returned?** Don't forget `return h` at the end (and `return` in Exercises 1 and 2).
+4. **Still stuck?** Re-read "Putting It in a Loop" in the lesson — the falling-ball code there is almost exactly Exercise 3.
+
+You're building the engine that will launch your Nerf darts. Let's go!

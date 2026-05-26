@@ -94,6 +94,8 @@ export interface TestCase {
   name: string;
   args: unknown[];
   expected: unknown;
+  /** Absolute tolerance for numeric comparison (overrides the entry-level tol). */
+  tol?: number;
 }
 
 export interface TestEntry {
@@ -101,6 +103,9 @@ export interface TestEntry {
   timeoutMs?: number;
   cases: TestCase[];
   constraints?: { forbidTokens?: string[] };
+  /** Absolute tolerance for numeric comparison, applied to all cases unless a
+   *  case sets its own. Needed for float/physics exercises. */
+  tol?: number;
 }
 
 export interface RubricItem {
@@ -117,7 +122,8 @@ export interface WeekContent {
   rubric: RubricItem[];
 }
 
-export interface VizConfig {
+/** Bio-class CRISPR simulator visualization. */
+export interface CrisprVizConfig {
   type: "crispr";
   scenario: {
     title: string;
@@ -133,6 +139,26 @@ export interface VizConfig {
   /** Args to pass to resultFn for the demo */
   demoArgs: unknown[];
 }
+
+/**
+ * Generic line/trajectory plot. The `resultFn` must return JSON-serializable
+ * plot data — either a single series `[[x, y], ...]` or multiple series
+ * `[{ name, points: [[x, y], ...], highlight? }, ...]`.
+ */
+export interface PlotVizConfig {
+  type: "plot";
+  /** The function (defined in the student's code or in `setup`) that returns plot data. */
+  resultFn: string;
+  /** Args to pass to resultFn for the demo. */
+  demoArgs: unknown[];
+  /** Optional Python prelude appended after the student's code (e.g. plot helpers). */
+  setup?: string;
+  title?: string;
+  xLabel?: string;
+  yLabel?: string;
+}
+
+export type VizConfig = CrisprVizConfig | PlotVizConfig;
 
 export interface LessonContent extends WeekContent {
   starterCode?: string;

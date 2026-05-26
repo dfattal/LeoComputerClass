@@ -1,0 +1,119 @@
+# Lesson 8 — Design Optimizer (Capstone)
+
+## Phase 4: Engineering the Blaster
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Use your blaster simulator to **search a design space**, not just predict one shot
+- Find the **optimal dart mass** — the famous result that only simulation can reveal
+- See how the best dart changes when the conditions change
+- Tune **two knobs at once** (mass *and* angle) to squeeze out the farthest shot
+- Finish your journey from "calculus → simulation → engineering design"
+
+---
+
+## Big Idea
+
+This is it — the whole class comes together here.
+
+For seven lessons you've been *building* a tool: a simulator that takes a blaster design and tells you exactly what the dart does. Today you flip it around. Instead of asking "what does *this* design do?", you ask the engineer's real question:
+
+> **"Out of all possible designs, which one is best?"**
+
+You answer it the way every real engineer does — not with a magic formula, but by letting the computer **try many designs and keep the winner**. You already know the move: it's the same sweep you used to find the best launch angle back in Lesson 4. Now you'll point it at the design itself.
+
+---
+
+## The Famous Question: How Heavy Should the Dart Be?
+
+Here's the puzzle that has no pencil-and-paper answer. Think about the dart's mass:
+
+- A **light** dart leaves the barrel *fast* (remember $v = x_0\sqrt{k/m}$ — smaller $m$, bigger $v$)... but the air shoves it around mercilessly (drag deceleration is $\frac{k_\text{drag}}{m}\lvert\vec v\rvert v$ — smaller $m$, more slowing). It rockets out and then face-plants.
+- A **heavy** dart leaves *slowly*... but it barrels through the air almost unbothered. It plods along but keeps going.
+
+So somewhere between "too light" and "too heavy" is a **just-right** dart that flies the farthest. You saw it in Lesson 7's graph — now you'll *find* it:
+
+```python
+def best_mass(x0, k, angle_deg, kdrag, dt):
+    best_m = 0.0
+    best_range = -1
+    m = 0.005
+    while m <= 0.06 + 1e-9:           # try darts from 5 g to 60 g
+        r = blast_range(m, x0, k, angle_deg, kdrag, dt)
+        if r > best_range:            # a new champion?
+            best_range = r
+            best_m = m
+        m = m + 0.005
+    return best_m
+```
+
+That's the entire idea of engineering optimization in eleven lines: **try them all, keep the best.** No calculus shortcut — the simulator *is* the answer.
+
+---
+
+## The Optimum Moves
+
+The best dart isn't a fixed number — it depends on the conditions. Crank up the air resistance (a fatter, draggier dart, or a windy day) and the *light* darts suffer even more, so the **optimal dart gets heavier**. Your optimizer discovers this automatically: run `best_mass` with more drag and watch the answer climb.
+
+This is the real lesson of design: **there is no single "best blaster."** The best design depends on the dart, the air, the spring, the goal. The simulator is what lets you find the right answer for *your* situation — which is exactly why engineers build simulators.
+
+---
+
+## Tuning Two Knobs at Once
+
+Why stop at one knob? You can search over the dart mass **and** the launch angle together — every combination — to find the design that flies absolutely farthest. It's just a loop inside a loop:
+
+```python
+def best_possible_range(x0, k, kdrag, dt):
+    best_range = -1
+    m = 0.005
+    while m <= 0.06 + 1e-9:           # outer loop: dart mass
+        angle = 15
+        while angle <= 60 + 1e-9:     # inner loop: launch angle
+            r = blast_range(m, x0, k, angle, kdrag, dt)
+            if r > best_range:
+                best_range = r
+            angle = angle + 5         # step the angle
+        m = m + 0.005                 # step the mass
+    return best_range
+```
+
+The inner loop tries every angle for one dart mass; the outer loop walks through the masses — so together they try every mass-and-angle combination. Tuning *both* always does at least as well as tuning one — you've given the optimizer more freedom. Real designs have many knobs (spring stiffness, compression, barrel length, dart mass, angle); the search just grows more loops, but the idea never changes.
+
+> **A word on cost:** every extra knob multiplies the number of designs to try. Two knobs with 12 and 10 settings is 120 simulations; add a third and it's thousands. This is why engineers think hard about *which* knobs matter most — and why fast simulators are worth so much.
+
+---
+
+## What You Built
+
+Step back and look at how far you've come:
+
+1. You turned **derivatives into a stepping loop** (Euler) and watched a ball fall.
+2. You launched **projectiles**, then made them real with **air resistance** — where the formulas died and only simulation survived.
+3. You measured shots and **searched for the best angle**.
+4. You built two **engines** — a spring and compressed air — and found a barrel's sweet spot.
+5. You **chained** them into a complete blaster.
+6. And today you used it to **design** — to answer "what's best?" by searching.
+
+That's the entire arc of computational physics: model the world with code, then use the model to make real decisions. You didn't just learn physics, and you didn't just learn to code — you learned to **engineer**. 
+
+Now go build the real thing. 🚀
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Optimization | search designs, keep the best | nested "best so far" sweep |
+| Optimal dart mass | not too light, not too heavy | `best_mass(...)` |
+| The optimum moves | more drag → heavier best dart | re-run with bigger `kdrag` |
+| Multi-knob search | tune mass *and* angle | loop inside a loop |
+| Cost of searching | each knob multiplies the work | pick the knobs that matter |
+| The big idea | model with code → design with search | the whole class |
+
+You've finished Leo's Motion Lab. Go to the exercises and design the perfect blaster!

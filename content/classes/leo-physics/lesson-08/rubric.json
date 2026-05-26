@@ -1,0 +1,6 @@
+[
+  {"criterion": "Optimal mass search", "weight": 40, "description": "best_mass sweeps dart masses and returns the one with the largest range (the interior optimum, not the lightest)"},
+  {"criterion": "Reports the best range", "weight": 20, "description": "max_range finds the best mass and returns its range"},
+  {"criterion": "Two-knob optimization", "weight": 30, "description": "best_possible_range sweeps mass AND angle (a nested loop) and keeps the single best range"},
+  {"criterion": "Understands optimization", "weight": 10, "description": "Recognizes the best design depends on conditions (more drag -> heavier optimal dart) and that two knobs beat one"}
+]

@@ -1,0 +1,103 @@
+# Lesson 6 — Exercises: Compressed-Air Blasters
+
+## How This Works
+
+You'll build an air-powered blaster and discover its sweet-spot barrel length. Units are SI: pressure in pascals (Pa), volume in m³, area in m², distance in meters. Atmospheric pressure is `PATM = 100000` Pa. The barrel is horizontal, so we ignore gravity.
+
+Some numbers are small (a 40 cm³ tank is `0.00004` m³) or big (3 atmospheres is `300000` Pa) — that's just real-world physics. As always, the tests accept anything **close enough**.
+
+---
+
+## Exercise 1: Gas Pressure (Boyle's law)
+
+Write `gas_pressure(P0, V0, A, d)` that returns the pressure after the dart has moved a distance `d` down the barrel. The gas started at pressure `P0` in volume `V0`; now it fills `V0 + A*d`, so by Boyle's law `P * V = P0 * V0`:
+
+```python
+def gas_pressure(P0, V0, A, d):
+    # return P0 * V0 / (V0 + A * d)
+    pass
+```
+
+**Examples:**
+- `gas_pressure(300000, 0.00004, 0.0002, 0)` → `300000.0` (no movement yet → full pressure)
+- `gas_pressure(300000, 0.00004, 0.0002, 0.4)` → `100000.0` (expanded until it hits atmospheric!)
+- `gas_pressure(200000, 0.00005, 0.0001, 0.5)` → `100000.0`
+
+**Hint:** One line: `return P0 * V0 / (V0 + A * d)`. As `d` grows, the bottom grows, so the pressure drops.
+
+---
+
+## Exercise 2: Air Muzzle Velocity
+
+Write `air_muzzle_velocity(P0, V0, A, m, barrel, dt)` that simulates the dart down the barrel and returns its exit speed. Use `PATM = 100000`. Each step, the net force is `(P - PATM) * A`.
+
+```python
+PATM = 100000.0
+
+def air_muzzle_velocity(P0, V0, A, m, barrel, dt):
+    d = 0.0
+    v = 0.0
+    while d < barrel:
+        P = gas_pressure(P0, V0, A, d)
+        a = (P - PATM) * A / m
+        # update v, then d  (velocity first!)
+        # safety: if v <= 0 the dart has stalled — stop
+        pass
+    return v
+```
+
+**Examples:**
+- `air_muzzle_velocity(300000, 0.00004, 0.0002, 0.02, 0.2, 0.00005)` → about `20.78`
+- `air_muzzle_velocity(300000, 0.00004, 0.0002, 0.02, 0.4, 0.00005)` → about `22.77` (the sweet spot!)
+- `air_muzzle_velocity(300000, 0.00004, 0.0002, 0.02, 0.6, 0.00005)` → about `21.53` (longer barrel, *slower* — the gas went below atmospheric)
+
+**Hint:** Inside the loop: `v = v + a * dt`, then `d = d + v * dt`. Add `if v <= 0: break` after, so a too-long barrel can't trap the dart. Reuses your `gas_pressure`!
+
+---
+
+## Exercise 3: Find the Best Barrel Length
+
+Write `best_barrel(P0, V0, A, m, dt)` that tries barrel lengths from `0.05` m to `1.0` m in steps of `0.05` m and returns the one that gives the **fastest** muzzle velocity — the sweet spot.
+
+```python
+def best_barrel(P0, V0, A, m, dt):
+    best_len = 0.0
+    best_v = -1.0
+    barrel = 0.05
+    while barrel <= 1.0 + 1e-9:
+        v = air_muzzle_velocity(P0, V0, A, m, barrel, dt)
+        # if v > best_v: save best_v and best_len
+        barrel = barrel + 0.05
+    return round(best_len, 2)
+```
+
+**Examples:**
+- `best_barrel(300000, 0.00004, 0.0002, 0.02, 0.0002)` → about `0.4`
+- `best_barrel(300000, 0.00008, 0.0002, 0.02, 0.0002)` → about `0.8` (bigger tank → wants a longer barrel)
+- `best_barrel(400000, 0.00004, 0.0002, 0.02, 0.0002)` → about `0.6` (higher pressure → longer barrel too)
+
+**Hint:** Same "best so far" pattern as Lesson 4's `best_angle`. This calls your `air_muzzle_velocity` for each barrel length and keeps the winner.
+
+---
+
+## Bonus Challenge (no test — just for fun)
+
+Print the muzzle velocity for barrels from 0.1 to 0.9 and watch it rise, peak, then fall:
+
+```python
+for bar in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
+    print(bar, air_muzzle_velocity(300000, 0.00004, 0.0002, 0.02, bar, 0.0002))
+```
+
+You can *see* the sweet spot in the numbers — and in the Graph panel!
+
+---
+
+## Tips If You're Stuck
+
+1. **`air_muzzle_velocity` runs forever?** Update `d` each step, and add `if v <= 0: break` — past the sweet spot the gas can stall the dart.
+2. **Velocity keeps rising with longer barrels?** Check the net force is `(P - PATM) * A`, not just `P * A` — without subtracting atmosphere, there's no sweet spot.
+3. **`best_barrel` returns 0?** Make sure you save `best_len = barrel` inside the `if v > best_v:` block.
+4. **Pressure looks wrong?** It's `P0 * V0 / (V0 + A * d)` — the whole `V0 + A*d` is the denominator.
+
+Find the sweet spot — then in Lesson 7 you'll fire a real shot end-to-end!

@@ -1,0 +1,6 @@
+[
+  {"criterion": "Internal engine", "weight": 30, "description": "muzzle_speed simulates the spring down the barrel and returns the exit speed"},
+  {"criterion": "Composition", "weight": 40, "description": "blast_range feeds the muzzle speed into drag_flight and returns the range — chaining the two stages"},
+  {"criterion": "Full report", "weight": 20, "description": "blast_report returns [muzzle_speed, range, peak_height] for the whole shot"},
+  {"criterion": "Reuses the engines", "weight": 10, "description": "Calls muzzle_speed and the provided drag_flight rather than re-deriving the physics"}
+]

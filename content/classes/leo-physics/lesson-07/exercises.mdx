@@ -1,0 +1,97 @@
+# Lesson 7 — Exercises: The Whole Blaster
+
+## How This Works
+
+Today you connect your two engines into one blaster simulator. We've **given you the external engine** `drag_flight(speed, angle_deg, m, kdrag, dt)` in the editor — it's your Lesson 3–4 drag trajectory, and it returns `[range, peak_height]`. Don't change it; just use it.
+
+You'll write the internal engine and then chain the two. Units are SI; barrel is horizontal for the engine, then the dart launches at `angle_deg`. As always, answers are approximations — the tests accept anything **close enough**.
+
+---
+
+## Exercise 1: The Engine (muzzle speed)
+
+Write `muzzle_speed(x0, k, m, barrel, dt)` — your spring engine from Lesson 5. The dart starts squished by `x0` and is pushed down the barrel; return its speed as it exits.
+
+```python
+def muzzle_speed(x0, k, m, barrel, dt):
+    d = 0.0
+    v = 0.0
+    while d < barrel:
+        s = x0 - d
+        F = k * s if s > 0 else 0.0   # spring push, fading to 0
+        # update v = v + (F/m)*dt, then d = d + v*dt
+        pass
+    return v
+```
+
+**Examples:**
+- `muzzle_speed(0.1, 200, 0.02, 0.3, 0.0001)` → about `10.0`
+- `muzzle_speed(0.12, 300, 0.02, 0.3, 0.0001)` → about `14.7`
+- `muzzle_speed(0.1, 200, 0.05, 0.3, 0.0001)` → about `6.32` (heavier dart → slower)
+
+**Hint:** `v = v + (F/m)*dt`, then `d = d + v*dt`. The acceleration is the spring force divided by mass.
+
+---
+
+## Exercise 2: The Whole Blast (chain the two engines)
+
+Write `blast_range(x0, k, m, barrel, angle_deg, kdrag, dt)` that predicts how far the dart flies. Get the muzzle speed from your engine, then hand it to the provided `drag_flight` and return the **range** (the first item it returns).
+
+```python
+def blast_range(x0, k, m, barrel, angle_deg, kdrag, dt):
+    speed = muzzle_speed(x0, k, m, barrel, dt)
+    # call drag_flight(speed, angle_deg, m, kdrag, dt) and return its range (item [0])
+    pass
+```
+
+**Examples:**
+- `blast_range(0.1, 200, 0.02, 0.3, 35, 0.002, 0.0001)` → about `5.91`
+- `blast_range(0.12, 300, 0.02, 0.3, 30, 0.002, 0.0001)` → about `8.97`
+- `blast_range(0.1, 200, 0.05, 0.3, 40, 0.003, 0.0001)` → about `3.42`
+
+**Hint:** Two lines. `speed = muzzle_speed(...)`, then `return drag_flight(speed, angle_deg, m, kdrag, dt)[0]`. The `[0]` grabs the range out of the `[range, peak]` list.
+
+---
+
+## Exercise 3: The Full Report
+
+Write `blast_report(x0, k, m, barrel, angle_deg, kdrag, dt)` that returns the whole shot as a list: `[muzzle_speed, range, peak_height]`.
+
+```python
+def blast_report(x0, k, m, barrel, angle_deg, kdrag, dt):
+    speed = muzzle_speed(x0, k, m, barrel, dt)
+    flight = drag_flight(speed, angle_deg, m, kdrag, dt)   # [range, peak]
+    # return [speed, range, peak]
+    pass
+```
+
+**Examples:**
+- `blast_report(0.1, 200, 0.02, 0.3, 35, 0.002, 0.0001)` → about `[10.0, 5.91, 1.27]`
+- `blast_report(0.12, 300, 0.02, 0.3, 30, 0.002, 0.0001)` → about `[14.7, 8.97, 1.75]`
+- `blast_report(0.1, 200, 0.05, 0.3, 40, 0.003, 0.0001)` → about `[6.32, 3.42, 0.77]`
+
+**Hint:** `flight` is `[range, peak]`, so return `[speed, flight[0], flight[1]]`.
+
+---
+
+## Bonus Challenge (no test — but this IS the capstone)
+
+Keep everything the same but try different dart masses, and print the range each time:
+
+```python
+for m in [0.005, 0.01, 0.015, 0.02, 0.03, 0.05]:
+    print(m, blast_range(0.1, 200, m, 0.3, 35, 0.002, 0.0001))
+```
+
+A lighter dart launches faster but drag eats it; a heavier dart launches slower but cuts through. Which mass flies the farthest? You'll automate this search in Lesson 8 — and you can already see the answer hiding in the Graph panel.
+
+---
+
+## Tips If You're Stuck
+
+1. **`blast_range` errors about `drag_flight`?** Make sure you didn't delete the provided `drag_flight` function in the editor.
+2. **Everything hangs / times out?** Your `muzzle_speed` loop must update `d` (`d = d + v*dt`) so the dart reaches the end of the barrel.
+3. **Range is 0 or `None`?** Check that `blast_range` actually `return`s the result of `drag_flight(...)[0]`.
+4. **`blast_report` list looks wrong?** It's `[speed, flight[0], flight[1]]` — speed first, then range, then peak.
+
+Build the whole machine — then optimize it in Lesson 8!

@@ -1,0 +1,109 @@
+# Lesson 2 — Exercises: Launch! Projectiles in 2D
+
+## How This Works
+
+You'll build a 2D dart launcher in three steps: split the launch, find how high it goes, and find how far it flies. Use `g = 9.8`, launch from the ground (`x = 0`, `y = 0`), and remember to `import math` at the top.
+
+As always, answers are **approximations** — the tests accept anything **close enough** to the exact formula.
+
+---
+
+## Exercise 1: Split the Launch
+
+Write `velocity_components(speed, angle_deg)` that turns a launch **speed** and **angle in degrees** into horizontal and vertical velocity. Return them as a list `[vx, vy]`.
+
+```python
+import math
+
+def velocity_components(speed, angle_deg):
+    # 1. convert the angle from degrees to radians
+    # 2. vx = speed * cos(angle),  vy = speed * sin(angle)
+    # 3. return [vx, vy]
+    pass
+```
+
+**Examples:**
+- `velocity_components(10, 30)` → about `[8.66, 5.0]`
+- `velocity_components(20, 45)` → about `[14.14, 14.14]` (equal — 45° splits it evenly!)
+- `velocity_components(10, 90)` → about `[0.0, 10.0]` (straight up — all of it vertical)
+- `velocity_components(5, 0)` → about `[5.0, 0.0]` (flat — all of it sideways)
+
+**Hint:** The big trap is degrees vs radians. Convert *first* with `math.radians(angle_deg)`, then use `math.cos` and `math.sin` on the result.
+
+---
+
+## Exercise 2: How High Does It Go?
+
+Write `peak_height(speed, angle_deg, dt)` that simulates the dart going **up** and returns the **highest point** it reaches (in meters).
+
+Launch from `y = 0`. Step the simulation with your Euler loop. The dart is rising while `vy` is positive and reaches its peak the moment `vy` stops being positive — so you can loop until `vy <= 0`, keeping track of the biggest `y` you've seen.
+
+```python
+def peak_height(speed, angle_deg, dt):
+    g = 9.8
+    vx, vy = velocity_components(speed, angle_deg)
+    y = 0.0
+    highest = 0.0
+    while True:
+        # update vy with gravity, then update y
+        # remember the highest y so far
+        # stop once vy <= 0 (the dart has reached the top)
+        pass
+    return highest
+```
+
+**Examples:**
+- `peak_height(20, 90, 0.001)` → about `20.41` (straight up, matches `(20)²/(2·9.8)`)
+- `peak_height(20, 45, 0.001)` → about `10.2`
+- `peak_height(10, 30, 0.001)` → about `1.28`
+
+**Check:** the exact formula is `H = (speed * sin(angle))**2 / (2 * 9.8)`.
+
+**Hint:** Inside the loop, update `vy = vy + (-g)*dt` first, then `y = y + vy*dt`. Use `if y > highest: highest = y`. Break when `vy <= 0`.
+
+---
+
+## Exercise 3: How Far Does It Fly? (The Range)
+
+Write `throw_range(speed, angle_deg, dt)` that simulates the **whole flight** — up, over, and back down to the ground — and returns how far the dart traveled sideways (its **range**, in meters).
+
+Launch from `x = 0`, `y = 0`. Loop until the dart lands (`y <= 0`), then return `x`.
+
+```python
+def throw_range(speed, angle_deg, dt):
+    g = 9.8
+    vx, vy = velocity_components(speed, angle_deg)
+    x = 0.0
+    y = 0.0
+    while True:
+        # update vy (gravity), then x (sideways), then y (up/down)
+        # stop when y <= 0 — it has landed
+        pass
+    return x
+```
+
+**Examples:**
+- `throw_range(20, 45, 0.001)` → about `40.82` (matches `20²·sin(90°)/9.8`)
+- `throw_range(15, 30, 0.001)` → about `19.88`
+- `throw_range(10, 60, 0.001)` → about `8.84`
+
+**Check:** the exact formula is `R = speed**2 * sin(radians(2*angle)) / 9.8`.
+
+**Hint:** `vx` never changes — there's no sideways push, so there's no `vx` update line. Only `vy`, `x`, and `y` change each step.
+
+---
+
+## Bonus Challenge (no test — just for fun)
+
+Once Exercise 3 works, call it for a fixed speed at several angles — say `15, 30, 45, 60, 75` — and `print` each range. Which angle wins? Do `30°` and `60°` really tie? You just rediscovered the magic of $45°$.
+
+---
+
+## Tips If You're Stuck
+
+1. **Dart flies the wrong way / weird numbers?** You probably forgot `math.radians`. Python trig needs radians, not degrees.
+2. **Loop never stops (timeout)?** Make sure `y` actually comes back down — check that gravity is `-g` (negative) and that you have an `if ... : break`.
+3. **Range a little off?** Double-check the update order: `vy` first, then `x` and `y`. And make sure `vx` has *no* update line.
+4. **Returned `None`?** Don't forget the `return` at the end.
+
+Launch away — your blaster's aim depends on this!
