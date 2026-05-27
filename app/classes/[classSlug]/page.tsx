@@ -55,43 +55,19 @@ export default async function ClassHomePage({
     (w: { status: string }) => w.status === "published"
   );
 
-  // Accent color mapping
-  const accentClasses: Record<string, { bg: string; text: string; subtitleText: string; overlay: string; badge: string }> = {
-    indigo: {
-      bg: "bg-indigo-500",
-      text: "text-indigo-400",
-      subtitleText: "text-indigo-300",
-      overlay: "from-indigo-950/80 via-stone-950/75 to-stone-950/90",
-      badge: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
-    },
-    violet: {
-      bg: "bg-violet-500",
-      text: "text-violet-400",
-      subtitleText: "text-violet-300",
-      overlay: "from-violet-950/80 via-stone-950/75 to-stone-950/90",
-      badge: "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
-    },
-    emerald: {
-      bg: "bg-emerald-500",
-      text: "text-emerald-400",
-      subtitleText: "text-emerald-300",
-      overlay: "from-emerald-950/80 via-stone-950/75 to-stone-950/90",
-      badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
-    },
-    amber: {
-      bg: "bg-amber-500",
-      text: "text-amber-400",
-      subtitleText: "text-amber-300",
-      overlay: "from-amber-950/80 via-stone-950/75 to-stone-950/90",
-      badge: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
-    },
+  // Accent color mapping (tuned for the light text area below the banner)
+  const accentClasses: Record<string, { bg: string; text: string }> = {
+    indigo: { bg: "bg-indigo-500", text: "text-indigo-600 dark:text-indigo-400" },
+    violet: { bg: "bg-violet-500", text: "text-violet-600 dark:text-violet-400" },
+    emerald: { bg: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
+    amber: { bg: "bg-amber-500", text: "text-amber-600 dark:text-amber-400" },
   };
   const accent = accentClasses[classDef.accentColor] ?? accentClasses.indigo;
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
-      {/* Hero */}
-      <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 pb-24 pt-32 text-center">
+    <div className="flex min-h-[calc(100vh-3.5rem)] w-full flex-col">
+      {/* Hero banner — full illustration, never cropped tight */}
+      <div className="relative w-full shrink-0 overflow-hidden h-52 sm:h-72 lg:h-[400px]">
         <Image
           src={classDef.heroImage}
           alt=""
@@ -99,51 +75,59 @@ export default async function ClassHomePage({
           priority
           className="object-cover object-center"
         />
+        {/* Dissolve the bottom of the art into the page so there's no hard edge */}
         <div
-          className={`absolute inset-0 bg-gradient-to-b ${accent.overlay}`}
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent, var(--background))",
+          }}
         />
+      </div>
 
-        <div className="relative z-10">
-          <p className={`mb-4 text-sm font-medium uppercase tracking-widest ${accent.subtitleText}`}>
-            A course for curious kids
-          </p>
-          <h1 className="mb-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
-            {classDef.tagline.includes(" ") ? (
-              <>
-                {classDef.tagline.split(" ").slice(0, -2).join(" ")}
-                <br />
-                <span className={accent.text}>
-                  {classDef.tagline.split(" ").slice(-2).join(" ")}
-                </span>
-              </>
-            ) : (
-              classDef.tagline
-            )}
-          </h1>
-          <p className="mx-auto mb-10 max-w-lg text-lg leading-relaxed text-stone-300">
-            {classDef.description}
-          </p>
-          <div className="flex justify-center gap-3">
-            {firstPublished && (
-              <Link
-                href={`/classes/${classSlug}/${firstPublished.slug}`}
-                className={`rounded-lg ${accent.bg} px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:opacity-90`}
-              >
-                Start Learning
-              </Link>
-            )}
+      {/* Intro — overlaps the faded edge to tie the art and text together */}
+      <section className="relative z-10 -mt-10 px-4 pb-12 text-center sm:-mt-14">
+        <p
+          className={`mb-3 text-xs font-semibold uppercase tracking-[0.2em] sm:text-sm ${accent.text}`}
+        >
+          A course for curious kids
+        </p>
+        <h1 className="mx-auto max-w-2xl text-4xl font-bold leading-[1.1] tracking-tight text-stone-900 dark:text-stone-100 sm:text-5xl">
+          {classDef.tagline.includes(" ") ? (
+            <>
+              {classDef.tagline.split(" ").slice(0, -2).join(" ")}
+              <br />
+              <span className={accent.text}>
+                {classDef.tagline.split(" ").slice(-2).join(" ")}
+              </span>
+            </>
+          ) : (
+            classDef.tagline
+          )}
+        </h1>
+        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-stone-600 dark:text-stone-400 sm:text-lg">
+          {classDef.description}
+        </p>
+        <div className="mt-8 flex justify-center gap-3">
+          {firstPublished && (
             <Link
-              href="/dashboard"
-              className="rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              href={`/classes/${classSlug}/${firstPublished.slug}`}
+              className={`rounded-lg ${accent.bg} px-6 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90`}
             >
-              My Progress
+              Start Learning
             </Link>
-          </div>
+          )}
+          <Link
+            href="/dashboard"
+            className="rounded-lg border border-stone-300 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition-colors hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:bg-stone-800"
+          >
+            My Progress
+          </Link>
         </div>
       </section>
 
       {/* Lessons */}
-      <section className="border-t border-stone-200 bg-stone-50 px-4 py-16 dark:border-stone-800 dark:bg-stone-900/50">
+      <section className="flex-1 border-t border-stone-200 bg-stone-50 px-4 py-16 dark:border-stone-800 dark:bg-stone-900/50">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-8 text-center text-sm font-semibold uppercase tracking-widest text-stone-400">
             Lessons
