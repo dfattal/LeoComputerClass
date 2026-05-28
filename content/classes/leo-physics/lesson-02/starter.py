@@ -3,6 +3,9 @@
 #
 # Reminder: up is positive, gravity's acceleration is -9.8, and launch
 # from the ground (x = 0, y = 0). Python trig needs RADIANS!
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 import math
 

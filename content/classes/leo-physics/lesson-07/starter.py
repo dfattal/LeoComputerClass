@@ -1,6 +1,9 @@
 # The Whole Blaster
 # Chain your spring engine (inside the barrel) into your drag flight (outside)
 # to predict a real shot from end to end.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 import math
 

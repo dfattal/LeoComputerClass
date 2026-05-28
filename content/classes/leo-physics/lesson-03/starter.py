@@ -3,6 +3,9 @@
 #
 # Reminder: up is positive, gravity is -9.8, and drag ALWAYS opposes motion.
 # k = drag constant (bigger = draggier),  m = dart mass in kg.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 import math
 

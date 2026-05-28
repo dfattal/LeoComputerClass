@@ -4,6 +4,9 @@
 #
 # SI units: pressure in Pa, volume in m^3, area in m^2, distance in m.
 # Barrel is horizontal, so we ignore gravity. Update velocity first, then position.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 PATM = 100000.0  # atmospheric pressure (Pa)
 

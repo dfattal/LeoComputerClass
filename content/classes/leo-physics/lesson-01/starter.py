@@ -2,6 +2,9 @@
 # Build a falling-ball simulator, one tiny time step at a time!
 #
 # Reminder: up is positive, so gravity's acceleration is -9.8.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 g = 9.8  # gravity, in meters per second squared
 

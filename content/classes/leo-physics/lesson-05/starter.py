@@ -3,6 +3,9 @@
 #
 # Work in meters / kilograms / newtons. The barrel is horizontal, so we ignore
 # gravity here. Update velocity first, then position.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 import math
 

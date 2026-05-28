@@ -29,6 +29,85 @@ function valuesMatch(actual, expected, tol) {
   return JSON.stringify(actual) === JSON.stringify(expected);
 }
 
+// Loads the student's code inside Python, capturing parse/runtime errors with
+// their real line number and type (far more reliable than scraping the JS
+// traceback string). Defines the student's functions in the global namespace
+// so the tests can call them. Returns null on success, or an info object.
+const LOAD_WRAPPER = `
+import sys, io, json, traceback
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+__load_err = None
+try:
+    exec(compile(__student_src, "<your code>", "exec"), globals())
+except SyntaxError as e:
+    __load_err = {
+        "kind": "syntax",
+        "etype": type(e).__name__,
+        "line": e.lineno,
+        "msg": e.msg or "",
+        "text": (e.text or "").rstrip(),
+    }
+except BaseException as e:
+    __ln = None
+    for __fr in reversed(traceback.extract_tb(e.__traceback__)):
+        if __fr.filename == "<your code>":
+            __ln = __fr.lineno
+            break
+    __load_err = {
+        "kind": "runtime",
+        "etype": type(e).__name__,
+        "line": __ln,
+        "msg": str(e),
+        "text": None,
+    }
+json.dumps(__load_err)
+`;
+
+function loadStudent(py, code) {
+  py.globals.set("__student_src", code);
+  return JSON.parse(py.runPython(LOAD_WRAPPER));
+}
+
+// Turn a Python load error into a message a 10-year-old can act on, while still
+// showing the real line number and Python error so it stays educational.
+function friendlyLoadError(info) {
+  const where = info.line ? `line ${info.line}` : "your code";
+  const snippet = info.text ? `\n\n    ${info.text.trim()}` : "";
+  const m = (info.msg || "").toLowerCase();
+  if (info.kind === "syntax") {
+    if (m.includes("expected an indented block")) {
+      return {
+        name: `Python expected some code on ${where}`,
+        error:
+          `A function or loop has nothing inside it but a comment. Leave a "pass" ` +
+          `line there until you write your code — a comment by itself isn't enough for Python.` +
+          snippet,
+      };
+    }
+    if (m.includes("indent")) {
+      return {
+        name: `Indentation problem on ${where}`,
+        error:
+          `The spacing doesn't line up. Every line inside a function or loop needs ` +
+          `the same indent (use 4 spaces).` + snippet,
+      };
+    }
+    return {
+      name: `Python couldn't read ${where}`,
+      error:
+        `There's a typo Python can't understand (${info.etype}: ${info.msg}). ` +
+        `Look for a missing ":", bracket, or quote.` + snippet,
+    };
+  }
+  return {
+    name: info.line
+      ? `Your code hit a problem on ${where}`
+      : `Your code hit a problem while loading`,
+    error: `${info.etype}: ${info.msg}` + snippet,
+  };
+}
+
 self.onmessage = async function (e) {
   const { type, code, tests } = e.data;
 
@@ -36,20 +115,14 @@ self.onmessage = async function (e) {
     const py = await loadPyodideInstance();
 
     if (type === "run") {
-      // Simple code execution — capture stdout/stderr
-      py.runPython(`
-import sys, io
-sys.stdout = io.StringIO()
-sys.stderr = io.StringIO()
-`);
-      try {
-        py.runPython(code);
-      } catch (err) {
-        const stderr = py.runPython("sys.stderr.getvalue()");
+      // Load + run the student's code (captures a friendly error if it fails)
+      const loadErr = loadStudent(py, code);
+      if (loadErr) {
+        const f = friendlyLoadError(loadErr);
         self.postMessage({
           type: "run-result",
-          stdout: "",
-          stderr: stderr + "\n" + err.message,
+          stdout: py.runPython("sys.stdout.getvalue()"),
+          stderr: `${f.name}\n${f.error}`,
           error: null,
         });
         return;
@@ -78,24 +151,15 @@ sys.stderr = io.StringIO()
         }
       }
 
-      // Load student code
-      py.runPython(`
-import sys, io
-sys.stdout = io.StringIO()
-sys.stderr = io.StringIO()
-`);
-      try {
-        py.runPython(code);
-      } catch (err) {
+      // Load student code (with a kid-friendly error if it won't parse/run)
+      const loadErr = loadStudent(py, code);
+      if (loadErr) {
+        const f = friendlyLoadError(loadErr);
         self.postMessage({
           type: "test-result",
           testResults: [
-            {
-              entry: "load",
-              passed: false,
-              name: "Code loads without error",
-              error: err.message,
-            },
+            ...results,
+            { entry: "load", passed: false, name: f.name, error: f.error },
           ],
           error: null,
         });

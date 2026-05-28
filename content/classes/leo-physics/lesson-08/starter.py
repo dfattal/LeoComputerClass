@@ -1,5 +1,8 @@
 # Design Optimizer (Capstone)
 # Use your blaster simulator to DESIGN: search many designs, keep the best.
+#
+# Tip: leave each "pass" as-is until you replace it with your code — don't just
+# delete it, or Python will complain that a function is empty.
 
 import math
 
