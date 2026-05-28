@@ -111,6 +111,7 @@ function CourseShellInner({
   const [stdout, setStdout] = useState("");
   const [stderr, setStderr] = useState("");
   const [testResults, setTestResults] = useState<TestResult[]>([]);
+  const [testError, setTestError] = useState<string | null>(null);
   const [existingSubmission, setExistingSubmission] =
     useState<ExistingSubmission | null>(null);
 
@@ -214,11 +215,21 @@ function CourseShellInner({
 
   const handleRunTests = useCallback(async () => {
     setTestResults([]);
+    setTestError(null);
     setDrawerTab("Tests");
     setDrawerCollapsed(false);
     localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
     const result = await runTests(code, tests);
     setTestResults(result.testResults);
+    if (result.error === "timeout") {
+      setTestError(
+        "Tests took too long — your code probably has a loop that never stops. " +
+          "Check each `while True:` block: it needs a way out (like `if y <= 0: break`), " +
+          "and the variable the `if` checks has to be updated inside the loop."
+      );
+    } else if (result.error) {
+      setTestError(`Tests couldn't finish: ${result.error}`);
+    }
 
     await captureViz(code, !!result.error);
   }, [runTests, code, tests, captureViz]);
@@ -304,11 +315,19 @@ function CourseShellInner({
   );
 
   const testsContent = (
-    <div>
+    <div className="space-y-3">
+      {testError && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          <p className="mb-1 font-semibold">Tests stopped early</p>
+          <p className="whitespace-pre-wrap leading-relaxed">{testError}</p>
+        </div>
+      )}
       {testResults.length === 0 ? (
-        <p className="text-sm text-stone-400">
-          Run tests to see results here.
-        </p>
+        !testError && (
+          <p className="text-sm text-stone-400">
+            Run tests to see results here.
+          </p>
+        )
       ) : (
         <TestResults results={testResults} />
       )}
