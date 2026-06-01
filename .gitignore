@@ -42,3 +42,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# image-gen + python scratch artifacts
+nanobanana-output/
+__pycache__/
+*.pyc
