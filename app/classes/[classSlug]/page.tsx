@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getClassBySlug, getClassSlugs } from "@/content/classes";
+import { getAccent } from "@/lib/accents";
 
 export function generateStaticParams() {
   return getClassSlugs().map((classSlug) => ({ classSlug }));
@@ -23,15 +24,7 @@ export default async function ClassHomePage({
           {classDef.name}
         </h1>
         <p className="mb-6 text-lg text-stone-500">{classDef.description}</p>
-        <span className={`rounded-full px-4 py-2 text-sm font-semibold ${
-          { indigo: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
-            violet: "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
-            emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
-            amber: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
-            sky: "bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300",
-            rose: "bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300",
-          }[classDef.accentColor] ?? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
-        }`}>
+        <span className={`rounded-full px-4 py-2 text-sm font-semibold ${getAccent(classDef.accentColor).badge}`}>
           Coming Soon
         </span>
         <Link
@@ -58,16 +51,9 @@ export default async function ClassHomePage({
     (w: { status: string }) => w.status === "published"
   );
 
-  // Accent color mapping (tuned for the light text area below the banner)
-  const accentClasses: Record<string, { bg: string; text: string }> = {
-    indigo: { bg: "bg-indigo-500", text: "text-indigo-600 dark:text-indigo-400" },
-    violet: { bg: "bg-violet-500", text: "text-violet-600 dark:text-violet-400" },
-    emerald: { bg: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
-    amber: { bg: "bg-amber-500", text: "text-amber-600 dark:text-amber-400" },
-    sky: { bg: "bg-sky-500", text: "text-sky-600 dark:text-sky-400" },
-    rose: { bg: "bg-rose-500", text: "text-rose-600 dark:text-rose-400" },
-  };
-  const accent = accentClasses[classDef.accentColor] ?? accentClasses.indigo;
+  // Accent classes for this class (single source of truth: lib/accents.ts).
+  // The banner uses the lighter `banner` (-500) shade; text uses `text`.
+  const accent = getAccent(classDef.accentColor);
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] w-full flex-col">
@@ -117,7 +103,7 @@ export default async function ClassHomePage({
           {firstPublished && (
             <Link
               href={`/classes/${classSlug}/${firstPublished.slug}`}
-              className={`rounded-lg ${accent.bg} px-6 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90`}
+              className={`rounded-lg ${accent.banner} px-6 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90`}
             >
               Start Learning
             </Link>
@@ -164,7 +150,7 @@ export default async function ClassHomePage({
                                 className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-4 transition-all hover:border-stone-300 hover:shadow-md dark:border-stone-800 dark:bg-stone-900 dark:hover:border-stone-700"
                               >
                                 <span
-                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${accent.bg} text-sm font-bold text-white`}
+                                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${accent.banner} text-sm font-bold text-white`}
                                 >
                                   {w.week}
                                 </span>

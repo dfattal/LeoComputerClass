@@ -1,43 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { classes } from "@/content/classes";
+import { getAccent } from "@/lib/accents";
 
 function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
   const isComingSoon = cls.comingSoon;
-
-  const accentBorder: Record<string, string> = {
-    indigo: "hover:border-indigo-400 dark:hover:border-indigo-500",
-    violet: "hover:border-violet-400 dark:hover:border-violet-500",
-    emerald: "hover:border-emerald-400 dark:hover:border-emerald-500",
-    amber: "hover:border-amber-400 dark:hover:border-amber-500",
-    sky: "hover:border-sky-400 dark:hover:border-sky-500",
-    rose: "hover:border-rose-400 dark:hover:border-rose-500",
-  };
-  const accentBadge: Record<string, string> = {
-    indigo:
-      "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
-    violet:
-      "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
-    emerald:
-      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
-    amber:
-      "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
-    sky: "bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300",
-    rose: "bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300",
-  };
-  const accentLink: Record<string, string> = {
-    indigo: "text-indigo-600 dark:text-indigo-400",
-    violet: "text-violet-600 dark:text-violet-400",
-    emerald: "text-emerald-600 dark:text-emerald-400",
-    amber: "text-amber-600 dark:text-amber-400",
-    sky: "text-sky-600 dark:text-sky-400",
-    rose: "text-rose-600 dark:text-rose-400",
-  };
+  const accent = getAccent(cls.accentColor);
 
   const cardClassName = `group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-all dark:border-stone-800 dark:bg-stone-900 ${
     isComingSoon
       ? "opacity-75"
-      : `cursor-pointer ${accentBorder[cls.accentColor] ?? ""} hover:shadow-md`
+      : `cursor-pointer ${accent.cardBorder} hover:shadow-md`
   }`;
 
   const cardContent = (
@@ -52,9 +25,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
         />
         {isComingSoon && (
           <div className="absolute inset-0 flex items-center justify-center bg-stone-950/50">
-            <span className={`rounded-full px-4 py-1.5 text-sm font-semibold text-white shadow-lg ${
-              cls.accentColor === "violet" ? "bg-violet-600" : cls.accentColor === "emerald" ? "bg-emerald-600" : "bg-indigo-600"
-            }`}>
+            <span className={`rounded-full px-4 py-1.5 text-sm font-semibold text-white shadow-lg ${accent.solid}`}>
               Coming Soon
             </span>
           </div>
@@ -68,7 +39,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
             {cls.name}
           </h2>
           <span
-            className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase ${accentBadge[cls.accentColor] ?? accentBadge.indigo}`}
+            className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase ${accent.badge}`}
           >
             {cls.language}
           </span>
@@ -78,9 +49,7 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
         </p>
         {!isComingSoon && (
           <span
-            className={`mt-auto inline-flex items-center gap-1 text-sm font-medium ${
-              accentLink[cls.accentColor] ?? accentLink.indigo
-            }`}
+            className={`mt-auto inline-flex items-center gap-1 text-sm font-medium ${accent.text}`}
           >
             Start Learning
             <svg

@@ -14,13 +14,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev      # Start dev server (localhost:3000)
-npm run build    # Production build (also validates SSG)
-npm run lint     # ESLint (no auto-fix)
-npm start        # Serve production build
+npm run dev               # Start dev server (localhost:3000)
+npm run build             # Production build (also validates SSG)
+npm run lint              # ESLint (no auto-fix)
+npm start                 # Serve production build
+npm run validate-class [slug]  # Validate lesson content (all classes, or one)
 ```
 
-No test runner is configured. Tests are student-facing (defined in `content/classes/<class>/*/tests.json`) and run in-browser via Pyodide.
+No test runner is configured. Tests are student-facing (defined in `content/classes/<class>/*/tests.json`) and run in-browser via Pyodide. `npm run validate-class` is the authoring-time check that those tests are correct (see "Class-making tooling" below).
 
 ## Tech Stack
 
@@ -39,6 +40,8 @@ No test runner is configured. Tests are student-facing (defined in `content/clas
 The app is **one platform, multiple classes, one shared engine**. Each class has its own content, syllabus, theme, and AI coaching prompt. Shared infrastructure: code editor, test runner, submission system, AI review, dashboard, admin panel.
 
 **Class registry:** `content/classes.ts` defines all classes (slug, name, accent color, hero image, etc.). To add a new class, add an entry here and create its content directory.
+
+**Accent colors:** `lib/accents.ts` is the single source of truth for every accent-color class string (one record per color: `indigo`, `violet`, `emerald`, `amber`, `sky`, `rose`). `AccentContext`, `app/page.tsx`, and the class landing page all read from it via `getAccent()`. To add a new accent, copy an existing color block and swap the name on every line (literal class strings only — Tailwind v4 purges interpolated ones). Do **not** hardcode accent strings in components.
 
 ### Routing
 
@@ -60,9 +63,11 @@ Path alias: `@/*` maps to project root (e.g., `@/lib/supabase/client`).
 Each lesson lives in `content/classes/<classSlug>/<lessonSlug>/` with these files:
 - `lesson.mdx` — Theory (MDX, rendered server-side)
 - `exercises.mdx` — Coding exercises (MDX)
-- `tests.json` — Array of `TestEntry` objects: `{ entry, cases: [{name, args, expected}], constraints?: { forbidTokens } }`
+- `tests.json` — Array of `TestEntry` objects: `{ entry, cases: [{name, args, expected, tol?}], constraints?: { forbidTokens } }`
 - `rubric.json` — Grading criteria for AI review
 - `starter.py` — (optional) Starter code for the editor
+- `viz.json` — (optional) Teaching graph config (`type: "plot"`, a `setup` defining a `resultFn`)
+- `reference.py` — (optional, **inert**) The answer key. `loadLesson.ts` only reads the fixed filenames above, so `reference.py` is never served or built. It exists so `npm run validate-class` can generate/check `tests.json` expected values from a real solution. **Write it before `tests.json`.**
 
 Each class also has:
 - `content/classes/<classSlug>/syllabus.ts` — Phases, weeks/lessons, status
@@ -106,16 +111,20 @@ SUPABASE_SERVICE_ROLE_KEY      # Server-only, elevated permissions
 OPENAI_API_KEY                 # For AI feedback (server-only)
 ```
 
-## Adding a New Lesson (to an existing class)
+## Class-making tooling
 
-1. Create `content/classes/<classSlug>/<lessonSlug>/` with `lesson.mdx`, `exercises.mdx`, `tests.json`, `rubric.json`
-2. Update `content/classes/<classSlug>/syllabus.ts` — add the week/lesson entry with status `"published"`
-3. The build auto-discovers it via `getLessonSlugs()` — no config changes needed
-4. The dashboard auto-syncs published lessons into the `lessons` DB table on load
+Authoring is automated. Prefer these over doing it by hand:
 
-## Adding a New Class
+- **`/new-lesson` skill** (`.claude/skills/new-lesson/`) — guided workflow to add a lesson. Encodes the proven order: **write `reference.py` first, generate `tests.json` expected values from it** (never hand-author them), design the teaching graph, write the student files in a 10-year-old voice, then `npm run validate-class` until green and flip the syllabus to `published`.
+- **`/new-class` skill** (`.claude/skills/new-class/`) — guided workflow to scaffold a new class shell (syllabus, ai-prompt, registry entry, accent color), then hand off to `/new-lesson`.
+- **`scripts/scaffold-class.mjs <slug> "<Name>" "<tagline>" <accent>`** — creates the class dir + appends a `comingSoon` registry entry; warns if the accent isn't in `lib/accents.ts`.
+- **`scripts/scaffold-lesson.mjs <slug> <N> "<title>"`** — creates a lesson dir with all six student files + a `reference.py` template.
+- **`scripts/validate-class.mjs` (`npm run validate-class [slug]`)** — JSON-parses every `tests.json`/`rubric.json`/`viz.json`, compiles the Python, checks every test entry has a starter stub, runs `reference.py` against every case using the **real `valuesMatch` extracted from `public/pyodide-worker.js`** (so it can't drift from the in-browser grader), and execs the graph to confirm it returns plottable data. Exits nonzero on any failure. Lessons without a `reference.py` skip the value checks but still get the rest.
 
-1. Create `content/classes/<newSlug>/` with `syllabus.ts` and `ai-prompt.ts`
-2. Add lesson directories under it
-3. Add the class to `content/classes.ts` (set `comingSoon: true` until content is ready)
-4. Remove `comingSoon` when lessons are published
+### Adding a New Lesson (to an existing class)
+
+Use `/new-lesson` (or `scaffold-lesson.mjs` directly). Manual fallback: create `content/classes/<classSlug>/<lessonSlug>/` with the lesson files, add the week to `syllabus.ts` with status `"published"`, and run `npm run validate-class <classSlug>`. The build auto-discovers it via `getLessonSlugs()`; the dashboard syncs published lessons into the `lessons` DB table on load.
+
+### Adding a New Class
+
+Use `/new-class` (or `scaffold-class.mjs` directly). It creates `content/classes/<newSlug>/` with `syllabus.ts` + `ai-prompt.ts`, appends the registry entry to `content/classes.ts` (`comingSoon: true` until lessons exist), and reminds you to add the accent to `lib/accents.ts` if it's new. Remove `comingSoon` once the first lesson is published.
