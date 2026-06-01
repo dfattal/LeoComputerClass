@@ -47,33 +47,44 @@ class. The plot viz is self-contained Python in a `setup` block — great for
 
 ---
 
+## Shipped from this list
+
+### Secret Codes (Cryptography) — ✅ built as `leo-codes`, 8 lessons published
+**Through-line:** "Send messages your sister can't read — then crack hers."
+The top candidate, now live. Final lesson arc (titles as shipped):
+
+1. The Caesar Cipher — shift letters to hide a message
+2. Crack It: Brute Force — try all 26 shifts, score for English, read the winner
+3. The Substitution Cipher — a full scrambled alphabet
+4. Frequency Analysis — *crack* a substitution by counting letters ("e" gives it away)
+5. The XOR Trick — bitwise secrecy; the same key undoes it (reuses Leo's binary)
+6. The One-Time Pad — the only unbreakable code; the two-time-pad leak shows why keys can't repeat
+7. Key Exchange by Color-Mixing — Diffie-Hellman as paint you can't un-mix
+8. The Public Lock (capstone) — tiny RSA: a public lock anyone can shut, a private key only you hold
+
+**As-built notes (differ slightly from the original sketch):**
+- To keep Pyodide `valuesMatch` robust, every function returns `str`/`int`/`bool`/`list`,
+  never a dict. The substitution key is a **26-char string** (not a dict), letter counts
+  are a **list of 26 ints**, and ciphers (XOR/OTP) return **lists of ints**.
+- Ciphers operate on lowercase `a–z`; spaces/other characters pass through unchanged.
+- Frequency "bar charts" are drawn as **profile point-series** in the line `plot` viz
+  (the only viz type available) — message vs scaled typical-English shape.
+- RSA/DH numbers are tiny and framed as clock arithmetic (RSA p=5,q=11,n=55,φ=40,e=3,d=27;
+  DH g=5,p=23). `private_key` finds `d` by a short search loop.
+- Hero `/hero-codes.webp` (cipher-wheel/spy motif), accent `rose`. Building this also
+  surfaced that accent colors are hardcoded in three files (`AccentContext.tsx`,
+  `app/page.tsx`, `app/classes/[classSlug]/page.tsx`) — `rose` and the previously-missing
+  `sky` were added to all three.
+
+---
+
 ## Candidate classes (ranked by fit)
 
-### 1. Secret Codes (Cryptography) — ✅ BUILT (slug `leo-codes`, 8 lessons published)
-**Through-line:** "Send messages your sister can't read — then crack hers."
-**Why it fits:** Best appeal-to-effort ratio. Every step is a pure string/number
-function. Reuses Leo's binary/bit knowledge from Computer Class & Primer. Spy
-theme is irresistible at this age, and *breaking* codes is as fun as making them.
-**Prereqs:** Python Primer (strings, loops, dicts).
-**8-lesson sketch:**
-1. Caesar cipher — shift letters to hide a message
-2. Decrypt & brute-force — try all 26 shifts, read the one that makes words
-3. Substitution cipher — a full scrambled alphabet (a dict)
-4. Frequency analysis — *crack* a substitution by counting letters ("e" is most common)
-5. The XOR trick — bitwise secrecy, and why the same key undoes it
-6. The one-time pad — the only unbreakable code, and why keys can't repeat
-7. Key exchange by color-mixing — Diffie-Hellman as paint you can't un-mix
-8. Capstone: a tiny public-key (RSA with small numbers) — send a secret with a *public* lock
-**Viz/assets:** letter-frequency bar charts (plot viz); a "cracking" panel showing
-candidate decryptions. Hero: spy/cipher-wheel motif.
-**Risks:** RSA math needs careful 10yo framing (modular arithmetic via clock
-analogy). Keep numbers tiny.
-
-### 2. Build an Unbeatable Game Bot — *gateway to recursion*
+### 1. Build an Unbeatable Game Bot — *gateway to recursion*
 **Through-line:** "A robot that never loses at tic-tac-toe… then Connect 4."
 **Why it fits:** The natural on-ramp to recursion and search, with an immediate
 payoff (beating Dad). Boards are grids (lists), every helper is testable.
-**Prereqs:** Python Primer; Secret Codes or Motion Lab helps with confidence.
+**Prereqs:** Python Primer (Leo has already done Secret Codes & Motion Lab — plenty of confidence).
 **8-lesson sketch:**
 1. The board — represent and print a grid
 2. Legal moves & making a move
@@ -88,7 +99,7 @@ a "search tree" sketch. Hero: game-grid/robot motif.
 **Risks:** Minimax recursion is the conceptual peak — scaffold heavily; keep
 tic-tac-toe small enough to search fully.
 
-### 3. Build a Programming Language — *the software bookend to the CPU class*
+### 2. Build a Programming Language — *the software bookend to the CPU class*
 **Through-line:** "You built the CPU — now build the language that runs on it."
 **Why it fits:** The most satisfying long-term capstone class; directly completes
 the Computer Class arc (hardware → software). Tokenizer/parser/evaluator are each
