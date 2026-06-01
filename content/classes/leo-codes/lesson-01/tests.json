@@ -1,0 +1,27 @@
+[
+  {
+    "entry": "shift_letter",
+    "cases": [
+      {"name": "shift_letter(\"a\", 3)", "args": ["a", 3], "expected": "d"},
+      {"name": "shift_letter(\"z\", 1) ~ wraps to a", "args": ["z", 1], "expected": "a"},
+      {"name": "shift_letter(\"x\", 5) ~ wraps past z", "args": ["x", 5], "expected": "c"},
+      {"name": "shift_letter(\" \", 4) ~ space stays a space", "args": [" ", 4], "expected": " "}
+    ]
+  },
+  {
+    "entry": "caesar_encrypt",
+    "cases": [
+      {"name": "caesar_encrypt(\"hello\", 3)", "args": ["hello", 3], "expected": "khoor"},
+      {"name": "caesar_encrypt(\"attack at dawn\", 5) ~ spaces stay", "args": ["attack at dawn", 5], "expected": "fyyfhp fy ifbs"},
+      {"name": "caesar_encrypt(\"hello world\", 13) ~ rot13", "args": ["hello world", 13], "expected": "uryyb jbeyq"}
+    ]
+  },
+  {
+    "entry": "caesar_decrypt",
+    "cases": [
+      {"name": "caesar_decrypt(\"khoor\", 3)", "args": ["khoor", 3], "expected": "hello"},
+      {"name": "caesar_decrypt(\"uryyb jbeyq\", 13)", "args": ["uryyb jbeyq", 13], "expected": "hello world"},
+      {"name": "caesar_decrypt(\"fyyfhp fy ifbs\", 5) ~ round-trip back to plain", "args": ["fyyfhp fy ifbs", 5], "expected": "attack at dawn"}
+    ]
+  }
+]

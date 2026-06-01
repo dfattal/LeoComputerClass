@@ -1,0 +1,24 @@
+[
+  {
+    "entry": "xor_num",
+    "cases": [
+      {"name": "xor_num(5, 3)", "args": [5, 3], "expected": 6},
+      {"name": "xor_num(255, 1)", "args": [255, 1], "expected": 254},
+      {"name": "xor_num(12, 12) ~ a number XOR itself is 0", "args": [12, 12], "expected": 0}
+    ]
+  },
+  {
+    "entry": "xor_encrypt",
+    "cases": [
+      {"name": "xor_encrypt(\"hi\", 42)", "args": ["hi", 42], "expected": [66, 67]},
+      {"name": "xor_encrypt(\"spy\", 99)", "args": ["spy", 99], "expected": [16, 19, 26]}
+    ]
+  },
+  {
+    "entry": "xor_decrypt",
+    "cases": [
+      {"name": "xor_decrypt([66, 67], 42) ~ same key undoes it", "args": [[66, 67], 42], "expected": "hi"},
+      {"name": "xor_decrypt([16, 19, 26], 99)", "args": [[16, 19, 26], 99], "expected": "spy"}
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": ["secret message", 42],
+  "title": "XOR scrambles the numbers — the cipher hides in the bits",
+  "xLabel": "position in the message",
+  "yLabel": "byte value (the number)",
+  "setup": "# --- plot helper (hidden) — letters as numbers, before and after XOR ---\ndef __plot(message, key):\n    plain = [[i, ord(c)] for i, c in enumerate(message)]\n    cipher = [[i, ord(c) ^ key] for i, c in enumerate(message)]\n    return [\n        {\"name\": \"after XOR (the cipher)\", \"points\": cipher, \"highlight\": True},\n        {\"name\": \"plain letters (as numbers)\", \"points\": plain, \"highlight\": False},\n    ]\n"
+}

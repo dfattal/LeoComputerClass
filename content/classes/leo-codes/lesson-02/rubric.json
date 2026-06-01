@@ -1,0 +1,6 @@
+[
+  {"criterion": "Generates all 26 decryptions", "weight": 25, "description": "all_shifts returns a list of 26 strings, decrypting the message with every shift 0..25 (reuses caesar_decrypt)"},
+  {"criterion": "English scorer counts common words", "weight": 30, "description": "english_score splits the text into words and counts how many are in COMMON_SET, returning the count"},
+  {"criterion": "Cracker finds the right key", "weight": 35, "description": "crack_caesar loops all 26 shifts, scores each decryption, and returns the shift with the highest score"},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses the given helpers, tracks best_score/best_shift clearly, a return on every function"}
+]

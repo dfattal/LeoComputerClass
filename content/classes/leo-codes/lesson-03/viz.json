@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": ["qwertyuiopasdfghjklzxcvbnm"],
+  "title": "A substitution scramble: every letter jumps to its own new spot",
+  "xLabel": "original letter (a=0, b=1, … z=25)",
+  "yLabel": "where it lands (its key letter's position)",
+  "setup": "# --- plot helper (hidden) — the substitution key as a scattered mapping ---\ndef __map(key):\n    return [[i, ord(key[i]) - 97] for i in range(26)]\n\ndef __identity():\n    return [[i, i] for i in range(26)]\n\ndef __plot(key):\n    return [\n        {\"name\": \"scrambled alphabet (your key)\", \"points\": __map(key), \"highlight\": True},\n        {\"name\": \"no scramble (a=a, b=b, …)\", \"points\": __identity(), \"highlight\": False},\n    ]\n"
+}

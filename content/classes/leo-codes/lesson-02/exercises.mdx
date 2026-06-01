@@ -1,0 +1,79 @@
+# Lesson 2 — Exercises: Crack It with Brute Force
+
+## How This Works
+
+You'll build a **codebreaker** that finds a Caesar key without being told it. The starter already gives you `shift_letter` and `caesar_decrypt` from Lesson 1, plus a list called `COMMON_WORDS` (the most common little words in English). Use them!
+
+**How scoring works:** split the text into words with `text.split()`, then count how many of those words are in `COMMON_WORDS`. We've turned the list into a fast lookup set called `COMMON_SET` for you — `if word in COMMON_SET` is the check you want.
+
+---
+
+## Exercise 1: Every Possible Decryption
+
+Write `all_shifts(message)` that returns a **list of 26 strings** — the message decrypted with every shift from 0 to 25.
+
+```python
+def all_shifts(message):
+    # Return [decrypt with 0, decrypt with 1, ..., decrypt with 25]
+    pass
+```
+
+**Example:**
+- `all_shifts("khoor")` → `["khoor", "jgnnq", "ifmmp", "hello", "gdkkn", ...]`
+  (26 entries — and entry number 3 is `"hello"`, the real message!)
+
+**Hint:** One line with a list comprehension:
+`return [caesar_decrypt(message, n) for n in range(26)]`.
+
+---
+
+## Exercise 2: Does It Look Like English?
+
+Write `english_score(text)` that returns **how many words in `text` are common English words**. Split the text into words and count the ones that appear in `COMMON_SET`.
+
+```python
+def english_score(text):
+    # Split text into words, count how many are in COMMON_SET, return the count.
+    pass
+```
+
+**Examples:**
+- `english_score("the cat and the dog")` → `3` (`the`, `and`, `the` — `cat` and `dog` aren't on the common list)
+- `english_score("xlmw mw e wigvix")` → `0` (still scrambled — no real words)
+- `english_score("you can see they are here")` → `5` (`you`, `can`, `see`, `they`, `are`)
+
+**Hint:** `return sum(1 for w in text.split() if w in COMMON_SET)`.
+
+---
+
+## Exercise 3: Crack the Code
+
+Write `crack_caesar(message)` that returns the **secret key** — the shift (0–25) whose decryption looks the most like English.
+
+Try all 26 shifts. For each, decrypt the message and score it with `english_score`. Keep track of the shift that scored the highest, and return it.
+
+```python
+def crack_caesar(message):
+    # Try every shift 0..25, score each decryption, return the best shift.
+    pass
+```
+
+**Examples:**
+- `crack_caesar("aol xbpjr iyvdu mve huk aol shgf kvn")` → `7`
+- `crack_caesar("rhn tgw b vtg lxx matm")` → `19`
+- `crack_caesar("phhw ph dw wkh rog rdn")` → `3`
+
+Once you have the key, you can read the message: `caesar_decrypt(message, crack_caesar(message))`. Try printing it!
+
+**Hint:** Keep a `best_shift` and a `best_score` (start it at `-1`). Loop `n` over `range(26)`, compute `score = english_score(caesar_decrypt(message, n))`, and when `score > best_score`, save both. Return `best_shift` at the end.
+
+---
+
+## Tips If You're Stuck
+
+1. **`all_shifts` not 26 long?** `range(26)` gives 0 through 25 — that's 26 values. 
+2. **Score always 0?** Make sure you're splitting into words (`text.split()`) and checking `in COMMON_SET`, not checking letters.
+3. **Cracker returns the wrong shift?** Start `best_score` at `-1` so the very first shift can win, and only update when the new score is strictly greater.
+4. **Want to see the answer?** After cracking, print `caesar_decrypt(message, crack_caesar(message))` to read the secret out loud.
+
+Crack all three and you're officially a codebreaker. Next: a cipher with so many keys that brute force gives up. Let's go!

@@ -1,0 +1,6 @@
+[
+  {"criterion": "Modular power is correct", "weight": 35, "description": "power_mod returns pow(base, exp, mod) — base to the power exp, wrapped on the mod clock"},
+  {"criterion": "Public key (the mix you send)", "weight": 25, "description": "public_key computes g^secret mod p using power_mod — the value sent out loud while the secret stays hidden"},
+  {"criterion": "Shared secret matches", "weight": 30, "description": "shared_key raises the received mix to your own secret mod p, so both sides compute the same shared number"},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses power_mod, uses three-argument pow for speed, a return on every function"}
+]

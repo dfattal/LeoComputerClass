@@ -1,0 +1,23 @@
+[
+  {
+    "entry": "letter_counts",
+    "cases": [
+      {"name": "letter_counts(\"hello\")", "args": ["hello"], "expected": [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {"name": "letter_counts(\"the eel feels keen\") ~ e appears 7 times", "args": ["the eel feels keen"], "expected": [0, 0, 0, 0, 7, 1, 0, 1, 0, 0, 1, 2, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]}
+    ]
+  },
+  {
+    "entry": "most_common_letter",
+    "cases": [
+      {"name": "most_common_letter(\"hello\")", "args": ["hello"], "expected": "l"},
+      {"name": "most_common_letter(\"the eel feels keen\")", "args": ["the eel feels keen"], "expected": "e"},
+      {"name": "most_common_letter(\"aabb\") ~ tie goes to a", "args": ["aabb"], "expected": "a"}
+    ]
+  },
+  {
+    "entry": "crack_by_frequency",
+    "cases": [
+      {"name": "crack a substituted sentence by letter frequency", "args": ["zit ltektz dtllqut iortl of hsqof louiz wxz zit stzztkl ziqz qhhtqk zit dglz gyztf qkt zit tqln gftl zg uxtll"], "expected": "toe aewhet ceaaile orgea rn duirn arlot ymt toe uetteha toit iddeih toe csat spten ihe toe eiaf snea ts lmeaa"}
+    ]
+  }
+]

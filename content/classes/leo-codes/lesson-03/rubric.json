@@ -1,0 +1,6 @@
+[
+  {"criterion": "Substitution uses the key correctly", "weight": 35, "description": "substitute replaces each letter a-z with key[ord(c) - 97] and leaves spaces/other characters unchanged"},
+  {"criterion": "Reverse key is built correctly", "weight": 35, "description": "invert_key places ALPHA[i] into the slot named by key[i], producing a key that undoes the original"},
+  {"criterion": "Decrypt round-trips", "weight": 20, "description": "unsubstitute decrypts by substituting with invert_key(key), so decrypt(encrypt(msg)) returns the original"},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses substitute and invert_key, clear names, a return on every function"}
+]

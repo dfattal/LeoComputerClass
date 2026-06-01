@@ -1,0 +1,90 @@
+# Lesson 1 — Exercises: The Caesar Cipher
+
+## How This Works
+
+You'll write three functions that together make a **Caesar cipher machine**. When you click **Run Tests**, the computer calls your functions with secret messages and checks that they scramble and unscramble correctly.
+
+**The rules every function follows:**
+
+- Work on lowercase letters **`a`–`z`** only.
+- **Spaces and other characters pass through unchanged** (so `attack at dawn` keeps its spaces).
+- The alphabet **wraps around**: after `z` comes `a`. Use `% 26` to wrap.
+
+Remember the one-line trick for shifting a single letter:
+
+```python
+chr((ord(letter) - 97 + n) % 26 + 97)
+```
+
+---
+
+## Exercise 1: Shift One Letter
+
+Write `shift_letter(letter, n)` that slides a single lowercase letter `n` steps forward, wrapping around the end of the alphabet. If `letter` isn't a lowercase `a`–`z` (like a space), return it **unchanged**.
+
+```python
+def shift_letter(letter, n):
+    # If it's a lowercase letter a-z, shift it and wrap with % 26.
+    # Otherwise, return it just as it came in.
+    pass
+```
+
+**Examples:**
+- `shift_letter("a", 3)` → `"d"`
+- `shift_letter("z", 1)` → `"a"` (wraps around the end!)
+- `shift_letter("x", 5)` → `"c"` (x → y → z → a → b → c)
+- `shift_letter(" ", 4)` → `" "` (a space isn't a letter, so it stays a space)
+
+**Hint:** Check `if "a" <= letter <= "z":` first. If yes, return `chr((ord(letter) - 97 + n) % 26 + 97)`. If no, `return letter`.
+
+---
+
+## Exercise 2: Encrypt a Message
+
+Write `caesar_encrypt(message, n)` that shifts **every** letter in `message` forward by `n`, hiding it. Use your `shift_letter` to do the work for each character.
+
+```python
+def caesar_encrypt(message, n):
+    # Build a new string: shift_letter(c, n) for every character c in message.
+    pass
+```
+
+**Examples:**
+- `caesar_encrypt("hello", 3)` → `"khoor"`
+- `caesar_encrypt("attack at dawn", 5)` → `"fyyfhp fy ifbs"` (spaces stayed!)
+- `caesar_encrypt("hello world", 13)` → `"uryyb jbeyq"`
+
+**Hint:** A loop that builds a string, or one neat line:
+`return "".join(shift_letter(c, n) for c in message)`.
+
+---
+
+## Exercise 3: Decrypt a Message
+
+Write `caesar_decrypt(message, n)` that undoes the encryption — it shifts every letter **back** by `n` to reveal the original.
+
+```python
+def caesar_decrypt(message, n):
+    # Shifting back by n is the same as shifting forward by -n.
+    pass
+```
+
+**Examples:**
+- `caesar_decrypt("khoor", 3)` → `"hello"`
+- `caesar_decrypt("uryyb jbeyq", 13)` → `"hello world"`
+- `caesar_decrypt("fyyfhp fy ifbs", 5)` → `"attack at dawn"`
+
+**The big test — the round-trip:** encrypt a message, then decrypt the result with the same key, and you should land back on exactly what you started with. If `caesar_decrypt(caesar_encrypt(msg, n), n)` gives back `msg`, your cipher is perfect.
+
+**Hint:** You don't need new math — just call `shift_letter(c, -n)` for each character (the `% 26` already handles going backwards).
+
+---
+
+## Tips If You're Stuck
+
+1. **Letters running off the end (like `z` → `{`)?** You forgot the `% 26`. That's what loops the ring back to `a`.
+2. **Spaces turned into weird symbols?** Make sure non-letters return unchanged — check `if "a" <= letter <= "z":` before shifting.
+3. **Decrypt not getting back the original?** You're probably shifting the same direction as encrypt. Decrypt shifts by `-n`, not `n`.
+4. **`None` showing up?** Don't forget `return` in each function.
+
+Build all three and you can pass secret notes nobody else can read. Next lesson: how a computer **cracks** a Caesar cipher in the blink of an eye. Let's go!

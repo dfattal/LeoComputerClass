@@ -1,0 +1,24 @@
+[
+  {
+    "entry": "all_shifts",
+    "cases": [
+      {"name": "all_shifts(\"khoor\") ~ 26 candidates, #3 is hello", "args": ["khoor"], "expected": ["khoor", "jgnnq", "ifmmp", "hello", "gdkkn", "fcjjm", "ebiil", "dahhk", "czggj", "byffi", "axeeh", "zwddg", "yvccf", "xubbe", "wtaad", "vszzc", "uryyb", "tqxxa", "spwwz", "rovvy", "qnuux", "pmttw", "olssv", "nkrru", "mjqqt", "lipps"]}
+    ]
+  },
+  {
+    "entry": "english_score",
+    "cases": [
+      {"name": "english_score(\"the cat and the dog\")", "args": ["the cat and the dog"], "expected": 3},
+      {"name": "english_score(\"xlmw mw e wigvix\") ~ scrambled, no words", "args": ["xlmw mw e wigvix"], "expected": 0},
+      {"name": "english_score(\"you can see they are here\")", "args": ["you can see they are here"], "expected": 5}
+    ]
+  },
+  {
+    "entry": "crack_caesar",
+    "cases": [
+      {"name": "crack \"the quick brown fox...\" (shifted 7)", "args": ["aol xbpjr iyvdu mve huk aol shgf kvn"], "expected": 7},
+      {"name": "crack \"you and i can see that\" (shifted 19)", "args": ["rhn tgw b vtg lxx matm"], "expected": 19},
+      {"name": "crack \"meet me at the old oak\" (shifted 3)", "args": ["phhw ph dw wkh rog rdn"], "expected": 3}
+    ]
+  }
+]

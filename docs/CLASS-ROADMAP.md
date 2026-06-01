@@ -41,14 +41,15 @@ class. The plot viz is self-contained Python in a `setup` block — great for
 | Python Primer | `python-primer` | Learn Python in 5 lessons (prerequisite) | Published (5) |
 | Leo's Computer Class | `leo` | Logic gates → a working CPU | Phases 1–3 published, ALU/CPU planned |
 | Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8) |
-| Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) ✅ new |
+| Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) |
+| Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) ✅ new |
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | 8 published, 2 planned |
 
 ---
 
 ## Candidate classes (ranked by fit)
 
-### 1. Secret Codes (Cryptography) — *top pick*
+### 1. Secret Codes (Cryptography) — ✅ BUILT (slug `leo-codes`, 8 lessons published)
 **Through-line:** "Send messages your sister can't read — then crack hers."
 **Why it fits:** Best appeal-to-effort ratio. Every step is a pure string/number
 function. Reuses Leo's binary/bit knowledge from Computer Class & Primer. Spy
@@ -130,7 +131,7 @@ well-tested stages; resist adding language features.
 Given what Leo has done (Primer → Computer Class → Motion Lab → Space School),
 the natural next order is:
 
-1. **Secret Codes** — fresh domain, reuses binary, highest fun-per-effort.
+1. ~~**Secret Codes**~~ — ✅ built (`leo-codes`).
 2. **Game Bot** — introduces recursion/search with a big payoff.
 3. **Build a Programming Language** — the grand finale that closes the
    hardware→software loop from the Computer Class.

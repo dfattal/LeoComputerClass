@@ -1,0 +1,96 @@
+# Lesson 7 — Exercises: Key Exchange by Color-Mixing
+
+## How This Works
+
+Everything happens on a "clock" with a prime number of hours `p`: do the math, then take the remainder with mod `p`. Python has a built-in that does "raise to a power, then wrap mod p" in one fast, exact step:
+
+```python
+pow(base, exp, mod)    # = (base ** exp) % mod, but fast and exact
+```
+
+We'll use small numbers so you can check the clock math by hand if you want. The agreed-on public numbers in the examples are base `g = 5` and prime `p = 23`.
+
+---
+
+## Exercise 1: The Mix Machine
+
+Write `power_mod(base, exp, mod)` that returns `base` raised to the power `exp`, wrapped around the clock with mod `mod`.
+
+```python
+def power_mod(base, exp, mod):
+    # Return base ** exp, wrapped mod (use Python's three-argument pow).
+    pass
+```
+
+**Examples:**
+- `power_mod(5, 6, 23)` → `8`
+- `power_mod(2, 10, 1000)` → `24` (2¹⁰ = 1024, and 1024 mod 1000 = 24)
+- `power_mod(5, 15, 23)` → `19`
+
+**Hint:** `return pow(base, exp, mod)`.
+
+---
+
+## Exercise 2: Your Public Mix
+
+Write `public_key(g, secret, p)` — the mix you can shout out loud. It's `g` raised to your `secret`, mod `p`.
+
+```python
+def public_key(g, secret, p):
+    # Return power_mod(g, secret, p)
+    pass
+```
+
+**Examples** (with `g = 5`, `p = 23`):
+- `public_key(5, 6, 23)` → `8` (this is what **Alice** sends, keeping her secret `6` hidden)
+- `public_key(5, 15, 23)` → `19` (this is what **Bob** sends, keeping his secret `15` hidden)
+
+**Hint:** It's just `power_mod(g, secret, p)`.
+
+---
+
+## Exercise 3: The Shared Secret
+
+Write `shared_key(received, secret, p)` — take the mix you *received* from the other person and stir in *your* secret: `received` raised to your `secret`, mod `p`.
+
+```python
+def shared_key(received, secret, p):
+    # Return power_mod(received, secret, p)
+    pass
+```
+
+**Examples:**
+- `shared_key(19, 6, 23)` → `2` (Alice takes Bob's mix `19`, stirs in her secret `6`)
+- `shared_key(8, 15, 23)` → `2` (Bob takes Alice's mix `8`, stirs in his secret `15`)
+
+**They match!** Both get `2` — that's their shared secret key, and they never once sent it. An eavesdropper heard `5`, `23`, `8`, and `19`, and still can't get `2` without un-mixing the paint.
+
+**Hint:** `return power_mod(received, secret, p)`.
+
+---
+
+## Putting It Together
+
+Try the whole handshake in the editor:
+
+```python
+g, p = 5, 23
+alice_secret, bob_secret = 6, 15
+
+A = public_key(g, alice_secret, p)   # Alice sends A
+B = public_key(g, bob_secret, p)     # Bob sends B
+
+alice_shared = shared_key(B, alice_secret, p)
+bob_shared = shared_key(A, bob_secret, p)
+print(alice_shared, bob_shared)      # same number!
+```
+
+---
+
+## Tips If You're Stuck
+
+1. **Numbers too big / slow?** Use the **three-argument** `pow(base, exp, mod)`, not `(base ** exp) % mod`. The three-argument form stays small and fast.
+2. **Shared keys don't match?** Make sure `shared_key` raises the **received** mix to **your** secret — Alice uses Bob's `B` with her `a`, Bob uses Alice's `A` with his `b`.
+3. **Forgot the mod?** Every step wraps mod `p`. Leaving it off gives a giant number instead of a clock value.
+
+You can now agree on a key in front of everyone. Last lesson — the grand finale: a **public lock** anyone can close, that only *your* private key opens. Let's go!

@@ -27,6 +27,9 @@ export default async function ClassHomePage({
           { indigo: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300",
             violet: "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300",
             emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300",
+            amber: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+            sky: "bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300",
+            rose: "bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300",
           }[classDef.accentColor] ?? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
         }`}>
           Coming Soon
@@ -61,6 +64,8 @@ export default async function ClassHomePage({
     violet: { bg: "bg-violet-500", text: "text-violet-600 dark:text-violet-400" },
     emerald: { bg: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
     amber: { bg: "bg-amber-500", text: "text-amber-600 dark:text-amber-400" },
+    sky: { bg: "bg-sky-500", text: "text-sky-600 dark:text-sky-400" },
+    rose: { bg: "bg-rose-500", text: "text-rose-600 dark:text-rose-400" },
   };
   const accent = accentClasses[classDef.accentColor] ?? accentClasses.indigo;
 

@@ -1,0 +1,75 @@
+# Lesson 5 — Exercises: The XOR Trick
+
+## How This Works
+
+In Python, XOR is the `^` operator. Your key is a single number from `0` to `255`. To XOR a letter you first turn it into a number with `ord(c)`, and to turn a number back into a letter you use `chr(n)`.
+
+The big idea to lean on: **XOR with the same key twice returns the original.** That's why `xor_encrypt` and `xor_decrypt` use the exact same XOR — just in opposite directions (letters→numbers, then numbers→letters).
+
+---
+
+## Exercise 1: XOR Two Numbers
+
+Write `xor_num(a, b)` that returns `a` XOR `b`. (This one's a warm-up — it's literally the `^` operator.)
+
+```python
+def xor_num(a, b):
+    # Return a XOR b
+    pass
+```
+
+**Examples:**
+- `xor_num(5, 3)` → `6`
+- `xor_num(255, 1)` → `254`
+- `xor_num(12, 12)` → `0` (any number XOR itself is 0 — that's the cancel trick!)
+
+**Hint:** `return a ^ b`.
+
+---
+
+## Exercise 2: Encrypt With XOR
+
+Write `xor_encrypt(message, key)` that turns each letter into its number with `ord`, XORs it with `key`, and returns the **list of numbers**.
+
+```python
+def xor_encrypt(message, key):
+    # Return [ord(c) ^ key for each character c in message]
+    pass
+```
+
+**Examples:**
+- `xor_encrypt("hi", 42)` → `[66, 67]`
+- `xor_encrypt("spy", 99)` → `[16, 19, 26]`
+
+**Hint:** `return [ord(c) ^ key for c in message]`.
+
+---
+
+## Exercise 3: Decrypt With XOR
+
+Write `xor_decrypt(numbers, key)` that takes the list of numbers, XORs each one with `key` again, turns each result back into a letter with `chr`, and joins them into the original string.
+
+```python
+def xor_decrypt(numbers, key):
+    # XOR each number with key, turn it into a letter with chr, join into a string.
+    pass
+```
+
+**Examples:**
+- `xor_decrypt([66, 67], 42)` → `"hi"`
+- `xor_decrypt([16, 19, 26], 99)` → `"spy"`
+
+**The round-trip:** `xor_decrypt(xor_encrypt(msg, key), key)` returns `msg` — because XOR-ing with the same key twice cancels out. Encrypt and decrypt are the *same operation*.
+
+**Hint:** `return "".join(chr(n ^ key) for n in numbers)`.
+
+---
+
+## Tips If You're Stuck
+
+1. **Got letters instead of a list from encrypt?** `xor_encrypt` returns **numbers**, not a string. Don't call `chr` there — that's the decrypt step's job.
+2. **Decrypt gives weird symbols?** Make sure you XOR with the **same** key you encrypted with. A different key won't undo it.
+3. **`TypeError` with ord/chr?** `ord` takes a one-character string and gives a number; `chr` takes a number and gives a one-character string. Don't mix them up.
+4. **Want proof?** Print `xor_decrypt(xor_encrypt("top secret", 200), 200)` — it should say `top secret`.
+
+XOR is the workhorse inside almost every real cipher. Next lesson we use it to build the *one truly unbreakable code.* Let's go!

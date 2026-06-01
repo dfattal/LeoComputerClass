@@ -1,0 +1,98 @@
+# Lesson 3 — The Substitution Cipher
+
+## Phase 2: Scramble & Crack
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See why the Caesar cipher is too weak, and what a **substitution cipher** fixes
+- Use a **scrambled alphabet** as your secret key (a full 26-letter mapping)
+- Understand why this cipher has a **mind-bendingly huge** number of keys (too many to brute-force)
+- **Encrypt** with a key, build the **reverse key**, and **decrypt** back again
+- Send a message that laughs at the "try all the keys" trick from last lesson
+
+---
+
+## Big Idea
+
+Last lesson you cracked a Caesar cipher by trying all 26 keys. The problem with Caesar is that every letter shifts by the *same* amount — so once you know where one letter goes, you know where they all go.
+
+The fix: let **every letter map to whatever you want.** Scramble the whole alphabet into a secret order, and use that as your key:
+
+```text
+plain:  a b c d e f g h i j k l m n o p q r s t u v w x y z
+key:    q w e r t y u i o p a s d f g h j k l z x c v b n m
+```
+
+Now `a` becomes `q`, `b` becomes `w`, `c` becomes `e`, and so on. There's no single "shift" — each letter has its own secret partner. This is a **substitution cipher**: every letter is *substituted* for another, following your scrambled key.
+
+To encrypt `hello`:
+- `h` → `i`, `e` → `t`, `l` → `s`, `l` → `s`, `o` → `g`  ⟶ `itssg`
+
+> **It's just a lookup table.** Your key is really a dictionary: "when you see `a`, write `q`." In code we can store that scramble as a 26-letter string, where the 1st letter is what `a` becomes, the 2nd is what `b` becomes, and so on. Position in the alphabet tells you which key letter to use.
+
+---
+
+## Why This Cipher Laughs at Brute Force
+
+How many secret keys are possible now? You're arranging all 26 letters into a new order. The first letter can be any of 26, the next any of the remaining 25, then 24… That's
+
+$$
+26! = 26 \times 25 \times 24 \times \cdots \times 1 \approx 4 \times 10^{26}
+$$
+
+That's **403,291,461,126,605,635,584,000,000** keys. If a computer tried a billion keys every second, going through them all would take **far longer than the age of the universe.** Brute force is dead. 🪦
+
+> **26! is enormous.** The Caesar cipher had 26 keys — a bike lock. The substitution cipher has more keys than there are grains of sand on Earth, by a huge margin. You cannot try them all. (Next lesson, though, you'll learn the *clever* way to crack it anyway — counting beats guessing.)
+
+---
+
+## Encrypting With a Key
+
+Encrypting is a lookup. For each letter in the message, find its position in the normal alphabet (`a`=0, `b`=1, …), and use that position to pick the key letter:
+
+```python
+key[ord(c) - 97]    # the cipher letter for plain letter c
+```
+
+As always: letters `a`–`z` get substituted; spaces and other characters pass through unchanged.
+
+---
+
+## The Reverse Key (for Decrypting)
+
+To decrypt, you need to go **backwards**: if `a` → `q`, then seeing a `q` means it was an `a`. So you need the **reverse key** — the decoding alphabet.
+
+Building it is a neat puzzle. Walk through your key. The key says position `0` (`a`) maps to `q`. So in the reverse key, the slot for `q` should hold `a`. Do that for all 26 letters and you've inverted the mapping:
+
+```text
+key:         q w e r t y u i o p a s d f g h j k l z x c v b n m
+reverse key: k x v m c n o p h q r s z y i j a d l e g w b u f t
+```
+
+Once you have the reverse key, **decrypting is just encrypting with the reverse key.** Same lookup, different table. And of course: encrypt then decrypt must return the original — the round-trip is your proof.
+
+---
+
+## What You'll Build
+
+1. `substitute(message, key)` — encrypt: replace each letter using the 26-letter `key`.
+2. `invert_key(key)` — build and return the reverse key (the decoding alphabet).
+3. `unsubstitute(message, key)` — decrypt: substitute using the reverse key.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Substitution cipher | every letter maps to its own secret letter | a scrambled 26-letter `key` |
+| Key as a string | position in the alphabet picks the key letter | `key[ord(c) - 97]` |
+| Key space | 26! ≈ 4×10²⁶ keys — too many to brute-force | — |
+| Reverse key | if `a`→`q`, then `q` decodes to `a` | fill `reverse[key[i]] = alphabet[i]` |
+| Decrypt | substitute using the reverse key | `substitute(msg, invert_key(key))` |
+
+Head to the exercises and build a code brute force can't touch!

@@ -1,0 +1,6 @@
+[
+  {"criterion": "Letter counting is correct", "weight": 30, "description": "letter_counts returns a list of 26 counts, adding 1 to slot ord(c)-97 for each letter a-z and ignoring other characters"},
+  {"criterion": "Finds the most common letter", "weight": 25, "description": "most_common_letter returns the letter with the highest count, breaking ties toward the earlier letter (strict > scan)"},
+  {"criterion": "Frequency crack maps by rank", "weight": 35, "description": "crack_by_frequency ranks cipher letters by frequency and maps them onto ENGLISH_FREQ_ORDER, translating the whole message"},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses letter_counts, builds a mapping for all 26 letters, keeps spaces unchanged, a return on every function"}
+]

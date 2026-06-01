@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [3, 27, 55],
+  "title": "Lock scrambles every number — the private key brings each one home",
+  "xLabel": "original number m",
+  "yLabel": "result",
+  "setup": "# --- plot helper (hidden) — RSA lock and unlock for every message ---\ndef __plot(e, d, n):\n    locked = [[m, pow(m, e, n)] for m in range(n)]\n    unlocked = [[m, pow(pow(m, e, n), d, n)] for m in range(n)]\n    return [\n        {\"name\": \"unlocked with private key (back home)\", \"points\": unlocked, \"highlight\": True},\n        {\"name\": \"after locking with public key\", \"points\": locked, \"highlight\": False},\n    ]\n"
+}

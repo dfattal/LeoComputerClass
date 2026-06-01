@@ -1,0 +1,94 @@
+# Lesson 3 — Exercises: The Substitution Cipher
+
+## How This Works
+
+Your key is a **26-letter scrambled alphabet**. Position tells you everything: `key[0]` is what `a` becomes, `key[1]` is what `b` becomes, … `key[25]` is what `z` becomes.
+
+The starter gives you `ALPHA = "abcdefghijklmnopqrstuvwxyz"` (the normal alphabet) and a sample scrambled `KEY` to test with. The same rules as always:
+
+- Substitute letters `a`–`z`; leave spaces and other characters unchanged.
+- The cipher letter for a character `c` is `key[ord(c) - 97]`.
+
+---
+
+## Exercise 1: Encrypt by Substitution
+
+Write `substitute(message, key)` that replaces each letter of `message` with its partner from `key`.
+
+```python
+def substitute(message, key):
+    # For each character c: if it's a-z, use key[ord(c) - 97]; else keep c.
+    pass
+```
+
+**Examples** (using `KEY = "qwertyuiopasdfghjklzxcvbnm"`):
+- `substitute("hello", KEY)` → `"itssg"`
+- `substitute("meet me at noon", KEY)` → `"dttz dt qz fggf"` (spaces stay!)
+
+**Hint:** Build the result character by character:
+```python
+out = ""
+for c in message:
+    if "a" <= c <= "z":
+        out += key[ord(c) - 97]
+    else:
+        out += c
+return out
+```
+
+---
+
+## Exercise 2: Build the Reverse Key
+
+Write `invert_key(key)` that returns the **decoding alphabet** — the key that undoes `key`. If `key` turns `a` into `q`, then the reverse key must turn `q` back into `a`.
+
+```python
+def invert_key(key):
+    # Make a list of 26 slots. For each position i, key[i] is a cipher letter;
+    # in the reverse key, that cipher letter's slot should hold ALPHA[i].
+    pass
+```
+
+**Examples:**
+- `invert_key("qwertyuiopasdfghjklzxcvbnm")` → `"kxvmcnophqrszyijadlegwbuft"`
+- `invert_key("bcdefghijklmnopqrstuvwxyza")` → `"zabcdefghijklmnopqrstuvwxy"` (the reverse of a shift-by-1)
+
+**Hint:**
+```python
+reverse = [""] * 26
+for i in range(26):
+    cipher_letter = key[i]
+    reverse[ord(cipher_letter) - 97] = ALPHA[i]
+return "".join(reverse)
+```
+
+---
+
+## Exercise 3: Decrypt
+
+Write `unsubstitute(message, key)` that decrypts a message that was encrypted with `key`. The trick: decrypting is just **substituting with the reverse key.**
+
+```python
+def unsubstitute(message, key):
+    # Substitute the message using invert_key(key).
+    pass
+```
+
+**Examples:**
+- `unsubstitute("itssg", KEY)` → `"hello"`
+- `unsubstitute("dttz dt qz fggf", KEY)` → `"meet me at noon"`
+
+**The round-trip proof:** `unsubstitute(substitute(msg, key), key)` should give back `msg` exactly. If it does, your cipher and its reverse are a perfect match.
+
+**Hint:** One line — `return substitute(message, invert_key(key))`.
+
+---
+
+## Tips If You're Stuck
+
+1. **Reverse key looks scrambled wrong?** Remember you're placing `ALPHA[i]` into the slot named by `key[i]` — not the other way around. The cipher letter is the *address*, the plain letter is what goes there.
+2. **Decrypt gives gibberish?** Make sure `unsubstitute` uses `invert_key(key)`, not `key` itself.
+3. **Spaces vanished or changed?** Only substitute when `"a" <= c <= "z"`; otherwise keep the character.
+4. **Want proof it works?** Print `unsubstitute(substitute("secret plans", KEY), KEY)` — it should say `secret plans`.
+
+Build all three and you've got a code no one can brute-force. Next lesson: how to crack it anyway — by *counting letters.* Let's go!

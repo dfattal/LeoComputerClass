@@ -1,0 +1,101 @@
+# Lesson 4 — Frequency Analysis
+
+## Phase 2: Scramble & Crack
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand why even a substitution cipher (26! keys!) can still be **cracked**
+- Learn the codebreaker's superpower: **letter frequencies** — `e` is the most common letter in English
+- **Count** the letters in a message and find the **most common** one
+- Use frequencies to make a smart **first guess** at a scrambled message
+- Crack a code that brute force couldn't even scratch
+
+---
+
+## Big Idea
+
+Last lesson you built a substitution cipher with about $4\times10^{26}$ possible keys — way too many to try one by one. So is it unbreakable? **No.** And the reason is beautiful.
+
+When you substitute letters, you scramble *which symbol* stands for each letter — but you can't hide **how often** each letter shows up. If `e` is the most common letter in your message (and in English, it almost always is), then whatever secret symbol you used for `e` will *also* be the most common symbol in the ciphertext. The letter wears a disguise, but it can't change how *often* it appears.
+
+This is **frequency analysis**, and it's over a thousand years old — invented by an Arab scholar named **al-Kindi** around the year 850. It's the crack that broke "unbreakable" substitution ciphers for centuries.
+
+> **Letters have fingerprints.** In normal English, the letters line up in a very predictable order of popularity: `e` is #1, then `t`, `a`, `o`, `i`, `n`, … and way down at the bottom, `z`, `q`, `j`. A long-enough message keeps this fingerprint no matter how you scramble the symbols. Count the symbols, and the fingerprint gives the letters away.
+
+---
+
+## Step 1: Count the Letters
+
+To use frequencies, first you have to **count**. Go through the text and tally how many times each letter `a`–`z` appears. We'll store the tallies in a **list of 26 numbers** — slot 0 is the count of `a`, slot 1 the count of `b`, … slot 25 the count of `z`. (Spaces and other characters don't count.)
+
+```text
+letter_counts("hello")  →  [0,0,0,0,1,0,0,1,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0]
+                                     e=1     h=1       l=2   o=1
+```
+
+A list of 26 numbers is the perfect home for counts: the *position* is the letter, and the *number* is how often it showed up.
+
+---
+
+## Step 2: Find the Most Common Letter
+
+The single most useful clue is the **most common letter**. In a scrambled English message, that symbol is almost certainly a disguised `e`.
+
+To find it, look through your 26 counts and remember the position with the biggest number. (If there's a tie, we'll keep the earliest one alphabetically — a simple, predictable rule.)
+
+```text
+most_common_letter("the eel feels keen")  →  "e"
+```
+
+That's your foothold: "the most common symbol is probably `e`."
+
+---
+
+## Step 3: Crack by Frequency
+
+Here's the full attack. We have the order of letters by popularity in English:
+
+```text
+e t a o i n s h r d l c u m w f g y p b v k j x q z
+```
+
+(most common on the left, rarest on the right — this is given to you as `ENGLISH_FREQ_ORDER`).
+
+The plan:
+
+1. **Count** the letters in the secret message.
+2. **Rank** the cipher's symbols from most common to least common.
+3. **Match them up:** guess that the most common cipher symbol is `e`, the next is `t`, the next is `a`, and so on down both lists.
+4. **Translate** the whole message using those guesses.
+
+The result won't be *perfect* — the rare letters get jumbled, because in a short message `q` and `j` and `z` don't appear in textbook order. But the common letters snap into place, and suddenly you can *read most of it* and fix the rest by eye.
+
+> **An honest crack.** Frequency analysis gives you a head start, not a finished answer. You'll see the spaces, the shape of the words, and the most common letters land correctly. A real codebreaker then stares at the half-readable text — "`toe`" is surely "`the`" — and swaps the last few letters by hand. Counting did the heavy lifting; your brain finishes the job.
+
+---
+
+## What You'll Build
+
+You're given `ENGLISH_FREQ_ORDER` (letters from most to least common in English). You'll write:
+
+1. `letter_counts(text)` — a list of 26 counts, one per letter `a`–`z`.
+2. `most_common_letter(text)` — the single most frequent letter (ties go to the earlier letter).
+3. `crack_by_frequency(ciphertext)` — match cipher symbols to English letters by frequency, and return the decrypted guess.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Frequency analysis | letters keep their popularity even when disguised | count symbols |
+| Letter counts | how often each `a`–`z` appears | list of 26 numbers |
+| Most common letter | the biggest count — probably `e` | scan for the max position |
+| English order | `e t a o i n s h r d l c …` | `ENGLISH_FREQ_ORDER` |
+| Cracking | match cipher symbols to English letters by rank | zip the two orders together |
+
+Head to the exercises and crack the "unbreakable" cipher!

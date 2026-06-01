@@ -1,0 +1,84 @@
+# Lesson 7 — Key Exchange by Color-Mixing
+
+## Phase 4: Sharing Keys
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Spot the **key-sharing problem**: great codes need a shared key, but how do you share it safely?
+- Understand **modular arithmetic** as **clock math** — numbers that wrap around
+- Meet **Diffie-Hellman**: agreeing on a secret key *out loud*, where everyone can listen
+- Use the **mix** operation (modular powers) that's easy to do but nearly impossible to undo
+- Watch two people end up with the **same secret** without ever sending it
+
+---
+
+## Big Idea
+
+You now know unbreakable codes — but every one of them needs you and your friend to **already share a secret key.** That's fine if you can whisper in person. But what if your only way to talk is shouting across a crowded room where your sister (and everyone else) can hear *every word*? How do you agree on a secret key when the bad guys hear everything you say?
+
+It sounds impossible. In 1976, **Whitfield Diffie and Martin Hellman** found a way. The trick is an operation that's **easy to do but practically impossible to undo** — a one-way street.
+
+> **Mixing paint.** Imagine everyone starts with the same tub of yellow paint (that part's public — no secret). You secretly stir in a few drops of *your* color and get some muddy mix. Your friend secretly stirs in *their* color and gets a different muddy mix. You **swap mixes out loud** (anyone can see them). Now you stir *your* secret color into your friend's mix, and your friend stirs *their* secret color into your mix. Amazingly, you both end up with the **exact same** final color! An eavesdropper saw the starting yellow and both muddy mixes — but **un-mixing paint to find the secret drops is hopeless.**
+
+---
+
+## Clock Math (Modular Arithmetic)
+
+The "paint" in code is a kind of math that wraps around like a clock. On a 12-hour clock, 5 hours after 9 o'clock isn't 14 — it's **2**, because the clock wraps at 12. That wrapping is the **modulo** (`%`) you already know: `14 % 12 = 2`.
+
+Diffie-Hellman uses a special clock with a **prime number** of hours, `p`. Everything is done "mod `p`" — do the math, then take the remainder. The magic "mix" is raising a number to a power and wrapping it on this clock:
+
+$$
+\text{mix} = g^{\text{secret}} \bmod p
+$$
+
+Going **forward** (pick a secret, compute the mix) is easy. Going **backward** (see the mix, figure out the secret) means trying to undo a power on a wrapping clock — and for big primes, nobody knows how to do that quickly. *That's* the locked door.
+
+> **Python does it in one step.** Computing `g` to a big power and then wrapping mod `p` is exactly what `pow(g, secret, p)` does — and it's fast and exact. You'll use it as your "mix" machine.
+
+---
+
+## How Two People Agree on a Secret
+
+Everyone publicly agrees on two numbers: a base `g` and a prime `p`. (Public — shout them out, it's fine.) Then:
+
+1. **Alice** picks a secret number `a`. She computes her mix `A = g^a mod p` and **sends `A`** (out loud).
+2. **Bob** picks a secret number `b`. He computes his mix `B = g^b mod p` and **sends `B`** (out loud).
+3. **Alice** takes Bob's mix and stirs in *her* secret: `B^a mod p`.
+4. **Bob** takes Alice's mix and stirs in *his* secret: `A^b mod p`.
+
+Both get the **same number**, because
+
+$$
+B^a = (g^b)^a = g^{ab} = (g^a)^b = A^b \pmod p
+$$
+
+That shared number is their secret key — and the eavesdropper, who only heard `g`, `p`, `A`, and `B`, can't compute it without un-mixing the paint. Let's try it with tiny numbers: `g = 5`, `p = 23`, Alice's secret `a = 6`, Bob's secret `b = 15`. Alice sends `A = 8`, Bob sends `B = 19`, and **both** compute the shared secret… `2`. 🎉
+
+---
+
+## What You'll Build
+
+1. `power_mod(base, exp, mod)` — the "mix" machine: `base` to the power `exp`, wrapped mod `mod`.
+2. `public_key(g, secret, p)` — the mix you send out loud: `g^secret mod p`.
+3. `shared_key(received, secret, p)` — stir your secret into the mix you received: `received^secret mod p`.
+
+If you run `public_key(5, 6, 23)` for Alice and `public_key(5, 15, 23)` for Bob, then feed each other's results into `shared_key`, you'll both land on the same secret.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Key-sharing problem | how to agree on a key when others are listening | — |
+| Clock math (mod) | numbers wrap around at `p` | `%` / `pow(.., .., p)` |
+| One-way mix | easy forward, hopeless to reverse | `g^secret mod p` |
+| Public key | the mix you send out loud | `power_mod(g, secret, p)` |
+| Shared secret | both sides compute the same number | `power_mod(received, secret, p)` |
+
+Head to the exercises and share a secret in plain sight!

@@ -1,0 +1,22 @@
+[
+  {
+    "entry": "otp_encrypt",
+    "cases": [
+      {"name": "otp_encrypt(\"hi\", [10, 200])", "args": ["hi", [10, 200]], "expected": [98, 161]},
+      {"name": "otp_encrypt(\"spy\", [1, 2, 3])", "args": ["spy", [1, 2, 3]], "expected": [114, 114, 122]}
+    ]
+  },
+  {
+    "entry": "otp_decrypt",
+    "cases": [
+      {"name": "otp_decrypt([98, 161], [10, 200]) ~ round-trip to hi", "args": [[98, 161], [10, 200]], "expected": "hi"},
+      {"name": "otp_decrypt([114, 114, 122], [1, 2, 3]) ~ round-trip to spy", "args": [[114, 114, 122], [1, 2, 3]], "expected": "spy"}
+    ]
+  },
+  {
+    "entry": "two_time_leak",
+    "cases": [
+      {"name": "two_time_leak of \"hello\" and \"world\" (same key) ~ key cancels", "args": [[98, 173, 77, 107, 12], [125, 167, 83, 107, 7]], "expected": [31, 10, 30, 0, 11]}
+    ]
+  }
+]

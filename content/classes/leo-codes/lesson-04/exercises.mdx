@@ -1,0 +1,106 @@
+# Lesson 4 — Exercises: Frequency Analysis
+
+## How This Works
+
+You'll crack a substitution cipher by **counting letters**. The starter gives you:
+
+- `ALPHA = "abcdefghijklmnopqrstuvwxyz"` — the normal alphabet.
+- `ENGLISH_FREQ_ORDER = "etaoinshrdlcumwfgypbvkjxqz"` — English letters from **most** common to **least** common.
+
+The rule stays the same: only letters `a`–`z` count; ignore spaces and other characters.
+
+---
+
+## Exercise 1: Count the Letters
+
+Write `letter_counts(text)` that returns a **list of 26 numbers** — how many times each letter `a`–`z` appears in `text`.
+
+```python
+def letter_counts(text):
+    # Start with 26 zeros. For each letter a-z in text, add 1 to its slot.
+    # Slot for a letter c is ord(c) - 97.
+    pass
+```
+
+**Examples:**
+- `letter_counts("hello")` → `[0,0,0,0,1,0,0,1,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0]`
+  (e=1, h=1, l=2, o=1)
+- `letter_counts("the eel feels keen")` → has `7` in the `e` slot (slot 4)
+
+**Hint:**
+```python
+counts = [0] * 26
+for c in text:
+    if "a" <= c <= "z":
+        counts[ord(c) - 97] += 1
+return counts
+```
+
+---
+
+## Exercise 2: The Most Common Letter
+
+Write `most_common_letter(text)` that returns the single letter that appears most often. If two letters tie, return the one that comes **first in the alphabet**.
+
+```python
+def most_common_letter(text):
+    # Get the counts, then find the position with the biggest count.
+    # Return ALPHA[that position].
+    pass
+```
+
+**Examples:**
+- `most_common_letter("hello")` → `"l"`
+- `most_common_letter("the eel feels keen")` → `"e"`
+- `most_common_letter("aabb")` → `"a"` (tie between a and b → earlier letter wins)
+
+**Hint:** Start with `best = 0`. Loop `i` from 0 to 25, and only switch to a new `i` when its count is **strictly greater** (`>`) than the count at `best`. Using `>` (not `>=`) keeps the earlier letter on a tie.
+
+---
+
+## Exercise 3: Crack It by Frequency
+
+Write `crack_by_frequency(ciphertext)` that returns a decryption **guess** by matching cipher symbols to English letters in order of how common they are.
+
+The steps:
+1. Count the letters in `ciphertext`.
+2. Rank the cipher's letters from most common to least common (break ties by alphabet order).
+3. Guess: the most common cipher letter is `e` (the first of `ENGLISH_FREQ_ORDER`), the next is `t`, and so on.
+4. Translate the whole message with those guesses (spaces stay spaces).
+
+```python
+def crack_by_frequency(ciphertext):
+    # 1. counts = letter_counts(ciphertext)
+    # 2. order = sorted(range(26), key=lambda i: (-counts[i], i))  # most common first
+    # 3. build a mapping: ALPHA[order[k]]  ->  ENGLISH_FREQ_ORDER[k]
+    # 4. translate ciphertext through the mapping
+    pass
+```
+
+**Example:**
+- `crack_by_frequency("zit ltektz dtllqut iortl of hsqof louiz wxz zit stzztkl ziqz qhhtqk zit dglz gyztf qkt zit tqln gftl zg uxtll")`
+  → `"toe aewhet ceaaile orgea rn duirn arlot ymt toe uetteha toit iddeih toe csat spten ihe toe eiaf snea ts lmeaa"`
+
+Not perfect — but look closely! Every `zit` became `toe` (that's `the` with two letters to fix), and the most common letter landed as `e`. A codebreaker would swap a few letters by eye and read it all. **That's frequency analysis: it cracks the door open.**
+
+**Hint for the mapping + translation:**
+```python
+mapping = {}
+for k in range(26):
+    mapping[ALPHA[order[k]]] = ENGLISH_FREQ_ORDER[k]
+out = ""
+for c in ciphertext:
+    out += mapping[c] if "a" <= c <= "z" else c
+return out
+```
+
+---
+
+## Tips If You're Stuck
+
+1. **Counts in the wrong slots?** The slot for a letter is `ord(c) - 97` (so `a`→0, `z`→25).
+2. **Ties picking the wrong letter?** Use strict `>` when scanning for the max, and `(-counts[i], i)` as the sort key — the `i` breaks ties alphabetically.
+3. **`KeyError` while translating?** Build the mapping for **all 26** letters (loop `k` over `range(26)`), so every possible cipher letter has a guess.
+4. **It's not fully readable** — that's expected! Frequency analysis gets the common letters right; the rare ones need a human to finish.
+
+Crack it and you've beaten a cipher with more keys than grains of sand. Next: secrets hidden in *bits*. Let's go!

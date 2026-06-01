@@ -64,6 +64,18 @@ export const classes: ClassDef[] = [
     language: "python",
   },
   {
+    slug: "leo-codes",
+    name: "Leo's Secret Codes",
+    tagline: "Send Secret Messages — Then Crack Them",
+    description:
+      "Hide a message your sister can't read, then learn to break the codes she sends back. Write Python that scrambles letters, flips bits, and even builds a public lock only your private key can open.",
+    accentColor: "rose",
+    heroImage: "/hero-codes.webp",
+    studentName: "Leo",
+    contentDir: "leo-codes",
+    language: "python",
+  },
+  {
     slug: "leila",
     name: "Leila's Bio Lab",
     tagline: "Code Your Way Through Biology",

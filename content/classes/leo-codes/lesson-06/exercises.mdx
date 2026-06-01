@@ -1,0 +1,80 @@
+# Lesson 6 — Exercises: The One-Time Pad
+
+## How This Works
+
+The key is now a **list of numbers**, the same length as the message — one key number per letter. You encrypt and decrypt by XOR-ing each letter with its **matching** key number, walking both lists together. Python's `zip(a, b)` pairs them up for you:
+
+```python
+for c, k in zip(message, key_nums):
+    ...   # c is a character, k is its key number
+```
+
+As before: `ord(c)` turns a letter into a number, `chr(n)` turns a number back into a letter, and `^` is XOR.
+
+---
+
+## Exercise 1: Encrypt With the Pad
+
+Write `otp_encrypt(message, key_nums)` that XORs each letter's number with the matching key number, and returns the **list of cipher numbers**.
+
+```python
+def otp_encrypt(message, key_nums):
+    # Pair each character with its key number; return [ord(c) ^ k, ...]
+    pass
+```
+
+**Examples:**
+- `otp_encrypt("hi", [10, 200])` → `[98, 161]`
+- `otp_encrypt("spy", [1, 2, 3])` → `[114, 114, 122]`
+
+**Hint:** `return [ord(c) ^ k for c, k in zip(message, key_nums)]`.
+
+---
+
+## Exercise 2: Decrypt With the Pad
+
+Write `otp_decrypt(numbers, key_nums)` that XORs each cipher number with its matching key number and turns the results back into letters.
+
+```python
+def otp_decrypt(numbers, key_nums):
+    # Pair each cipher number with its key number; chr(n ^ k); join into a string.
+    pass
+```
+
+**Examples:**
+- `otp_decrypt([98, 161], [10, 200])` → `"hi"`
+- `otp_decrypt([114, 114, 122], [1, 2, 3])` → `"spy"`
+
+**The round-trip:** `otp_decrypt(otp_encrypt(msg, key), key)` returns `msg` — same key, XOR undoes itself.
+
+**Hint:** `return "".join(chr(n ^ k) for n, k in zip(numbers, key_nums))`.
+
+---
+
+## Exercise 3: The Two-Time Leak (the attack!)
+
+Write `two_time_leak(cipher1, cipher2)` that XORs two ciphertexts together, position by position, and returns the resulting list of numbers. This is what an attacker does when you **reuse a key** — the key cancels out and the plaintexts leak.
+
+```python
+def two_time_leak(cipher1, cipher2):
+    # Return [a ^ b for matching numbers a, b in the two ciphertexts]
+    pass
+```
+
+**Example:**
+- `two_time_leak([98, 173, 77, 107, 12], [125, 167, 83, 107, 7])` → `[31, 10, 30, 0, 11]`
+
+Those two ciphertexts came from encrypting `"hello"` and `"world"` with the **same** key. Notice the `0` in the middle — that's where both words have the letter `l` in the same spot, so `l XOR l = 0`. The key is *gone*, and the structure of the secrets is showing through. **That's why a one-time pad key is used exactly once.**
+
+**Hint:** `return [a ^ b for a, b in zip(cipher1, cipher2)]`.
+
+---
+
+## Tips If You're Stuck
+
+1. **Lists different lengths?** `zip` stops at the shorter one — for the pad, the key should be as long as the message.
+2. **Decrypt gives gibberish?** Use the **same** key list, in the **same order**, that you encrypted with.
+3. **Mixing up encrypt vs the leak?** `otp_encrypt` pairs a *message* with a *key*. `two_time_leak` pairs two *ciphertexts* with each other — no key needed, which is exactly the danger.
+4. **Want proof?** Print `otp_decrypt(otp_encrypt("fire now", [7, 7, 7, 7, 7, 7, 7, 7]), [7, 7, 7, 7, 7, 7, 7, 7])`.
+
+You've built the only unbreakable code there is. Next: how do two spies agree on a secret key *out loud*, where everyone can hear? Let's go!

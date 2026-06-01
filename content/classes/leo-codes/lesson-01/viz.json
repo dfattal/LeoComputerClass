@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [3],
+  "title": "The cipher wheel: every letter slides over by the same key",
+  "xLabel": "original letter (a=0, b=1, … z=25)",
+  "yLabel": "where it lands after the shift",
+  "setup": "# --- plot helper (hidden) — the Caesar shift as a mapping ---\ndef __shift_map(n):\n    pts = []\n    for i in range(26):\n        pts.append([i, (i + n) % 26])\n    return pts\n\ndef __identity():\n    return [[i, i] for i in range(26)]\n\ndef __plot(n):\n    return [\n        {\"name\": \"shifted alphabet (your key)\", \"points\": __shift_map(n), \"highlight\": True},\n        {\"name\": \"no shift (key = 0)\", \"points\": __identity(), \"highlight\": False},\n    ]\n"
+}

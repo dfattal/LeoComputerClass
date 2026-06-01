@@ -1,0 +1,114 @@
+# Lesson 1 — The Caesar Cipher
+
+## Phase 1: Hide a Message
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Know what a **cipher** is — a recipe for turning a readable message into a secret one
+- Understand the **Caesar cipher**: slide every letter the same number of steps down the alphabet
+- Make the alphabet **wrap around** (after `z` comes `a` again) using the `%` operator
+- Write code that **encrypts** a message and **decrypts** it back — and prove it works with a round-trip
+- Send your first message your sister can't read
+
+---
+
+## Big Idea
+
+You want to pass a note that says **`attack at dawn`** — but your sister might grab it first. So you scramble it into something that looks like nonsense: **`fyyfhp fy ifbs`**. Only someone who knows the secret can turn it back.
+
+That scrambling recipe is called a **cipher**. The oldest one we know is named after a Roman general who used it 2,000 years ago to hide army orders: the **Caesar cipher**.
+
+The idea is wonderfully simple. **Pick a number — that's your secret key. Then slide every letter that many steps forward in the alphabet.**
+
+With a key of **3**:
+
+- `a` slides to `d`
+- `b` slides to `e`
+- `c` slides to `f`
+- … and so on.
+
+So `cat` becomes `fdw`. The key (3) is the only secret. If your sister doesn't know it, the message is gibberish.
+
+> **A turning ring.** Picture two alphabet rings, one inside the other. Turn the inner ring 3 clicks, and now `a` lines up with `d`. That's the whole machine — a *cipher wheel*. Spies really carried these as little brass discs.
+
+---
+
+## Wrapping Around the End
+
+Here's the one tricky part. What happens to `z` with a key of 3? There's no letter three steps past `z`… unless the alphabet is a **circle**. After `z`, we loop back to the start:
+
+- `x` → `y` → `z` → **`a`** → `b`
+
+So `z` shifted by 3 becomes `c`. The alphabet **wraps around**, like the numbers on a clock going from 12 back to 1.
+
+In code, "wrap around a circle" is exactly what the **modulo** operator `%` does. There are 26 letters, so we wrap with `% 26`. Here's the trick, step by step, for one letter:
+
+1. Turn the letter into a number `0–25`. The computer stores `a` as `97`, `b` as `98`, and so on, so we subtract `97`: `ord(letter) - 97`.
+2. Add the shift `n`.
+3. Wrap it back into `0–25` with `% 26`.
+4. Turn the number back into a letter by adding `97` again and calling `chr`.
+
+$$
+\text{new position} = (\,\text{old position} + n\,) \bmod 26
+$$
+
+In Python, all together:
+
+```python
+chr((ord(letter) - 97 + n) % 26 + 97)
+```
+
+That one line is the heart of this whole lesson. The `% 26` is what makes `z` loop back to `a` instead of running off the end.
+
+> **Why `ord` and `chr`?** Computers don't really store letters — they store numbers. `ord('a')` gives you the number `97`, and `chr(97)` gives you back `'a'`. We do our math on the numbers, then turn them back into letters.
+
+---
+
+## Encrypting a Whole Message
+
+Once you can shift **one** letter, shifting a whole message is easy: go through it letter by letter, shift each one, and glue the results back together.
+
+But messages have **spaces** too — and `attack at dawn` should stay readable as three words. So the rule is: **shift the letters `a–z`, and leave everything else (spaces, punctuation) exactly as it is.** That's why `attack at dawn` keeps its spaces and becomes `fyyfhp fy ifbs`.
+
+---
+
+## Undoing It (Decrypting)
+
+To **decrypt**, you just shift the other way — back up the alphabet by the same key. If encrypting with key 3 slides letters *forward* 3, then decrypting slides them *backward* 3. In code, shifting backward is just shifting by `-n`, and the same `% 26` handles the wrap.
+
+Here's the magic test, {{FIRST_NAME}}: **if you encrypt a message and then decrypt it with the same key, you must get the exact message back.** That perfect round-trip is how you *know* your cipher is built right.
+
+```text
+"attack at dawn"  --encrypt key 5-->  "fyyfhp fy ifbs"
+"fyyfhp fy ifbs"  --decrypt key 5-->  "attack at dawn"   ✅ back to the start!
+```
+
+---
+
+## What You'll Build
+
+Three functions — your first spy toolkit:
+
+1. `shift_letter(letter, n)` — slide a single letter `n` steps, wrapping around (and leave spaces alone).
+2. `caesar_encrypt(message, n)` — shift every letter in a message to hide it.
+3. `caesar_decrypt(message, n)` — shift back the other way to reveal it.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Cipher | a recipe to scramble a message | — |
+| Key | the secret number you shift by | `n` |
+| Letter → number | the computer stores `a` as 97 | `ord(c) - 97` |
+| Wrap around | after `z` comes `a` again | `% 26` |
+| Shift one letter | slide it `n` steps on the ring | `chr((ord(c) - 97 + n) % 26 + 97)` |
+| Decrypt | shift the other way | shift by `-n` |
+| Round-trip | encrypt then decrypt = original | how you KNOW it works |
+
+Head to the exercises and build your first secret code!

@@ -1,0 +1,106 @@
+# Lesson 8 — Exercises: The Public Lock (RSA)
+
+## How This Works
+
+You're building a tiny **RSA** with small numbers so every step is visible. The starter gives you everything set up:
+
+- Primes `p = 5`, `q = 11`
+- `n = p * q = 55` (the public clock size)
+- `phi = (p - 1) * (q - 1) = 40` (secret helper)
+- A sample public exponent `e = 3`
+- A `gcd(a, b)` helper (greatest common divisor)
+
+Messages are **numbers smaller than `n`**. Lock with the public exponent `e`, unlock with the private key `d`. Use the fast three-argument `pow(base, exp, mod)` for the clock math.
+
+---
+
+## Exercise 1: Find the Private Key
+
+Write `private_key(e, phi)` that finds the secret number `d` — the smallest `d ≥ 1` where `(e * d) % phi == 1`. This `d` is the only thing that can undo `e`.
+
+```python
+def private_key(e, phi):
+    # Try d = 1, 2, 3, ... until (e * d) % phi == 1. Return that d.
+    pass
+```
+
+**Examples:**
+- `private_key(3, 40)` → `27` (because 3 × 27 = 81, and 81 mod 40 = 1)
+- `private_key(7, 40)` → `23` (because 7 × 23 = 161, and 161 mod 40 = 1)
+
+**Hint:**
+```python
+d = 1
+while (e * d) % phi != 1:
+    d += 1
+return d
+```
+
+---
+
+## Exercise 2: Lock With the Public Key
+
+Write `encrypt(m, e, n)` that locks the number `m` using the public key: `m` to the power `e`, on the `n`-clock.
+
+```python
+def encrypt(m, e, n):
+    # Return m^e mod n
+    pass
+```
+
+**Examples:**
+- `encrypt(7, 3, 55)` → `13` (7³ = 343, and 343 mod 55 = 13)
+- `encrypt(2, 3, 55)` → `8` (2³ = 8)
+
+**Hint:** `return pow(m, e, n)`.
+
+---
+
+## Exercise 3: Unlock With the Private Key
+
+Write `decrypt(c, d, n)` that unlocks the locked number `c` using the private key: `c` to the power `d`, on the `n`-clock.
+
+```python
+def decrypt(c, d, n):
+    # Return c^d mod n
+    pass
+```
+
+**Examples:**
+- `decrypt(13, 27, 55)` → `7` (unlocks the `7` we locked above!)
+- `decrypt(8, 27, 55)` → `2`
+
+**The round-trip:** lock a number with `(e, n)`, then unlock with `(d, n)`, and you get the original number back — that's the whole point of a public lock and a private key.
+
+**Hint:** `return pow(c, d, n)`.
+
+---
+
+## Putting It Together — Your Public Lock
+
+Try the full system in the editor. The public key `(e, n)` goes to everyone; the private key `d` stays secret:
+
+```python
+e, n, phi = 3, 55, 40
+d = private_key(e, phi)        # your SECRET private key
+print("public key:", (e, n))   # hand this out freely
+print("private key:", d)       # never share this!
+
+# Your sister uses your PUBLIC key to lock the number 9 to you:
+locked = encrypt(9, e, n)
+print("she sends:", locked)
+
+# Only YOU can unlock it, with your private key:
+print("you read:", decrypt(locked, d, n))   # back to 9
+```
+
+---
+
+## Tips If You're Stuck
+
+1. **`private_key` runs forever?** Make sure your loop checks `(e * d) % phi == 1` (remainder of 1), and that you start `d` at `1` and add `1` each time.
+2. **Round-trip gives the wrong number?** Lock with `e`, unlock with `d` — don't swap them. And keep your message smaller than `n` (55).
+3. **Slow or giant numbers?** Use the three-argument `pow(base, exp, mod)`, not `(base ** exp) % mod`.
+4. **Want the full picture?** Print the public key `(e, n)` and the private key `d`, then lock and unlock a number to watch it return home.
+
+You did it — from a shifted alphabet to a public-key lock. That's the same idea that protects the entire internet. Congratulations, codebreaker! 🔐

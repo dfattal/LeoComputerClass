@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct shift with wraparound", "weight": 40, "description": "shift_letter slides a letter by n and wraps with % 26 so z+1 becomes a (using ord/chr and the -97 / +97 offset)"},
+  {"criterion": "Non-letters pass through", "weight": 20, "description": "Spaces and other characters are returned unchanged, so 'attack at dawn' keeps its spaces"},
+  {"criterion": "Encrypt and decrypt round-trip", "weight": 30, "description": "caesar_encrypt shifts every letter forward; caesar_decrypt shifts back by -n so decrypt(encrypt(msg, n), n) returns the original message"},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses shift_letter inside encrypt/decrypt, clear names, a return on every function"}
+]

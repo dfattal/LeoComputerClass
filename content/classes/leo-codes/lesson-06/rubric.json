@@ -1,0 +1,6 @@
+[
+  {"criterion": "Pads encrypt position by position", "weight": 35, "description": "otp_encrypt XORs each letter's number with the matching key number (zip), returning a list of numbers"},
+  {"criterion": "Decryption round-trips", "weight": 30, "description": "otp_decrypt XORs each cipher number with the matching key number and chr's it back, returning the original message"},
+  {"criterion": "Two-time leak is correct", "weight": 25, "description": "two_time_leak XORs two ciphertexts position by position, showing the key cancels when reused"},
+  {"criterion": "Clean code", "weight": 10, "description": "Uses zip to pair lists, understands the key must match the message length, a return on every function"}
+]

@@ -87,6 +87,36 @@ const accentMap: Record<string, AccentClasses> = {
       body: "text-amber-900 dark:text-amber-100",
     },
   },
+  sky: {
+    bg: "bg-sky-600",
+    bgHover: "hover:bg-sky-700",
+    text: "text-sky-600 dark:text-sky-400",
+    underline: "bg-sky-600 dark:bg-sky-400",
+    ring: "focus-visible:ring-sky-500",
+    handleHover: "group-hover:bg-sky-400 dark:group-hover:bg-sky-500",
+    sidebar: "bg-sky-600 font-medium text-white shadow-sm shadow-sky-600/25",
+    feedback: {
+      border: "border-sky-200 dark:border-sky-800",
+      bg: "bg-sky-50 dark:bg-sky-950/40",
+      title: "text-sky-800 dark:text-sky-200",
+      body: "text-sky-900 dark:text-sky-100",
+    },
+  },
+  rose: {
+    bg: "bg-rose-600",
+    bgHover: "hover:bg-rose-700",
+    text: "text-rose-600 dark:text-rose-400",
+    underline: "bg-rose-600 dark:bg-rose-400",
+    ring: "focus-visible:ring-rose-500",
+    handleHover: "group-hover:bg-rose-400 dark:group-hover:bg-rose-500",
+    sidebar: "bg-rose-600 font-medium text-white shadow-sm shadow-rose-600/25",
+    feedback: {
+      border: "border-rose-200 dark:border-rose-800",
+      bg: "bg-rose-50 dark:bg-rose-950/40",
+      title: "text-rose-800 dark:text-rose-200",
+      body: "text-rose-900 dark:text-rose-100",
+    },
+  },
 };
 
 const AccentContext = createContext<AccentClasses>(accentMap.indigo);

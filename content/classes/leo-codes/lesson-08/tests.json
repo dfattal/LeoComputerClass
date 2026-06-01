@@ -1,0 +1,23 @@
+[
+  {
+    "entry": "private_key",
+    "cases": [
+      {"name": "private_key(3, 40) ~ the secret d", "args": [3, 40], "expected": 27},
+      {"name": "private_key(7, 40)", "args": [7, 40], "expected": 23}
+    ]
+  },
+  {
+    "entry": "encrypt",
+    "cases": [
+      {"name": "encrypt(7, 3, 55) ~ lock with the public key", "args": [7, 3, 55], "expected": 13},
+      {"name": "encrypt(2, 3, 55)", "args": [2, 3, 55], "expected": 8}
+    ]
+  },
+  {
+    "entry": "decrypt",
+    "cases": [
+      {"name": "decrypt(13, 27, 55) ~ unlock with the private key = 7", "args": [13, 27, 55], "expected": 7},
+      {"name": "decrypt(8, 27, 55) ~ = 2", "args": [8, 27, 55], "expected": 2}
+    ]
+  }
+]

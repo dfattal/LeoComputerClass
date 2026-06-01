@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [5, 23],
+  "title": "The one-way mix: g^secret mod p bounces all over the clock",
+  "xLabel": "secret number (the exponent)",
+  "yLabel": "the mix you'd send: g^secret mod p",
+  "setup": "# --- plot helper (hidden) — modular powers bounce unpredictably ---\ndef __plot(g, p):\n    pts = [[x, pow(g, x, p)] for x in range(1, p)]\n    return [{\"name\": \"g^secret mod p\", \"points\": pts, \"highlight\": True}]\n"
+}

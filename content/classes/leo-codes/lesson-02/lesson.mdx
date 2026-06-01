@@ -1,0 +1,97 @@
+# Lesson 2 — Crack It: Brute Force
+
+## Phase 1: Hide a Message
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand why the Caesar cipher is **weak**: there are only 26 possible keys
+- Generate **all 26 decryptions** of a secret message at once
+- Write a simple **English detector** that scores how "real" a piece of text looks
+- Combine them into a **cracker** that finds the secret key with no key at all
+- Read a message your sister thought was safe
+
+---
+
+## Big Idea
+
+Last lesson you hid `attack at dawn` as `fyyfhp fy ifbs`. Feels safe, right? Here's the bad news for spies: the Caesar cipher has a **fatal weakness**. There are only **26 possible keys** (shift by 0, 1, 2, … all the way to 25). A computer can try *every single one* faster than you can blink.
+
+Trying every possible key until one works is called a **brute-force attack**. No cleverness, no secret — just try them all and look at the results.
+
+> **Why 26 is tiny.** Imagine a bike lock with only 26 combinations. You'd just spin through all of them in a few seconds. A good code needs *so many* keys that trying them all would take longer than the age of the universe. The Caesar cipher has 26. That's nothing to a computer.
+
+So how do we crack it? Three steps:
+
+1. **Decrypt the message with all 26 keys.** One of them is the real message; the other 25 are gibberish.
+2. **Score each result** by how much it looks like English.
+3. **Pick the winner** — the decryption that scored highest.
+
+---
+
+## Step 1: Try Every Key
+
+If you decrypt `khoor` with every shift from 0 to 25, you get a list of 26 candidates:
+
+```text
+shift 0:  khoor
+shift 1:  jgnnq
+shift 2:  ifmmp
+shift 3:  hello     ← that one's a real word!
+shift 4:  gdkkn
+...
+```
+
+Only **one** of these is readable. Your eye spots `hello` instantly. But we want the *computer* to spot it — because real messages are long and you don't want to read 26 versions yourself.
+
+---
+
+## Step 2: Does This Look Like English?
+
+How can code tell `hello world` from `uryyb jbeyq`? The trick: **real English is full of common little words** — `the`, `and`, `you`, `is`, `to`, `a`… If a piece of text contains a bunch of those, it's probably English. If it contains none, it's probably gibberish.
+
+So we'll write an **English score**: split the text into words, and count how many of them are on a list of super-common English words. Higher score = more English-like.
+
+```text
+english_score("the cat and the dog")  →  3   (the, and, the)
+english_score("xlmw mw e wigvix")      →  0   (none — it's still scrambled)
+```
+
+The gibberish decryptions score **0** or close to it. The real decryption lights up.
+
+> **It doesn't have to be perfect.** Our detector is dumb — it just counts common words. But that's *enough*: out of 26 tries, only the real message will be full of words like `the` and `and`. The right answer wins by a landslide.
+
+---
+
+## Step 3: Pick the Winner
+
+Now put it together. Go through all 26 shifts, decrypt with each, score each result, and **remember the shift with the best score**. That shift is the secret key — and decrypting with it reveals the message. You just cracked a code *without being told the key.*
+
+This is the whole game of codebreaking in miniature: **a weak code can be broken by trying everything and recognizing the answer.** It's exactly why the next lessons build *stronger* codes — ones with far too many keys to brute-force.
+
+---
+
+## What You'll Build
+
+You're given your Lesson 1 `caesar_decrypt` and `shift_letter` (already in the starter), plus a list `COMMON_WORDS`. You'll write:
+
+1. `all_shifts(message)` — return a list of all 26 decryptions.
+2. `english_score(text)` — count how many words in `text` are common English words.
+3. `crack_caesar(message)` — return the secret key (the shift that scores highest).
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Brute force | try every possible key | loop `n` over `range(26)` |
+| Key space | how many keys exist (Caesar: only 26) | tiny → weak |
+| All decryptions | every candidate plaintext | `[caesar_decrypt(msg, n) for n in range(26)]` |
+| English score | count common words present | `sum(1 for w in text.split() if w in COMMON)` |
+| Cracking | pick the shift with the best score | track the best as you loop |
+
+Head to the exercises and break your first code!

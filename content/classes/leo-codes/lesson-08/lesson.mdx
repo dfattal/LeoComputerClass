@@ -1,0 +1,120 @@
+# Lesson 8 — The Public Lock (Capstone)
+
+## Phase 4: Sharing Keys
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand **public-key cryptography**: a lock anyone can close, that only *you* can open
+- Build a tiny version of **RSA**, the code that protects the whole internet
+- See how a **public key** and a **private key** are born from two prime numbers
+- Compute the secret **private key** with a simple search, and lock/unlock messages with clock math
+- Tie together everything you've learned into one beautiful idea
+
+---
+
+## Big Idea
+
+Last lesson, Alice and Bob did a clever dance to agree on a shared key. But here's an even wilder idea, and it's the one that runs the modern world.
+
+What if you had **two** keys: a **public** one you hand out to *everybody* — print it on a t-shirt! — and a **private** one you tell *no one*? Anyone can use your public key to **lock** a message *to* you. But the public key **can't unlock** anything. Only your private key opens what the public key closed.
+
+> **A padlock you mail out.** Picture an open padlock. You make thousands of copies and mail one to everyone — that's your **public key**. Anyone can put a secret in a box and **snap your padlock shut** (locking is easy, and the padlock is public). But snapping it shut doesn't help them *open* it. Only **you** have the little key that opens that padlock — your **private key**, which never leaves your pocket. Your sister can lock a message to you using a padlock she got from you, and still not be able to read anyone else's.
+
+This is **RSA**, invented in 1977 by Rivest, Shamir, and Adleman. It's what keeps your passwords and messages safe online. We'll build a tiny version with small numbers so every step is visible.
+
+---
+
+## Where the Keys Come From
+
+RSA is built on **clock arithmetic** (mod, just like last lesson) and the fact that **multiplying two primes is easy, but un-multiplying a big number back into its primes is brutally hard.**
+
+Here's the tiny recipe (the starter sets these up for you):
+
+1. Pick two prime numbers. We'll use $p = 5$ and $q = 11$.
+2. Multiply them: $n = p \times q = 55$. This `n` is the size of our clock, and it's **public**.
+3. Compute a helper number $\phi = (p-1)(q-1) = 4 \times 10 = 40$. (This one is **secret** — it needs the primes.)
+4. Pick a public exponent $e$ that shares no factors with $\phi$. We'll use $e = 3$.
+
+Your **public key** is the pair $(e, n) = (3, 55)$ — give it away freely.
+
+Your **private key** is a number $d$ that "undoes" $e$ on the $\phi$-clock: a $d$ where $e \times d$ leaves a remainder of **1** when divided by $\phi$. With $e=3$ and $\phi=40$, the answer is $d = 27$ (because $3 \times 27 = 81 = 2\times40 + 1$). You find `d` by simply **trying** $d = 1, 2, 3, \dots$ until $(e \times d) \bmod \phi = 1$.
+
+---
+
+## Locking and Unlocking
+
+Messages are **numbers** (smaller than `n`). To **lock** a number `m` with the public key, raise it to the power `e` on the `n`-clock:
+
+$$
+c = m^{e} \bmod n
+$$
+
+To **unlock** the locked number `c` with the private key, raise it to the power `d` on the same clock:
+
+$$
+m = c^{d} \bmod n
+$$
+
+That's it. Lock with `e`, unlock with `d`. Let's lock the number `7` with our public key `(3, 55)`:
+
+$$
+c = 7^{3} \bmod 55 = 343 \bmod 55 = 13
+$$
+
+Now unlock `13` with the private key `d = 27`:
+
+$$
+m = 13^{27} \bmod 55 = 7 \quad ✅
+$$
+
+Back to `7`! The public key locked it; only the private key opened it. The reason it works is a deep fact of clock arithmetic — but you can *see* it work with your own code.
+
+> **Why the lock is safe.** To find `d`, an attacker needs `φ`, and to get `φ` they need the primes `p` and `q` hidden inside `n`. For `n = 55` that's easy (it's `5 × 11`). But for the real internet, `n` is hundreds of digits long, and no computer on Earth can split it back into its primes in any reasonable time. The padlock stays locked.
+
+---
+
+## What You'll Build
+
+You're given the primes, `n`, `phi`, a sample `e`, and a `gcd` helper. You'll write:
+
+1. `private_key(e, phi)` — find the secret `d`: the smallest `d ≥ 1` with `(e * d) % phi == 1`.
+2. `encrypt(m, e, n)` — lock a number with the **public** key: `m^e mod n`.
+3. `decrypt(c, d, n)` — unlock with the **private** key: `c^d mod n`.
+
+When you `encrypt` with `(e, n)` and then `decrypt` with `(d, n)`, you should get your original number back — every time.
+
+---
+
+## The Whole Journey
+
+Look how far you've come, {{FIRST_NAME}}:
+
+- **Caesar** — shift the alphabet (weak: 26 keys).
+- **Brute force** — try every key and recognize English.
+- **Substitution** — scramble the whole alphabet (too many keys to try).
+- **Frequency analysis** — crack it anyway by counting letters.
+- **XOR** — hide secrets in bits, where the key undoes itself.
+- **One-time pad** — the unbreakable code, if the key is never reused.
+- **Diffie-Hellman** — agree on a key out loud.
+- **RSA** — a public lock anyone can close, that only your private key opens.
+
+You can now send messages your sister can't read, crack the ones she sends, and even hand out a lock she can use to write to you — while keeping the only key in your pocket. That's real cryptography. 🔐
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Public key | `(e, n)` — hand it out; it can only lock | `encrypt(m, e, n)` |
+| Private key | `d` — secret; it's the only thing that unlocks | `decrypt(c, d, n)` |
+| Finding `d` | smallest `d` with `(e*d) % phi == 1` | a simple search loop |
+| Lock | raise the number to `e` on the `n`-clock | `pow(m, e, n)` |
+| Unlock | raise it to `d` on the same clock | `pow(c, d, n)` |
+| Why it's safe | un-multiplying a huge `n` into primes is too hard | — |
+
+Head to the exercises and build your public lock — the grand finale!

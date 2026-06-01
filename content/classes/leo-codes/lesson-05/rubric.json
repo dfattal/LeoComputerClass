@@ -1,0 +1,6 @@
+[
+  {"criterion": "Uses XOR correctly", "weight": 25, "description": "xor_num returns a ^ b — comfortable with the bitwise XOR operator"},
+  {"criterion": "XOR encryption", "weight": 35, "description": "xor_encrypt turns each letter into ord(c) and XORs with the key, returning a list of numbers"},
+  {"criterion": "XOR decryption round-trips", "weight": 30, "description": "xor_decrypt XORs each number with the same key and chr's it back, so decrypt(encrypt(msg, key), key) returns the original"},
+  {"criterion": "Clean code", "weight": 10, "description": "Understands encrypt returns numbers and decrypt returns a string, clear names, a return on every function"}
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "entry": "substitute",
+    "cases": [
+      {"name": "substitute(\"hello\", KEY)", "args": ["hello", "qwertyuiopasdfghjklzxcvbnm"], "expected": "itssg"},
+      {"name": "substitute(\"meet me at noon\", KEY) ~ spaces stay", "args": ["meet me at noon", "qwertyuiopasdfghjklzxcvbnm"], "expected": "dttz dt qz fggf"}
+    ]
+  },
+  {
+    "entry": "invert_key",
+    "cases": [
+      {"name": "invert_key(KEY) ~ the decoding alphabet", "args": ["qwertyuiopasdfghjklzxcvbnm"], "expected": "kxvmcnophqrszyijadlegwbuft"},
+      {"name": "invert_key(shift-by-1 key) ~ reverses a shift", "args": ["bcdefghijklmnopqrstuvwxyza"], "expected": "zabcdefghijklmnopqrstuvwxy"}
+    ]
+  },
+  {
+    "entry": "unsubstitute",
+    "cases": [
+      {"name": "unsubstitute(\"itssg\", KEY) ~ back to hello", "args": ["itssg", "qwertyuiopasdfghjklzxcvbnm"], "expected": "hello"},
+      {"name": "unsubstitute(\"dttz dt qz fggf\", KEY) ~ round-trip", "args": ["dttz dt qz fggf", "qwertyuiopasdfghjklzxcvbnm"], "expected": "meet me at noon"}
+    ]
+  }
+]

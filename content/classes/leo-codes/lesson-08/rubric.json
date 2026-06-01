@@ -1,0 +1,6 @@
+[
+  {"criterion": "Finds the private key d", "weight": 35, "description": "private_key searches for the smallest d >= 1 with (e * d) % phi == 1 — the number that undoes e"},
+  {"criterion": "Encrypts with the public key", "weight": 25, "description": "encrypt returns pow(m, e, n) — locking a number on the n-clock with the public exponent"},
+  {"criterion": "Decrypts with the private key", "weight": 30, "description": "decrypt returns pow(c, d, n), and encrypt-then-decrypt returns the original number"},
+  {"criterion": "Clean code", "weight": 10, "description": "Uses three-argument pow, understands public (e,n) vs private d, a return on every function"}
+]

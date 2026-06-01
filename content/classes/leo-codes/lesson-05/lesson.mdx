@@ -1,0 +1,103 @@
+# Lesson 5 — The XOR Trick
+
+## Phase 3: Secrets in Bits
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Meet **XOR**, a bit operation that's the secret weapon of real-world cryptography
+- See the magic property: **XOR-ing with the same key twice gets you back to the start**
+- Turn letters into **numbers** and scramble their **bits** with a key
+- Build an encrypt and decrypt that use the **exact same operation** — one key, both directions
+- Lock and unlock a message without ever moving a single letter on the alphabet ring
+
+---
+
+## Big Idea
+
+So far you've shuffled letters around an alphabet ring. Real computers don't think in letters — they think in **bits**, the 0s and 1s you met in Computer Class. The most important tool for hiding secrets in bits is a tiny operation called **XOR** ("exclusive or").
+
+XOR compares two bits and answers one question: **"are they different?"**
+
+| bit A | bit B | A XOR B |
+|:-----:|:-----:|:-------:|
+| 0 | 0 | **0** |
+| 0 | 1 | **1** |
+| 1 | 0 | **1** |
+| 1 | 1 | **0** |
+
+Same → `0`. Different → `1`. That's the whole rule. In Python, XOR is the `^` symbol:
+
+```python
+5 ^ 3   # → 6
+```
+
+Why 6? Write them in bits and XOR each column ("are they different?"):
+
+```text
+  5 = 1 0 1
+  3 = 0 1 1
+      -----
+      1 1 0   = 6
+```
+
+---
+
+## The Magic: XOR Undoes Itself
+
+Here's the property that makes XOR perfect for secret codes. **XOR with the same number twice, and you're back where you started:**
+
+$$
+(A \oplus K) \oplus K = A
+$$
+
+Try it: take a bit, XOR it with `1` — it flips. XOR with `1` again — it flips back. XOR with `0` — it stays. Either way, applying the **same key** a second time **reverses** the first. A number XOR-ed with itself is always `0` (every bit matches itself), and that's the seed of why it cancels.
+
+This is huge: it means **encrypting and decrypting are the exact same operation.** Lock the message by XOR-ing with your key; unlock it by XOR-ing with the *same* key again. One recipe, both directions. No "reverse key" to build like last lesson.
+
+> **A light switch for bits.** XOR with key bit `1` flips a bit; XOR with `0` leaves it alone. Your key is a pattern of flips. Apply the pattern once → scrambled. Apply the very same pattern again → every flip undone, message restored.
+
+---
+
+## Letters Are Numbers
+
+To XOR a letter, we first turn it into its number with `ord` (just like Lesson 1): `ord('h')` is `104`. Then we XOR that number with our key. The result is a new number — the encrypted "byte". To get the letter back, we XOR again and call `chr`.
+
+With a key of `42`:
+
+```text
+'h' → 104  →  104 XOR 42 = 66
+'i' → 105  →  105 XOR 42 = 67
+"hi"  encrypts to  [66, 67]
+```
+
+To decrypt `[66, 67]` we XOR each number with `42` again: `66 XOR 42 = 104 = 'h'`, `67 XOR 42 = 105 = 'i'`. Back to `"hi"`. ✅
+
+Notice the cipher is a **list of numbers**, not letters — XOR can produce values that aren't normal letters at all, which is fine. The numbers *are* the secret message.
+
+---
+
+## What You'll Build
+
+Your key is a single number from 0 to 255 (one byte's worth of flips). You'll write:
+
+1. `xor_num(a, b)` — return `a XOR b` (just the `^` operator — get comfortable with it).
+2. `xor_encrypt(message, key)` — turn each letter into a number and XOR it with `key`; return the list of numbers.
+3. `xor_decrypt(numbers, key)` — XOR each number with `key` again and turn it back into a letter; return the string.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| XOR | "are the bits different?" | `a ^ b` |
+| Undoes itself | XOR with the same key twice = original | `(a ^ k) ^ k == a` |
+| Same op both ways | encrypt and decrypt are identical | XOR with the key |
+| Letter → number | scramble the number, not the letter | `ord(c)`, `chr(n)` |
+| Cipher | a list of numbers (maybe not letters!) | `[ord(c) ^ key for c in msg]` |
+
+Head to the exercises and hide a message in its bits!

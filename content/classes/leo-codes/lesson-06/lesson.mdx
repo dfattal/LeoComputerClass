@@ -1,0 +1,96 @@
+# Lesson 6 — The One-Time Pad
+
+## Phase 3: Secrets in Bits
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Meet the **one-time pad** — the only code that is *mathematically, provably* unbreakable
+- Understand why the key must be **as long as the message** and **truly random**
+- Encrypt and decrypt by XOR-ing the message with a **list** of key numbers
+- Discover the deadly trap: reuse a key once and the secret **leaks**
+- See *why* it's called a **one-time** pad
+
+---
+
+## Big Idea
+
+Last lesson you XOR-ed every letter with the **same** key number. That's better than Caesar, but a clever attacker can still attack it — the repeating key leaves patterns.
+
+Now we fix that completely. Instead of one key number, use a **whole list of random numbers — one for every letter of the message.** XOR the first letter with the first key number, the second letter with the second, and so on. This is the **one-time pad**, and when it's done right it is the **only cipher that can never be broken.** Not by a faster computer, not by a smarter mathematician, not ever.
+
+> **A pad of random numbers.** Imagine a little notebook ("pad") where every page is a fresh page of random numbers. You and your friend each have an identical copy. To send a message, you XOR it with the numbers on the next page, then **tear the page out and throw it away.** Your friend XORs with the same page to read it, then tears it out too. Each page is used exactly once.
+
+For the one-time pad to be unbreakable, three rules must ALL hold:
+1. The key is **as long as the message** (one key number per letter).
+2. The key is **truly random**.
+3. The key is **used only once** — never, ever again.
+
+---
+
+## Why It's Unbreakable
+
+Here's the astonishing part. Suppose your ciphertext is some list of numbers. Because the key was totally random and as long as the message, **every possible message of that length could have produced it** — for the right key. The ciphertext for `attack` and the ciphertext for `defend` look *equally likely*. An attacker who tries all keys doesn't get one answer that "looks like English" and 25 that don't (remember brute force?). They get **every** sensible message, all at once, with no way to tell which is real. There's simply no information left to grab.
+
+That's not "really hard to break." That's **impossible** to break. It was proven by Claude Shannon, the same scientist who helped invent information theory.
+
+---
+
+## Encrypt and Decrypt
+
+The math is the same friendly XOR as last lesson — just paired up position by position. Encrypt by XOR-ing each letter's number with the matching key number:
+
+```text
+message:  "hi"        → numbers  [104, 105]
+key:                              [ 10, 200]
+cipher = [104 XOR 10, 105 XOR 200] = [98, 161]
+```
+
+Decrypt by XOR-ing the cipher numbers with the **same** key numbers again (XOR undoes itself, remember):
+
+```text
+[98 XOR 10, 161 XOR 200] = [104, 105] → "hi"   ✅
+```
+
+In code you walk the message and the key **together** — Python's `zip` pairs them up perfectly.
+
+---
+
+## The Deadly Trap: Never Reuse a Key
+
+Why "**one**-time"? Because reusing a key is a disaster. Watch what happens if you encrypt **two** messages with the **same** key and an attacker grabs both ciphertexts. They XOR the two ciphertexts together:
+
+$$
+(P_1 \oplus K) \oplus (P_2 \oplus K) = P_1 \oplus P_2
+$$
+
+The key `K` appears twice and **cancels out** — it vanishes! What's left is the two *plaintexts* XOR-ed together. The attacker doesn't even need the key anymore; the secrets are now tangled with each other, and with a little guessing both can be pulled apart. One reused key, and the whole thing collapses.
+
+> **The key must disappear forever.** Use a pad page once and burn it, and you're untouchable. Use it twice, and the second use erases the protection of the first. That single rule — *one time only* — is the entire reason the cipher works. Break it and the magic is gone.
+
+---
+
+## What You'll Build
+
+The key is now a **list of numbers**, the same length as the message. You'll write:
+
+1. `otp_encrypt(message, key_nums)` — XOR each letter's number with the matching key number; return the list of cipher numbers.
+2. `otp_decrypt(numbers, key_nums)` — XOR each cipher number with the matching key number; return the original string.
+3. `two_time_leak(cipher1, cipher2)` — XOR two ciphertexts together (this is the attack that proves why keys can't repeat).
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| One-time pad | a random key as long as the message, used once | a list of key numbers |
+| Unbreakable | every message is equally possible — no info to attack | proven by Shannon |
+| Encrypt | XOR each letter with its matching key number | `zip(message, key_nums)` |
+| Decrypt | XOR again with the same key numbers | XOR undoes itself |
+| Two-time leak | reuse a key and it cancels: `C1 ^ C2 = P1 ^ P2` | the key vanishes |
+
+Head to the exercises and build the unbreakable code!
