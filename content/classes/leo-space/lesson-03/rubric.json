@@ -1,0 +1,6 @@
+[
+  {"criterion": "Eccentricity formula", "weight": 25, "description": "eccentricity returns (r_apo - r_peri)/(r_apo + r_peri); a circle gives 0"},
+  {"criterion": "Kepler's Third Law", "weight": 30, "description": "orbital_period returns 2*pi*sqrt(a**3/(G*M)) with correct parentheses"},
+  {"criterion": "Apogee from simulation", "weight": 35, "description": "farthest_point runs the 2D loop and tracks the maximum distance reached"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names, uses the provided G, and a return on every function"}
+]

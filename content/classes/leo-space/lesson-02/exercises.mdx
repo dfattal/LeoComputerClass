@@ -1,0 +1,107 @@
+# Lesson 2 — Exercises: Falling Around the World
+
+## How This Works
+
+You'll write three functions that put a satellite in orbit: find the right speed, turn gravity into a 2D arrow, then run the loop and see where you end up.
+
+**Important:** Orbits are simulated with the Euler method, so the answers are *close enough*, not exact — the tests use a tolerance. Get the physics right and small drift is fine.
+
+Use `G = 6.674e-11` (already set up for you), and `import math` is at the top of the starter so you can use `math.sqrt`.
+
+**Handy facts:** Earth mass `5.972e24` kg. A "low orbit" sits about `7e6` m from Earth's center.
+
+---
+
+## Exercise 1: The Orbit Speed
+
+Write `orbital_speed(M, r)` — the one exact speed needed to circle a planet of mass `M` at radius `r`:
+
+$$
+v = \sqrt{\frac{G M}{r}}
+$$
+
+```python
+def orbital_speed(M, r):
+    # Return the square root of (G * M / r)
+    pass
+```
+
+**Examples:**
+- `orbital_speed(5.972e24, 7e6)` → about `7545.78` (low Earth orbit — 27,000 km/h!)
+- `orbital_speed(5.972e24, 4.216e7)` → about `3074.70` (geostationary — way slower up high)
+- `orbital_speed(5.972e24, 3.844e8)` → about `1018.27` (the Moon's speed around Earth)
+
+**Hint:** `return math.sqrt(G * M / r)`.
+
+---
+
+## Exercise 2: Gravity as a 2D Arrow
+
+Write `gravity_xy(M, x, y)` that returns gravity's acceleration as a list `[ax, ay]`, pointing from position `(x, y)` back toward the planet at the center:
+
+$$
+r = \sqrt{x^2 + y^2}
+\qquad
+a_x = -\frac{G M\, x}{r^3}
+\qquad
+a_y = -\frac{G M\, y}{r^3}
+$$
+
+```python
+def gravity_xy(M, x, y):
+    # 1. r = math.sqrt(x*x + y*y)
+    # 2. ax = -G * M * x / r**3
+    # 3. ay = -G * M * y / r**3
+    # 4. return [ax, ay]
+    pass
+```
+
+**Examples:**
+- `gravity_xy(5.972e24, 7e6, 0)` → about `[-8.1341, 0]` (to the right of Earth → pulled left)
+- `gravity_xy(5.972e24, 0, 7e6)` → about `[0, -8.1341]` (above Earth → pulled down)
+- `gravity_xy(5.972e24, 3e6, 4e6)` → about `[-9.5657, -12.7543]` (diagonal → pulled back toward center)
+
+**Hint:** "r cubed" is `r**3`. The minus signs are what make it point *toward* the planet.
+
+---
+
+## Exercise 3: Put It in Orbit!
+
+Now the 2D loop. Write `orbit_sim(M, r0, v, dt, steps)`:
+
+- The satellite **starts** at position `(r0, 0)` — out to the right of the planet.
+- It launches **sideways** with velocity `(0, v)` — straight "up" the screen at speed `v`.
+- Run `steps` Euler steps and return the **final distance** from the planet's center.
+
+```python
+def orbit_sim(M, r0, v, dt, steps):
+    x = r0
+    y = 0.0
+    vx = 0.0
+    vy = v
+    for _ in range(steps):
+        r = math.sqrt(x*x + y*y)
+        # 1. ax = -G*M*x/r**3 ,  ay = -G*M*y/r**3
+        # 2. vx += ax*dt ,  vy += ay*dt   (velocity first!)
+        # 3. x += vx*dt ,  y += vy*dt     (then position)
+        pass
+    return math.sqrt(x*x + y*y)
+```
+
+**Examples:**
+- `orbit_sim(5.972e24, 7e6, 7546, 1, 1500)` → about `7.0e6` (circular speed → distance stays put!)
+- `orbit_sim(5.972e24, 7e6, 6400, 1, 1500)` → about `4.7e6` (too slow → falling inward)
+- `orbit_sim(5.972e24, 7e6, 8700, 1, 1500)` → about `9.2e6` (too fast → climbing away)
+
+**Check your work:** When you launch at exactly `orbital_speed`, the final distance should come back close to where you started (`r0`). That's a circle!
+
+---
+
+## Tips If You're Stuck
+
+1. **Distance not staying constant for circular speed?** Make sure you update *both* velocity parts before *both* position parts.
+2. **Satellite flies off instantly?** Check the minus signs in `ax`/`ay` — gravity pulls *toward* the center, not away.
+3. **`r**3` vs `r**2`?** The 2D gravity uses `r**3` on the bottom (one extra `r` aims the arrow). The plain strength `G*M/r**2` is for the 1D version.
+4. **`None` returned?** Don't forget the `return` lines.
+
+Put something in orbit, then press Run to watch it circle in the Graph panel. Next lesson: stretch that circle into an ellipse!

@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "orbital_speed",
+    "tol": 0.5,
+    "cases": [
+      {"name": "orbital_speed(5.972e24, 7e6) ~ low Earth orbit", "args": [5.972e24, 7e6], "expected": 7545.78},
+      {"name": "orbital_speed(5.972e24, 4.216e7) ~ geostationary", "args": [5.972e24, 4.216e7], "expected": 3074.70},
+      {"name": "orbital_speed(5.972e24, 3.844e8) ~ the Moon", "args": [5.972e24, 3.844e8], "expected": 1018.27},
+      {"name": "orbital_speed(7.342e22, 1.8e6) ~ low Moon orbit", "args": [7.342e22, 1.8e6], "expected": 1649.92}
+    ]
+  },
+  {
+    "entry": "gravity_xy",
+    "tol": 0.01,
+    "cases": [
+      {"name": "gravity_xy(5.972e24, 7e6, 0) ~ pulls left", "args": [5.972e24, 7000000, 0], "expected": [-8.1341, 0]},
+      {"name": "gravity_xy(5.972e24, 0, 7e6) ~ pulls down", "args": [5.972e24, 0, 7000000], "expected": [0, -8.1341]},
+      {"name": "gravity_xy(5.972e24, 3e6, 4e6) ~ diagonal pull", "args": [5.972e24, 3000000, 4000000], "expected": [-9.5657, -12.7543]}
+    ]
+  },
+  {
+    "entry": "orbit_sim",
+    "tol": 100000,
+    "cases": [
+      {"name": "orbit_sim circular ~ stays at 7e6", "args": [5.972e24, 7000000, 7546, 1, 1500], "expected": 6996668, "tol": 50000},
+      {"name": "orbit_sim too slow ~ falls inward", "args": [5.972e24, 7000000, 6400, 1, 1500], "expected": 4685695},
+      {"name": "orbit_sim too fast ~ climbs outward", "args": [5.972e24, 7000000, 8700, 1, 1500], "expected": 9170455}
+    ]
+  }
+]

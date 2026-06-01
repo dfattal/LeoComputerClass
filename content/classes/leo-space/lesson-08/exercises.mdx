@@ -1,0 +1,84 @@
+# Lesson 8 — Exercises: Mission Control (Capstone)
+
+## How This Works
+
+This is your capstone! You're **given** two functions — don't change them:
+
+- `v_circle(M, r0)` — the Lesson 2 formula speed, `sqrt(G*M/r0)`.
+- `sim_orbit(M, r0, v, dt, steps)` — launches sideways from `(r0, 0)` at speed `v` and returns `[min_r, max_r]`: the closest and farthest distance the orbit reaches.
+
+You'll write three functions that turn your simulator into a **designer** that searches for the perfect orbit.
+
+**Important:** Everything is simulated with the Euler method, so answers are *close enough*, not exact — the tests use a tolerance.
+
+---
+
+## Exercise 1: How Circular?
+
+Write `roundness(M, r0, v, dt, steps)` — a score for how *un*-circular an orbit is. Run `sim_orbit`, then subtract the closest distance from the farthest. A perfect circle scores near 0; a stretched ellipse scores big.
+
+```python
+def roundness(M, r0, v, dt, steps):
+    # 1. min_r, max_r = sim_orbit(M, r0, v, dt, steps)
+    # 2. return max_r - min_r
+    pass
+```
+
+**Example:**
+- `roundness(5.972e24, 7e6, 7545.78, 3, 2000)` → about `22637` (launched at the formula speed → already pretty round; the small gap is just Euler wobble)
+
+**Hint:** `sim_orbit` returns a list of two numbers — unpack it: `min_r, max_r = sim_orbit(...)`.
+
+---
+
+## Exercise 2: Sweep for the Best Speed
+
+Write `best_factor(M, r0, dt, steps)`. Try speeds from 0.80 to 1.20 times the formula speed `v_circle`, score each with `roundness`, and return the **factor** that gives the smallest (roundest) score.
+
+```python
+def best_factor(M, r0, dt, steps):
+    vc = v_circle(M, r0)
+    best_f = 0
+    best_score = 1e99           # start impossibly bad
+    f = 0.80
+    while f <= 1.20 + 1e-9:
+        # 1. score = roundness(M, r0, f * vc, dt, steps)
+        # 2. if score < best_score: save best_score and best_f
+        f = f + 0.02
+    return round(best_f, 2)
+```
+
+**Examples:**
+- `best_factor(5.972e24, 7e6, 3, 2000)` → `1.0` (the roundest orbit is at exactly the formula speed!)
+- `best_factor(5.972e24, 1e7, 3, 2000)` → `1.0`
+- `best_factor(7.342e22, 2e6, 3, 2000)` → `1.0` (works at the Moon too)
+
+**Check your work:** Getting `1.0` means your search rediscovered the orbital-speed law — the roundest orbit is the one the Lesson 2 formula predicts.
+
+---
+
+## Exercise 3: The Searched Speed
+
+Write `best_speed(M, r0, dt, steps)` — turn the winning factor into an actual speed by multiplying by `v_circle`:
+
+```python
+def best_speed(M, r0, dt, steps):
+    # Return best_factor(M, r0, dt, steps) * v_circle(M, r0)
+    pass
+```
+
+**Example:**
+- `best_speed(5.972e24, 7e6, 3, 2000)` → about `7545.78` (your *searched* speed matches the Lesson 2 *formula* exactly!)
+
+**The big moment:** Compare `best_speed(5.972e24, 7e6, 3, 2000)` with `orbital_speed(5.972e24, 7e6)` from Lesson 2. Two totally different methods — a brute-force search and a pencil formula — give the same answer. That's how you *know* it's real.
+
+---
+
+## Tips If You're Stuck
+
+1. **`best_factor` returns 0?** Your `if score < best_score` save isn't running — make sure you update *both* `best_score` and `best_f` inside the `if`.
+2. **Unpacking `sim_orbit`:** it returns `[min_r, max_r]` — grab both with `min_r, max_r = sim_orbit(...)`.
+3. **Sweep not stopping at the right place?** The `+ 1e-9` lets `f` reach 1.20 despite tiny rounding; keep the step `f = f + 0.02`.
+4. **Slow to run?** That's normal — `best_factor` runs 21 full simulations. Give it a moment.
+
+Finish your capstone, then press Run to watch your simulator pinpoint the perfect orbit in the Graph panel. Congratulations, Mission Control — you've completed Space School! 🚀

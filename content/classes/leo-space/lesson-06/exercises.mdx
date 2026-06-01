@@ -1,0 +1,89 @@
+# Lesson 6 — Exercises: The Lunar Lander
+
+## How This Works
+
+Three functions to land on the Moon: one step, the full descent, and the safety check. The Moon's gravity is `g = 1.62`.
+
+**Remember:** up is positive, so a **falling** lander has a **negative** velocity. The touchdown speed comes out negative — that's fine, `is_safe` uses `abs()`.
+
+**Important:** This is simulated with the Euler method, so it's *close enough*, not exact — the tests use a tolerance.
+
+---
+
+## Exercise 1: One Landing Step
+
+Write `lander_step(h, v, thrust, g, dt)` that does a single Euler step and returns the new `[h, v]`:
+
+```python
+def lander_step(h, v, thrust, g, dt):
+    # 1. v2 = v + (thrust - g) * dt   (net acceleration)
+    # 2. h2 = h + v2 * dt             (use the new velocity)
+    # 3. return [h2, v2]
+    pass
+```
+
+**Examples:**
+- `lander_step(100, -10, 1.5, 1.62, 0.5)` → about `[94.97, -10.06]` (engine too weak → still speeding up downward)
+- `lander_step(50, 0, 2.0, 1.62, 1.0)` → about `[50.38, 0.38]` (engine beats gravity → starting to rise)
+
+**Hint:** Update velocity first, then use that new velocity for the height. Return them as a list `[h2, v2]`.
+
+---
+
+## Exercise 2: Land It!
+
+Write `land(h0, v0, thrust, g, dt, steps)`. Start at height `h0` with velocity `v0`, fire a constant `thrust`, and step until you reach the ground (`h <= 0`). Return the velocity at touchdown.
+
+```python
+def land(h0, v0, thrust, g, dt, steps):
+    h = h0
+    v = v0
+    for _ in range(steps):
+        # 1. v = v + (thrust - g) * dt
+        # 2. h = h + v * dt
+        # 3. if h <= 0: break   (touchdown!)
+        pass
+    return v
+```
+
+**Examples:**
+- `land(50, 0, 1.5, 1.62, 0.01, 20000)` → about `-3.46` (dropped from 50 m, weak engine → crash)
+- `land(20, -2, 1.0, 1.62, 0.01, 20000)` → about `-5.37` (low thrust → hits hard)
+- `land(8, -1, 1.55, 1.62, 0.01, 20000)` → about `-1.46` (gentle: strong engine + short fall → soft!)
+- `land(100, -5, 1.4, 1.62, 0.01, 20000)` → about `-8.31` (high and weak → big crash)
+
+**Notice:** the closer your thrust gets to gravity (1.62), the gentler the landing. Keep thrust *below* 1.62 so you actually come down.
+
+---
+
+## Exercise 3: Safe or Crash?
+
+Write `is_safe(touchdown_speed)` that returns `True` if you landed gently — 2 m/s or slower (ignoring direction):
+
+```python
+def is_safe(touchdown_speed):
+    # Return True if abs(touchdown_speed) <= 2.0
+    pass
+```
+
+**Examples:**
+- `is_safe(-1.2)` → `True` (gentle touchdown)
+- `is_safe(-3.5)` → `False` (crash)
+- `is_safe(1.8)` → `True`
+- `is_safe(-2.0)` → `True` (right at the limit)
+- `is_safe(2.5)` → `False`
+
+**Hint:** `abs(x)` removes the minus sign. `return abs(touchdown_speed) <= 2.0`.
+
+**Put it together:** Try `is_safe(land(8, -1, 1.55, 1.62, 0.01, 20000))` — a soft landing should come back `True`!
+
+---
+
+## Tips If You're Stuck
+
+1. **Lander never lands (loops forever or hits the step cap)?** Your thrust is probably *bigger* than gravity, so it floats back up. Use a thrust below 1.62.
+2. **Touchdown speed positive?** That means it was moving *up* when the loop ended — again, thrust too strong.
+3. **`lander_step` order:** velocity first, then height using the new velocity.
+4. **`None` returned?** Don't forget the `return` lines (Exercise 1 returns a list `[h2, v2]`).
+
+Stick the landing, then press Run to watch different engines come down in the Graph panel. Next: leave the Moon behind and fly to Mars!

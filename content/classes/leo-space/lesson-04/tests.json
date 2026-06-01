@@ -1,0 +1,29 @@
+[
+  {
+    "entry": "escape_speed",
+    "tol": 0.5,
+    "cases": [
+      {"name": "escape_speed(5.972e24, 6.371e6) ~ Earth surface", "args": [5.972e24, 6.371e6], "expected": 11185.73},
+      {"name": "escape_speed(7.342e22, 1.737e6) ~ the Moon", "args": [7.342e22, 1.737e6], "expected": 2375.28},
+      {"name": "escape_speed(5.972e24, 7e6) ~ from low orbit", "args": [5.972e24, 7000000], "expected": 10671.34}
+    ]
+  },
+  {
+    "entry": "total_energy",
+    "tol": 10000,
+    "cases": [
+      {"name": "total_energy at escape speed ~ near 0", "args": [5.972e24, 11186, 6.371e6], "expected": 3059, "tol": 1000},
+      {"name": "total_energy of a circular orbit ~ negative", "args": [5.972e24, 7546, 7000000], "expected": -28467696},
+      {"name": "total_energy way past escape ~ big positive", "args": [5.972e24, 15000, 6.371e6], "expected": 49939761}
+    ]
+  },
+  {
+    "entry": "will_escape",
+    "cases": [
+      {"name": "will_escape(5.972e24, 15000, 6.371e6) ~ gone!", "args": [5.972e24, 15000, 6.371e6], "expected": true},
+      {"name": "will_escape(5.972e24, 7000, 7e6) ~ bound", "args": [5.972e24, 7000, 7000000], "expected": false},
+      {"name": "will_escape(5.972e24, 11186, 6.371e6) ~ just barely free", "args": [5.972e24, 11186, 6.371e6], "expected": true},
+      {"name": "will_escape(7.342e22, 2000, 1.737e6) ~ not enough off the Moon", "args": [7.342e22, 2000, 1.737e6], "expected": false}
+    ]
+  }
+]

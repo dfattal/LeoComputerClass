@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    5.972e24
+  ],
+  "title": "Faster launches stretch the circle into taller and taller ellipses",
+  "xLabel": "x (m)",
+  "yLabel": "y (m)",
+  "setup": "# --- plot helper (hidden) — ellipses from (7e6, 0) at three speeds ---\nimport math as __m\ndef __orbit(M, v, dt, steps, every):\n    G = 6.674e-11\n    x = 7e6; y = 0.0; vx = 0.0; vy = v\n    pts = [[round(x, 1), round(y, 1)]]\n    for i in range(steps):\n        r = __m.sqrt(x * x + y * y)\n        if r < 1.0:\n            break\n        f = G * M / (r * r * r)\n        vx += -f * x * dt; vy += -f * y * dt\n        x += vx * dt; y += vy * dt\n        if i % every == 0:\n            pts.append([round(x, 1), round(y, 1)])\n    return pts\n\ndef __plot(M):\n    return [\n        {\"name\": \"circle (7546)\", \"points\": __orbit(M, 7546, 4.0, 3000, 15), \"highlight\": False},\n        {\"name\": \"ellipse (8200)\", \"points\": __orbit(M, 8200, 4.0, 3000, 15), \"highlight\": True},\n        {\"name\": \"tall ellipse (8700)\", \"points\": __orbit(M, 8700, 4.0, 3000, 15), \"highlight\": False},\n    ]\n"
+}

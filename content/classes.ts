@@ -52,6 +52,18 @@ export const classes: ClassDef[] = [
     language: "python",
   },
   {
+    slug: "leo-space",
+    name: "Leo's Space School",
+    tagline: "Fly a Mission to the Moon",
+    description:
+      "Gravity reaches across millions of miles. Use Python to find out why the Moon doesn't fall down — then orbit a planet, land a rocket, and plan a trip to Mars.",
+    accentColor: "sky",
+    heroImage: "/hero-space.webp",
+    studentName: "Leo",
+    contentDir: "leo-space",
+    language: "python",
+  },
+  {
     slug: "leila",
     name: "Leila's Bio Lab",
     tagline: "Code Your Way Through Biology",

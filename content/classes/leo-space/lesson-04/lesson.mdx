@@ -1,0 +1,120 @@
+# Lesson 4 — Escape!
+
+## Phase 2: Real Orbits
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand that every moving object near a planet has two kinds of energy
+- Learn the **escape speed** — how fast you must go to leave a planet *forever*
+- See that a single number, the **total energy**, decides your fate: crash, orbit, or escape
+- Write code that predicts whether a launch comes back or flies away into space
+
+---
+
+## Big Idea: A Tug-of-War of Energy
+
+Whether you fall back or fly away comes down to a contest between two energies.
+
+**Kinetic energy** — the energy of *moving*. The faster you go, the more you have. Per kilogram, it's:
+
+$$
+KE = \tfrac{1}{2} v^2
+$$
+
+**Potential energy** — the energy gravity has "stored up" by pulling on you. Here's the strange part: near a planet, gravitational potential energy is **negative**, and it's *most* negative when you're close. Per kilogram:
+
+$$
+PE = -\frac{G M}{r}
+$$
+
+Think of the planet as the bottom of a deep well. Down close, you're stuck deep in the well (very negative PE). To get out, you have to "pay" your way up — and your kinetic energy is the only money you've got.
+
+> **Why negative?** It's just a bookkeeping choice: we say PE = 0 infinitely far away (totally free of the planet), so anywhere *closer* — still trapped by gravity — counts as below zero. The deeper in the well, the more negative.
+
+---
+
+## The Number That Decides Everything
+
+Add the two together and you get the **total energy** (per kilogram):
+
+$$
+E = \tfrac{1}{2}v^2 - \frac{G M}{r}
+$$
+
+This one number tells you the whole story, because total energy never changes as you coast — gravity just keeps trading kinetic for potential and back. So whatever $E$ is at launch, that's your destiny:
+
+- **$E < 0$** → you're **bound**. You don't have enough kinetic energy to climb out of the well. You'll fall back or settle into an orbit. (A circular orbit always has $E < 0$.)
+- **$E = 0$** → you have *exactly* enough to barely escape, coasting to a stop infinitely far away.
+- **$E > 0$** → you **escape** with energy to spare and never come back.
+
+So predicting a launch is as easy as checking one sign: **is $E$ negative or not?**
+
+---
+
+## Escape Speed
+
+The magic moment is $E = 0$ — the slowest speed that still lets you escape. Set total energy to zero and solve for $v$:
+
+$$
+\tfrac{1}{2}v^2 - \frac{G M}{r} = 0
+\quad\Longrightarrow\quad
+v_{esc} = \sqrt{\frac{2 G M}{r}}
+$$
+
+That's the **escape speed**. Go any faster and you're free; any slower and the planet reels you back in.
+
+Notice it's the circular orbital speed from Lesson 2 times $\sqrt{2}$:
+
+$$
+v_{esc} = \sqrt{2}\; v_{circle} \approx 1.41 \times v_{circle}
+$$
+
+So to *escape* a planet you only need about **41% more speed** than to *orbit* it. Some real numbers:
+
+- **Earth's surface:** about $11{,}186$ m/s — that's **40,000 km/h**, the famous "11.2 km/s." Every rocket that's ever left Earth had to beat this.
+- **The Moon:** only about $2{,}375$ m/s — which is exactly why a small lander could blast off the Moon and come home, but you need a giant rocket to leave Earth.
+
+---
+
+## Predicting a Launch in Code
+
+You don't need a simulation for this — just the energy formula and a comparison. Compute the total energy and check its sign:
+
+```python
+def will_escape(M, v, r):
+    energy = 0.5 * v**2 - G * M / r
+    return energy >= 0
+```
+
+If `energy` is zero or positive, the object escapes — return `True`. If it's negative, gravity wins — return `False`. One formula, one comparison, and you can predict the fate of anything you launch from anywhere.
+
+> **It works on the whole universe.** This same check tells you whether a comet will swing past the Sun once and leave forever, or come back in a few thousand years. Whether a moon stays put. Whether a probe reaches deep space. One sign, the whole story.
+
+---
+
+## What You'll Build
+
+1. `escape_speed(M, r)` — the slowest speed that escapes a planet forever.
+2. `total_energy(M, v, r)` — the kinetic-plus-potential number that decides your fate.
+3. `will_escape(M, v, r)` — `True` if you fly away, `False` if you fall back.
+
+`G = 6.674e-11` and `import math` are set up for you. Time to break free.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Kinetic energy | energy of motion | `0.5 * v**2` |
+| Potential energy | gravity's stored (negative) energy | `-G * M / r` |
+| Total energy | the sum — never changes while coasting | `0.5*v**2 - G*M/r` |
+| Bound vs. free | $E < 0$ orbits/falls; $E \ge 0$ escapes | `energy >= 0` |
+| Escape speed | the slowest escape, where $E = 0$ | `math.sqrt(2*G*M/r)` |
+| Escape vs. orbit | escape is ~1.41× circular speed | — |
+
+Head to the exercises and find out what it takes to break free!

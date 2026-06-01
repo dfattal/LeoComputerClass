@@ -1,0 +1,92 @@
+# Lesson 7 — Exercises: Transfer to Mars
+
+## How This Works
+
+Three functions to plan a Hohmann transfer between two orbits around the Sun: the transfer ellipse, the departure burn, and the travel time.
+
+Use `G = 6.674e-11` (already set up) and `import math` for `math.sqrt` and `math.pi`.
+
+**Handy facts (orbits around the Sun):** Sun mass `1.989e30` kg. Earth's orbit `1.496e11` m. Mars's orbit `2.279e11` m. Venus's orbit `1.082e11` m.
+
+---
+
+## Exercise 1: The Transfer Ellipse
+
+Write `transfer_axis(r1, r2)` — the semi-major axis of the ellipse that touches both orbits:
+
+$$
+a = \frac{r_1 + r_2}{2}
+$$
+
+```python
+def transfer_axis(r1, r2):
+    # Return (r1 + r2) / 2
+    pass
+```
+
+**Examples:**
+- `transfer_axis(1.496e11, 2.279e11)` → `1.8875e11` (the Earth → Mars transfer ellipse)
+- `transfer_axis(1.496e11, 1.496e11)` → `1.496e11` (same orbit → just a circle)
+
+**Hint:** One line: `(r1 + r2) / 2`.
+
+---
+
+## Exercise 2: The Departure Burn
+
+Write `burn_one(M, r1, r2)` — how much to speed up (or slow down) to leave orbit `r1` onto the transfer ellipse. It's your speed on the ellipse minus your current circular speed:
+
+$$
+\Delta v_1 = \sqrt{G M\left(\frac{2}{r_1} - \frac{1}{a}\right)} - \sqrt{\frac{G M}{r_1}}
+\qquad\text{where } a = \frac{r_1 + r_2}{2}
+$$
+
+```python
+def burn_one(M, r1, r2):
+    # 1. a = (r1 + r2) / 2
+    # 2. v_transfer = math.sqrt(G * M * (2/r1 - 1/a))
+    # 3. v_circle = math.sqrt(G * M / r1)
+    # 4. return v_transfer - v_circle
+    pass
+```
+
+**Examples:**
+- `burn_one(1.989e30, 1.496e11, 2.279e11)` → about `2943.83` (speed up ~2.9 km/s to head for Mars)
+- `burn_one(1.989e30, 1.496e11, 1.082e11)` → about `-2496.45` (negative → slow down to fall inward toward Venus)
+
+**Hint:** Compute `a` first, then the two speeds, then subtract. A negative answer just means "fire backward."
+
+---
+
+## Exercise 3: How Long to Get There?
+
+Write `transfer_time(M, r1, r2)` — the travel time, which is **half** the transfer ellipse's period (Kepler's Law):
+
+$$
+t = \pi \sqrt{\frac{a^3}{G M}}
+\qquad\text{where } a = \frac{r_1 + r_2}{2}
+$$
+
+```python
+def transfer_time(M, r1, r2):
+    # 1. a = (r1 + r2) / 2
+    # 2. return math.pi * math.sqrt(a**3 / (G * M))
+    pass
+```
+
+**Examples:**
+- `transfer_time(1.989e30, 1.496e11, 2.279e11)` → about `22359898` seconds (Earth → Mars: that's 259 days, ~8½ months!)
+- `transfer_time(1.989e30, 1.496e11, 1.082e11)` → about `12618820` seconds (Earth → Venus: ~146 days)
+
+**Check your work:** Divide the Earth → Mars answer by 86400 (seconds in a day) and you should get about **259 days** — the real travel time NASA's Mars missions take!
+
+---
+
+## Tips If You're Stuck
+
+1. **`burn_one` way off?** Double-check the vis-viva part: `2/r1 - 1/a`, all multiplied by `G*M`, then square-rooted.
+2. **Use the Sun's mass** (`1.989e30`), not Earth's — you're orbiting the *Sun* now.
+3. **`transfer_time` huge?** That's expected — it's in *seconds*. Divide by 86400 to get days.
+4. **`a**3` inside the sqrt** — keep `a**3 / (G * M)` together under `math.sqrt`.
+
+Plan your Mars trip, then press Run to see the transfer ellipse in the Graph panel. Next: the grand finale — steal speed from a planet and find the best mission of all!

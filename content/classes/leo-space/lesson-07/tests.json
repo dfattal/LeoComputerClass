@@ -1,0 +1,26 @@
+[
+  {
+    "entry": "transfer_axis",
+    "tol": 1,
+    "cases": [
+      {"name": "transfer_axis(1.496e11, 2.279e11) ~ Earth->Mars", "args": [1.496e11, 2.279e11], "expected": 188750000000},
+      {"name": "transfer_axis(1.496e11, 1.496e11) ~ same orbit", "args": [1.496e11, 1.496e11], "expected": 149600000000}
+    ]
+  },
+  {
+    "entry": "burn_one",
+    "tol": 1,
+    "cases": [
+      {"name": "burn_one(Sun, Earth, Mars) ~ speed up", "args": [1.989e30, 1.496e11, 2.279e11], "expected": 2943.83},
+      {"name": "burn_one(Sun, Earth, Venus) ~ slow down (negative)", "args": [1.989e30, 1.496e11, 1.082e11], "expected": -2496.45}
+    ]
+  },
+  {
+    "entry": "transfer_time",
+    "tol": 1000,
+    "cases": [
+      {"name": "transfer_time(Sun, Earth, Mars) ~ 259 days", "args": [1.989e30, 1.496e11, 2.279e11], "expected": 22359898},
+      {"name": "transfer_time(Sun, Earth, Venus) ~ 146 days", "args": [1.989e30, 1.496e11, 1.082e11], "expected": 12618820}
+    ]
+  }
+]

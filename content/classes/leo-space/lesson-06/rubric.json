@@ -1,0 +1,6 @@
+[
+  {"criterion": "Net acceleration", "weight": 25, "description": "lander_step uses (thrust - g) and updates velocity before height, returning [h, v]"},
+  {"criterion": "Working descent loop", "weight": 40, "description": "land steps until h <= 0 and returns the touchdown velocity"},
+  {"criterion": "Safety check", "weight": 25, "description": "is_safe returns abs(touchdown_speed) <= 2.0"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names and a return on every function"}
+]

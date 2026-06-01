@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "eccentricity",
+    "tol": 0.0001,
+    "cases": [
+      {"name": "eccentricity(7e6, 7e6) ~ a circle", "args": [7000000, 7000000], "expected": 0.0},
+      {"name": "eccentricity(7e6, 1.4e7) ~ mild oval", "args": [7000000, 14000000], "expected": 0.33333333},
+      {"name": "eccentricity(2e7, 6e7) ~ stretched", "args": [20000000, 60000000], "expected": 0.5},
+      {"name": "eccentricity(7e6, 2.1e7)", "args": [7000000, 21000000], "expected": 0.5}
+    ]
+  },
+  {
+    "entry": "orbital_period",
+    "tol": 2,
+    "cases": [
+      {"name": "orbital_period(5.972e24, 7e6) ~ low Earth orbit", "args": [5.972e24, 7000000], "expected": 5829},
+      {"name": "orbital_period(5.972e24, 4.216e7) ~ one day", "args": [5.972e24, 42160000], "expected": 86154},
+      {"name": "orbital_period(1.989e30, 1.496e11) ~ one year", "args": [1.989e30, 1.496e11], "expected": 31554897, "tol": 100}
+    ]
+  },
+  {
+    "entry": "farthest_point",
+    "tol": 100000,
+    "cases": [
+      {"name": "farthest_point circular ~ stays at 7e6", "args": [5.972e24, 7000000, 7545.78, 1, 1500], "expected": 7000000, "tol": 30000},
+      {"name": "farthest_point 8200 ~ apogee ~1.01e7", "args": [5.972e24, 7000000, 8200, 1, 10000], "expected": 10092322},
+      {"name": "farthest_point 8700 ~ apogee ~1.39e7", "args": [5.972e24, 7000000, 8700, 1, 12000], "expected": 13874451}
+    ]
+  }
+]

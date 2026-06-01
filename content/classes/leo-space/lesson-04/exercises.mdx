@@ -1,0 +1,87 @@
+# Lesson 4 — Exercises: Escape!
+
+## How This Works
+
+Three functions about energy and freedom: the escape speed, the total energy, and a predictor that says whether a launch flies away or falls back.
+
+Use `G = 6.674e-11` (already set up), and `import math` is at the top for `math.sqrt`.
+
+**Handy facts:** Earth — mass `5.972e24` kg, radius `6.371e6` m. Moon — mass `7.342e22` kg, radius `1.737e6` m.
+
+---
+
+## Exercise 1: Escape Speed
+
+Write `escape_speed(M, r)` — the slowest speed that leaves a planet forever:
+
+$$
+v_{esc} = \sqrt{\frac{2 G M}{r}}
+$$
+
+```python
+def escape_speed(M, r):
+    # Return the square root of (2 * G * M / r)
+    pass
+```
+
+**Examples:**
+- `escape_speed(5.972e24, 6.371e6)` → about `11185.73` (Earth's surface — the famous 11.2 km/s!)
+- `escape_speed(7.342e22, 1.737e6)` → about `2375.28` (the Moon — much easier to leave)
+- `escape_speed(5.972e24, 7e6)` → about `10671.34` (a bit easier from up in orbit)
+
+**Hint:** Just like the orbital speed, but with a `2` on top: `math.sqrt(2 * G * M / r)`.
+
+---
+
+## Exercise 2: Total Energy
+
+Write `total_energy(M, v, r)` — the kinetic-plus-potential energy (per kilogram):
+
+$$
+E = \tfrac{1}{2}v^2 - \frac{G M}{r}
+$$
+
+```python
+def total_energy(M, v, r):
+    # Return 0.5 * v**2  minus  G * M / r
+    pass
+```
+
+**Examples:**
+- `total_energy(5.972e24, 11186, 6.371e6)` → about `3059` (launched at escape speed → energy ≈ 0!)
+- `total_energy(5.972e24, 7546, 7e6)` → about `-28467696` (a circular orbit → energy is negative, it's bound)
+- `total_energy(5.972e24, 15000, 6.371e6)` → about `49939761` (way past escape → big positive energy)
+
+**Hint:** `0.5 * v**2 - G * M / r`. The kinetic part is positive; the potential part is subtracted.
+
+---
+
+## Exercise 3: Will It Escape?
+
+Write `will_escape(M, v, r)` that returns `True` if the object flies away forever, or `False` if gravity reels it back. The rule: it escapes when the total energy is zero or positive.
+
+```python
+def will_escape(M, v, r):
+    # 1. energy = 0.5 * v**2 - G * M / r
+    # 2. return True if energy >= 0, else False
+    pass
+```
+
+**Examples:**
+- `will_escape(5.972e24, 15000, 6.371e6)` → `True` (15 km/s from Earth's surface — gone!)
+- `will_escape(5.972e24, 7000, 7e6)` → `False` (7 km/s in low orbit — stays bound)
+- `will_escape(5.972e24, 11186, 6.371e6)` → `True` (right at escape speed — just barely free)
+- `will_escape(7.342e22, 2000, 1.737e6)` → `False` (2 km/s off the Moon — not quite enough)
+
+**Hint:** You can `return energy >= 0` directly — that comparison already gives `True` or `False`.
+
+---
+
+## Tips If You're Stuck
+
+1. **`will_escape` always True (or always False)?** Check the sign in the energy: it's `+0.5*v**2` *minus* `G*M/r`.
+2. **Escape speed too small?** Don't forget the `2` on top — escape speed is bigger than orbital speed.
+3. **Compare your answers:** `escape_speed` should be about 1.41× the `orbital_speed` from Lesson 2 at the same radius.
+4. **`None` returned?** Don't forget the `return` lines.
+
+Predict some launches, then press Run to see the escape-vs-orbit picture in the Graph panel. Next lesson: build the rocket that actually gets you there!

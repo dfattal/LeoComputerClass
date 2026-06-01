@@ -1,0 +1,87 @@
+# Lesson 7 — Transfer to Mars
+
+## Phase 4: To Other Worlds
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand the **Hohmann transfer** — the fuel-cheapest way to fly between orbits
+- See why getting to Mars takes **two burns**, not one
+- Compute the **departure burn** that flings you off toward another planet
+- Use Kepler's Law to find the **travel time** — and discover why a Mars trip takes months
+
+---
+
+## Big Idea: You Can't Just Aim at Mars
+
+Here's a shock: to fly from Earth to Mars, you don't point your rocket at Mars and fire. Earth, Mars, and your spacecraft are *all* orbiting the Sun, looping around at tens of thousands of km/h. To change worlds, you don't aim — you **change your orbit** around the Sun.
+
+The clever, fuel-saving path is called a **Hohmann transfer**: a single stretched ellipse that just kisses Earth's orbit on the inside and Mars's orbit on the outside. You ride half of that ellipse from one planet to the other — coasting the whole way, engine off, gravity doing the work. (Sound familiar? It's exactly the elliptical orbit from Lesson 3, now drawn around the Sun.)
+
+The transfer ellipse touches Earth's orbit ($r_1$) at its near end and Mars's orbit ($r_2$) at its far end, so its semi-major axis is just the average of the two — the same formula from Lesson 3:
+
+$$
+a = \frac{r_1 + r_2}{2}
+$$
+
+---
+
+## Two Burns: Speed Up, Then Speed Up Again
+
+A Hohmann transfer needs **two** engine burns — at the start and the end.
+
+**Burn 1 — Departure (leaving Earth's orbit).** Right now you're cruising with Earth at its circular speed. To stretch your orbit outward to Mars, you fire *forward* (prograde) to speed up. You need just enough to put yourself on the transfer ellipse. We can find both speeds with formulas you already know — the circular speed from Lesson 2 and the vis-viva speed of an ellipse:
+
+$$
+\Delta v_1 = \underbrace{\sqrt{G M\left(\frac{2}{r_1} - \frac{1}{a}\right)}}_{\text{speed on the transfer ellipse}} \;-\; \underbrace{\sqrt{\frac{G M}{r_1}}}_{\text{Earth's circular speed}}
+$$
+
+where $M$ is the **Sun's** mass (the Sun is what you're orbiting now). For Earth → Mars this comes out to about **2,944 m/s** of speed-up.
+
+> **Going *inward* instead?** If your destination is *closer* to the Sun (say Venus), the math gives a **negative** burn — you fire *backward* to slow down, so you fall in toward the Sun. The sign tells you which way to point the engine!
+
+**Burn 2 — Arrival (matching Mars's orbit).** You coast up the ellipse and arrive out at Mars's distance — but moving *slower* than Mars (you climbed away from the Sun and traded speed for height, remember Lesson 3). If you do nothing, you'd slide right back toward the Sun. So you fire forward **again** to speed up to Mars's circular speed and settle into its orbit. That's your second burn.
+
+---
+
+## How Long Does It Take?
+
+You ride exactly **half** of the transfer ellipse — from the near end to the far end. So the travel time is **half the orbit's period**, which you get straight from Kepler's Third Law (Lesson 3!):
+
+$$
+t_{transfer} = \pi \sqrt{\frac{a^3}{G M}}
+$$
+
+(It's the period formula $2\pi\sqrt{a^3/GM}$ with the $2$ removed, because you only fly half the loop.)
+
+Plug in Earth and Mars and you get about **22.4 million seconds** — which is **259 days**, or roughly **8½ months**. That's a real number: it's about how long NASA's rovers actually took to reach Mars. And it's why you can't leave whenever you want — Mars has to be in *just* the right spot in its own orbit so it arrives at the far end of your ellipse exactly when you do. Miss the launch window and you wait two years for the next one.
+
+{{FIRST_NAME}}, with three short formulas you can now plan a real interplanetary mission — the same math mission designers use.
+
+---
+
+## What You'll Build
+
+1. `transfer_axis(r1, r2)` — the semi-major axis of the transfer ellipse.
+2. `burn_one(M, r1, r2)` — the departure burn (positive = speed up, negative = slow down).
+3. `transfer_time(M, r1, r2)` — how long the trip takes, from Kepler's Law.
+
+`G = 6.674e-11` and `import math` are set up for you. The Sun's mass is `1.989e30` kg. Plan your mission.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Hohmann transfer | a half-ellipse between two orbits | — |
+| Transfer axis | average of the two orbit sizes | `(r1 + r2) / 2` |
+| Vis-viva speed | your speed at a point on an ellipse | `math.sqrt(G*M*(2/r - 1/a))` |
+| Departure burn | transfer speed minus circular speed | `burn_one` |
+| Two burns | speed up to leave, speed up to arrive | — |
+| Travel time | half the transfer ellipse's period | `math.pi * math.sqrt(a**3/(G*M))` |
+
+Head to the exercises and book a trip to Mars!

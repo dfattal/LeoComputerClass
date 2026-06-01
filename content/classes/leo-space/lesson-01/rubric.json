@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct gravity formula", "weight": 40, "description": "gravity_force uses G*m1*m2/r**2 and gravity_accel uses G*M/r**2 — note the distance is squared"},
+  {"criterion": "Inverse-square understanding", "weight": 30, "description": "times_weaker returns (r_far/r_near)**2 — doubling the distance makes gravity four times weaker"},
+  {"criterion": "Passes the sanity check", "weight": 20, "description": "gravity_accel at Earth's surface comes out near 9.8, confirming the physics is right"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names (M, r, a), uses the provided G, and a return on every function"}
+]

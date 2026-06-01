@@ -1,0 +1,133 @@
+# Lesson 8 — Mission Control (Capstone)
+
+## Phase 4: To Other Worlds
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Use your orbit simulator to **design**, not just to watch
+- Measure how *circular* an orbit is with a single number
+- **Sweep** many launch speeds and let the computer pick the best one
+- Watch your simulator **rediscover** the orbital-speed law from Lesson 2 — all by itself
+
+---
+
+## Big Idea: Let the Computer Find the Answer
+
+You've built an incredible toolkit, {{FIRST_NAME}}. You started Lesson 1 not even knowing why the Moon stays up. Now you can simulate orbits, escapes, rocket burns, soft landings, and trips to Mars. For your final mission, you're going to do what real engineers do: stop *guessing* and let the computer **search** for the perfect answer.
+
+Back in Lesson 2 you learned a formula for the one speed that makes a perfect circular orbit:
+
+$$
+v = \sqrt{\frac{G M}{r}}
+$$
+
+But what if you'd *never* learned that formula? Could you still find the right speed — using nothing but your simulator? Yes. You'd try lots of speeds, measure how circular each orbit comes out, and **keep the best one.** That's an *optimizer*, and it's one of the most powerful ideas in all of computing.
+
+Here's the thrilling part: when your search finishes, it'll land right on top of the formula. The machine will have **rediscovered the law of orbits** without being told it. That's your capstone.
+
+---
+
+## Step 1: Measure "How Circular?"
+
+To search for the *roundest* orbit, you first need a way to *score* an orbit. Easy: simulate it, find its closest distance (perigee) and farthest distance (apogee), and subtract.
+
+- A **perfect circle** has perigee = apogee, so the gap is **0**.
+- A **stretched ellipse** has a big gap.
+
+So a smaller gap means a rounder orbit. We'll call this the **roundness** score (really, the *un*-roundness — smaller is better):
+
+```python
+def roundness(M, r0, v, dt, steps):
+    min_r, max_r = sim_orbit(M, r0, v, dt, steps)
+    return max_r - min_r
+```
+
+You're given `sim_orbit` (it's your Lesson 2 loop, upgraded to track the smallest and biggest distance). Launch too slow and the orbit dips in on one side — big gap. Too fast and it bulges out — big gap. *Just right* and it's a clean circle — tiny gap.
+
+---
+
+## Step 2: Sweep and Keep the Best
+
+Now the search. Instead of testing wild random speeds, we'll test speeds *near* the formula's answer by scaling it with a **factor** `f`:
+
+- `f = 1.0` means "exactly the formula speed."
+- `f = 0.9` means "10% slower," `f = 1.1` means "10% faster," and so on.
+
+We sweep `f` from 0.80 up to 1.20, score each one's roundness, and remember the factor that scored lowest — exactly like the dart-mass sweep in your Motion Lab capstone:
+
+```python
+def best_factor(M, r0, dt, steps):
+    vc = v_circle(M, r0)        # the formula's speed (given)
+    best_f = 0
+    best_score = 1e99           # start impossibly bad
+    f = 0.80
+    while f <= 1.20 + 1e-9:
+        score = roundness(M, r0, f * vc, dt, steps)
+        if score < best_score:  # rounder than anything so far?
+            best_score = score
+            best_f = f
+        f = f + 0.02
+    return round(best_f, 2)
+```
+
+If your simulator and your physics are right, the winning factor will come out to **1.00** — meaning the roundest orbit happens at *exactly* the formula speed. The search confirms the law.
+
+---
+
+## Step 3: The Payoff
+
+Finally, turn that winning factor back into an actual speed:
+
+```python
+def best_speed(M, r0, dt, steps):
+    return best_factor(M, r0, dt, steps) * v_circle(M, r0)
+```
+
+Run it for Earth at $r = 7{,}000$ km and your *searched* answer comes back as about **7,545.8 m/s** — the very same number the Lesson 2 formula gives. Two completely different roads — one a pencil-and-paper formula, one a brute-force computer search — arriving at the *identical* answer.
+
+That agreement is the deepest idea in this whole class. It's how scientists *trust* a result: when the theory and the simulation shake hands, you know you've found something real.
+
+---
+
+## You Did It
+
+Look how far you've come:
+
+- **Lesson 1:** why the Moon doesn't fall down (it does — it keeps missing)
+- **Lessons 2–4:** circular orbits, ellipses, escape velocity
+- **Lessons 5–6:** rockets that leave the pad, and landers that touch down softly
+- **Lesson 7:** a real mission plan to Mars
+- **Lesson 8:** a simulator smart enough to discover the laws of physics on its own
+
+Every bit of it written by you, in Python, from first principles. The next adventures are wide open — **gravity slingshots** that steal speed from a passing planet, **landing on Mars**, **three-body chaos**, whole solar systems. You've got the engine now. Point it anywhere. 🚀
+
+---
+
+## What You'll Build
+
+You're given `v_circle(M, r0)` and `sim_orbit(M, r0, v, dt, steps)`. You write:
+
+1. `roundness(M, r0, v, dt, steps)` — the un-roundness score (apogee minus perigee).
+2. `best_factor(M, r0, dt, steps)` — sweep the speed factor and keep the roundest.
+3. `best_speed(M, r0, dt, steps)` — turn the winning factor into the actual orbit speed.
+
+`G = 6.674e-11` and `import math` are set up for you. Take command, Mission Control.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Roundness score | apogee minus perigee (0 = circle) | `max_r - min_r` |
+| Optimizer | try many, keep the best | a sweep loop |
+| Speed factor | a multiple of the formula speed | `f * v_circle(M, r0)` |
+| Keep the best | remember the lowest score | `if score < best_score:` |
+| The payoff | the search lands on the formula | `best_factor ≈ 1.0` |
+| Theory = simulation | two roads, one answer → it's real | — |
+
+Head to the exercises and let your simulator rediscover the law!

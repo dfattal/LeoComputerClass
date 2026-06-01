@@ -1,0 +1,6 @@
+[
+  {"criterion": "Transfer ellipse", "weight": 20, "description": "transfer_axis returns (r1 + r2)/2"},
+  {"criterion": "Departure burn", "weight": 45, "description": "burn_one computes vis-viva speed minus circular speed; a negative result for inner targets is correct"},
+  {"criterion": "Travel time", "weight": 25, "description": "transfer_time returns pi*sqrt(a**3/(G*M)) — half the ellipse's period"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names, uses the provided G, and a return on every function"}
+]

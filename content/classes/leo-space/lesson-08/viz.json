@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    0
+  ],
+  "title": "Roundness drops to a sharp minimum at the formula speed (factor = 1.0)",
+  "xLabel": "speed factor (x the formula speed)",
+  "yLabel": "apogee minus perigee (m)",
+  "setup": "# --- plot helper (hidden) — roundness across the speed sweep ---\nimport math as __m\ndef __sweep():\n    G = 6.674e-11; M = 5.972e24; r0 = 7e6; dt = 3.0; steps = 2000\n    vc = __m.sqrt(G * M / r0)\n    pts = []\n    f = 0.80\n    while f <= 1.20 + 1e-9:\n        x = r0; y = 0.0; vx = 0.0; vy = f * vc; mn = r0; mx = r0\n        for _ in range(steps):\n            r = __m.sqrt(x * x + y * y); ff = G * M / (r * r * r)\n            vx += -ff * x * dt; vy += -ff * y * dt; x += vx * dt; y += vy * dt\n            d = __m.sqrt(x * x + y * y)\n            if d < mn: mn = d\n            if d > mx: mx = d\n        pts.append([round(f, 2), round(mx - mn, 1)])\n        f += 0.02\n    return pts\n\ndef __plot(_):\n    return [\n        {\"name\": \"roundness (gap) vs speed factor\", \"points\": __sweep(), \"highlight\": True},\n    ]\n"
+}

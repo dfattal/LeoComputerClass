@@ -1,0 +1,128 @@
+# Lesson 1 — Gravity Gets Weaker
+
+## Phase 1: Falling Forever
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Know **Newton's law of gravity** — the rule every planet, moon, and rocket obeys
+- Understand why gravity follows an **inverse-square law**: twice as far means *four* times weaker
+- Discover the surprise that a falling object's **own mass doesn't matter**
+- Write code that computes the pull between any two masses, and the acceleration near a planet
+- Use your code to answer the big question: **why doesn't the Moon fall down?**
+
+---
+
+## Big Idea
+
+In your last class, gravity was simple: everything fell at $9.8\ \text{m/s}^2$, always. That worked great near the ground. But $9.8$ is a lie the moment you leave home.
+
+Gravity isn't a fixed number — it's a **force that reaches across space and gets weaker the farther away you are.** The Moon feels Earth's pull from 384,000 km away. The Earth feels the Sun's pull from 150 million km away. The same rule controls all of it, and Isaac Newton wrote it down over 300 years ago:
+
+$$
+F = G\,\frac{m_1\, m_2}{r^2}
+$$
+
+In words: *the gravitational pull between two objects depends on both of their masses multiplied together, divided by the distance between them squared.* The $G$ is a tiny fixed number called the **gravitational constant**:
+
+$$
+G = 6.674 \times 10^{-11}
+$$
+
+It's tiny because gravity is actually a *very* weak force. You only notice it when one of the masses is gigantic — like a whole planet.
+
+> **Mass times mass?** Yes! Gravity is a handshake. The Earth pulls on you, and you pull on the Earth *just as hard*. Make either object heavier and the pull gets stronger. That's why both masses are multiplied in.
+
+---
+
+## The Inverse-Square Law
+
+Look closely at that $r^2$ on the bottom. The distance isn't just divided — it's **squared** first. This one detail changes everything.
+
+- Move **twice** as far away → gravity is $2^2 = 4$ times weaker.
+- Move **three** times as far → $3^2 = 9$ times weaker.
+- Move **ten** times as far → $10^2 = 100$ times weaker.
+
+Gravity doesn't fade gently. It **collapses**. This is called the **inverse-square law**, and it's why space is mostly weightless even though gravity technically reaches forever.
+
+> **Why squared?** Picture the pull spreading out from a planet like light from a flashlight. As it travels outward it has to cover a bigger and bigger *ball-shaped* area, and the area of a sphere grows with the radius **squared**. The same pull, spread over four times the area, is four times weaker.
+
+---
+
+## The Surprise: Your Own Mass Doesn't Matter
+
+Here's a question that fooled smart people for 2,000 years: *drop a heavy rock and a light pebble at the same time — which hits the ground first?*
+
+The answer is **they tie.** Let's see why, with code-friendly math. The force on a falling object of mass $m$ near a planet of mass $M$ is:
+
+$$
+F = G\,\frac{M\, m}{r^2}
+$$
+
+But acceleration is force divided by mass ($a = F / m$, which you know as Newton's second law). So divide both sides by that little $m$:
+
+$$
+a = \frac{F}{m} = G\,\frac{M}{r^2}
+$$
+
+**The falling object's mass $m$ cancels out completely!** The acceleration only depends on the *planet's* mass $M$ and your distance $r$ — not on how heavy *you* are. A feather and a hammer fall at the same rate (astronauts actually tested this on the Moon, where there's no air to slow the feather). This is the formula you'll use the most:
+
+$$
+a = G\,\frac{M}{r^2}
+$$
+
+**Sanity check — does it give 9.8?** Plug in Earth's mass $M = 5.972 \times 10^{24}\ \text{kg}$ and Earth's radius $r = 6.371 \times 10^{6}\ \text{m}$ (standing on the surface, you're one Earth-radius from the center):
+
+$$
+a = 6.674\times10^{-11} \cdot \frac{5.972\times10^{24}}{(6.371\times10^{6})^2} \approx 9.8\ \text{m/s}^2
+$$
+
+There's your old friend $9.8$! It was never a magic number — it's just what Newton's law gives *at Earth's surface.* Climb a mountain or fly to orbit, and $r$ grows, and gravity drops. **Whenever your code reproduces a value you already know (like 9.8), that's how you know it's right.**
+
+---
+
+## So… Why Doesn't the Moon Fall Down?
+
+It does. That's the twist.
+
+The Moon is $r = 3.844 \times 10^8\ \text{m}$ from Earth's center. Run that through our formula and Earth's gravity out there is about:
+
+$$
+a \approx 0.0027\ \text{m/s}^2
+$$
+
+Weak — about 3,600 times weaker than at the surface — but **not zero.** Earth really is pulling the Moon toward it, every second. So why doesn't the Moon spiral in and crash?
+
+Because the Moon is also moving **sideways**, fast. Every second, gravity pulls it a little closer… but in that same second it coasts sideways just enough that the curved Earth *falls away beneath it.* It's falling and **forever missing.** That, {{FIRST_NAME}}, is what an orbit really is — and it's exactly what you'll build in the next lesson.
+
+For now, your job is to build the gravity engine that makes all of it possible.
+
+---
+
+## What You'll Build
+
+Three functions, the toolkit for every mission ahead:
+
+1. `gravity_force(m1, m2, r)` — the full handshake: the pull between any two masses.
+2. `gravity_accel(M, r)` — the acceleration a small object feels near a planet (mass cancels out).
+3. `times_weaker(r_near, r_far)` — how many times weaker gravity gets when you move farther away (the inverse-square law in one line).
+
+Use `G = 6.674e-11` (it's already set up for you in the starter code). Let's go.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Newton's law | pull grows with both masses, drops with distance² | `G * m1 * m2 / r**2` |
+| Gravitational constant | the tiny fixed number $G$ | `G = 6.674e-11` |
+| Inverse-square | twice as far = four times weaker | `(r_far / r_near)**2` |
+| Acceleration near a planet | the falling object's mass cancels out | `G * M / r**2` |
+| Sanity check | Earth's surface should give ≈ 9.8 | `gravity_accel(5.972e24, 6.371e6)` |
+| Why the Moon stays up | it falls toward Earth but moves sideways and misses | (next lesson!) |
+
+Head to the exercises and build your gravity engine!

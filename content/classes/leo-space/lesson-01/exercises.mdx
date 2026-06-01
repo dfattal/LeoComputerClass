@@ -1,0 +1,102 @@
+# Lesson 1 — Exercises: Gravity Gets Weaker
+
+## How This Works
+
+You'll write three functions that together make a **gravity engine** — the toolkit you'll use to orbit planets and land rockets in the lessons ahead. When you click **Run Tests**, the computer calls your functions and checks the answers.
+
+**Important:** Gravity answers come in wildly different sizes — from `0.0000000667` between two apples to `200000000000000000000` between the Earth and the Moon. The tests accept anything **close enough** to the right value, so don't stress about matching every digit. Get the formula right and you're golden.
+
+Use `G = 6.674e-11` for the gravitational constant. It's already defined at the top of the starter code, so you can just use `G` in your functions.
+
+**Handy space facts** (you'll need these to check your work):
+
+| Object | Mass (kg) | Radius (m) |
+|--------|-----------|------------|
+| Earth | `5.972e24` | `6.371e6` |
+| Moon | `7.342e22` | `1.737e6` |
+
+Earth-to-Moon distance: `3.844e8` m.
+
+---
+
+## Exercise 1: The Gravity Handshake
+
+Write a function `gravity_force(m1, m2, r)` that returns the gravitational pull between two objects, using Newton's law:
+
+$$
+F = G\,\frac{m_1\, m_2}{r^2}
+$$
+
+```python
+def gravity_force(m1, m2, r):
+    # Return G times m1 times m2, divided by r squared
+    pass
+```
+
+**Examples:**
+- `gravity_force(1, 1, 1)` → about `6.674e-11` (two 1 kg masses, 1 m apart — gravity is *really* weak!)
+- `gravity_force(1000, 1000, 10)` → about `6.674e-7` (two cars — you'd never feel it)
+- `gravity_force(5.972e24, 7.342e22, 3.844e8)` → about `1.98e20` (the Earth–Moon pull — *enormous*)
+
+**Hint:** In Python, "r squared" is `r**2`. One line: `return G * m1 * m2 / r**2`.
+
+---
+
+## Exercise 2: Acceleration Near a Planet
+
+When a *small* object (a rock, a rocket, you) falls near a *big* planet of mass `M`, the small object's own mass cancels out. Write `gravity_accel(M, r)` that returns the acceleration it feels:
+
+$$
+a = G\,\frac{M}{r^2}
+$$
+
+```python
+def gravity_accel(M, r):
+    # Return G times M, divided by r squared (no small mass needed!)
+    pass
+```
+
+**Examples:**
+- `gravity_accel(5.972e24, 6.371e6)` → about `9.8` (standing on Earth's surface — your old friend!)
+- `gravity_accel(7.342e22, 1.737e6)` → about `1.62` (standing on the Moon — you'd feel light)
+- `gravity_accel(5.972e24, 3.844e8)` → about `0.0027` (Earth's pull way out at the Moon — weak, but not zero!)
+
+**Check your work:** If `gravity_accel(5.972e24, 6.371e6)` comes out near `9.8`, your formula is correct — that's Earth's surface gravity, the number you already know.
+
+**Hint:** It's almost the same as Exercise 1, but with only *one* mass on top: `return G * M / r**2`.
+
+---
+
+## Exercise 3: How Much Weaker?
+
+This one shows off the **inverse-square law** with no constants at all. Write `times_weaker(r_near, r_far)` that returns how many times weaker gravity is at the far distance compared to the near distance.
+
+Because gravity goes as $1/r^2$, moving from `r_near` out to `r_far` makes it weaker by the *ratio of the distances, squared*:
+
+$$
+\text{times weaker} = \left(\frac{r_{far}}{r_{near}}\right)^2
+$$
+
+```python
+def times_weaker(r_near, r_far):
+    # Return (r_far / r_near) squared
+    pass
+```
+
+**Examples:**
+- `times_weaker(1, 2)` → `4` (twice as far = four times weaker)
+- `times_weaker(1, 3)` → `9` (three times as far = nine times weaker)
+- `times_weaker(6.371e6, 1.2742e7)` → `4` (fly up to *double* Earth's radius, and gravity is a quarter as strong)
+
+**Hint:** Divide first, then square the result: `return (r_far / r_near)**2`.
+
+---
+
+## Tips If You're Stuck
+
+1. **Answer way too big or too small?** Make sure you squared `r` (use `r**2`, not just `r`). Forgetting the square is the #1 gravity bug.
+2. **Exercise 2 not near 9.8?** Double-check you only put *one* mass on top (`M`), and that you're using Earth's radius `6.371e6` for `r`.
+3. **`None` returned?** Don't forget `return` at the start of each function's answer.
+4. **Using the right G?** It should be `6.674e-11` — already defined for you at the top. Just write `G` in your formula.
+
+Build this gravity engine and you've got everything you need to start flying. Next lesson: your first orbit. Let's go!

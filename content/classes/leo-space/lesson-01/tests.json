@@ -1,0 +1,31 @@
+[
+  {
+    "entry": "gravity_force",
+    "cases": [
+      {"name": "gravity_force(1, 1, 1) ~ two 1 kg masses", "args": [1, 1, 1], "expected": 6.674e-11, "tol": 1e-13},
+      {"name": "gravity_force(1000, 1000, 10) ~ two cars", "args": [1000, 1000, 10], "expected": 6.674e-7, "tol": 1e-9},
+      {"name": "gravity_force(100, 200, 4)", "args": [100, 200, 4], "expected": 8.3425e-8, "tol": 1e-10},
+      {"name": "gravity_force(5.972e24, 7.342e22, 3.844e8) ~ Earth-Moon", "args": [5.972e24, 7.342e22, 3.844e8], "expected": 1.9804e20, "tol": 1e17}
+    ]
+  },
+  {
+    "entry": "gravity_accel",
+    "tol": 0.01,
+    "cases": [
+      {"name": "gravity_accel(5.972e24, 6.371e6) ~ Earth surface = 9.8", "args": [5.972e24, 6.371e6], "expected": 9.82},
+      {"name": "gravity_accel(7.342e22, 1.737e6) ~ Moon surface", "args": [7.342e22, 1.737e6], "expected": 1.62},
+      {"name": "gravity_accel(5.972e24, 1.2742e7) ~ double Earth radius", "args": [5.972e24, 1.2742e7], "expected": 2.455},
+      {"name": "gravity_accel(5.972e24, 3.844e8) ~ Earth's pull at the Moon", "args": [5.972e24, 3.844e8], "expected": 0.0027, "tol": 0.0001}
+    ]
+  },
+  {
+    "entry": "times_weaker",
+    "tol": 1e-9,
+    "cases": [
+      {"name": "times_weaker(1, 2) ~ twice as far", "args": [1, 2], "expected": 4},
+      {"name": "times_weaker(1, 3) ~ three times as far", "args": [1, 3], "expected": 9},
+      {"name": "times_weaker(6.371e6, 1.2742e7) ~ double Earth radius", "args": [6.371e6, 1.2742e7], "expected": 4},
+      {"name": "times_weaker(5, 5) ~ same distance", "args": [5, 5], "expected": 1}
+    ]
+  }
+]

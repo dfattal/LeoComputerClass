@@ -1,0 +1,99 @@
+# Lesson 3 — Exercises: Ellipses & Kepler
+
+## How This Works
+
+Three functions to explore real (oval-shaped) orbits: measure their stretch, time their laps with Kepler's Law, and simulate one to find its apogee.
+
+Use `G = 6.674e-11` (already set up), and `import math` is at the top so you can use `math.sqrt` and `math.pi`.
+
+**Important:** The apogee one is simulated with the Euler method, so it's *close enough*, not exact — the tests use a tolerance.
+
+---
+
+## Exercise 1: How Stretched? (Eccentricity)
+
+Write `eccentricity(r_peri, r_apo)` — the shape number of an orbit:
+
+$$
+e = \frac{r_{apo} - r_{peri}}{r_{apo} + r_{peri}}
+$$
+
+```python
+def eccentricity(r_peri, r_apo):
+    # Return (r_apo - r_peri) / (r_apo + r_peri)
+    pass
+```
+
+**Examples:**
+- `eccentricity(7e6, 7e6)` → `0.0` (closest equals farthest → a perfect circle)
+- `eccentricity(7e6, 1.4e7)` → about `0.333` (a mild oval)
+- `eccentricity(2e7, 6e7)` → `0.5` (a good stretch)
+
+**Hint:** One line — just be careful which one is on top: `(r_apo - r_peri)`.
+
+---
+
+## Exercise 2: How Long Is a Lap? (Kepler's Third Law)
+
+Write `orbital_period(M, a)` — the time for one full orbit, from its semi-major axis `a`:
+
+$$
+T = 2\pi \sqrt{\frac{a^3}{G M}}
+$$
+
+```python
+def orbital_period(M, a):
+    # Return 2 * math.pi * math.sqrt(a**3 / (G * M))
+    pass
+```
+
+**Examples:**
+- `orbital_period(5.972e24, 7e6)` → about `5829` seconds (a low Earth orbit — ~97 minutes)
+- `orbital_period(5.972e24, 4.216e7)` → about `86154` seconds (geostationary — almost exactly one day!)
+- `orbital_period(1.989e30, 1.496e11)` → about `31554897` seconds (Earth around the Sun — one year!)
+
+**Hint:** `a**3` is "a cubed". Watch your parentheses: the whole `a**3 / (G * M)` goes inside the square root.
+
+---
+
+## Exercise 3: Find the Apogee
+
+Launch a satellite *faster* than circular speed and it swings out into an ellipse. Write `farthest_point(M, r0, v0, dt, steps)` that simulates the orbit and returns the **biggest distance** from the planet it reaches:
+
+- Start at `(r0, 0)`, launch sideways with velocity `(0, v0)`.
+- Each step, update the orbit and check if you've gone farther than ever before.
+
+```python
+def farthest_point(M, r0, v0, dt, steps):
+    x = r0
+    y = 0.0
+    vx = 0.0
+    vy = v0
+    farthest = r0
+    for _ in range(steps):
+        r = math.sqrt(x*x + y*y)
+        # 1. ax = -G*M*x/r**3 ,  ay = -G*M*y/r**3
+        # 2. vx += ax*dt ,  vy += ay*dt
+        # 3. x += vx*dt ,  y += vy*dt
+        # 4. d = math.sqrt(x*x + y*y); if d > farthest: farthest = d
+        pass
+    return farthest
+```
+
+**Examples:**
+- `farthest_point(5.972e24, 7e6, 7545.78, 1, 1500)` → about `7.0e6` (circular speed → never goes farther than the start)
+- `farthest_point(5.972e24, 7e6, 8200, 1, 10000)` → about `1.01e7` (a bit faster → swings out to ~10,000 km)
+- `farthest_point(5.972e24, 7e6, 8700, 1, 12000)` → about `1.39e7` (faster still → a much taller orbit)
+
+**Check your work:** The faster you launch (above circular speed), the higher the apogee. Notice the faster orbits need *more steps* to reach the top — that's Kepler's Law in action!
+
+---
+
+## Tips If You're Stuck
+
+1. **Apogee comes out as just `r0`?** You need *more steps* — a stretched orbit takes longer to reach the top. Or your launch speed isn't above circular.
+2. **Same 2D loop as Lesson 2** — gravity points inward with `r**3` on the bottom, velocity before position.
+3. **Period way off?** Make sure `a**3 / (G*M)` is *all* inside `math.sqrt`, and you multiplied by `2*math.pi`.
+4. **`None` returned?** Don't forget the `return` lines.
+
+Explore some ellipses, then press Run to see them in the Graph panel. Next lesson: go fast enough to never come back — escape!

@@ -1,0 +1,26 @@
+[
+  {
+    "entry": "roundness",
+    "tol": 3000,
+    "cases": [
+      {"name": "roundness at formula speed ~ small gap", "args": [5.972e24, 7000000, 7545.78, 3, 2000], "expected": 22637}
+    ]
+  },
+  {
+    "entry": "best_factor",
+    "tol": 0.02,
+    "cases": [
+      {"name": "best_factor(5.972e24, 7e6) ~ formula speed wins", "args": [5.972e24, 7000000, 3, 2000], "expected": 1.0},
+      {"name": "best_factor(5.972e24, 1e7)", "args": [5.972e24, 10000000, 3, 2000], "expected": 1.0},
+      {"name": "best_factor(7.342e22, 2e6) ~ at the Moon", "args": [7.342e22, 2000000, 3, 2000], "expected": 1.0}
+    ]
+  },
+  {
+    "entry": "best_speed",
+    "tol": 60,
+    "cases": [
+      {"name": "best_speed(5.972e24, 7e6) ~ matches Lesson 2 formula", "args": [5.972e24, 7000000, 3, 2000], "expected": 7545.78},
+      {"name": "best_speed(5.972e24, 1e7) ~ matches formula", "args": [5.972e24, 10000000, 3, 2000], "expected": 6313.25}
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "entry": "lander_step",
+    "tol": 0.01,
+    "cases": [
+      {"name": "lander_step(100, -10, 1.5, 1.62, 0.5)", "args": [100, -10, 1.5, 1.62, 0.5], "expected": [94.97, -10.06]},
+      {"name": "lander_step(50, 0, 2.0, 1.62, 1.0) ~ rising", "args": [50, 0, 2.0, 1.62, 1.0], "expected": [50.38, 0.38]}
+    ]
+  },
+  {
+    "entry": "land",
+    "tol": 0.1,
+    "cases": [
+      {"name": "land(50, 0, 1.5, 1.62, 0.01, 20000) ~ crash", "args": [50, 0, 1.5, 1.62, 0.01, 20000], "expected": -3.46},
+      {"name": "land(20, -2, 1.0, 1.62, 0.01, 20000) ~ hard", "args": [20, -2, 1.0, 1.62, 0.01, 20000], "expected": -5.37},
+      {"name": "land(8, -1, 1.55, 1.62, 0.01, 20000) ~ soft!", "args": [8, -1, 1.55, 1.62, 0.01, 20000], "expected": -1.46},
+      {"name": "land(100, -5, 1.4, 1.62, 0.01, 20000) ~ big crash", "args": [100, -5, 1.4, 1.62, 0.01, 20000], "expected": -8.31}
+    ]
+  },
+  {
+    "entry": "is_safe",
+    "cases": [
+      {"name": "is_safe(-1.2) ~ gentle", "args": [-1.2], "expected": true},
+      {"name": "is_safe(-3.5) ~ crash", "args": [-3.5], "expected": false},
+      {"name": "is_safe(1.8)", "args": [1.8], "expected": true},
+      {"name": "is_safe(-2.0) ~ right at the limit", "args": [-2.0], "expected": true},
+      {"name": "is_safe(2.5)", "args": [2.5], "expected": false}
+    ]
+  }
+]

@@ -1,0 +1,142 @@
+# Lesson 2 — Falling Around the World
+
+## Phase 1: Falling Forever
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand the famous idea that **an orbit is just falling sideways and missing the ground**
+- Know the **circular orbital speed** formula and where it comes from
+- Turn gravity into a **2D vector** — an acceleration that always points toward the planet
+- Upgrade your Euler loop to **two dimensions** (x *and* y) and watch a satellite circle the Earth
+- See why too slow means you crash, and too fast means you fly away
+
+---
+
+## Big Idea: Newton's Cannonball
+
+Isaac Newton imagined a cannon on top of an impossibly tall mountain, firing a cannonball sideways.
+
+- Fire it **gently** and it arcs through the air and lands a little way off — you already simulated this in Motion Lab.
+- Fire it **harder** and it lands farther away, because while it falls, the round Earth is also curving away beneath it.
+- Fire it **just right** and here's the magic: the ground curves away *exactly* as fast as the ball falls. The cannonball keeps falling forever and **never hits the ground.** It's in **orbit.**
+
+That's the whole secret, {{FIRST_NAME}}: an orbit isn't "escaping gravity." Gravity is pulling the whole time. An orbit is **falling so fast sideways that you keep missing the planet.** The Moon is doing it right now. So is every satellite over your head.
+
+---
+
+## How Fast Is "Just Right"?
+
+For a perfect circle, there's one exact speed. We can find it by matching two things you already know.
+
+Going in a circle of radius $r$ requires a constant inward pull (the same reason a ball on a string tugs your hand). The acceleration needed to hold a circle is:
+
+$$
+a = \frac{v^2}{r}
+$$
+
+And the pull *available* is gravity, which you learned last lesson:
+
+$$
+a = \frac{G M}{r^2}
+$$
+
+For a circle to hold, the pull you need has to equal the pull you have. Set them equal:
+
+$$
+\frac{v^2}{r} = \frac{G M}{r^2}
+$$
+
+Multiply both sides by $r$ and take the square root, and out pops the **circular orbital speed**:
+
+$$
+v = \sqrt{\frac{G M}{r}}
+$$
+
+Plug in Earth and a low orbit ($r = 7{,}000$ km from the center) and you get about **7,546 m/s** — roughly **27,000 km/h!** That's why reaching orbit is so hard: it's not about going *up*, it's about going *sideways* unbelievably fast.
+
+> **Farther out = slower.** Notice $r$ is on the bottom: the higher your orbit, the *slower* you go. The Moon, way out at 384,000 km, only needs about 1,000 m/s to hold its orbit. Gravity is weaker out there, so less speed is needed to balance it.
+
+---
+
+## Gravity Points *Somewhere* Now
+
+In Motion Lab, gravity always pointed straight down. In space there is no "down" — there's only **toward the planet.** As your satellite swings around, the direction of the pull keeps changing. So we need gravity as a **2D vector**: two numbers, `ax` and `ay`.
+
+Put the planet at the center, $(0, 0)$, and your satellite at position $(x, y)$. Its distance from the center is the Pythagorean theorem:
+
+$$
+r = \sqrt{x^2 + y^2}
+$$
+
+The *strength* of the pull is the same $G M / r^2$ as always. We just have to split it into an x-part and a y-part that point back toward the center. The trick is to scale by $x/r$ and $y/r$:
+
+$$
+a_x = -\,\frac{G M}{r^2}\cdot\frac{x}{r} = -\,\frac{G M\, x}{r^3}
+\qquad
+a_y = -\,\frac{G M\, y}{r^3}
+$$
+
+The minus signs mean "point back toward the center." If you're to the *right* of the planet (positive $x$), gravity pulls you *left* (negative $a_x$). Makes sense!
+
+> **Why divide by $r^3$?** One factor of $r^2$ is the usual gravity weakening. The extra $/r$ (hidden in the $x/r$) is just turning the direction into a clean "unit" arrow of length 1. Don't overthink it — the formula handles the aiming for you.
+
+---
+
+## The 2D Euler Loop
+
+Your stepping loop barely changes — you just do everything **twice**, once for x and once for y:
+
+```python
+r = math.sqrt(x*x + y*y)      # how far from the planet
+ax = -G * M * x / r**3        # gravity's x-part (points toward center)
+ay = -G * M * y / r**3        # gravity's y-part
+vx = vx + ax * dt             # update both velocity parts
+vy = vy + ay * dt
+x = x + vx * dt               # then update both position parts
+y = y + vy * dt
+```
+
+Same rhythm as always: **update velocity first, then position.** Repeat it a few thousand times and you've got a satellite tracing a circle around the Earth — pure code, no kit, no magic.
+
+To launch into a circle, you start off to one side, say at $(r, 0)$, and fire **sideways** (straight up the screen) at exactly the orbital speed: velocity $(0, v)$. Gravity does the rest.
+
+---
+
+## Goldilocks: Too Slow, Too Fast, Just Right
+
+Once you can simulate it, you can *play*:
+
+- **Just right** ($v = \sqrt{GM/r}$): a perfect circle. Your distance from the planet stays the same the whole way around.
+- **Too slow**: gravity wins. You spiral inward and your distance shrinks — you're crashing.
+- **Too fast**: you climb away from the planet, stretching the circle into a long oval (that's next lesson — ellipses!).
+
+You'll test all three in the exercises by checking the satellite's distance from the center after the simulation runs.
+
+---
+
+## What You'll Build
+
+1. `orbital_speed(M, r)` — the one exact speed for a circular orbit.
+2. `gravity_xy(M, x, y)` — gravity as a 2D arrow `[ax, ay]` pointing at the planet.
+3. `orbit_sim(M, r0, v, dt, steps)` — the 2D loop; launch sideways and report your final distance from the planet.
+
+`G = 6.674e-11` is set up for you. Time to put something in orbit. Let's go.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Orbit | falling sideways fast enough to keep missing | — |
+| Circular speed | the one speed that holds a circle | `math.sqrt(G*M/r)` |
+| Distance from center | Pythagoras on x and y | `math.sqrt(x*x + y*y)` |
+| Gravity vector | always points back at the planet | `ax = -G*M*x/r**3` |
+| 2D Euler step | do velocity then position, for x *and* y | (see above) |
+| Too slow / too fast | crash inward / stretch outward | change `v` |
+
+Head to the exercises and put a satellite in orbit!

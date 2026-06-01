@@ -1,0 +1,119 @@
+# Lesson 3 — Ellipses & Kepler
+
+## Phase 2: Real Orbits
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See why most orbits are **ellipses** (stretched circles), not perfect circles
+- Learn the words **perigee** (closest point) and **apogee** (farthest point)
+- Measure how stretched an orbit is with its **eccentricity**
+- Use **Kepler's Third Law** to find how long an orbit takes — from its size alone
+- Simulate an elliptical orbit and find its apogee with your own code
+
+---
+
+## Big Idea: Real Orbits Are Ovals
+
+Last lesson you found the *one* speed that makes a perfect circle. But what if you go a little faster? You don't fly away — you swing out into a **stretched oval** and then come right back. That oval is called an **ellipse**, and it's the shape of almost every real orbit: planets, comets, satellites, the Moon.
+
+Two special points on every elliptical orbit:
+
+- **Perigee** — the *closest* you get to the planet. You're moving *fastest* here (gravity has been pulling you in, speeding you up).
+- **Apogee** — the *farthest* you get. You're moving *slowest* here (you've been climbing against gravity, trading speed for height).
+
+It's exactly like a skateboarder in a halfpipe: fastest at the bottom, slowest at the top, trading speed for height and back again — forever. {{FIRST_NAME}}, your satellite does the same thing, swooping fast past the planet and coasting slowly way out at the top.
+
+---
+
+## How Stretched? Eccentricity
+
+To describe the *shape* of an orbit with a single number, we use **eccentricity**. It compares how different the apogee and perigee are:
+
+$$
+e = \frac{r_{apo} - r_{peri}}{r_{apo} + r_{peri}}
+$$
+
+- $e = 0$ → a **perfect circle** (apogee equals perigee, top and bottom are nowhere).
+- $e = 0.3$ → a **mildly squished** oval.
+- $e$ close to $1$ → a **long, dramatic** ellipse (like a comet that dives past the Sun and shoots far away).
+
+Earth's orbit around the Sun has $e \approx 0.017$ — almost a perfect circle. Halley's Comet has $e \approx 0.97$ — a wildly stretched cigar.
+
+---
+
+## The Size of an Orbit: the Semi-Major Axis
+
+An ellipse's "size" is set by its **semi-major axis**, written $a$ — basically the average of its closest and farthest distances:
+
+$$
+a = \frac{r_{peri} + r_{apo}}{2}
+$$
+
+For a circle, $r_{peri} = r_{apo}$, so $a$ is just the radius — nice and consistent. This single number $a$ turns out to control something amazing: *how long the orbit takes.*
+
+---
+
+## Kepler's Third Law: Size Tells You Time
+
+Four hundred years ago, Johannes Kepler stared at planet data and found a stunning pattern: an orbit's **period** (the time for one full lap) depends *only* on its semi-major axis $a$ — not on its shape, not on its mass. Newton later showed why, and gave us the formula:
+
+$$
+T = 2\pi \sqrt{\frac{a^3}{G M}}
+$$
+
+In words: *cube the size, divide by the planet's pull, square-root it.* Bigger orbits take dramatically longer — double the size and the period grows by $2^{1.5} \approx 2.8$ times.
+
+Check it on something you know — a low Earth orbit ($a = 7{,}000$ km):
+
+$$
+T = 2\pi\sqrt{\frac{(7\times10^6)^3}{G \cdot 5.972\times10^{24}}} \approx 5{,}829 \text{ seconds} \approx 97 \text{ minutes}
+$$
+
+That's why astronauts on the Space Station see a sunrise every 90-ish minutes — they really do loop the whole Earth that fast! And our own planet? Plug in Earth's orbit around the Sun and Kepler's law spits out **31.5 million seconds** — one year. The math knows.
+
+---
+
+## Finding the Apogee with Code
+
+The formulas above describe an orbit you already know the shape of. But your **simulator** can *discover* the shape. Launch a satellite a little faster than circular speed and let the loop run: it'll swing outward, and somewhere out there it reaches its farthest point — the apogee — before falling back.
+
+The trick in code is simple: as you step, keep a running record of the **biggest distance** you've seen so far.
+
+```python
+farthest = r0
+# inside the loop, after updating position:
+d = math.sqrt(x*x + y*y)
+if d > farthest:
+    farthest = d
+```
+
+Give the loop *enough steps* to reach the top of the arc (a stretched orbit takes longer — remember Kepler!), and `farthest` will hold the apogee distance. You've measured an orbit's shape with nothing but a stepping loop.
+
+---
+
+## What You'll Build
+
+1. `eccentricity(r_peri, r_apo)` — how stretched an orbit is (0 = circle).
+2. `orbital_period(M, a)` — Kepler's Third Law: the time for one lap.
+3. `farthest_point(M, r0, v0, dt, steps)` — launch sideways and simulate to find the apogee.
+
+`G = 6.674e-11` and `import math` are set up for you. Let's stretch some orbits.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Ellipse | a stretched-circle orbit | — |
+| Perigee / Apogee | closest / farthest point | — |
+| Eccentricity | how stretched (0 = circle) | `(ra - rp) / (ra + rp)` |
+| Semi-major axis | the orbit's size | `(rp + ra) / 2` |
+| Kepler's Third Law | period from size | `2*math.pi*math.sqrt(a**3 / (G*M))` |
+| Find apogee | track the biggest distance in the loop | `if d > farthest: farthest = d` |
+
+Head to the exercises and explore real orbits!

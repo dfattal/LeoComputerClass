@@ -1,0 +1,6 @@
+[
+  {"criterion": "Roundness score", "weight": 25, "description": "roundness unpacks sim_orbit and returns max_r - min_r"},
+  {"criterion": "Working optimizer sweep", "weight": 45, "description": "best_factor scores every speed factor and keeps the one with the smallest roundness (lands on 1.0)"},
+  {"criterion": "Searched speed matches theory", "weight": 20, "description": "best_speed returns best_factor * v_circle, matching the Lesson 2 formula"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names and a return on every function"}
+]

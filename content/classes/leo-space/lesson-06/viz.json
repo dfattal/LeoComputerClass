@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    0
+  ],
+  "title": "Dropping from 50 m: a weak engine crashes fast, a strong one glides in",
+  "xLabel": "time (s)",
+  "yLabel": "height (m)",
+  "setup": "# --- plot helper (hidden) — Moon descents at different thrusts ---\ndef __descend(thrust, dt, steps, every):\n    g = 1.62; h = 50.0; v = 0.0; t = 0.0\n    pts = [[0.0, 50.0]]\n    for i in range(steps):\n        v += (thrust - g) * dt\n        h += v * dt; t += dt\n        if h <= 0:\n            pts.append([round(t, 2), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 2), round(h, 2)])\n    return pts\n\ndef __plot(_):\n    return [\n        {\"name\": \"engine off (0.0) — crash\", \"points\": __descend(0.0, 0.05, 3000, 20), \"highlight\": False},\n        {\"name\": \"weak (1.0)\", \"points\": __descend(1.0, 0.05, 3000, 20), \"highlight\": False},\n        {\"name\": \"strong (1.61) — gentle glide\", \"points\": __descend(1.61, 0.05, 3000, 20), \"highlight\": True},\n    ]\n"
+}

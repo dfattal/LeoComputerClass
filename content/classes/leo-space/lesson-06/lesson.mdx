@@ -1,0 +1,104 @@
+# Lesson 6 — The Lunar Lander
+
+## Phase 3: Flying a Mission
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Combine **gravity pulling down** and an **engine pushing up** into one motion
+- Understand why landing is all about the **net acceleration**
+- Simulate a descent to the surface and find your **touchdown speed**
+- Decide whether a landing is **safe** — the goal of the whole mission
+
+---
+
+## Big Idea: The Hardest Part Is Stopping
+
+Getting *to* the Moon is mostly coasting. The terrifying part is the last few hundred meters — coming **down** without smashing into the ground. In 1969, Neil Armstrong landed the real Lunar Module by hand with about 25 seconds of fuel to spare. Today, you'll land one with code.
+
+The whole problem is a battle between two accelerations:
+
+- **Gravity** pulls you *down*. On the Moon it's gentle — only $g = 1.62\ \text{m/s}^2$, about a sixth of Earth's. (You found that exact number back in Lesson 1!)
+- **Your engine** pushes you *up* with some thrust acceleration you control.
+
+Whichever wins decides what your speed does. We call the leftover the **net acceleration**:
+
+$$
+a = (\text{thrust}) - g
+$$
+
+- Engine **weaker** than gravity (thrust $< g$) → net is downward → you keep descending, but **slower than a free fall**. Your engine is softening the landing.
+- Engine **equal** to gravity (thrust $= g$) → net is zero → you drift down at a steady speed, like a feather.
+- Engine **stronger** than gravity (thrust $> g$) → net is upward → you slow to a stop and start *rising* again. Fire too hard and you'll lift back off!
+
+For a controlled landing, you want your thrust **close to but not more than** gravity — a gentle, drifting descent that kisses the ground.
+
+---
+
+## One Step at a Time
+
+This is the same Euler loop you've used all along, with the acceleration being that tug-of-war. Up is positive, so a downward velocity is **negative** (you're falling):
+
+```python
+v = v + (thrust - g) * dt    # net acceleration changes your speed
+h = h + v * dt               # your speed changes your height
+```
+
+Start the lander up at some height `h` with some downward velocity `v` (a negative number), and repeat the two lines. When `h` reaches `0`, you've touched the ground — and the velocity at that instant is your **touchdown speed.**
+
+```python
+def land(h0, v0, thrust, g, dt, steps):
+    h = h0
+    v = v0
+    for _ in range(steps):
+        v = v + (thrust - g) * dt
+        h = h + v * dt
+        if h <= 0:        # touchdown!
+            break
+    return v              # the speed you hit at
+```
+
+> **Why the step limit?** If you set thrust *higher* than gravity, the lander slows, stops, and floats back up — it would never reach the ground, and the loop would run forever. The `steps` cap is a safety net. For a real landing, keep your thrust a touch below `g` so you actually come down.
+
+---
+
+## Did You Land — or Crash?
+
+A spacecraft's legs can only take so much. Touch down too fast and you break something; touch down gently and you've made it. The cutoff we'll use is **2 m/s** — about walking-into-a-wall speed. So a landing is safe when the touchdown speed (ignoring its direction) is small enough:
+
+```python
+def is_safe(touchdown_speed):
+    return abs(touchdown_speed) <= 2.0
+```
+
+The `abs()` throws away the minus sign, because we only care *how fast* you hit, not which way you were moving. A touchdown speed of $-1.5$ m/s is safe; $-3.5$ m/s is a crash.
+
+The mission, {{FIRST_NAME}}: fire your engine hard enough that you drift down and `is_safe` comes back `True`. Too little thrust and you slam in. Too much and you never land. Just right, and you stick the landing — in pure Python.
+
+---
+
+## What You'll Build
+
+1. `lander_step(h, v, thrust, g, dt)` — one Euler step, returning the new `[h, v]`.
+2. `land(h0, v0, thrust, g, dt, steps)` — drop to the surface and return the touchdown speed.
+3. `is_safe(touchdown_speed)` — `True` for a gentle landing (≤ 2 m/s), `False` for a crash.
+
+`import math` is set up for you. Bring it down softly.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Net acceleration | engine push minus gravity | `(thrust - g)` |
+| Moon gravity | gentle — about 1.62 m/s² | `g = 1.62` |
+| Falling = negative | up is positive, so down is a minus speed | — |
+| One landing step | speed then height | `v += (thrust-g)*dt; h += v*dt` |
+| Touchdown speed | the velocity when `h` reaches 0 | `if h <= 0: break` |
+| Safe landing | gentle enough not to break | `abs(speed) <= 2.0` |
+
+Head to the exercises and stick the landing!

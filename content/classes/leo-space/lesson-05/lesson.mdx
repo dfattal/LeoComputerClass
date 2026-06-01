@@ -1,0 +1,102 @@
+# Lesson 5 — Off the Pad
+
+## Phase 3: Flying a Mission
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand how a rocket pushes itself by **throwing mass backward**
+- See why a rocket gets **easier to push** as it burns fuel and grows lighter
+- Meet the famous **rocket equation** that predicts a rocket's top speed
+- Simulate a burn step by step and watch your loop **match the equation**
+
+---
+
+## Big Idea: Throw Stuff Backward
+
+A rocket has nothing to push against — space is empty. So how does it move? The same way you'd scoot a skateboard by throwing bowling balls off the back: every time you hurl mass *backward*, you get shoved *forward*. That's Newton's Third Law — every push has an equal push the other way.
+
+A rocket does this thousands of times a second, blasting hot gas out its nozzle. The faster it throws that gas (the **exhaust speed**), and the more gas it throws each second (the **burn rate**), the harder it's pushed forward.
+
+But here's the beautiful twist that makes rockets work at all...
+
+---
+
+## Getting Lighter = Getting Easier
+
+Acceleration is force divided by mass ($a = F/m$ — you know this). A rocket's engine gives a roughly steady push, but its **mass keeps dropping** as fuel pours out the back. Same push ÷ smaller mass = **more acceleration.**
+
+So a rocket starts slow and heavy, barely lifting off… then speeds up faster and faster as it lightens, even though the engine never changed. By the time the tanks run dry, it's a featherweight getting flung forward hard. The mass that's left is just the empty shell and the payload.
+
+This is why rockets are almost entirely fuel. A real rocket on the pad can be **90% fuel by weight** — a giant flying gas tank with a tiny spacecraft on top.
+
+---
+
+## The Rocket Equation
+
+In 1903 a Russian schoolteacher named Konstantin Tsiolkovsky worked out exactly how much speed a rocket can gain. It depends only on the exhaust speed and how much of the rocket was fuel:
+
+$$
+\Delta v = v_{exhaust} \cdot \ln\!\left(\frac{m_{full}}{m_{empty}}\right)
+$$
+
+That $\ln$ is the **natural logarithm** (`math.log` in Python). Don't worry about the deep math — just know what it *does*: it's a "diminishing returns" button. The ratio $m_{full}/m_{empty}$ is how many times heavier the loaded rocket is than the empty one, and the log squashes it.
+
+The harsh lesson hidden in that log: to go faster, you need *wildly* more fuel.
+
+- Mass ratio **2** (half fuel) → about $0.69 \times v_{exhaust}$
+- Mass ratio **3** → about $1.10 \times v_{exhaust}$
+- Mass ratio **10** (90% fuel!) → only about $2.30 \times v_{exhaust}$
+
+Tripling your fuel ratio doesn't triple your speed — that's why reaching orbit is so brutally hard, and why rockets are stacked in stages that drop their empty tanks along the way.
+
+---
+
+## Simulating the Burn
+
+The rocket equation is the *exact* answer (for a burn far from any planet, where gravity isn't part of the story). But you can also reach it the way you know best — **step by step.**
+
+Each tiny moment, the engine pushes with acceleration $a = \dfrac{v_{exhaust} \cdot \text{burn rate}}{\text{mass}}$, you nudge the velocity up, and the rocket loses a little mass:
+
+```python
+def burn_sim(m_full, m_empty, v_exhaust, burn_rate, dt):
+    m = m_full
+    v = 0.0
+    while m > m_empty:           # keep burning until the fuel runs out
+        a = v_exhaust * burn_rate / m   # push ÷ current mass
+        v = v + a * dt           # speed up
+        m = m - burn_rate * dt   # burn a little fuel (mass drops!)
+    return v
+```
+
+Watch what happens: as `m` shrinks, that same `v_exhaust * burn_rate` gives a *bigger* `a`. The rocket accelerates harder and harder as it empties — exactly the real behavior.
+
+And here's the golden-rule moment from Lesson 1, back again: **your step-by-step burn should land right on top of the rocket equation.** When your loop's answer matches Tsiolkovsky's formula, you *know* both are right. {{FIRST_NAME}}, that's how engineers trust a simulator before they ever light a real engine.
+
+---
+
+## What You'll Build
+
+1. `rocket_dv(v_exhaust, m_full, m_empty)` — the rocket equation: the top speed a burn can give.
+2. `mass_after(m0, burn_rate, t)` — how much rocket is left after burning for a while.
+3. `burn_sim(m_full, m_empty, v_exhaust, burn_rate, dt)` — step through the burn and confirm it matches the equation.
+
+`G = 6.674e-11` and `import math` are set up for you (`math.log` is the natural logarithm). Light it up.
+
+---
+
+## Recap
+
+| Concept | Meaning | Code |
+|---------|---------|------|
+| Thrust | throw mass back, get pushed forward | — |
+| Lighter = faster | same push ÷ smaller mass = more accel | `a = v_exh*rate/m` |
+| Rocket equation | the top speed of a burn | `v_exh * math.log(m_full/m_empty)` |
+| Mass left | starting mass minus burned fuel | `m0 - burn_rate*t` |
+| Burn loop | step velocity up, drop the mass | (see above) |
+| Golden rule | the sim should match the equation | — |
+
+Head to the exercises and fire your first engine!

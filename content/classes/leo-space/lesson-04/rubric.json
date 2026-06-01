@@ -1,0 +1,6 @@
+[
+  {"criterion": "Escape speed formula", "weight": 30, "description": "escape_speed returns sqrt(2*G*M/r) — note the 2 on top"},
+  {"criterion": "Total energy formula", "weight": 30, "description": "total_energy returns 0.5*v**2 - G*M/r (kinetic minus the negative potential)"},
+  {"criterion": "Correct escape test", "weight": 30, "description": "will_escape returns True exactly when the total energy is zero or positive"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names, uses the provided G, and a return on every function"}
+]

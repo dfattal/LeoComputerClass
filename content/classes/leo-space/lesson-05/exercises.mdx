@@ -1,0 +1,90 @@
+# Lesson 5 — Exercises: Off the Pad
+
+## How This Works
+
+Three functions for your rocket: the rocket equation, the leftover mass after a burn, and a step-by-step burn that should match the equation.
+
+Use `import math` (set up at the top) — you'll need `math.log`, which is the natural logarithm ($\ln$).
+
+**Important:** The burn simulation uses the Euler method, so it's *close enough*, not exact — but it should land right next to the rocket equation.
+
+---
+
+## Exercise 1: The Rocket Equation
+
+Write `rocket_dv(v_exhaust, m_full, m_empty)` — the top speed a burn can deliver:
+
+$$
+\Delta v = v_{exhaust} \cdot \ln\!\left(\frac{m_{full}}{m_{empty}}\right)
+$$
+
+```python
+def rocket_dv(v_exhaust, m_full, m_empty):
+    # Return v_exhaust * math.log(m_full / m_empty)
+    pass
+```
+
+**Examples:**
+- `rocket_dv(3000, 100, 40)` → about `2748.87` (a 100 kg rocket burning down to 40 kg)
+- `rocket_dv(2500, 50, 10)` → about `4023.59` (mostly fuel → much faster)
+- `rocket_dv(4000, 1000, 100)` → about `9210.34` (90% fuel + fast exhaust → enough to reach orbit!)
+
+**Hint:** `math.log(x)` is the natural logarithm. So: `v_exhaust * math.log(m_full / m_empty)`.
+
+---
+
+## Exercise 2: How Much Rocket Is Left?
+
+Write `mass_after(m0, burn_rate, t)` — the mass remaining after burning fuel at `burn_rate` (kg per second) for `t` seconds:
+
+$$
+m = m_0 - (\text{burn rate}) \cdot t
+$$
+
+```python
+def mass_after(m0, burn_rate, t):
+    # Return m0 - burn_rate * t
+    pass
+```
+
+**Examples:**
+- `mass_after(100, 2, 30)` → `40` (started at 100 kg, burned 2 kg/s for 30 s → lost 60 kg)
+- `mass_after(500, 5, 40)` → `300`
+
+**Hint:** One line: `m0 - burn_rate * t`.
+
+---
+
+## Exercise 3: Simulate the Burn
+
+Write `burn_sim(m_full, m_empty, v_exhaust, burn_rate, dt)`. Start at rest and step through the burn until the fuel runs out (mass drops to `m_empty`). Return the final speed.
+
+```python
+def burn_sim(m_full, m_empty, v_exhaust, burn_rate, dt):
+    m = m_full
+    v = 0.0
+    while m > m_empty:
+        # 1. a = v_exhaust * burn_rate / m   (push divided by current mass)
+        # 2. v = v + a * dt                  (speed up)
+        # 3. m = m - burn_rate * dt          (burn a little fuel)
+        pass
+    return v
+```
+
+**Examples:**
+- `burn_sim(100, 40, 3000, 2, 0.002)` → about `2748.78` (matches `rocket_dv(3000, 100, 40)`!)
+- `burn_sim(50, 10, 2500, 1, 0.002)` → about `4023.39` (matches `rocket_dv(2500, 50, 10)`!)
+- `burn_sim(80, 20, 4000, 4, 0.002)` → about `5544.58` (matches `rocket_dv(4000, 80, 20)`!)
+
+**Check your work:** Each `burn_sim` answer should land right next to what the rocket equation predicts. When your loop and the formula agree, you know your rocket simulator works.
+
+---
+
+## Tips If You're Stuck
+
+1. **Burn never stops (loops forever)?** Make sure you *subtract* mass each step: `m = m - burn_rate * dt`. If the mass doesn't shrink, the loop runs forever.
+2. **Answer is `0`?** Check that you update `v` *inside* the loop, and `return v` at the end.
+3. **`math.log` error?** It needs `import math` at the top (already there) — and `math.log` is the natural log, exactly what we want.
+4. **Sim a bit off from the formula?** That's normal for Euler — a smaller `dt` gets you closer.
+
+Fire your engine, then press Run to watch the rocket speed up as it lightens (Graph panel). Next lesson: the hardest part — landing softly!

@@ -1,0 +1,6 @@
+[
+  {"criterion": "Orbital speed formula", "weight": 25, "description": "orbital_speed returns sqrt(G*M/r) — higher orbits are slower"},
+  {"criterion": "Gravity vector points inward", "weight": 35, "description": "gravity_xy returns [ax, ay] with the right minus signs and r**3, aiming back at the planet"},
+  {"criterion": "Working 2D Euler loop", "weight": 30, "description": "orbit_sim updates both velocity parts before both position parts; circular speed keeps the distance near r0"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names, uses the provided G, and a return on every function"}
+]

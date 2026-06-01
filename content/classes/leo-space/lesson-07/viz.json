@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    0
+  ],
+  "title": "The Hohmann transfer: a half-ellipse from Earth's orbit out to Mars's",
+  "xLabel": "x (m)",
+  "yLabel": "y (m)",
+  "setup": "# --- plot helper (hidden) — orbits and the transfer ellipse around the Sun ---\nimport math as __m\ndef __circle(r, n):\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(r * __m.cos(th), 1), round(r * __m.sin(th), 1)])\n    return pts\n\ndef __ellipse(r1, r2, n):\n    a = (r1 + r2) / 2; c = (r2 - r1) / 2; b = __m.sqrt(r1 * r2)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __plot(_):\n    return [\n        {\"name\": \"Earth's orbit\", \"points\": __circle(1.496e11, 80), \"highlight\": False},\n        {\"name\": \"Mars's orbit\", \"points\": __circle(2.279e11, 80), \"highlight\": False},\n        {\"name\": \"transfer ellipse\", \"points\": __ellipse(1.496e11, 2.279e11, 80), \"highlight\": True},\n    ]\n"
+}

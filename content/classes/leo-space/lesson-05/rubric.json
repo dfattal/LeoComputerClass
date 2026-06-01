@@ -1,0 +1,6 @@
+[
+  {"criterion": "Rocket equation", "weight": 30, "description": "rocket_dv returns v_exhaust * math.log(m_full/m_empty)"},
+  {"criterion": "Mass after burning", "weight": 15, "description": "mass_after returns m0 - burn_rate*t"},
+  {"criterion": "Working burn loop", "weight": 45, "description": "burn_sim divides thrust by the shrinking mass, speeds up, drops mass each step, and matches the rocket equation"},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear names and a return on every function"}
+]

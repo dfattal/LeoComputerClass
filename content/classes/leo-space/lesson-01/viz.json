@@ -1,0 +1,11 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [
+    5.972e24
+  ],
+  "title": "Gravity collapses with distance — twice as far, four times weaker",
+  "xLabel": "distance from Earth's center (Earth-radii)",
+  "yLabel": "gravity (m/s²)",
+  "setup": "# --- plot helper (hidden) — Newton's gravity vs distance from a planet ---\ndef __g_curve(M):\n    G = 6.674e-11\n    R = 6.371e6\n    pts = []\n    n = 1.0\n    while n <= 60.0:\n        r = n * R\n        a = G * M / (r * r)\n        pts.append([round(n, 2), round(a, 4)])\n        n += 0.5\n    return pts\n\ndef __flat():\n    return [[1.0, 9.8], [60.0, 9.8]]\n\ndef __plot(M):\n    return [\n        {\"name\": \"real gravity (1/r²)\", \"points\": __g_curve(M), \"highlight\": True},\n        {\"name\": \"if gravity stayed 9.8 (it doesn't!)\", \"points\": __flat(), \"highlight\": False},\n    ]\n"
+}

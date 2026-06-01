@@ -1,0 +1,28 @@
+[
+  {
+    "entry": "rocket_dv",
+    "tol": 0.5,
+    "cases": [
+      {"name": "rocket_dv(3000, 100, 40)", "args": [3000, 100, 40], "expected": 2748.87},
+      {"name": "rocket_dv(2500, 50, 10) ~ mostly fuel", "args": [2500, 50, 10], "expected": 4023.59},
+      {"name": "rocket_dv(4000, 1000, 100) ~ enough for orbit", "args": [4000, 1000, 100], "expected": 9210.34}
+    ]
+  },
+  {
+    "entry": "mass_after",
+    "tol": 0.0001,
+    "cases": [
+      {"name": "mass_after(100, 2, 30)", "args": [100, 2, 30], "expected": 40},
+      {"name": "mass_after(500, 5, 40)", "args": [500, 5, 40], "expected": 300}
+    ]
+  },
+  {
+    "entry": "burn_sim",
+    "tol": 2,
+    "cases": [
+      {"name": "burn_sim(100, 40, 3000, 2, 0.002) ~ matches rocket_dv", "args": [100, 40, 3000, 2, 0.002], "expected": 2748.78},
+      {"name": "burn_sim(50, 10, 2500, 1, 0.002) ~ matches rocket_dv", "args": [50, 10, 2500, 1, 0.002], "expected": 4023.39},
+      {"name": "burn_sim(80, 20, 4000, 4, 0.002) ~ matches rocket_dv", "args": [80, 20, 4000, 4, 0.002], "expected": 5544.58}
+    ]
+  }
+]
