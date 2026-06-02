@@ -2,7 +2,8 @@
 name: new-lesson
 description: >-
   Author a new lesson for a Family Classroom class (Leo's Computer Class, Secret
-  Codes, Motion Lab, Space School, Python Primer, Bio Lab, etc.). Use this
+  Codes, Motion Lab, Space School, Python Primer, Pixel Wizards, Bio Lab, etc.).
+  Use this
   whenever the user wants to add, build, write, or scaffold a lesson, week, or
   exercise for one of the classes in this repo — even if they just say "add
   lesson 9 to leo-codes" or "write the next cryptography lesson." Encodes the
@@ -35,13 +36,20 @@ build. It exists purely so `npm run validate-class` can check the test suite.)
 ### 1. Scaffold the files
 
 ```bash
-node scripts/scaffold-lesson.mjs <slug> <N> "<Lesson Title>"
+node scripts/scaffold-lesson.mjs <slug> <N> "<Lesson Title>" [--viz plot|draw]
 ```
 
 This creates `content/classes/<slug>/lesson-0N/` with all seven files (the six
 student-facing ones plus `reference.py`), each a template with `TODO`/
 `REPLACE_FROM_REFERENCE` placeholders. It refuses to overwrite an existing
 lesson. If the class doesn't exist yet, run `/new-class` first.
+
+Pick the teaching panel with `--viz`: **`plot`** (a line/scatter graph — the
+default, used by Motion Lab, Space School, Secret Codes) or **`draw`** (a
+pixel-grid drawing canvas — used by Pixel Wizards). Pass `--viz draw` for a
+drawing class so `viz.json` scaffolds with the right shape; otherwise you'll get
+the plot skeleton and have to convert it by hand. Match whatever the rest of the
+class uses.
 
 Before writing anything, study the most recent finished class as your pattern —
 `content/classes/leo-codes` is the reference build (8 complete lessons). Match
@@ -87,10 +95,14 @@ Pick cases that teach: a simple one, an edge case (wrap-around, empty input,
 spaces), and a round-trip (encrypt→decrypt returns the original) where it
 applies. The `name` shows up in the student's test panel, so make it readable.
 
-### 4. Design the graph (viz.json) — it's a teaching panel, not filler
+### 4. Design the teaching panel (viz.json) — it's a teaching panel, not filler
 
-Every lesson ships a graph, and the good ones make the concept *visible*. Look at
-the existing classes for the bar to clear:
+Every lesson ships a live panel driven by the student's code through the `__VIZ__`
+channel, and the good ones make the concept *visible*. There are two kinds — pick
+the one the class uses (`--viz` in step 1).
+
+**Plot graphs** (`type: "plot"`). The good ones reveal a comparison. Look at the
+existing classes for the bar to clear:
 
 - Motion Lab plots **"your Euler simulation vs the exact formula"** — the student
   sees their approximation converge as the step shrinks.
@@ -105,6 +117,18 @@ returning either a single `[[x,y],...]` series or a list of series objects
 `xLabel`, `yLabel`. The `setup` can call the lesson's own functions (the app
 prepends the student's code before `setup`; the validator prepends
 `reference.py`), so the graph can show off what the student just built.
+
+**Pixel-grid drawings** (`type: "draw"`, Pixel Wizards). Here the panel paints a
+picture the student's code returns, which is hugely motivating for absolute
+beginners. Point `resultFn` directly at the student's own function (no `__plot`
+wrapper needed) and set `demoArgs`. That function must return a **2D grid**: a
+list of rows, each row a list of cells, where a cell is a color name (`"red"`,
+`"blue"`, `"green"`, `"yellow"`, `"black"`, `"white"`, `"pink"`, `"purple"`,
+`"orange"`, `"brown"`, `"gray"`), an emoji (`"🌸"`), or `""`/`"."`/`None` for an
+empty see-through square. Rows may be ragged (the renderer pads to the widest).
+A `setup` prelude is optional (use it only if you need a hidden helper). See
+`content/classes/pixels/lesson-07` (an 8×8 checkerboard from nested loops) for the
+pattern, and `components/PixelCanvas.tsx` for the exact cell contract.
 
 ### 5. Write the six student-facing files for a 10-year-old
 
@@ -128,9 +152,10 @@ npm run validate-class <slug>
 
 This JSON-parses every file, compiles the Python, checks every `tests.json` entry
 has a starter stub, runs `reference.py` against every test case using the **real**
-`valuesMatch` from the Pyodide worker, and execs the graph to confirm it returns
-plottable data. Fix anything red and rerun until it passes. A green run means a
-correct student solution will pass exactly these tests.
+`valuesMatch` from the Pyodide worker, and execs the panel to confirm it returns
+plottable series (or, for `type: "draw"` lessons, a valid pixel grid). Fix
+anything red and rerun until it passes. A green run means a correct student
+solution will pass exactly these tests.
 
 ### 7. Publish
 
@@ -141,7 +166,7 @@ clean.
 
 ## Quick checklist
 
-1. `scaffold-lesson.mjs` → 2. write `reference.py` → 3. generate `tests.json`
-values from it → 4. design the graph → 5. write the 6 files (10-yo voice) →
-6. `npm run validate-class <slug>` green → 7. flip `syllabus.ts` to `published` +
-`npm run build`.
+1. `scaffold-lesson.mjs` (`--viz draw` for a drawing class) → 2. write
+`reference.py` → 3. generate `tests.json` values from it → 4. design the panel →
+5. write the 6 files (10-yo voice) → 6. `npm run validate-class <slug>` green →
+7. flip `syllabus.ts` to `published` + `npm run build`.

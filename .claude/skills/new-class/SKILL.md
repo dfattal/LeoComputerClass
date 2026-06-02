@@ -32,9 +32,14 @@ Pin down, with the user if anything's unclear:
 - **slug** (kebab-case, e.g. `leo-music`) and **name** (e.g. "Leo's Music Machine")
 - **tagline** — a short, exciting promise ("Make Songs with Code")
 - **through-line** — the one thing the whole class builds toward
-- **accent color** — one of the known accents in `lib/accents.ts` (`indigo`,
-  `violet`, `emerald`, `amber`, `sky`, `rose`). If you want a color that isn't
-  there yet, see step 3.
+- **accent color** — one of the known accents in `lib/accents.ts` (currently
+  `indigo`, `violet`, `emerald`, `amber`, `sky`, `rose`, `fuchsia` — check the
+  file for the live set, it grows). If you want a color that isn't there yet, see
+  step 3.
+- **panel kind** — will the lessons teach with **plot** graphs (most classes) or
+  a **pixel-grid drawing** canvas (`type: "draw"`, like Pixel Wizards)? This picks
+  the `--viz` flag you'll pass to `/new-lesson`. A drawing canvas is a great fit
+  for a true-beginner / visual class.
 
 ### 2. Scaffold the shell
 
@@ -46,6 +51,11 @@ This creates `content/classes/<slug>/syllabus.ts` and `ai-prompt.ts` (skeletons)
 and appends a `comingSoon: true` entry to `content/classes.ts` pointing at a hero
 image `public/hero-<slug>.webp`. It prints a loud warning if the accent color
 isn't in `lib/accents.ts`.
+
+**Home-page order = array order.** The scaffolder *appends* the new entry, so the
+class shows up last on the home page. If it should lead — e.g. a beginner on-ramp
+that students hit first (Pixel Wizards sits above Python Primer) — move the entry
+up in the `classes` array yourself after scaffolding.
 
 ### 3. Add the accent color if it's new (single source of truth)
 
@@ -78,9 +88,10 @@ the style). The class card and landing banner use it.
 
 ### 6. Build the lessons
 
-Now build lessons one at a time with `/new-lesson <slug> <N> "<title>"`. Once the
-first lesson is published, remove `comingSoon: true` from the registry entry in
-`content/classes.ts` so the class goes live.
+Now build lessons one at a time with `/new-lesson <slug> <N> "<title>"` (add
+`--viz draw` for a drawing class). Once the first lesson is published, remove
+`comingSoon: true` from the registry entry in `content/classes.ts` so the class
+goes live.
 
 ### 7. Verify
 
@@ -91,7 +102,8 @@ npm run validate-class <slug>   # once lessons exist
 
 ## Quick checklist
 
-1. concept (slug/name/tagline/through-line/accent) → 2. `scaffold-class.mjs` →
+1. concept (slug/name/tagline/through-line/accent/panel kind) →
+2. `scaffold-class.mjs` (move the entry up if it should lead the home page) →
 3. add accent to `lib/accents.ts` if new → 4. fill description + ai-prompt +
-syllabus (weeks `planned`) → 5. hero image → 6. `/new-lesson` per lesson →
-7. drop `comingSoon`, `npm run build`.
+syllabus (weeks `planned`) → 5. hero image → 6. `/new-lesson` per lesson
+(`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`.

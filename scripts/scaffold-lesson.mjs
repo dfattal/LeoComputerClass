@@ -5,8 +5,13 @@
 // workflow and `npm run validate-class <slug>` to check your work).
 //
 // Usage:
-//   node scripts/scaffold-lesson.mjs <slug> <N> "<title>"
+//   node scripts/scaffold-lesson.mjs <slug> <N> "<title>" [--viz plot|draw]
 //   node scripts/scaffold-lesson.mjs leo-codes 9 "The Vigenere Cipher"
+//   node scripts/scaffold-lesson.mjs pixels 8 "Your Masterpiece" --viz draw
+//
+// --viz picks the teaching panel: "plot" (a line/scatter graph, the default) or
+// "draw" (a pixel-grid drawing canvas, à la the Pixel Wizards class). Either way
+// the panel is driven by the student's code via the __VIZ__ channel.
 
 import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -14,9 +19,31 @@ import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-const [slug, nRaw, title] = process.argv.slice(2);
+// Parse args: positional <slug> <N> "<title>" plus an optional --viz flag
+// (accepts "--viz draw" or "--viz=draw").
+const positional = [];
+let vizType = "plot";
+const argv = process.argv.slice(2);
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a === "--viz") {
+    vizType = argv[++i];
+  } else if (a.startsWith("--viz=")) {
+    vizType = a.slice("--viz=".length);
+  } else if (a.startsWith("-")) {
+    console.error(`Unknown flag: ${a}`);
+    process.exit(2);
+  } else {
+    positional.push(a);
+  }
+}
+const [slug, nRaw, title] = positional;
 if (!slug || !nRaw || !title) {
-  console.error('Usage: node scripts/scaffold-lesson.mjs <slug> <N> "<title>"');
+  console.error('Usage: node scripts/scaffold-lesson.mjs <slug> <N> "<title>" [--viz plot|draw]');
+  process.exit(2);
+}
+if (vizType !== "plot" && vizType !== "draw") {
+  console.error(`--viz must be "plot" or "draw". Got: ${vizType ?? "(missing value)"}`);
   process.exit(2);
 }
 const n = parseInt(nRaw, 10);
@@ -131,33 +158,39 @@ print("Press Run to see the Graph panel!")
 `
 );
 
-// --- viz.json (REAL plot skeleton — the graph is a teaching panel, not filler) ---
-writeFileSync(
-  join(lessonDir, "viz.json"),
-  JSON.stringify(
-    {
-      type: "plot",
-      resultFn: "__plot",
-      demoArgs: [10],
-      title: "What this graph reveals about the concept",
-      xLabel: "x axis label",
-      yLabel: "y axis label",
-      setup:
-        "# --- plot helper (hidden) ---\n" +
-        "# Define __plot(...) returning either a single [[x,y],...] series, or a\n" +
-        "# list of series objects {\"name\", \"points\":[[x,y],...], \"highlight\":bool}.\n" +
-        "# Often the most teachable graph compares two things (e.g. the student's\n" +
-        "# method vs the exact answer, or before vs after).\n" +
-        "def __plot(n):\n" +
-        "    yours = [[i, i] for i in range(n)]\n" +
-        "    return [\n" +
-        '        {"name": "your result", "points": yours, "highlight": True},\n' +
-        "    ]\n",
-    },
-    null,
-    2
-  ) + "\n"
-);
+// --- viz.json (REAL teaching panel — a plot graph or a pixel-grid drawing) ---
+// "draw" panels point resultFn at the student's own function, which must return
+// a 2D grid: a list of rows, each row a list of cells (a color name like "red",
+// an emoji, or "" for an empty/see-through square). See components/PixelCanvas.tsx
+// and the Pixel Wizards lessons for the contract.
+const vizJson =
+  vizType === "draw"
+    ? {
+        type: "draw",
+        resultFn: fn1, // rename to the function that returns the grid
+        demoArgs: ["example"], // args passed to resultFn for the live preview
+        title: "What this drawing shows about the concept",
+      }
+    : {
+        type: "plot",
+        resultFn: "__plot",
+        demoArgs: [10],
+        title: "What this graph reveals about the concept",
+        xLabel: "x axis label",
+        yLabel: "y axis label",
+        setup:
+          "# --- plot helper (hidden) ---\n" +
+          "# Define __plot(...) returning either a single [[x,y],...] series, or a\n" +
+          "# list of series objects {\"name\", \"points\":[[x,y],...], \"highlight\":bool}.\n" +
+          "# Often the most teachable graph compares two things (e.g. the student's\n" +
+          "# method vs the exact answer, or before vs after).\n" +
+          "def __plot(n):\n" +
+          "    yours = [[i, i] for i in range(n)]\n" +
+          "    return [\n" +
+          '        {"name": "your result", "points": yours, "highlight": True},\n' +
+          "    ]\n",
+      };
+writeFileSync(join(lessonDir, "viz.json"), JSON.stringify(vizJson, null, 2) + "\n");
 
 // --- reference.py (the ANSWER KEY — write this FIRST, before tests.json) ---
 writeFileSync(
@@ -179,13 +212,17 @@ def ${fn1}(x):
 );
 
 console.log(`✓ Created ${lessonDir}/ with lesson.mdx, exercises.mdx, tests.json,`);
-console.log(`  rubric.json, starter.py, viz.json, reference.py`);
+console.log(`  rubric.json, starter.py, viz.json (type "${vizType}"), reference.py`);
 console.log("");
 console.log("Next (the proven order — reference.py BEFORE tests.json):");
 console.log(`  1. Write reference.py with the real solution(s).`);
 console.log(`  2. Run reference.py to GENERATE the exact expected values for tests.json.`);
 console.log(`  3. Rename "${fn1}" everywhere to your real exercise names.`);
-console.log(`  4. Design the viz.json graph so it reveals the concept.`);
+console.log(
+  vizType === "draw"
+    ? `  4. Point viz.json resultFn at the function that returns the pixel grid, and set demoArgs.`
+    : `  4. Design the viz.json graph so it reveals the concept.`
+);
 console.log(`  5. Write the student-facing files in a 10-year-old voice.`);
 console.log(`  6. npm run validate-class ${slug}   (until green)`);
 console.log(`  7. Add the week to content/classes/${slug}/syllabus.ts, status "published".`);
