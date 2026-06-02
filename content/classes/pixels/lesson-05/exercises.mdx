@@ -1,0 +1,25 @@
+## Your mission
+
+### Exercise 1 — `bar(color, n)`
+
+Give back **one row** of `n` squares, all the given `color`.
+
+```python
+bar("red", 3)    # -> [["red", "red", "red"]]
+bar("blue", 5)   # -> [["blue", "blue", "blue", "blue", "blue"]]
+```
+
+**Hint:** same `* n` trick as before, but use the `color` blank instead of a fixed word: `return [[color] * n]`.
+
+---
+
+### Exercise 2 — `dot(color)`
+
+Give back a **3x3 picture** with one square of `color` in the very middle, surrounded by empty `""` squares.
+
+```python
+dot("green")   # -> [["", "", ""], ["", "green", ""], ["", "", ""]]
+dot("pink")    # -> [["", "", ""], ["", "pink", ""], ["", "", ""]]
+```
+
+**Hint:** the middle row is `["", color, ""]`. The top and bottom rows are all empty: `["", "", ""]`.

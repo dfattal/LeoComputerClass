@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 55,
+    "description": "bar(color, n) returns a row of n squares of that color; dot(color) centers that color in a 3x3 of empty squares."
+  },
+  {
+    "criterion": "Used the parameters",
+    "weight": 30,
+    "description": "Built the picture from the color/n inputs, so different inputs make different pictures — not a fixed color or size."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that one function with parameters replaces many almost-identical functions."
+  }
+]

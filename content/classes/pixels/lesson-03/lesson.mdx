@@ -1,0 +1,59 @@
+# Numbers & Counting
+
+> What if you want a bar that's 20 squares long? Typing `"green"` twenty times is nobody's idea of fun. Let the computer count instead. 🔢
+
+## Phase 1: First Pictures
+
+---
+
+## The problem: counting by hand is slow
+
+Say you want a row of green squares. Easy enough for three:
+
+```python
+return [["green", "green", "green"]]
+```
+
+But what if you want **twenty**? Or you want to make it "a little longer" tomorrow? You'd be typing `"green"` over and over and *counting with your finger* to get it right. Computers are supposed to do the counting for us!
+
+---
+
+## The big idea: numbers you can compute with
+
+Python knows math. And one of its coolest tricks works on lists: the `*` symbol means **"make this many copies."**
+
+```python
+["green"] * 3      # -> ["green", "green", "green"]
+```
+
+Read it as: *"a list with `"green"` in it, copied 3 times."* Change the 3, change how many squares you get — no counting on your fingers.
+
+So a bar of any length is just:
+
+```python
+def bar(n):
+    return [["green"] * n]
+```
+
+Now `bar(3)` is three squares and `bar(20)` is twenty squares, from the **exact same code**. The number `n` does all the work. 💪
+
+---
+
+## Joining lists with `+`
+
+You can also glue two lists together with `+`:
+
+```python
+[""] * 2 + ["red"]     # -> ["", "", "red"]
+```
+
+That's two empty squares, then a red one. The `+` puts the second list right after the first. Handy for putting something at the *end* of a gap.
+
+---
+
+## What you'll build
+
+- **`bar(n)`** — a row of `n` green squares. One number sets the length.
+- **`arrow(n)`** — `n` empty squares, then a red square at the tip.
+
+Once it's working, change the number you pass and Run again. Same code, different picture — because the number is in charge now, {{FIRST_NAME}}. 🔢

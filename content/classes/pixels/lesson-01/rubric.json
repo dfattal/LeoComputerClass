@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 60,
+    "description": "hello_pixel() gives back one red square and rainbow() gives back the six colors in the right order."
+  },
+  {
+    "criterion": "Used return",
+    "weight": 25,
+    "description": "Each function hands back its grid with the word return (not print)."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that a picture is a list of rows, and the computer drew exactly what the code returned."
+  }
+]

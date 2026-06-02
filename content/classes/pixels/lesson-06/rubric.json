@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The choices are right",
+    "weight": 55,
+    "description": "light(True) is yellow and light(False) is black; tile gives white for even n and black for odd n."
+  },
+  {
+    "criterion": "Used if/else",
+    "weight": 30,
+    "description": "Used if and else to pick the result from the input, rather than ignoring the input."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that the same function can return different pictures because it DECIDES based on the data."
+  }
+]

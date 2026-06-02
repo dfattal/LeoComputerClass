@@ -1,0 +1,18 @@
+[
+  {
+    "entry": "light",
+    "cases": [
+      { "name": "light(True) is yellow", "args": [true], "expected": [["yellow"]] },
+      { "name": "light(False) is black", "args": [false], "expected": [["black"]] }
+    ]
+  },
+  {
+    "entry": "tile",
+    "cases": [
+      { "name": "tile(0) is white (even)", "args": [0], "expected": [["white"]] },
+      { "name": "tile(1) is black (odd)", "args": [1], "expected": [["black"]] },
+      { "name": "tile(2) is white (even)", "args": [2], "expected": [["white"]] },
+      { "name": "tile(3) is black (odd)", "args": [3], "expected": [["black"]] }
+    ]
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "rainbow",
+  "demoArgs": [],
+  "title": "Your rainbow — press Run to paint it!"
+}

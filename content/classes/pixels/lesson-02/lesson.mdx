@@ -1,0 +1,74 @@
+# Boxes That Remember
+
+> What if you painted 100 squares blue... and then your sister says "make them red"? Ugh. Let's never do that the hard way. 📦
+
+## Phase 1: First Pictures
+
+---
+
+## The problem: changing your mind is painful
+
+Last time you returned pictures by typing color words. That's great — until you want to **change** them.
+
+Imagine a big square, all blue:
+
+```python
+def my_square():
+    return [["blue", "blue"], ["blue", "blue"]]
+```
+
+Now you decide it should be **red**. You have to hunt down *every single* `"blue"` and change it. Four times here — but what about a picture with 50 squares? You'd be changing words forever, and it's easy to miss one. 😫
+
+There has to be a better way. There is.
+
+---
+
+## The big idea: a variable is a labeled box
+
+A **variable** is a box with a name. You put a value inside it once, and then you use the box's name instead of the value.
+
+You make a box with `=`:
+
+```python
+c = "blue"
+```
+
+Read it as: *"Let `c` mean `"blue"`."* Now anywhere you write `c`, the computer reads `"blue"`.
+
+```python
+def my_square():
+    c = "blue"
+    return [[c, c], [c, c]]
+```
+
+Here's the magic: to turn the whole square red, you change **one** word:
+
+```python
+    c = "red"      # <- change ONE box...
+    return [[c, c], [c, c]]   # ...and all four squares turn red!
+```
+
+One change, whole picture updates. *That's* why variables exist: so you can name a thing once and never repeat yourself.
+
+---
+
+## You can have lots of boxes
+
+Boxes need different names so the computer can tell them apart:
+
+```python
+a = "black"
+b = "yellow"
+return [[a, b, a, b]]
+```
+
+That returns a row that goes black, yellow, black, yellow — a little checkered stripe, built from just two boxes.
+
+---
+
+## What you'll build
+
+- **`my_square()`** — a 2x2 square built from **one** color box. Change the box, change everything.
+- **`two_tone()`** — a striped row built from **two** boxes.
+
+Once your picture is green ✅, try changing a box to a different color and press Run again. Watch how one tiny change repaints the whole thing. That's the superpower, {{FIRST_NAME}}. 📦

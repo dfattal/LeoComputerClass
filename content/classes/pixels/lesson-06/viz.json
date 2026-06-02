@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "light",
+  "demoArgs": [true],
+  "title": "if/else: the computer decides which square to show"
+}

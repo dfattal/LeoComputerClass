@@ -1,0 +1,62 @@
+# Do It Again
+
+> Want to fill an 8x8 board — 64 squares? Typing them all would take forever and you'd quit halfway. The final wizard trick makes the computer do the boring part. 🔁
+
+## Phase 3: Loops
+
+---
+
+## The problem: too much to type
+
+You can make a row with `* n` now. But a real picture isn't one row — it's *many* rows, and they're often **different** from each other. A checkerboard's rows flip back and forth: black-white-black, then white-black-white...
+
+To build an 8x8 checkerboard by hand you'd type **64 squares**, carefully alternating, without a single mistake. Nobody wants that. This is the moment loops were made for.
+
+---
+
+## The big idea: a loop repeats for you
+
+A **`for` loop** says "do this again and again." `range(n)` counts from `0` up to `n`:
+
+```python
+def row_of(color, n):
+    row = []                 # start with an empty row
+    for i in range(n):       # do this n times...
+        row.append(color)    # ...add one square each time
+    return [row]
+```
+
+`append` means "add to the end." So the loop adds a square, then another, then another — `n` times. You wrote **one** line of adding, and the loop ran it as many times as you needed. 🎉
+
+---
+
+## The big trick: a loop inside a loop
+
+To fill a whole **grid**, you loop over the rows, and *inside* that, loop over the squares in each row:
+
+```python
+def checkerboard(n):
+    grid = []
+    for r in range(n):           # for each row...
+        row = []
+        for c in range(n):       # ...for each square in that row...
+            if (r + c) % 2 == 0: # decide its color (remember even/odd?)
+                row.append("black")
+            else:
+                row.append("white")
+        grid.append(row)         # add the finished row to the grid
+    return grid
+```
+
+Look how small that is! A few lines build a board of **any** size. `checkerboard(8)` makes 64 squares. `checkerboard(20)` makes 400 — same code. *That* is why loops exist: a little code doing a lot of work.
+
+And see the callback — `(r + c) % 2 == 0` is the even/odd choice from last lesson, now running on every square. Everything you've learned, snapping together. 🧩
+
+---
+
+## What you'll build
+
+- **`row_of(color, n)`** — a row built by a loop.
+- **`checkerboard(n)`** — a full board built by a loop inside a loop.
+
+Press Run and watch an entire 8x8 board appear from a handful of lines. You did that, {{FIRST_NAME}}. You're a real Pixel Wizard now. 🪄🔁

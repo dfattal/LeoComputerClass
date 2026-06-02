@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 50,
+    "description": "my_square() is a 2x2 of one color; two_tone() is the black/yellow striped row."
+  },
+  {
+    "criterion": "Used a variable",
+    "weight": 35,
+    "description": "Stored the color in a named box (e.g. c = \"purple\") and used the name, instead of typing the color word over and over."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that changing the box in one place changes every square that uses it."
+  }
+]

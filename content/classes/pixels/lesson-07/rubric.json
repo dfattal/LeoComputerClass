@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 50,
+    "description": "row_of(color, n) returns a row of n colored squares; checkerboard(n) returns the correct n-by-n alternating grid."
+  },
+  {
+    "criterion": "Used loops",
+    "weight": 35,
+    "description": "Built the row with a for loop, and the board with a loop inside a loop — not by typing every square."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that a loop (and a loop in a loop) does a huge amount of work from just a few lines."
+  }
+]

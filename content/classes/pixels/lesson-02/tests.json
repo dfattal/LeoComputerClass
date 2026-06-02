@@ -1,0 +1,22 @@
+[
+  {
+    "entry": "my_square",
+    "cases": [
+      {
+        "name": "my_square() is a 2x2 of one color",
+        "args": [],
+        "expected": [["purple", "purple"], ["purple", "purple"]]
+      }
+    ]
+  },
+  {
+    "entry": "two_tone",
+    "cases": [
+      {
+        "name": "two_tone() is a black/yellow striped row",
+        "args": [],
+        "expected": [["black", "yellow", "black", "yellow"]]
+      }
+    ]
+  }
+]

@@ -1,0 +1,61 @@
+# Magic Spells
+
+> Drawing the same thing three times and then spotting a typo in *all three*? Let's learn the wizard trick: write it once, use it forever. 🪄
+
+## Phase 2: Spells & Choices
+
+---
+
+## The problem: copy-paste is a trap
+
+Suppose your picture needs a few empty rows — rows of five blank squares:
+
+```python
+["", "", "", "", ""]
+```
+
+You need one at the top, one in the middle, one at the bottom. So you copy-paste it three times. Fine... until you realize you wanted **six** squares per row, not five. Now you have to fix it in *every copy*, and if you miss one, your picture comes out crooked. 😬
+
+Copy-paste feels fast but it makes work for future-you.
+
+---
+
+## The big idea: a function is a reusable spell
+
+A **function** is a recipe you write once and give a name. Then you **call** it — say its name with `()` — and it does its thing. You've been writing functions since Lesson 1. The new trick today: you can **call your own function from inside another one.**
+
+Write the blank row *once*, as its own spell:
+
+```python
+def blank_row():
+    return ["", "", "", "", ""]
+```
+
+Now, anywhere you need that row, you just **call** `blank_row()`:
+
+```python
+def face():
+    eyes  = ["", "black", "", "black", ""]
+    smile = ["", "black", "black", "black", ""]
+    return [blank_row(), eyes, blank_row(), ..., smile]
+```
+
+See how `blank_row()` appears twice, but you only *wrote* it once? If you ever want six squares instead of five, you change it in **one** place — inside `blank_row` — and every face fixes itself. That's why functions exist: **name it once, reuse it everywhere.**
+
+---
+
+## Calling vs. defining
+
+- `def face():` — this **defines** the spell (writes the recipe).
+- `face()` — this **calls** the spell (actually casts it).
+
+The Graph panel calls your `face()` for you every time you press Run. Cast away. 🪄
+
+---
+
+## What you'll build
+
+- **`blank_row()`** — a tiny spell that returns one empty row.
+- **`face()`** — a 5x5 smiley that **calls** `blank_row()` for its empty rows.
+
+When it works you'll see a little face smiling back at you, {{FIRST_NAME}} — built from a spell you can reuse as many times as you like. 😊

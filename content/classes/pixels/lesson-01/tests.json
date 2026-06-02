@@ -1,0 +1,22 @@
+[
+  {
+    "entry": "hello_pixel",
+    "cases": [
+      {
+        "name": "hello_pixel() is one red square",
+        "args": [],
+        "expected": [["red"]]
+      }
+    ]
+  },
+  {
+    "entry": "rainbow",
+    "cases": [
+      {
+        "name": "rainbow() is a row of six colors",
+        "args": [],
+        "expected": [["red", "orange", "yellow", "green", "blue", "purple"]]
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "entry": "bar",
+    "cases": [
+      { "name": "bar(\"red\", 3) is three red squares", "args": ["red", 3], "expected": [["red", "red", "red"]] },
+      { "name": "bar(\"blue\", 5) is five blue squares", "args": ["blue", 5], "expected": [["blue", "blue", "blue", "blue", "blue"]] }
+    ]
+  },
+  {
+    "entry": "dot",
+    "cases": [
+      { "name": "dot(\"green\") centers a green square", "args": ["green"], "expected": [["", "", ""], ["", "green", ""], ["", "", ""]] },
+      { "name": "dot(\"pink\") centers a pink square", "args": ["pink"], "expected": [["", "", ""], ["", "pink", ""], ["", "", ""]] }
+    ]
+  }
+]

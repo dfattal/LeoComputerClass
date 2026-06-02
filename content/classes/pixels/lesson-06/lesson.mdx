@@ -1,0 +1,69 @@
+# Making Choices
+
+> A real checkerboard has black squares *and* white squares. But so far, your code paints every square the same. Time to teach the computer how to **decide**. 🚦
+
+## Phase 2: Spells & Choices
+
+---
+
+## The problem: code that can't make up its mind
+
+Think about a light switch. Sometimes the light is **on** (yellow glow), sometimes **off** (dark). It's the *same* light — what changes is the situation.
+
+With what you know so far, you'd be stuck. A function gives back whatever you typed, the same way every time. It can't look at the situation and go "hmm, this one should be different." But that's *exactly* what a checkerboard needs: some squares black, some white, decided square by square.
+
+---
+
+## The big idea: `if` / `else`
+
+`if` lets the computer **check something** and do one thing when it's true, another when it's not:
+
+```python
+def light(on):
+    if on:
+        return [["yellow"]]
+    else:
+        return [["black"]]
+```
+
+Read it as: *"**If** `on` is true, give back yellow. **Otherwise** (`else`), give back black."*
+
+```python
+light(True)    # -> [["yellow"]]   the light is on
+light(False)   # -> [["black"]]    the light is off
+```
+
+Same function, two different pictures — because it **decided** based on the input. That's the whole power of `if`: your code can finally react to what's going on. 🧠
+
+---
+
+## Deciding with numbers: even or odd
+
+A super useful check is "is this number even or odd?" Python has a tool for it: `%` gives the **leftover** after dividing.
+
+```python
+n % 2     # the leftover after sharing n into groups of 2
+```
+
+If you can share evenly, the leftover is `0` — that means `n` is **even**:
+
+```python
+def tile(n):
+    if n % 2 == 0:
+        return [["white"]]    # even -> white
+    else:
+        return [["black"]]    # odd  -> black
+```
+
+Notice we use `==` (two equals signs) to **ask** "are these equal?" — that's a question, not the `=` that fills a box.
+
+This even/odd trick is the secret behind checkerboards. Hold onto it — next lesson it explodes into a whole grid. 😏
+
+---
+
+## What you'll build
+
+- **`light(on)`** — yellow when on, black when off.
+- **`tile(n)`** — white for even numbers, black for odd.
+
+Try `light(False)` and `tile(7)` and watch your code make different calls, {{FIRST_NAME}}. 🚦

@@ -1,0 +1,27 @@
+## Your mission
+
+### Exercise 1 — `bar(n)`
+
+Give back **one row** with `n` green squares.
+
+```python
+bar(1)   # -> [["green"]]
+bar(3)   # -> [["green", "green", "green"]]
+bar(6)   # -> [["green", "green", "green", "green", "green", "green"]]
+```
+
+**Hint:** let Python count for you: `return [["green"] * n]`. The `* n` makes `n` copies, whatever `n` is.
+
+---
+
+### Exercise 2 — `arrow(n)`
+
+Give back **one row**: `n` empty squares (`""`), then one `"red"` square at the end.
+
+```python
+arrow(0)   # -> [["red"]]
+arrow(2)   # -> [["", "", "red"]]
+arrow(4)   # -> [["", "", "", "", "red"]]
+```
+
+**Hint:** make the gap with `[""] * n`, then glue the red square on with `+ ["red"]`. All together: `return [[""] * n + ["red"]]`.

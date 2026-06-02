@@ -1,0 +1,60 @@
+# Hello, Pixels!
+
+> Type a few color words, press Run, and watch a picture appear out of nowhere. That's you, writing your very first code. ✨
+
+## Phase 1: First Pictures
+
+---
+
+## The problem: a computer does *nothing* on its own
+
+Here's a secret about computers: they are not smart. A computer will sit there forever and do **absolutely nothing** until someone tells it exactly what to do.
+
+That someone is **you**. The way you tell a computer what to do is by writing **code**. Code is just a list of instructions the computer follows — exactly, every time, no guessing.
+
+So let's give it our first instruction: *"draw me a picture."*
+
+---
+
+## The big idea: a picture is a grid
+
+In this class, every picture is a **grid** — like a checkerboard made of little squares. Each square is one **pixel**.
+
+To tell the computer what to draw, we hand it back a list of **rows**. Each row is a list of **squares**. Each square is a **color word** in quotes, like `"red"` or `"blue"`.
+
+The magic word that hands something back to the computer is **`return`**.
+
+```python
+def hello_pixel():
+    return [["red"]]
+```
+
+Read that out loud: *"Make a thing called `hello_pixel`. When someone runs it, give back one row, and in that row, one red square."*
+
+Press Run and — boom — one red square shows up in the Graph panel. You drew it. With code. 🟥
+
+---
+
+## Squares side by side
+
+Want more squares in a row? Just put more color words in the list, separated by commas:
+
+```python
+def stripes():
+    return [["red", "yellow", "green"]]
+```
+
+That gives back **one row** with **three** squares: red, then yellow, then green.
+
+The computer drew *exactly* what you returned. It didn't add anything or change the order. That's the deal with code: it does what you say, precisely.
+
+---
+
+## What you'll build
+
+- **`hello_pixel()`** — your first square ever. One red pixel.
+- **`rainbow()`** — a whole row of six colors. Your first real picture!
+
+Color words you can use: `"red"`, `"orange"`, `"yellow"`, `"green"`, `"blue"`, `"purple"`, `"pink"`, `"black"`, `"white"`, and `""` for an empty (see-through) square.
+
+Ready, {{FIRST_NAME}}? Let's make some pixels. 🎨

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 55,
+    "description": "bar(n) returns one row of n green squares; arrow(n) returns n empty squares followed by one red square."
+  },
+  {
+    "criterion": "Let the number do the work",
+    "weight": 30,
+    "description": "Used the number n with * (and + for arrow) instead of typing a fixed number of squares by hand."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that the same code makes different-sized pictures depending on the number."
+  }
+]

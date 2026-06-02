@@ -1,0 +1,28 @@
+[
+  {
+    "entry": "blank_row",
+    "cases": [
+      {
+        "name": "blank_row() is five empty squares",
+        "args": [],
+        "expected": ["", "", "", "", ""]
+      }
+    ]
+  },
+  {
+    "entry": "face",
+    "cases": [
+      {
+        "name": "face() draws a 5x5 smiley",
+        "args": [],
+        "expected": [
+          ["", "", "", "", ""],
+          ["", "black", "", "black", ""],
+          ["", "", "", "", ""],
+          ["black", "", "", "", "black"],
+          ["", "black", "black", "black", ""]
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+## Your mission
+
+### Exercise 1 — `light(on)`
+
+If `on` is `True`, give back a yellow square. Otherwise, give back a black square.
+
+```python
+light(True)    # -> [["yellow"]]
+light(False)   # -> [["black"]]
+```
+
+**Hint:**
+
+```python
+if on:
+    return [["yellow"]]
+else:
+    return [["black"]]
+```
+
+---
+
+### Exercise 2 — `tile(n)`
+
+If `n` is **even**, give back a white square. If `n` is **odd**, give back a black square.
+
+```python
+tile(0)   # -> [["white"]]   (even)
+tile(1)   # -> [["black"]]   (odd)
+tile(2)   # -> [["white"]]   (even)
+tile(3)   # -> [["black"]]   (odd)
+```
+
+**Hint:** check even with `if n % 2 == 0:`. The `% 2` gives the leftover after sharing by 2 — it's `0` exactly when `n` is even.

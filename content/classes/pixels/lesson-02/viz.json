@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "my_square",
+  "demoArgs": [],
+  "title": "Change the box, change the whole square!"
+}

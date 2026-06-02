@@ -16,11 +16,23 @@ export interface ClassDef {
 
 export const classes: ClassDef[] = [
   {
+    slug: "pixels",
+    name: "Pixel Wizards",
+    tagline: "Make Pictures with Code",
+    description:
+      "Your very first code — no experience needed! Draw pictures on a grid and discover what variables, functions, and loops really are (and why we need them).",
+    accentColor: "fuchsia",
+    heroImage: "/hero-pixels.webp",
+    studentName: "friend",
+    contentDir: "pixels",
+    language: "python",
+  },
+  {
     slug: "python-primer",
     name: "Python Primer",
-    tagline: "Learn Python in 5 Fun Lessons",
+    tagline: "Real Python, One Step Up",
     description:
-      "Variables, functions, strings, loops, and more — everything you need to start coding in Python. No experience required!",
+      "Ready for real Python? Variables, strings, loops, and containers — the next step after Pixel Wizards, and the launchpad into every other class.",
     accentColor: "emerald",
     heroImage: "/hero-python.webp",
     studentName: "Student",

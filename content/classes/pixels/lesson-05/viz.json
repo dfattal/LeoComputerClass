@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "dot",
+  "demoArgs": ["purple"],
+  "title": "Same dot() spell — the color is yours to choose"
+}

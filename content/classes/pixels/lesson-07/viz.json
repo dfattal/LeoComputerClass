@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "checkerboard",
+  "demoArgs": [8],
+  "title": "A few lines of loops → a whole 8x8 board"
+}

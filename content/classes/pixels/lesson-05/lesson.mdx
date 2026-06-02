@@ -1,0 +1,65 @@
+# Spells with Inputs
+
+> Your `face()` spell is awesome — but it only ever makes the *same* face. What if you want a red one, a blue one, a giant one? Time to give your spells a dial. 🎚️
+
+## Phase 2: Spells & Choices
+
+---
+
+## The problem: a spell that only does one thing
+
+Here's a green bar spell:
+
+```python
+def green_bar():
+    return [["green", "green", "green"]]
+```
+
+Now you want a red bar too. So you write `red_bar()`. Then a blue one: `blue_bar()`. Then purple... You'd need a brand-new function for **every single color**. That's silly — they're all *the same recipe*, just a different color. 😵
+
+---
+
+## The big idea: parameters are fill-in-the-blanks
+
+A **parameter** is a blank you leave in your recipe for the caller to fill in. You put the blanks' names in the parentheses when you define the function:
+
+```python
+def bar(color, n):
+    return [[color] * n]
+```
+
+Now `color` and `n` are blanks. When you **call** it, you fill them in:
+
+```python
+bar("red", 3)     # color = "red", n = 3   -> three red squares
+bar("blue", 5)    # color = "blue", n = 5  -> five blue squares
+```
+
+**One** spell, endless pictures. You don't write `red_bar` and `blue_bar` anymore — you write `bar` once and tell it what you want each time. *That's* why parameters exist: so one recipe can do many jobs.
+
+---
+
+## More than one blank
+
+You can have as many parameters as you need, separated by commas. The order matters — the first value you pass goes into the first blank:
+
+```python
+def dot(color):
+    return [
+        ["", "", ""],
+        ["", color, ""],
+        ["", "", ""],
+    ]
+
+dot("green")   # a green dot in the middle
+dot("pink")    # a pink dot — same spell!
+```
+
+---
+
+## What you'll build
+
+- **`bar(color, n)`** — your color-and-length bar. Any color, any size.
+- **`dot(color)`** — a single colored dot floating in a 3x3 of empty squares.
+
+The Graph panel will call `dot("purple")` — but try calling it with your own favorite color and Run again. One spell, your choice, {{FIRST_NAME}}. 🎚️

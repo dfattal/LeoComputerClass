@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "face",
+  "demoArgs": [],
+  "title": "One face() spell — call it any time you want a smiley"
+}

@@ -1,0 +1,40 @@
+## Your mission
+
+### Exercise 1 — `blank_row()`
+
+Give back **one row of five empty squares**.
+
+```python
+blank_row()   # -> ["", "", "", "", ""]
+```
+
+**Hint:** this one returns a single row (one pair of `[ ]`), not a whole grid: `return ["", "", "", "", ""]`.
+
+---
+
+### Exercise 2 — `face()`
+
+Give back a **5x5 smiley**. Use `blank_row()` for the two empty rows instead of retyping them.
+
+```python
+face()
+# -> [
+#      ["", "", "", "", ""],
+#      ["", "black", "", "black", ""],
+#      ["", "", "", "", ""],
+#      ["black", "", "", "", "black"],
+#      ["", "black", "black", "black", ""]
+#    ]
+```
+
+**Hint:** your `return` is a list of five rows. Two of them are just `blank_row()` — call it, don't retype it:
+
+```python
+return [
+    blank_row(),
+    ["", "black", "", "black", ""],
+    blank_row(),
+    ["black", "", "", "", "black"],
+    ["", "black", "black", "black", ""],
+]
+```

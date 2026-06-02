@@ -1,0 +1,6 @@
+{
+  "type": "draw",
+  "resultFn": "bar",
+  "demoArgs": [6],
+  "title": "One number decides how long the bar is"
+}

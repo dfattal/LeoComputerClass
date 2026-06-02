@@ -1,0 +1,31 @@
+## Your mission
+
+### Exercise 1 — `row_of(color, n)`
+
+Build **one row** of `n` squares of the given `color`, using a **loop**.
+
+```python
+row_of("blue", 4)   # -> [["blue", "blue", "blue", "blue"]]
+row_of("red", 1)    # -> [["red"]]
+```
+
+**Hint:** start with `row = []`, then `for i in range(n): row.append(color)`, then `return [row]`.
+
+---
+
+### Exercise 2 — `checkerboard(n)`
+
+Build an **n-by-n checkerboard** using a loop inside a loop. A square at row `r`, column `c` is `"black"` when `r + c` is even, and `"white"` when it's odd.
+
+```python
+checkerboard(2)
+# -> [["black", "white"],
+#     ["white", "black"]]
+
+checkerboard(3)
+# -> [["black", "white", "black"],
+#     ["white", "black", "white"],
+#     ["black", "white", "black"]]
+```
+
+**Hint:** outer loop `for r in range(n):` builds each row; inner loop `for c in range(n):` adds each square. Inside, use `if (r + c) % 2 == 0:` to pick `"black"`, else `"white"`. Don't forget to `grid.append(row)` at the end of each row!

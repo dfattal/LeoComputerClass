@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The picture is right",
+    "weight": 50,
+    "description": "blank_row() returns five empty squares; face() returns the 5x5 smiley exactly."
+  },
+  {
+    "criterion": "Reused the spell",
+    "weight": 35,
+    "description": "face() CALLS blank_row() for its empty rows instead of retyping the empty squares."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that writing a recipe once and calling it saves work and prevents mistakes."
+  }
+]

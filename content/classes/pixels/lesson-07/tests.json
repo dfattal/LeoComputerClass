@@ -1,0 +1,16 @@
+[
+  {
+    "entry": "row_of",
+    "cases": [
+      { "name": "row_of(\"blue\", 4) is four blue squares", "args": ["blue", 4], "expected": [["blue", "blue", "blue", "blue"]] },
+      { "name": "row_of(\"red\", 1) is one red square", "args": ["red", 1], "expected": [["red"]] }
+    ]
+  },
+  {
+    "entry": "checkerboard",
+    "cases": [
+      { "name": "checkerboard(2) is a 2x2 checker", "args": [2], "expected": [["black", "white"], ["white", "black"]] },
+      { "name": "checkerboard(3) is a 3x3 checker", "args": [3], "expected": [["black", "white", "black"], ["white", "black", "white"], ["black", "white", "black"]] }
+    ]
+  }
+]

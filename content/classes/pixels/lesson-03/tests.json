@@ -1,0 +1,18 @@
+[
+  {
+    "entry": "bar",
+    "cases": [
+      { "name": "bar(1) is one green square", "args": [1], "expected": [["green"]] },
+      { "name": "bar(3) is three green squares", "args": [3], "expected": [["green", "green", "green"]] },
+      { "name": "bar(6) is six green squares", "args": [6], "expected": [["green", "green", "green", "green", "green", "green"]] }
+    ]
+  },
+  {
+    "entry": "arrow",
+    "cases": [
+      { "name": "arrow(0) is just the red square", "args": [0], "expected": [["red"]] },
+      { "name": "arrow(2) has two gaps then red", "args": [2], "expected": [["", "", "red"]] },
+      { "name": "arrow(4) has four gaps then red", "args": [4], "expected": [["", "", "", "", "red"]] }
+    ]
+  }
+]

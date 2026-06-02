@@ -162,6 +162,25 @@ export const accents: Record<string, Accent> = {
     solid: "bg-rose-600",
     banner: "bg-rose-500",
   },
+  fuchsia: {
+    bg: "bg-fuchsia-600",
+    bgHover: "hover:bg-fuchsia-700",
+    text: "text-fuchsia-600 dark:text-fuchsia-400",
+    underline: "bg-fuchsia-600 dark:bg-fuchsia-400",
+    ring: "focus-visible:ring-fuchsia-500",
+    handleHover: "group-hover:bg-fuchsia-400 dark:group-hover:bg-fuchsia-500",
+    sidebar: "bg-fuchsia-600 font-medium text-white shadow-sm shadow-fuchsia-600/25",
+    feedback: {
+      border: "border-fuchsia-200 dark:border-fuchsia-800",
+      bg: "bg-fuchsia-50 dark:bg-fuchsia-950/40",
+      title: "text-fuchsia-800 dark:text-fuchsia-200",
+      body: "text-fuchsia-900 dark:text-fuchsia-100",
+    },
+    cardBorder: "hover:border-fuchsia-400 dark:hover:border-fuchsia-500",
+    badge: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900 dark:text-fuchsia-300",
+    solid: "bg-fuchsia-600",
+    banner: "bg-fuchsia-500",
+  },
 };
 
 /** The accent names this platform knows how to paint. */
