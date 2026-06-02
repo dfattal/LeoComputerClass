@@ -1,29 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-
-/** Resolve a lesson by class + lesson slug, falling back to slug-only for backward compat. */
-async function resolveLesson(
-  serviceClient: Awaited<ReturnType<typeof createServiceClient>>,
-  classSlug: string | null,
-  lessonSlug: string
-) {
-  if (classSlug) {
-    const { data } = await serviceClient
-      .from("lessons")
-      .select("id")
-      .eq("class_slug", classSlug)
-      .eq("slug", lessonSlug)
-      .single();
-    if (data) return data;
-  }
-  // Fallback: slug-only lookup (backward compat for old clients)
-  const { data } = await serviceClient
-    .from("lessons")
-    .select("id")
-    .eq("slug", lessonSlug)
-    .single();
-  return data;
-}
+import { resolveLessonId } from "@/lib/lessons/resolveLessonId";
 
 export async function GET(request: Request) {
   try {
@@ -49,7 +26,7 @@ export async function GET(request: Request) {
     }
 
     const serviceClient = await createServiceClient();
-    const lesson = await resolveLesson(serviceClient, classSlug, lessonSlug);
+    const lesson = await resolveLessonId(serviceClient, classSlug, lessonSlug);
 
     if (!lesson) {
       return NextResponse.json({ submission: null });
@@ -102,7 +79,7 @@ export async function POST(request: Request) {
     }
 
     const serviceClient = await createServiceClient();
-    const lesson = await resolveLesson(serviceClient, classSlug, lessonSlug);
+    const lesson = await resolveLessonId(serviceClient, classSlug, lessonSlug);
 
     if (!lesson) {
       return NextResponse.json(
@@ -140,6 +117,14 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // The submission is now the canonical copy — drop the auto-saved draft so it
+    // can't shadow this submission when the student returns to the lesson.
+    await serviceClient
+      .from("drafts")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("lesson_id", lesson.id);
 
     // Auto-update progress if all tests pass
     if (

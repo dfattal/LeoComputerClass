@@ -2,6 +2,7 @@
 
 import CodeEditor from "./CodeEditor";
 import EditorToolbar from "./EditorToolbar";
+import type { SaveStatus } from "./CourseShell";
 
 export default function EditorPanel({
   classSlug,
@@ -18,6 +19,7 @@ export default function EditorPanel({
   hasCode,
   hasSubmittedBefore,
   resetKey,
+  saveStatus,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -33,6 +35,7 @@ export default function EditorPanel({
   hasCode?: boolean;
   hasSubmittedBefore?: boolean;
   resetKey?: number;
+  saveStatus?: SaveStatus;
 }) {
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -46,6 +49,7 @@ export default function EditorPanel({
           submitting={submitting ?? false}
           hasCode={hasCode ?? false}
           hasSubmittedBefore={hasSubmittedBefore ?? false}
+          saveStatus={saveStatus ?? "idle"}
         />
       )}
       <div className="min-h-0 flex-1">

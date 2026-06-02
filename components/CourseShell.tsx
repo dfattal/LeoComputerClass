@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect, type ReactNode } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
@@ -30,6 +36,9 @@ import LinePlot from "./LinePlot";
 import EditorGraphSplit from "./EditorGraphSplit";
 
 const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
+const DRAFT_SAVE_DEBOUNCE_MS = 2000;
+
+export type SaveStatus = "idle" | "saving" | "saved";
 
 interface ExistingSubmission {
   id: string;
@@ -115,6 +124,11 @@ function CourseShellInner({
   const [existingSubmission, setExistingSubmission] =
     useState<ExistingSubmission | null>(null);
 
+  // Auto-saved draft (in-progress, unsubmitted code) restored from the DB.
+  const [draftCode, setDraftCode] = useState<string | null>(null);
+  // Save-status badge state for the editor toolbar.
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+
   // Viz state — parsed JSON returned from the student's (or lesson's) viz function
   const [vizResult, setVizResult] = useState<unknown>(undefined);
 
@@ -145,13 +159,13 @@ function CourseShellInner({
     setMounted(true);
   }, []);
 
-  // Fetch existing submission on mount
+  // Fetch existing submission + auto-saved draft on mount. The draft is the
+  // in-progress code; it takes priority over the last submission when restoring.
   useEffect(() => {
+    const query = `classSlug=${encodeURIComponent(classSlug)}&lessonSlug=${encodeURIComponent(lessonSlug)}`;
     async function fetchExisting() {
       try {
-        const res = await fetch(
-          `/api/submit?classSlug=${encodeURIComponent(classSlug)}&lessonSlug=${encodeURIComponent(lessonSlug)}`
-        );
+        const res = await fetch(`/api/submit?${query}`);
         if (res.ok) {
           const { submission } = await res.json();
           if (submission) setExistingSubmission(submission);
@@ -160,7 +174,119 @@ function CourseShellInner({
         // Ignore — no existing submission
       }
     }
+    async function fetchDraft() {
+      try {
+        const res = await fetch(`/api/draft?${query}`);
+        if (res.ok) {
+          const { draft } = await res.json();
+          if (draft?.code) setDraftCode(draft.code);
+        }
+      } catch {
+        // Ignore — no saved draft
+      }
+    }
     fetchExisting();
+    fetchDraft();
+  }, [classSlug, lessonSlug]);
+
+  // The editor's restore fallback: prefer the in-progress draft, then the last
+  // submission. (localStorage, written on every keystroke, still wins inside
+  // CodeEditor when present — this fallback covers a fresh device / cleared cache.)
+  const fallbackCode = draftCode ?? existingSubmission?.code;
+
+  // Values the editor can load on its own — the starter, the restored draft, or
+  // the restored submission. These are NOT user edits, so they must never be
+  // auto-saved (otherwise opening a lesson would overwrite the real draft with
+  // the starter before the student types anything).
+  const isBaselineCode = useCallback(
+    (c: string) =>
+      c === starterCode ||
+      c === draftCode ||
+      c === existingSubmission?.code,
+    [starterCode, draftCode, existingSubmission?.code]
+  );
+  const isBaselineRef = useRef(isBaselineCode);
+  isBaselineRef.current = isBaselineCode;
+
+  // --- Debounced auto-save of in-progress code to the DB ---
+  // The working copy lives in `code`; saving is a pure side-effect of it
+  // changing. Skips the initial restore, unchanged values, and blank code.
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSavedCode = useRef<string | null>(null);
+  const savedBadgeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Mirror of `code` so the once-bound visibilitychange listener reads the latest value.
+  const codeRef = useRef(code);
+  codeRef.current = code;
+
+  const saveDraft = useCallback(
+    async (codeToSave: string) => {
+      if (!codeToSave.trim() || codeToSave === lastSavedCode.current) return;
+      setSaveStatus("saving");
+      try {
+        const res = await fetch("/api/draft", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ classSlug, lessonSlug, code: codeToSave }),
+        });
+        if (res.ok) {
+          lastSavedCode.current = codeToSave;
+          setSaveStatus("saved");
+          if (savedBadgeTimer.current) clearTimeout(savedBadgeTimer.current);
+          savedBadgeTimer.current = setTimeout(() => setSaveStatus("idle"), 2000);
+        } else {
+          setSaveStatus("idle");
+        }
+      } catch {
+        setSaveStatus("idle");
+      }
+    },
+    [classSlug, lessonSlug]
+  );
+
+  // Seed lastSavedCode with the restored value so we don't re-save unchanged code.
+  useEffect(() => {
+    if (fallbackCode != null && lastSavedCode.current === null) {
+      lastSavedCode.current = fallbackCode;
+    }
+  }, [fallbackCode]);
+
+  // Debounce: save 2s after the last keystroke. Skips blanks, already-saved
+  // code, and any baseline value the editor loaded on its own.
+  useEffect(() => {
+    if (!code.trim() || code === lastSavedCode.current || isBaselineCode(code))
+      return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveDraft(code);
+    }, DRAFT_SAVE_DEBOUNCE_MS);
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, [code, saveDraft, isBaselineCode]);
+
+  // Flush an unsaved draft when the tab is hidden/closed (beats the debounce).
+  useEffect(() => {
+    function flush() {
+      if (document.visibilityState === "hidden") {
+        const codeToSave = codeRef.current;
+        if (
+          codeToSave.trim() &&
+          codeToSave !== lastSavedCode.current &&
+          !isBaselineRef.current(codeToSave)
+        ) {
+          // keepalive lets the request finish even as the page unloads.
+          fetch("/api/draft", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ classSlug, lessonSlug, code: codeToSave }),
+            keepalive: true,
+          }).catch(() => {});
+          lastSavedCode.current = codeToSave;
+        }
+      }
+    }
+    document.addEventListener("visibilitychange", flush);
+    return () => document.removeEventListener("visibilitychange", flush);
   }, [classSlug, lessonSlug]);
 
   const handleCodeChange = useCallback((newCode: string) => {
@@ -457,7 +583,7 @@ function CourseShellInner({
                       classSlug={classSlug}
                       lessonSlug={lessonSlug}
                       onCodeChange={handleCodeChange}
-                      fallbackCode={existingSubmission?.code}
+                      fallbackCode={fallbackCode}
                       starterCode={starterCode}
                       onRun={handleRun}
                       onRunTests={handleRunTests}
@@ -468,6 +594,7 @@ function CourseShellInner({
                       hasCode={!!code.trim()}
                       hasSubmittedBefore={hasSubmittedBefore}
                       resetKey={resetKey}
+                      saveStatus={saveStatus}
                     />
                   }
                   graph={graphContent}
@@ -477,7 +604,7 @@ function CourseShellInner({
                   classSlug={classSlug}
                   lessonSlug={lessonSlug}
                   onCodeChange={handleCodeChange}
-                  fallbackCode={existingSubmission?.code}
+                  fallbackCode={fallbackCode}
                   starterCode={starterCode}
                   onRun={handleRun}
                   onRunTests={handleRunTests}
@@ -488,6 +615,7 @@ function CourseShellInner({
                   hasCode={!!code.trim()}
                   hasSubmittedBefore={hasSubmittedBefore}
                   resetKey={resetKey}
+                  saveStatus={saveStatus}
                 />
               )
             }
@@ -539,6 +667,7 @@ function CourseShellInner({
               classSlug={classSlug}
               lessonSlug={lessonSlug}
               onCodeChange={handleCodeChange}
+              fallbackCode={fallbackCode}
               starterCode={starterCode}
               resetKey={resetKey}
             />
@@ -568,6 +697,7 @@ function CourseShellInner({
           submitting={submitting}
           hasCode={!!code.trim()}
           hasSubmittedBefore={hasSubmittedBefore}
+          saveStatus={saveStatus}
         />
       </div>
     </>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useAccent } from "./AccentContext";
+import SaveStatusBadge from "./SaveStatusBadge";
+import type { SaveStatus } from "./CourseShell";
 
 export default function EditorToolbar({
   onRun,
@@ -11,6 +13,7 @@ export default function EditorToolbar({
   submitting,
   hasCode,
   hasSubmittedBefore,
+  saveStatus = "idle",
 }: {
   onRun: () => void;
   onRunTests: () => void;
@@ -20,6 +23,7 @@ export default function EditorToolbar({
   submitting: boolean;
   hasCode: boolean;
   hasSubmittedBefore: boolean;
+  saveStatus?: SaveStatus;
 }) {
   const accent = useAccent();
 
@@ -82,12 +86,14 @@ export default function EditorToolbar({
         Reset
       </button>
 
-      {/* Submit — pushed to right */}
-      <button
-        onClick={onSubmit}
-        disabled={submitting || !hasCode}
-        className={`ml-auto inline-flex items-center gap-1.5 rounded-md ${accent.bg} px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
-      >
+      {/* Save status + Submit — pushed to right */}
+      <div className="ml-auto flex items-center gap-3">
+        <SaveStatusBadge status={saveStatus} />
+        <button
+          onClick={onSubmit}
+          disabled={submitting || !hasCode}
+          className={`inline-flex items-center gap-1.5 rounded-md ${accent.bg} px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors ${accent.bgHover} disabled:opacity-50`}
+        >
         <svg
           viewBox="0 0 16 16"
           fill="currentColor"
@@ -96,12 +102,13 @@ export default function EditorToolbar({
         >
           <path d="M8 2l5 5H9v7H7V7H3l5-5z" />
         </svg>
-        {submitting
-          ? "Submitting…"
-          : hasSubmittedBefore
-            ? "Resubmit"
-            : "Submit"}
-      </button>
+          {submitting
+            ? "Submitting…"
+            : hasSubmittedBefore
+              ? "Resubmit"
+              : "Submit"}
+        </button>
+      </div>
     </div>
   );
 }

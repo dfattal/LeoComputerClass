@@ -45,11 +45,23 @@ create table if not exists lesson_progress (
   unique(user_id, lesson_id)
 );
 
+-- Drafts table: in-progress (unsubmitted) code, auto-saved as the student types.
+-- One row per (user, lesson), upserted on each save. Cleared once submitted.
+create table if not exists drafts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references profiles(id) on delete cascade,
+  lesson_id uuid not null references lessons(id) on delete cascade,
+  code text not null,
+  updated_at timestamptz not null default now(),
+  unique(user_id, lesson_id)
+);
+
 -- Enable RLS on all tables
 alter table profiles enable row level security;
 alter table lessons enable row level security;
 alter table submissions enable row level security;
 alter table lesson_progress enable row level security;
+alter table drafts enable row level security;
 
 -- Profiles policies
 create policy "Users can read own profile"
@@ -106,6 +118,17 @@ create policy "Instructors can update progress"
     exists (select 1 from profiles where id = auth.uid() and role = 'instructor')
   );
 
+-- Drafts policies
+create policy "Users can manage own drafts"
+  on drafts for all
+  using (auth.uid() = user_id);
+
+create policy "Instructors can read all drafts"
+  on drafts for select
+  using (
+    exists (select 1 from profiles where id = auth.uid() and role = 'instructor')
+  );
+
 -- Seed initial lessons (keep in sync with content/classes/leo/syllabus.ts published weeks)
 insert into lessons (class_slug, week_number, slug, title) values
   ('leo', 1, 'week-01', 'Boolean Algebra & Truth Tables'),
@@ -136,3 +159,17 @@ create or replace trigger on_auth_user_created
 -- ALTER TABLE lessons DROP CONSTRAINT IF EXISTS lessons_slug_key;
 -- ALTER TABLE lessons ADD CONSTRAINT lessons_class_slug_unique UNIQUE (class_slug, slug);
 -- ALTER TABLE lessons ADD CONSTRAINT lessons_class_week_unique UNIQUE (class_slug, week_number);
+
+-- Migration to add the drafts table to an existing database (run as one block):
+-- create table if not exists drafts (
+--   id uuid primary key default gen_random_uuid(),
+--   user_id uuid not null references profiles(id) on delete cascade,
+--   lesson_id uuid not null references lessons(id) on delete cascade,
+--   code text not null,
+--   updated_at timestamptz not null default now(),
+--   unique(user_id, lesson_id)
+-- );
+-- alter table drafts enable row level security;
+-- create policy "Users can manage own drafts" on drafts for all using (auth.uid() = user_id);
+-- create policy "Instructors can read all drafts" on drafts for select
+--   using (exists (select 1 from profiles where id = auth.uid() and role = 'instructor'));

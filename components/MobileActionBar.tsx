@@ -1,6 +1,8 @@
 "use client";
 
 import { useAccent } from "./AccentContext";
+import SaveStatusBadge from "./SaveStatusBadge";
+import type { SaveStatus } from "./CourseShell";
 
 export default function MobileActionBar({
   onRun,
@@ -11,6 +13,7 @@ export default function MobileActionBar({
   submitting,
   hasCode,
   hasSubmittedBefore,
+  saveStatus = "idle",
 }: {
   onRun: () => void;
   onRunTests: () => void;
@@ -20,11 +23,17 @@ export default function MobileActionBar({
   submitting: boolean;
   hasCode: boolean;
   hasSubmittedBefore: boolean;
+  saveStatus?: SaveStatus;
 }) {
   const accent = useAccent();
 
   return (
     <div className="shrink-0 border-t border-stone-200 bg-white px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] dark:border-stone-800 dark:bg-stone-950 lg:hidden">
+      {saveStatus !== "idle" && (
+        <div className="mb-1.5 flex justify-end">
+          <SaveStatusBadge status={saveStatus} />
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <button
           onClick={onRun}
