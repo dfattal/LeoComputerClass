@@ -154,7 +154,7 @@ function isDrawGrid(result) {
 
 function lessonDirs(classDir) {
   return readdirSync(classDir)
-    .filter((d) => /^lesson-\d+/.test(d))
+    .filter((d) => /^(?:lesson|week)-\d+/.test(d))
     .filter((d) => statSync(join(classDir, d)).isDirectory())
     .sort();
 }
