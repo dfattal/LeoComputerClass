@@ -33,6 +33,7 @@ import RunPanel from "./RunPanel";
 import TestResults from "./TestResults";
 import AIFeedback from "./AIFeedback";
 import LinePlot from "./LinePlot";
+import PixelCanvas from "./PixelCanvas";
 import EditorGraphSplit from "./EditorGraphSplit";
 
 const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
@@ -308,10 +309,11 @@ function CourseShellInner({
         const argsStr = vizConfig.demoArgs
           .map((a) => JSON.stringify(a))
           .join(", ");
-        // A "plot" lesson can ship a hidden `setup` prelude (plot helpers that
-        // call the student's functions); append it after the student's code.
+        // A "plot" or "draw" lesson can ship a hidden `setup` prelude (helpers
+        // that call the student's functions); append it after the student's code.
         const setup =
-          vizConfig.type === "plot" && vizConfig.setup
+          (vizConfig.type === "plot" || vizConfig.type === "draw") &&
+          vizConfig.setup
             ? `\n${vizConfig.setup}`
             : "";
         const vizCode = `${currentCode}${setup}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
@@ -530,15 +532,19 @@ function CourseShellInner({
     />
   ) : undefined;
 
-  // Generic line/trajectory plot (rendered in drawer "Graph" tab)
-  const graphContent = vizConfig?.type === "plot" ? (
-    <LinePlot
-      data={vizResult}
-      title={vizConfig.title}
-      xLabel={vizConfig.xLabel}
-      yLabel={vizConfig.yLabel}
-    />
-  ) : undefined;
+  // Right-column graph panel (also a drawer "Graph" tab on mobile): a line plot
+  // for "plot" lessons, or a pixel-grid drawing for "draw" lessons.
+  const graphContent =
+    vizConfig?.type === "plot" ? (
+      <LinePlot
+        data={vizResult}
+        title={vizConfig.title}
+        xLabel={vizConfig.xLabel}
+        yLabel={vizConfig.yLabel}
+      />
+    ) : vizConfig?.type === "draw" ? (
+      <PixelCanvas data={vizResult} title={vizConfig.title} />
+    ) : undefined;
 
   const sidebarProps = {
     phases,

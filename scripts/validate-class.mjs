@@ -141,6 +141,17 @@ function isPlotSeries(result) {
   return false;
 }
 
+function isDrawGrid(result) {
+  // A pixel-grid drawing: a non-empty list of rows, each row a list of cells
+  // (color name / emoji string, number, or null/"" for empty).
+  if (!Array.isArray(result) || result.length === 0) return false;
+  return result.every(
+    (row) =>
+      Array.isArray(row) &&
+      row.every((c) => c === null || ["string", "number"].includes(typeof c))
+  );
+}
+
 function lessonDirs(classDir) {
   return readdirSync(classDir)
     .filter((d) => /^lesson-\d+/.test(d))
@@ -249,11 +260,16 @@ function validateLesson(lessonDir) {
         );
       });
 
-      // viz check
+      // viz check — "draw" lessons return a pixel grid, everything else a plot.
       if (viz) {
         if (res.viz && "value" in res.viz) {
-          const ok = isPlotSeries(res.viz.value);
-          add(ok, `viz ${viz.resultFn}() returns plottable series`, ok ? undefined : "not a [x,y] / points series");
+          if (viz.type === "draw") {
+            const ok = isDrawGrid(res.viz.value);
+            add(ok, `viz ${viz.resultFn}() returns a pixel grid`, ok ? undefined : "not a list of rows of cells");
+          } else {
+            const ok = isPlotSeries(res.viz.value);
+            add(ok, `viz ${viz.resultFn}() returns plottable series`, ok ? undefined : "not a [x,y] / points series");
+          }
         } else {
           add(false, `viz ${viz.resultFn}() runs`, res.viz ? res.viz.error : "no viz result");
         }

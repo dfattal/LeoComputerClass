@@ -158,7 +158,25 @@ export interface PlotVizConfig {
   yLabel?: string;
 }
 
-export type VizConfig = CrisprVizConfig | PlotVizConfig;
+/**
+ * Pixel-grid drawing canvas (used by the "Pixel Wizards" beginner class). The
+ * `resultFn` returns a 2D grid — a list of rows, each row a list of cells. A
+ * cell is a named color ("red", "blue", …), an emoji ("🌸"), or empty
+ * (""/"."/null → transparent). Rows may be ragged; the renderer pads to the
+ * widest row. Driven by the same __VIZ__ stdout channel as plots.
+ */
+export interface DrawVizConfig {
+  type: "draw";
+  /** The function (in the student's code or in `setup`) that returns the grid. */
+  resultFn: string;
+  /** Args to pass to resultFn for the demo. */
+  demoArgs: unknown[];
+  /** Optional Python prelude appended after the student's code (grid helpers/palette). */
+  setup?: string;
+  title?: string;
+}
+
+export type VizConfig = CrisprVizConfig | PlotVizConfig | DrawVizConfig;
 
 export interface LessonContent extends WeekContent {
   starterCode?: string;
