@@ -26,11 +26,16 @@ class should keep all five:
 5. **A payoff worth wanting.** Each lesson ends with a visible win, and the class
    ends with a capstone that ties everything together.
 
-**Supporting tech already available** (lean on it): KaTeX for math, the line/
-trajectory plot `viz.json` type for graphs, the CRISPR-style `viz` for sequence
-work, per-case/per-entry `tol` for float answers, the AI coaching prompt per
-class. The plot viz is self-contained Python in a `setup` block — great for
-"watch it happen" panels.
+**Supporting tech already available** (lean on it): KaTeX for math, three
+`viz.json` panel types — the line/trajectory **`plot`**, the **`draw`** pixel-grid
+drawing canvas (student code returns a 2D grid of color-name/emoji/empty cells;
+see Pixel Wizards + `components/PixelCanvas.tsx`), and the CRISPR-style sequence
+`viz` — per-case/per-entry `tol` for float answers, and a per-class AI coaching
+prompt (now personalized with the student's login first name). `plot`/`draw`
+panels are driven by the student's own code through the `__VIZ__` channel, so
+they're "watch it happen" panels. Accent colors live in one place,
+`lib/accents.ts` (don't hardcode them). To scaffold a drawing lesson, pass
+`--viz draw` to `scaffold-lesson.mjs` / `/new-lesson`.
 
 ---
 
@@ -38,16 +43,51 @@ class. The plot viz is self-contained Python in a `setup` block — great for
 
 | Class | Slug | Through-line | Status |
 |-------|------|--------------|--------|
-| Python Primer | `python-primer` | Learn Python in 5 lessons (prerequisite) | Published (5) |
+| Pixel Wizards | `pixels` | Absolute basics: draw pictures with code (variables → loops) | Published (7) ✅ new |
+| Python Primer | `python-primer` | Real Python, one step up from Pixel Wizards | Published (5) |
 | Leo's Computer Class | `leo` | Logic gates → a working CPU | Phases 1–3 published, ALU/CPU planned |
 | Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8) |
 | Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) |
-| Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) ✅ new |
+| Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) |
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | 8 published, 2 planned |
 
 ---
 
 ## Shipped from this list
+
+### Pixel Wizards — ✅ built as `pixels`, 7 lessons published
+**Through-line:** "Draw pictures with code — and find out *why* variables,
+functions, and loops exist." A new **Level 0** class (not originally on this
+list): the true absolute-beginner on-ramp for a kid who has never coded. It sits
+first on the home page, above Python Primer, which was repositioned as the
+next step ("Real Python, One Step Up").
+
+**Why it was added:** Python Primer ramps to intermediate fast (bitwise ops by
+lesson 5) and has no visuals — too steep as a first contact. Pixel Wizards is
+visual-first and slows the ramp to half-steps.
+
+**Lesson arc (each one: feel the *pain* of not having the idea → then the idea as
+relief → then draw):**
+1. Hello, Pixels! — return a grid; one red square, then a rainbow row
+2. Boxes That Remember — variables (name a color once, change it everywhere)
+3. Numbers & Counting — `["green"] * n`, sizing by a number (no loop yet)
+4. Magic Spells — functions/reuse (call `blank_row()` instead of retyping)
+5. Spells with Inputs — parameters (one `dot(color)` spell, many pictures)
+6. Making Choices — `if`/`else` (the computer decides per square)
+7. Do It Again — `for` + nested loops (an 8×8 checkerboard from a few lines)
+
+**As-built notes:**
+- Shipped the new **`draw` pixel-grid viz** (`type:"draw"`): the student's
+  function returns a 2D grid of color-name/emoji/`""`-empty cells, rendered by
+  `components/PixelCanvas.tsx` over the existing `__VIZ__` channel (no Pyodide
+  change). `validate-class` and `scaffold-lesson.mjs --viz draw` know about it.
+  **This closes the "needs a raster/grid panel" blocker the honorable-mention
+  classes below were waiting on.**
+- Exact-match grids (lists of lists of strings) are generated from `reference.py`
+  like every other class — no `tol` needed.
+- New accent `fuchsia` added to `lib/accents.ts`. Hero `/hero-pixels.webp` is
+  pixel-art. The AI coaching prompt is name-agnostic and greets the student by
+  their Google login first name (a personalization now wired for all classes).
 
 ### Secret Codes (Cryptography) — ✅ built as `leo-codes`, 8 lessons published
 **Through-line:** "Send messages your sister can't read — then crack hers."
@@ -94,8 +134,9 @@ payoff (beating Dad). Boards are grids (lists), every helper is testable.
 6. Recursion: imagine the whole game — the minimax idea
 7. The unbeatable bot — minimax to the end of tic-tac-toe
 8. Capstone: Connect 4 with depth-limited search + a scoring heuristic
-**Viz/assets:** board render (could reuse/extend the plot or a simple text grid);
-a "search tree" sketch. Hero: game-grid/robot motif.
+**Viz/assets:** board render — now easy with the **`draw` pixel-grid viz** (return
+the board as a grid of colored/emoji cells); a "search tree" sketch would still be
+custom. Hero: game-grid/robot motif.
 **Risks:** Minimax recursion is the conceptual peak — scaffold heavily; keep
 tic-tac-toe small enough to search fully.
 
@@ -126,11 +167,16 @@ well-tested stages; resist adding language features.
 
 - **Pictures from Math** — pixel grids, color functions, fractals (Mandelbrot),
   ASCII or PNG output. Strong visual payoff; ties into David's 3D/DisplayXR work.
-  Needs an image-output viz path (the plot viz is line-based; would want a raster
-  panel). Through-line: "render a scene with nothing but math."
+  **Now unblocked:** the `draw` pixel-grid viz (shipped with Pixel Wizards) is
+  exactly the raster panel this needed — return a grid where each cell's color
+  comes from a math function. (Very high-res continuous fractals would still want
+  a finer per-pixel canvas, but coarse grids work today.) A natural sequel that
+  graduates Pixel Wizards kids from "pick a color" to "*compute* a color."
+  Through-line: "render a scene with nothing but math."
 - **Game of Life & Emergence** — Conway's Life and other cellular automata; magical
   emergent behavior from tiny rules. Grid-based, very testable. Through-line:
-  "tiny rules, surprising worlds." Could share a grid-render viz with Game Bot.
+  "tiny rules, surprising worlds." **Now unblocked:** render each generation with
+  the `draw` pixel-grid viz (live → black cells, dead → empty).
 - **Sound by Code** — sine waves → notes → scales → synthesize a tune. Bridges
   Motion Lab's wave math to music. Pyodide can emit WAV bytes; needs an audio
   output path in the UI (new). Through-line: "compose and play a song in code."
@@ -147,5 +193,10 @@ the natural next order is:
 3. **Build a Programming Language** — the grand finale that closes the
    hardware→software loop from the Computer Class.
 
-Pictures from Math / Game of Life / Sound by Code are great any-time detours,
-gated mainly on adding the matching output panel (raster image / audio).
+For an **absolute beginner** (a younger kid, or Leila starting out), the ladder
+now starts earlier: **Pixel Wizards** (✅ built) → **Python Primer** → a subject
+class. Pixel Wizards is the gentlest first contact and feeds everything else.
+
+Pictures from Math / Game of Life are now unblocked by the `draw` pixel-grid viz
+(see above) and make strong any-time detours; **Sound by Code** is still gated on
+adding an audio output path to the UI.
