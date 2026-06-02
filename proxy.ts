@@ -1,8 +1,8 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-export async function middleware(request: NextRequest) {
-  // Skip middleware when Supabase is not configured
+export async function proxy(request: NextRequest) {
+  // Skip when Supabase is not configured
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     process.env.NEXT_PUBLIC_SUPABASE_URL === "your-supabase-url"
