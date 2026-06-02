@@ -159,18 +159,39 @@ export interface PlotVizConfig {
 }
 
 /**
- * Pixel-grid drawing canvas (used by the "Pixel Wizards" beginner class). The
- * `resultFn` returns a 2D grid — a list of rows, each row a list of cells. A
- * cell is a named color ("red", "blue", …), an emoji ("🌸"), or empty
- * (""/"."/null → transparent). Rows may be ragged; the renderer pads to the
- * widest row. Driven by the same __VIZ__ stdout channel as plots.
+ * One step of a progressive drawing lesson: the student function `fn`, the demo
+ * `args` to call it with, the `expected` grid a correct solution returns for
+ * those args, and the `caption` to show once this is the furthest correct step.
+ */
+export interface DrawStage {
+  fn: string;
+  args: unknown[];
+  expected: unknown;
+  caption: string;
+}
+
+/**
+ * Pixel-grid drawing canvas (used by the "Pixel Wizards" beginner class). A cell
+ * is a named color ("red", "blue", …), an emoji ("🌸"), or empty (""/"."/null →
+ * transparent). Rows may be ragged; the renderer pads to the widest. Driven by
+ * the same __VIZ__ stdout channel as plots. Two modes:
+ *
+ * - Simple: `resultFn` returns the grid directly.
+ * - Progressive (`stages`): the engine walks the stages, draws the furthest one
+ *   whose output matches `expected`, and shows that stage's caption — so the
+ *   panel tracks how far the student has correctly gotten. `resultFn` returns
+ *   `{ grid, caption }` in this mode (built by the engine).
  */
 export interface DrawVizConfig {
   type: "draw";
-  /** The function (in the student's code or in `setup`) that returns the grid. */
-  resultFn: string;
-  /** Args to pass to resultFn for the demo. */
-  demoArgs: unknown[];
+  /** Simple mode: the function (in the student's code or `setup`) returning the grid. */
+  resultFn?: string;
+  /** Simple-mode args for resultFn. */
+  demoArgs?: unknown[];
+  /** Progressive mode: ordered steps, first → last. */
+  stages?: DrawStage[];
+  /** Progressive-mode caption shown when no step is correct yet. */
+  todo?: string;
   /** Optional Python prelude appended after the student's code (grid helpers/palette). */
   setup?: string;
   title?: string;

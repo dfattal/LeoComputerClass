@@ -1,6 +1,19 @@
 {
   "type": "draw",
-  "resultFn": "light",
-  "demoArgs": [true],
-  "title": "if/else: the computer decides which square to show"
+  "title": "if/else: the computer decides which square to show",
+  "todo": "Turn the light on first — light(True).",
+  "stages": [
+    {
+      "fn": "light",
+      "args": [true],
+      "expected": [["yellow"]],
+      "caption": "💡 Light's on! Now make tile decide by even/odd."
+    },
+    {
+      "fn": "tile",
+      "args": [3],
+      "expected": [["black"]],
+      "caption": "✅ tile decides! 3 is odd, so it comes out black."
+    }
+  ]
 }

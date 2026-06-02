@@ -16,6 +16,3 @@ def rainbow():
     # Give back ONE row with six colored squares, in this order:
     # red, orange, yellow, green, blue, purple
     pass
-
-
-print("Press Run to paint your picture in the Graph panel! 🌈")

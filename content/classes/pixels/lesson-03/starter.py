@@ -13,6 +13,3 @@ def bar(n):
 def arrow(n):
     # Give back ONE row: n empty squares, then a red square at the end.
     pass
-
-
-print("Press Run — try changing the number and watch the bar grow! 🔢")

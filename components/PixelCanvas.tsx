@@ -39,6 +39,24 @@ function normalize(data: unknown): Cell[][] | null {
   return data as Cell[][];
 }
 
+// Accept either a bare grid, or a progressive `{ grid, caption }` object (the
+// caption is the "how far you've gotten" message in progressive-stage lessons).
+function unwrap(data: unknown): { grid: Cell[][] | null; caption?: string } {
+  if (
+    data &&
+    typeof data === "object" &&
+    !Array.isArray(data) &&
+    "grid" in data
+  ) {
+    const d = data as { grid: unknown; caption?: unknown };
+    return {
+      grid: normalize(d.grid),
+      caption: typeof d.caption === "string" ? d.caption : undefined,
+    };
+  }
+  return { grid: normalize(data) };
+}
+
 function cellKind(cell: Cell): { fill: string; glyph?: string } {
   if (cell == null) return { fill: "transparent" };
   const s = String(cell);
@@ -56,12 +74,17 @@ export default function PixelCanvas({
   data?: unknown;
   title?: string;
 }) {
-  const grid = normalize(data);
+  const { grid, caption } = unwrap(data);
 
   if (!grid) {
     return (
-      <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm text-stone-400 dark:border-stone-800 dark:bg-stone-900">
-        Run your code to see the picture.
+      <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm dark:border-stone-800 dark:bg-stone-900">
+        <span className="text-stone-400">Run your code to see the picture.</span>
+        {caption && (
+          <span className="font-medium text-stone-600 dark:text-stone-300">
+            {caption}
+          </span>
+        )}
       </div>
     );
   }
@@ -130,6 +153,11 @@ export default function PixelCanvas({
           )}
         </svg>
       </div>
+      {caption && (
+        <p className="shrink-0 text-center text-sm font-medium text-stone-600 dark:text-stone-300">
+          {caption}
+        </p>
+      )}
     </div>
   );
 }

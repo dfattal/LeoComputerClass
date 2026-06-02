@@ -303,21 +303,60 @@ function CourseShellInner({
   // its JSON return value. Shared by Run and Run-Tests.
   const captureViz = useCallback(
     async (currentCode: string, mainErrored: boolean) => {
-      // The plot is driven by the student's own code, so skip if it errored.
+      // The viz is driven by the student's own code, so skip if it errored.
       if (!vizConfig || mainErrored) return;
       try {
-        const argsStr = vizConfig.demoArgs
-          .map((a) => JSON.stringify(a))
-          .join(", ");
-        // A "plot" or "draw" lesson can ship a hidden `setup` prelude (helpers
-        // that call the student's functions); append it after the student's code.
+        // A "plot"/"draw" lesson can ship a hidden `setup` prelude (helpers that
+        // call the student's functions); append it after the student's code.
         const setup =
           (vizConfig.type === "plot" || vizConfig.type === "draw") &&
           vizConfig.setup
             ? `\n${vizConfig.setup}`
             : "";
-        const vizCode = `${currentCode}${setup}\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
-        const vizRun = await run(vizCode);
+
+        let driver: string;
+        if (vizConfig.type === "draw" && vizConfig.stages) {
+          // Progressive mode: walk the stages, draw the furthest one whose output
+          // matches its expected grid, and report that stage's caption. While a
+          // stage is still being worked on, show its raw output for feedback.
+          const stagesLit = JSON.stringify(JSON.stringify(vizConfig.stages));
+          const todoLit = JSON.stringify(
+            vizConfig.todo ?? "Run your code to see your picture!"
+          );
+          driver = `\nimport json as __json
+def __viz_progress():
+    __stages = __json.loads(${stagesLit})
+    __shown = None
+    __cap = ${todoLit}
+    for __s in __stages:
+        __fn = globals().get(__s["fn"])
+        try:
+            __out = __fn(*__s["args"]) if __fn is not None else None
+        except Exception:
+            __out = None
+        if __out == __s["expected"]:
+            __shown = __out
+            __cap = __s["caption"]
+            continue
+        if __shown is None and isinstance(__out, list) and len(__out) > 0:
+            __shown = __out
+        break
+    if __shown is None:
+        __shown = [[""]]
+    return {"grid": __shown, "caption": __cap}
+try:
+    print("__VIZ__:" + __json.dumps(__viz_progress()))
+except Exception as __e:
+    print("__VIZ_ERR__:" + str(__e))`;
+        } else {
+          // Simple mode: call resultFn(demoArgs) and plot/draw its return value.
+          const argsStr = (vizConfig.demoArgs ?? [])
+            .map((a) => JSON.stringify(a))
+            .join(", ");
+          driver = `\nimport json\ntry:\n    __viz_r = ${vizConfig.resultFn}(${argsStr})\n    print("__VIZ__:" + json.dumps(__viz_r))\nexcept Exception as e:\n    print("__VIZ_ERR__:" + str(e))`;
+        }
+
+        const vizRun = await run(`${currentCode}${setup}${driver}`);
         const vizLine = vizRun.stdout
           .split("\n")
           .find((l: string) => l.startsWith("__VIZ__:"));

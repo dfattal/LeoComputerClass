@@ -14,6 +14,3 @@ def dot(color):
     # Give back a 3x3 picture with one square of the given color in the MIDDLE,
     # and empty squares "" all around it.
     pass
-
-
-print("Press Run — then call dot() with a different color! 🎚️")

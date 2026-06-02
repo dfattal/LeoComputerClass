@@ -15,6 +15,3 @@ def two_tone():
     # Make TWO boxes: a = "black" and b = "yellow".
     # Return one row that goes a, b, a, b.
     pass
-
-
-print("Press Run — then change a box and watch the picture change! 📦")

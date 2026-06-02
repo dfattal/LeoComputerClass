@@ -1,6 +1,25 @@
 {
   "type": "draw",
-  "resultFn": "face",
-  "demoArgs": [],
-  "title": "One face() spell — call it any time you want a smiley"
+  "title": "One face() spell — built by reusing blank_row()",
+  "todo": "Make blank_row() first — a row of five empty squares.",
+  "stages": [
+    {
+      "fn": "blank_row",
+      "args": [],
+      "expected": ["", "", "", "", ""],
+      "caption": "✅ blank_row spell ready! Now build the face with it."
+    },
+    {
+      "fn": "face",
+      "args": [],
+      "expected": [
+        ["", "", "", "", ""],
+        ["", "black", "", "black", ""],
+        ["", "", "", "", ""],
+        ["black", "", "", "", "black"],
+        ["", "black", "black", "black", ""]
+      ],
+      "caption": "😊 Face complete — and you reused blank_row to make it!"
+    }
+  ]
 }

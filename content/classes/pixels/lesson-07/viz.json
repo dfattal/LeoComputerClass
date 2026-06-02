@@ -1,7 +1,28 @@
 {
   "type": "draw",
-  "resultFn": "__draw",
-  "demoArgs": [],
-  "title": "Loops at work — press Run to paint it!",
-  "setup": "# Show the checkerboard once it's done, otherwise the single looped row.\ndef __draw():\n    try:\n        __g = checkerboard(8)\n        if __g:\n            return __g\n    except Exception:\n        pass\n    try:\n        __g = row_of(\"blue\", 6)\n        if __g:\n            return __g\n    except Exception:\n        pass\n    return [[\"\"]]\n"
+  "title": "Loops at work — a few lines fill the whole board",
+  "todo": "Build row_of(color, n) first, using a loop.",
+  "stages": [
+    {
+      "fn": "row_of",
+      "args": ["blue", 6],
+      "expected": [["blue", "blue", "blue", "blue", "blue", "blue"]],
+      "caption": "✅ A looped row! Now fill a whole board with checkerboard."
+    },
+    {
+      "fn": "checkerboard",
+      "args": [8],
+      "expected": [
+        ["black", "white", "black", "white", "black", "white", "black", "white"],
+        ["white", "black", "white", "black", "white", "black", "white", "black"],
+        ["black", "white", "black", "white", "black", "white", "black", "white"],
+        ["white", "black", "white", "black", "white", "black", "white", "black"],
+        ["black", "white", "black", "white", "black", "white", "black", "white"],
+        ["white", "black", "white", "black", "white", "black", "white", "black"],
+        ["black", "white", "black", "white", "black", "white", "black", "white"],
+        ["white", "black", "white", "black", "white", "black", "white", "black"]
+      ],
+      "caption": "🏁 Checkerboard! Loops inside loops filled all 64 squares."
+    }
+  ]
 }

@@ -1,7 +1,19 @@
 {
   "type": "draw",
-  "resultFn": "__draw",
-  "demoArgs": [],
-  "title": "Your spell — press Run to paint it!",
-  "setup": "# Show whichever spell the student has finished: the dot if it's done,\n# otherwise the colored bar.\ndef __draw():\n    try:\n        __g = dot(\"purple\")\n        if __g:\n            return __g\n    except Exception:\n        pass\n    try:\n        __g = bar(\"purple\", 5)\n        if __g:\n            return __g\n    except Exception:\n        pass\n    return [[\"\"]]\n"
+  "title": "Same spell — the color is yours to choose",
+  "todo": "Finish bar(color, n) to see your bar!",
+  "stages": [
+    {
+      "fn": "bar",
+      "args": ["purple", 5],
+      "expected": [["purple", "purple", "purple", "purple", "purple"]],
+      "caption": "✅ A purple bar! Now center a dot with dot(color)."
+    },
+    {
+      "fn": "dot",
+      "args": ["purple"],
+      "expected": [["", "", ""], ["", "purple", ""], ["", "", ""]],
+      "caption": "🟣 Dot done — one spell, any color you like."
+    }
+  ]
 }

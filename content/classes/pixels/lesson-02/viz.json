@@ -1,6 +1,19 @@
 {
   "type": "draw",
-  "resultFn": "my_square",
-  "demoArgs": [],
-  "title": "Change the box, change the whole square!"
+  "title": "Change the box, change the whole square!",
+  "todo": "Finish my_square() to see your square!",
+  "stages": [
+    {
+      "fn": "my_square",
+      "args": [],
+      "expected": [["purple", "purple"], ["purple", "purple"]],
+      "caption": "✅ Purple square! Now make the striped row with two_tone."
+    },
+    {
+      "fn": "two_tone",
+      "args": [],
+      "expected": [["black", "yellow", "black", "yellow"]],
+      "caption": "🎉 Both done! A striped row built from two boxes."
+    }
+  ]
 }

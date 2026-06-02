@@ -1,7 +1,19 @@
 {
   "type": "draw",
-  "resultFn": "__draw",
-  "demoArgs": [],
   "title": "Your picture — press Run to paint it!",
-  "setup": "# Show the best picture the student has finished so far: the rainbow\n# once it's done, otherwise the single hello_pixel square.\ndef __draw():\n    for __f in (rainbow, hello_pixel):\n        try:\n            __g = __f()\n        except Exception:\n            __g = None\n        if __g:\n            return __g\n    return [[\"\"]]\n"
+  "todo": "Finish hello_pixel() to see your very first square!",
+  "stages": [
+    {
+      "fn": "hello_pixel",
+      "args": [],
+      "expected": [["red"]],
+      "caption": "✅ One red square! Now make the rainbow."
+    },
+    {
+      "fn": "rainbow",
+      "args": [],
+      "expected": [["red", "orange", "yellow", "green", "blue", "purple"]],
+      "caption": "🌈 Rainbow complete — your first picture made of code!"
+    }
+  ]
 }

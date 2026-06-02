@@ -19,6 +19,3 @@ def face():
     #   ["black", "", "", "", "black"]      <- mouth corners
     #   ["", "black", "black", "black", ""] <- smile
     pass
-
-
-print("Press Run to cast your face() spell! 🪄")

@@ -1,6 +1,19 @@
 {
   "type": "draw",
-  "resultFn": "bar",
-  "demoArgs": [6],
-  "title": "One number decides how long the bar is"
+  "title": "One number decides how long the bar is",
+  "todo": "Finish bar(n) to see your green bar!",
+  "stages": [
+    {
+      "fn": "bar",
+      "args": [6],
+      "expected": [["green", "green", "green", "green", "green", "green"]],
+      "caption": "✅ A bar of 6! Now place a star at the end with arrow."
+    },
+    {
+      "fn": "arrow",
+      "args": [4],
+      "expected": [["", "", "", "", "red"]],
+      "caption": "🎯 Arrow done — the number decides where the red lands."
+    }
+  ]
 }

@@ -19,6 +19,3 @@ def checkerboard(n):
     # Outer loop walks the rows (r). Inner loop walks the squares (c).
     # For each square, DECIDE the color from (r + c): even -> black, odd -> white.
     pass
-
-
-print("Press Run to fill the whole board with just a few lines! 🔁")

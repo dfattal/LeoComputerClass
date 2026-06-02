@@ -230,12 +230,23 @@ function validateLesson(lessonDir) {
         }
       }
     }
+    // Progressive "draw" lessons declare stages instead of a resultFn. Each
+    // stage's expected grid must match what reference.py actually returns, so we
+    // run them through the same reference-execution + valuesMatch path as tests
+    // (this also catches a stage's embedded `expected` drifting from the answer).
+    const stageCases =
+      viz && viz.type === "draw" && Array.isArray(viz.stages)
+        ? viz.stages.map((s) => ({ entry: s.fn, args: s.args || [], expected: s.expected }))
+        : [];
+    const usesResultFn = viz && !(viz.type === "draw" && Array.isArray(viz.stages));
+    const allCases = [...flatCases, ...stageCases];
+
     let res;
     try {
       res = runPython({
         refPath,
-        cases: flatCases.map(({ entry, args }) => ({ entry, args })),
-        viz: viz ? { setup: viz.setup || "", resultFn: viz.resultFn, demoArgs: viz.demoArgs || [] } : null,
+        cases: allCases.map(({ entry, args }) => ({ entry, args })),
+        viz: usesResultFn ? { setup: viz.setup || "", resultFn: viz.resultFn, demoArgs: viz.demoArgs || [] } : null,
       });
     } catch (e) {
       add(false, "python3 reference run", String(e.stderr || e.message).trim());
@@ -245,7 +256,7 @@ function validateLesson(lessonDir) {
     if (res && res.loadError) {
       add(false, "reference.py imports", res.loadError);
     } else if (res) {
-      // expected-value comparisons
+      // expected-value comparisons (tests)
       flatCases.forEach((c, i) => {
         const a = res.actuals[i];
         if (!a || "error" in a) {
@@ -260,8 +271,23 @@ function validateLesson(lessonDir) {
         );
       });
 
-      // viz check — "draw" lessons return a pixel grid, everything else a plot.
-      if (viz) {
+      // viz stage checks (progressive draw lessons)
+      stageCases.forEach((c, j) => {
+        const a = res.actuals[flatCases.length + j];
+        if (!a || "error" in a) {
+          add(false, `viz stage ${c.entry}()`, a ? a.error : "no result");
+          return;
+        }
+        const ok = valuesMatch(a.value, c.expected);
+        add(
+          ok,
+          `viz stage ${c.entry}() draws the right picture`,
+          ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(a.value)}`
+        );
+      });
+
+      // viz check for simple-mode (resultFn) draw / plot lessons.
+      if (usesResultFn) {
         if (res.viz && "value" in res.viz) {
           if (viz.type === "draw") {
             const ok = isDrawGrid(res.viz.value);
