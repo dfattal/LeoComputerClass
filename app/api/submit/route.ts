@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { resolveLessonId } from "@/lib/lessons/resolveLessonId";
+import { resolveLessonId, ensureLessonId } from "@/lib/lessons/resolveLessonId";
 
 export async function GET(request: Request) {
   try {
@@ -79,7 +79,9 @@ export async function POST(request: Request) {
     }
 
     const serviceClient = await createServiceClient();
-    const lesson = await resolveLessonId(serviceClient, classSlug, lessonSlug);
+    // Write path: create the lesson row from the syllabus if it isn't synced yet
+    // (a brand-new lesson submitted before anyone loaded /dashboard).
+    const lesson = await ensureLessonId(serviceClient, classSlug, lessonSlug);
 
     if (!lesson) {
       return NextResponse.json(

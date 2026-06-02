@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { resolveLessonId } from "@/lib/lessons/resolveLessonId";
+import { resolveLessonId, ensureLessonId } from "@/lib/lessons/resolveLessonId";
 
 // GET /api/draft?classSlug=...&lessonSlug=... — return the student's auto-saved
 // draft for a lesson (the in-progress, unsubmitted code). Degrades to
@@ -71,7 +71,9 @@ export async function PUT(request: Request) {
     }
 
     const serviceClient = await createServiceClient();
-    const lesson = await resolveLessonId(serviceClient, classSlug, lessonSlug);
+    // Write path: create the lesson row from the syllabus if it isn't synced yet,
+    // so auto-save works the first time a student opens a brand-new lesson.
+    const lesson = await ensureLessonId(serviceClient, classSlug, lessonSlug);
     if (!lesson) {
       return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
     }
