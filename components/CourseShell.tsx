@@ -123,6 +123,7 @@ function CourseShellInner({
 
   // Submit state
   const [submitting, setSubmitting] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [aiFeedback, setAiFeedback] = useState<Record<string, unknown> | null>(
     null
@@ -236,6 +237,8 @@ function CourseShellInner({
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
+    setReviewing(true);
+    setAiFeedback(null);
     setSubmitError(null);
     setDrawerTab("Review");
     setDrawerCollapsed(false);
@@ -275,6 +278,7 @@ function CourseShellInner({
         feedback = data.feedback;
         setAiFeedback(feedback);
       }
+      setReviewing(false);
 
       setExistingSubmission({
         id: submissionId,
@@ -294,12 +298,15 @@ function CourseShellInner({
       );
     } finally {
       setSubmitting(false);
+      setReviewing(false);
     }
   }, [classSlug, lessonSlug, code, stdout, stderr, testResults]);
 
   const hasSubmittedBefore = submitted || !!existingSubmission;
-  const displayAiFeedback =
-    aiFeedback ?? existingSubmission?.ai_feedback ?? null;
+  // While a new review is in flight, suppress stale feedback so the spinner shows instead.
+  const displayAiFeedback = reviewing
+    ? null
+    : aiFeedback ?? existingSubmission?.ai_feedback ?? null;
   const displayInstructorFeedback = existingSubmission?.instructor_feedback;
 
   // Shared output content for the drawer tabs
@@ -336,9 +343,36 @@ function CourseShellInner({
 
   const reviewContent = (
     <div className="space-y-3">
-      {submitted && !aiFeedback && !submitting && (
+      {submitted && !aiFeedback && !submitting && !reviewing && (
         <div className="rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
           Submitted successfully!
+        </div>
+      )}
+      {reviewing && (
+        <div className="flex items-center gap-3 rounded-lg border border-stone-200 bg-stone-50 p-4 dark:border-stone-800 dark:bg-stone-900/40">
+          <svg
+            className={`h-5 w-5 animate-spin ${accent.feedback.title}`}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+          <span className="text-sm text-stone-600 dark:text-stone-300">
+            Your coach is reading your code…
+          </span>
         </div>
       )}
       {displayAiFeedback && <AIFeedback feedback={displayAiFeedback} />}
