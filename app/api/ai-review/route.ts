@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { loadLessonContent } from "@/lib/lessons/loadLesson";
+import { getStudentName } from "@/lib/lessons/personalize";
 
 // Fallback prompt if no class-specific prompt is found
 const DEFAULT_SYSTEM_PROMPT = `You are a warm, enthusiastic coding coach talking to a kid. Think "favorite science teacher" energy. Keep sentences short and punchy. No jargon.`;
@@ -56,8 +57,24 @@ export async function POST(request: Request) {
     const classSlug = lesson.class_slug || "leo";
     const weekData = loadLessonContent(classSlug, lesson.slug);
 
-    // Load class-specific AI prompt
-    const systemPrompt = await getSystemPrompt(classSlug);
+    // Load class-specific AI prompt, then personalize it with the student's
+    // Google login name (same source as the {{FIRST_NAME}} lesson tokens) so
+    // the coach can greet them by name. Best-effort: skip silently if missing.
+    const basePrompt = await getSystemPrompt(classSlug);
+    let systemPrompt = basePrompt;
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.admin.getUserById(submission.user_id);
+      if (user) {
+        const { firstName } = getStudentName(user);
+        if (firstName) {
+          systemPrompt = `The student you are coaching is named ${firstName}. Greet them by their first name and use it naturally now and then.\n\n${basePrompt}`;
+        }
+      }
+    } catch {
+      // No name available — fall back to the un-personalized prompt.
+    }
 
     const userPayload = `## Lesson: ${lesson.title}
 
