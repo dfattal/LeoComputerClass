@@ -585,6 +585,11 @@ except Exception as __e:
       <PixelCanvas data={vizResult} title={vizConfig.title} />
     ) : undefined;
 
+  // The panel isn't always a "graph": a pixel-drawing lesson shows a canvas.
+  const isDrawViz = vizConfig?.type === "draw";
+  const graphTabLabel = isDrawViz ? "Canvas" : "Graph";
+  const graphHeaderLabel = isDrawViz ? "🎨 Canvas" : "📈 Graph";
+
   const sidebarProps = {
     phases,
     weeks,
@@ -643,6 +648,7 @@ except Exception as __e:
                     />
                   }
                   graph={graphContent}
+                  label={graphHeaderLabel}
                 />
               ) : (
                 <EditorPanel
@@ -730,6 +736,7 @@ except Exception as __e:
           reviewContent={reviewContent}
           labContent={labContent}
           graphContent={graphContent}
+          graphLabel={graphTabLabel}
         />
 
         {/* Mobile sticky action bar */}

@@ -19,9 +19,12 @@ const HEADER_H = 36;
 export default function EditorGraphSplit({
   editor,
   graph,
+  label = "📈 Graph",
 }: {
   editor: ReactNode;
   graph: ReactNode;
+  /** Header label — e.g. "📈 Graph" for plots, "🎨 Canvas" for pixel drawings. */
+  label?: ReactNode;
 }) {
   const [height, setHeight] = useState(() => {
     const saved = localStorage.getItem(HEIGHT_KEY);
@@ -92,7 +95,7 @@ export default function EditorGraphSplit({
       >
         <div className="flex h-9 shrink-0 items-center gap-2 border-b border-stone-200 px-3 dark:border-stone-800">
           <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-            📈 Graph
+            {label}
           </span>
           <div className="flex-1" />
           <button

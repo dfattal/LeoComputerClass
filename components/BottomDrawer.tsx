@@ -22,6 +22,7 @@ export default function BottomDrawer({
   reviewContent,
   labContent,
   graphContent,
+  graphLabel = "Graph",
 }: {
   activeTab: DrawerTab;
   onTabChange: (tab: DrawerTab) => void;
@@ -32,6 +33,8 @@ export default function BottomDrawer({
   reviewContent: ReactNode;
   labContent?: ReactNode;
   graphContent?: ReactNode;
+  /** Display label for the graph tab (key stays "Graph"); e.g. "Canvas" for drawings. */
+  graphLabel?: string;
 }) {
   // Safe to use lazy init: this component only renders client-side (behind CourseShell's mounted guard)
   const [height, setHeight] = useState(() => {
@@ -137,7 +140,7 @@ export default function BottomDrawer({
                   : "text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
               }`}
             >
-              {tab}
+              {tab === "Graph" ? graphLabel : tab}
             </button>
           ))}
         </div>
