@@ -148,17 +148,49 @@ discriminating** — a `pass`-stub that returns a placeholder must NOT satisfy i
 cross-checks each caption's `expected`/`tol` against `reference.py`. Optional —
 skip it for lessons that read fine with just the student-driven curve.
 
+**Optional: progressive stages — pin-to-play** (GH #4). When a lesson teaches
+**two or more functions that each draw a genuinely separate curve/picture**, use
+`stages` instead of a single `resultFn`. The panel grows a chip row: the student
+sees the furthest correct step by default ("▶ Auto"), but can **pin an earlier
+function to experiment with *its* output live** while later steps stay done — and
+the view re-snaps to the furthest step the moment they push progress further.
+Pixel Wizards uses this on every lesson (e.g. `my_square` then `two_tone`);
+`leo-codes/lesson-08` uses it on a plot (Lock = `encrypt(m)`, Unlock =
+`decrypt(encrypt(m))`).
+
+- **draw** stages: each is `{fn, args, expected, caption, label?}` — `fn` is the
+  student's function, `expected` is the grid a correct solution returns
+  (generated from `reference.py`, exactly like a test value). The engine draws
+  each stage's live output and ✓-marks the matched ones.
+- **plot** stages: each is `{resultFn, demoArgs, check:{fn,args,expected,tol?},
+  caption, label?}` — `resultFn` (defined in `setup`) builds *that stage's* series
+  (student-driven, with the same try/except fallback as above), and `check` gates
+  the stage's status against a curve-driving fn.
+
+**When NOT to use stages** (the common case — default to single): if the
+functions **compose into one curve** (editing either already updates the single
+graph, so nothing is hidden) or the panel shows **intentional comparison series**
+(big-vs-small step, two tank sizes, your-method-vs-exact), keep the single
+`resultFn`/`caption` form — stages would *hide* the teaching. Single-function
+lessons show no chips. This is why almost every Motion Lab / Space School plot
+stays single and only RSA earned plot stages. `validate-class` runs every stage's
+producer against `reference.py` and checks each stage's gate value, the same
+honesty guarantee as the caption checks.
+
 **Pixel-grid drawings** (`type: "draw"`, Pixel Wizards). Here the panel paints a
 picture the student's code returns, which is hugely motivating for absolute
-beginners. Point `resultFn` directly at the student's own function (no `__plot`
-wrapper needed) and set `demoArgs`. That function must return a **2D grid**: a
-list of rows, each row a list of cells, where a cell is a color name (`"red"`,
-`"blue"`, `"green"`, `"yellow"`, `"black"`, `"white"`, `"pink"`, `"purple"`,
-`"orange"`, `"brown"`, `"gray"`), an emoji (`"🌸"`), or `""`/`"."`/`None` for an
-empty see-through square. Rows may be ragged (the renderer pads to the widest).
-A `setup` prelude is optional (use it only if you need a hidden helper). See
-`content/classes/pixels/lesson-07` (an 8×8 checkerboard from nested loops) for the
-pattern, and `components/PixelCanvas.tsx` for the exact cell contract.
+beginners. In simple mode, point `resultFn` directly at the student's own
+function (no `__plot` wrapper needed) and set `demoArgs`; most Pixel Wizards
+lessons instead use the progressive **`stages`** form above (one stage per
+function). Either way the function must return a **2D grid**: a list of rows, each
+row a list of cells, where a cell is a color name (`"red"`, `"blue"`, `"green"`,
+`"yellow"`, `"black"`, `"white"`, `"pink"`, `"purple"`, `"orange"`, `"brown"`,
+`"gray"`), an emoji (`"🌸"`), or `""`/`"."`/`None` for an empty see-through
+square. Rows may be ragged (the renderer pads to the widest). A `setup` prelude is
+optional (use it only if you need a hidden helper). See
+`content/classes/pixels/lesson-07` (a `row_of` → 8×8 `checkerboard` two-stage
+lesson) for the pattern, and `components/PixelCanvas.tsx` for the exact cell
+contract.
 
 ### 5. Write the six student-facing files for a 10-year-old
 
@@ -183,9 +215,10 @@ npm run validate-class <slug>
 This JSON-parses every file, compiles the Python, checks every `tests.json` entry
 has a starter stub, runs `reference.py` against every test case using the **real**
 `valuesMatch` from the Pyodide worker, and execs the panel to confirm it returns
-plottable series (or, for `type: "draw"` lessons, a valid pixel grid). Fix
-anything red and rerun until it passes. A green run means a correct student
-solution will pass exactly these tests.
+plottable series (or, for `type: "draw"` lessons, a valid pixel grid). For
+progressive-stage panels it runs **every stage's producer** and checks each
+stage's gate value against `reference.py`. Fix anything red and rerun until it
+passes. A green run means a correct student solution will pass exactly these tests.
 
 ### 7. Publish
 
@@ -198,7 +231,8 @@ clean.
 
 1. `scaffold-lesson.mjs` (`--viz draw` for a drawing class) → 2. write
 `reference.py` → 3. generate `tests.json` values from it → 4. design the panel
-(student-driven curve + fallback; optional `scaffold-captions.mjs` for a
-progress-aware caption) → 5. write the 6 files (10-yo voice) → 6. `npm run
+(student-driven curve + fallback; optional `scaffold-captions.mjs` caption;
+`stages` for pin-to-play only when each fn draws a separate curve/picture) →
+5. write the 6 files (10-yo voice) → 6. `npm run
 validate-class <slug>` green → 7. flip `syllabus.ts` to `published` + `npm run
 build`.

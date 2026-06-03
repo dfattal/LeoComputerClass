@@ -66,7 +66,7 @@ Each lesson lives in `content/classes/<classSlug>/<lessonSlug>/` with these file
 - `tests.json` — Array of `TestEntry` objects: `{ entry, cases: [{name, args, expected, tol?}], constraints?: { forbidTokens } }`
 - `rubric.json` — Grading criteria for AI review
 - `starter.py` — (optional) Starter code for the editor
-- `viz.json` — (optional) Teaching graph config (`type: "plot"`, a `setup` defining a `resultFn`)
+- `viz.json` — (optional) Teaching panel config. `type: "plot"` (line graph from a `setup`-defined `resultFn`) or `type: "draw"` (pixel-grid canvas). Both support **progressive stages** (`stages: [...]`) — a "pin-to-play" chip row where the student sees the furthest correct step by default but can pin an earlier function's curve/picture to experiment with it live (the view re-snaps to the furthest step when progress advances). Use stages **only when each function draws a genuinely separate curve/picture**; for composed pipelines or intentional comparison series, keep the single `resultFn`/`caption` form (no chips). See the `/new-lesson` skill.
 - `reference.py` — (optional, **inert**) The answer key. `loadLesson.ts` only reads the fixed filenames above, so `reference.py` is never served or built. It exists so `npm run validate-class` can generate/check `tests.json` expected values from a real solution. **Write it before `tests.json`.**
 
 Each class also has:
@@ -119,7 +119,7 @@ Authoring is automated. Prefer these over doing it by hand:
 - **`/new-class` skill** (`.claude/skills/new-class/`) — guided workflow to scaffold a new class shell (syllabus, ai-prompt, registry entry, accent color), then hand off to `/new-lesson`.
 - **`scripts/scaffold-class.mjs <slug> "<Name>" "<tagline>" <accent>`** — creates the class dir + appends a `comingSoon` registry entry; warns if the accent isn't in `lib/accents.ts`.
 - **`scripts/scaffold-lesson.mjs <slug> <N> "<title>"`** — creates a lesson dir with all six student files + a `reference.py` template.
-- **`scripts/validate-class.mjs` (`npm run validate-class [slug]`)** — JSON-parses every `tests.json`/`rubric.json`/`viz.json`, compiles the Python, checks every test entry has a starter stub, runs `reference.py` against every case using the **real `valuesMatch` extracted from `public/pyodide-worker.js`** (so it can't drift from the in-browser grader), and execs the graph to confirm it returns plottable data. Exits nonzero on any failure. Lessons without a `reference.py` skip the value checks but still get the rest.
+- **`scripts/validate-class.mjs` (`npm run validate-class [slug]`)** — JSON-parses every `tests.json`/`rubric.json`/`viz.json`, compiles the Python, checks every test entry has a starter stub, runs `reference.py` against every case using the **real `valuesMatch` extracted from `public/pyodide-worker.js`** (so it can't drift from the in-browser grader), and execs the graph to confirm it returns plottable data. For progressive-stage panels it runs **every stage's producer** and cross-checks each stage's gate value against `reference.py`. Exits nonzero on any failure. Lessons without a `reference.py` skip the value checks but still get the rest.
 
 ### Adding a New Lesson (to an existing class)
 
