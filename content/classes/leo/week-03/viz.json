@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "Counting in binary — built by your decimal_to_4bit",
+  "setup": "# --- grid helper (hidden) — a binary counter built from decimal_to_4bit ---\n# Laid out wide (the canvas has more room sideways): each COLUMN is a number\n# 0..15; read down the column for its 8s/4s/2s/1s bits, lit by the student's own\n# decimal_to_4bit(n). Until it works the bit cells show '?'; the number row and\n# place-value labels always render.\ndef __grid():\n    fn = globals().get(\"decimal_to_4bit\")\n    nums = list(range(16))\n\n    def bits_of(n):\n        if fn is None:\n            return None\n        try:\n            r = fn(n)\n            if r is not None and len(r) == 4:\n                return list(r)\n        except Exception:\n            return None\n        return None\n\n    allbits = [bits_of(n) for n in nums]\n\n    def cell(bits, i):\n        if bits is None:\n            return \"?\"\n        if bits[i] == 1:\n            return \"blue\"\n        if bits[i] == 0:\n            return \"\"\n        return \"?\"\n\n    rows = [[\"n\"] + [str(n) for n in nums]]\n    for i, place in enumerate([\"8\", \"4\", \"2\", \"1\"]):\n        rows.append([place] + [cell(allbits[n], i) for n in nums])\n    return {\n        \"grid\": rows,\n        \"caption\": \"Each column is a number 0-15 in 4-bit binary - read down the column: 8s, 4s, 2s, 1s - built by your decimal_to_4bit. A blue square means that place-value bit is 1. A ? means decimal_to_4bit isn't finished yet.\",\n    }\n"
+}

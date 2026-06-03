@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__wave",
+  "demoArgs": [],
+  "title": "Timing diagram — your flip-flop captures D on each rising clock edge",
+  "xLabel": "time (clock ticks)",
+  "yLabel": "Clock (top) · D (middle) · Q (bottom)",
+  "setup": "# --- plot helper (hidden) — a timing diagram driven by d_flip_flop ---\n# Steps a clock and a D input through the student's own d_flip_flop and plots\n# three stacked square waves: Clock, D, and Q. Q should change ONLY on a rising\n# clock edge. If d_flip_flop isn't ready, Q stays flat and says so.\ndef __steps(vals, base):\n    pts = []\n    for t, v in enumerate(vals):\n        pts.append([t, base + v])\n        pts.append([t + 1, base + v])\n    return pts\n\ndef __wave():\n    N = 8\n    clk = [t % 2 for t in range(N)]          # 0,1,0,1,... rising edges on odd ticks\n    d_in = [1, 1, 1, 0, 0, 1, 0, 0]\n    ff = globals().get(\"d_flip_flop\")\n    ok = ff is not None\n    q = 0\n    q_series = []\n    for t in range(N):\n        clk_prev = clk[t - 1] if t > 0 else 0\n        if ok:\n            try:\n                q = ff(d_in[t], clk[t], clk_prev, q)\n            except Exception:\n                ok = False\n                q = 0\n            if q not in (0, 1):\n                ok = False\n                q = 0\n        q_series.append(q if ok else 0)\n    return [\n        {\"name\": \"Clock\", \"points\": __steps(clk, 4), \"highlight\": False},\n        {\"name\": \"D (input)\", \"points\": __steps(d_in, 2), \"highlight\": False},\n        {\"name\": (\"Q (your flip-flop)\" if ok else \"Q (write d_flip_flop to see it)\"), \"points\": __steps(q_series, 0), \"highlight\": True},\n    ]\n"
+}
