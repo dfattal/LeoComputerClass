@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__wave",
+  "demoArgs": [],
+  "title": "Timing diagram — your register loads D when Load=1, holds when Load=0",
+  "xLabel": "time (ticks)",
+  "yLabel": "Load (top) · D (middle) · Q (bottom)",
+  "setup": "# --- plot helper (hidden) — a register timing diagram driven by reg_bit ---\n# Steps a Load signal and a D input through the student's own reg_bit and plots\n# three stacked square waves: Load, D, and Q. Q should follow D while Load=1 and\n# hold its value while Load=0. If reg_bit isn't ready, Q stays flat and says so.\ndef __steps(vals, base):\n    pts = []\n    for t, v in enumerate(vals):\n        pts.append([t, base + v])\n        pts.append([t + 1, base + v])\n    return pts\n\ndef __wave():\n    N = 8\n    load = [t % 2 for t in range(N)]         # 0,1,0,1,... load pulses\n    d_in = [1, 1, 0, 1, 1, 0, 0, 1]\n    rb = globals().get(\"reg_bit\")\n    ok = rb is not None\n    q = 0\n    q_series = []\n    for t in range(N):\n        if ok:\n            try:\n                q = rb(d_in[t], load[t], q)\n            except Exception:\n                ok = False\n                q = 0\n            if q not in (0, 1):\n                ok = False\n                q = 0\n        q_series.append(q if ok else 0)\n    return [\n        {\"name\": \"Load\", \"points\": __steps(load, 4), \"highlight\": False},\n        {\"name\": \"D (input)\", \"points\": __steps(d_in, 2), \"highlight\": False},\n        {\"name\": (\"Q (your register)\" if ok else \"Q (write reg_bit to see it)\"), \"points\": __steps(q_series, 0), \"highlight\": True},\n    ]\n"
+}
