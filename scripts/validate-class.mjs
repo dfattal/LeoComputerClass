@@ -248,8 +248,15 @@ function validateLesson(lessonDir) {
       viz && viz.type === "draw" && Array.isArray(viz.stages)
         ? viz.stages.map((s) => ({ entry: s.fn, args: s.args || [], expected: s.expected }))
         : [];
+    // Progress-aware plot caption: each check's expected/tol must match what
+    // reference.py returns for the curve-driving fn (keeps the baked caption
+    // honest against the answer key — same idea as the draw stages above).
+    const captionCases =
+      viz && viz.type === "plot" && viz.caption && Array.isArray(viz.caption.checks)
+        ? viz.caption.checks.map((c) => ({ entry: c.fn, args: c.args || [], expected: c.expected, tol: c.tol }))
+        : [];
     const usesResultFn = viz && !(viz.type === "draw" && Array.isArray(viz.stages));
-    const allCases = [...flatCases, ...stageCases];
+    const allCases = [...flatCases, ...stageCases, ...captionCases];
 
     let res;
     try {
@@ -292,6 +299,21 @@ function validateLesson(lessonDir) {
         add(
           ok,
           `viz stage ${c.entry}() draws the right picture`,
+          ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(a.value)}`
+        );
+      });
+
+      // viz caption checks (progress-aware plot lessons)
+      captionCases.forEach((c, k) => {
+        const a = res.actuals[flatCases.length + stageCases.length + k];
+        if (!a || "error" in a) {
+          add(false, `viz caption check ${c.entry}()`, a ? a.error : "no result");
+          return;
+        }
+        const ok = valuesMatch(a.value, c.expected, c.tol);
+        add(
+          ok,
+          `viz caption check ${c.entry}() matches reference`,
           ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(a.value)}`
         );
       });

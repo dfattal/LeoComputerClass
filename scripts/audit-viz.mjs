@@ -40,9 +40,14 @@ function classify(viz, studentFns) {
   if (viz.type === "draw" && Array.isArray(viz.stages)) return "PROGRESSIVE";
   if (!studentFns.length) return "no-ref";
   // draw simple-mode: resultFn IS a student fn → student-driven
-  if (viz.type === "draw" && viz.resultFn && studentFns.includes(viz.resultFn))
-    return "STUDENT-DRIVEN";
-  return callsStudentFn(viz, studentFns) ? "STUDENT-DRIVEN" : "BAKED-IN";
+  const driven =
+    (viz.type === "draw" && viz.resultFn && studentFns.includes(viz.resultFn)) ||
+    callsStudentFn(viz, studentFns);
+  if (!driven) return "BAKED-IN";
+  // plot lessons with a progress-aware caption get their own bucket
+  if (viz.type === "plot" && viz.caption && Array.isArray(viz.caption.checks))
+    return "STUDENT-DRIVEN+CAPTION";
+  return "STUDENT-DRIVEN";
 }
 
 function lessonDirs(classDir) {
@@ -57,9 +62,10 @@ const classSlugs = (only ? [only] : readdirSync(CLASSES_DIR)).filter((d) =>
   (existsSync(join(CLASSES_DIR, d)) && statSync(join(CLASSES_DIR, d)).isDirectory())
 );
 
-const totals = { PROGRESSIVE: 0, "STUDENT-DRIVEN": 0, "BAKED-IN": 0, "no-ref": 0, none: 0 };
+const totals = { PROGRESSIVE: 0, "STUDENT-DRIVEN+CAPTION": 0, "STUDENT-DRIVEN": 0, "BAKED-IN": 0, "no-ref": 0, none: 0 };
 const tag = {
   PROGRESSIVE: `${C.green}PROGRESSIVE${C.reset}`,
+  "STUDENT-DRIVEN+CAPTION": `${C.green}STUDENT-DRIVEN+CAPTION${C.reset}`,
   "STUDENT-DRIVEN": `${C.green}STUDENT-DRIVEN${C.reset}`,
   "BAKED-IN": `${C.red}BAKED-IN${C.reset}`,
   "no-ref": `${C.yellow}no-ref${C.reset}`,
@@ -92,8 +98,10 @@ for (const slug of classSlugs) {
         ? `${C.dim}could call: ${studentFns.join(", ") || "?"}${C.reset}`
         : klass === "PROGRESSIVE"
         ? `${C.dim}${viz.stages.length} stages${C.reset}`
+        : klass === "STUDENT-DRIVEN+CAPTION"
+        ? `${C.dim}${viz.caption.checks.length} caption check(s)${C.reset}`
         : `${C.dim}${viz.type}${C.reset}`;
-    rows.push(`  ${d.padEnd(10)} ${tag[klass].padEnd(24)} ${detail}`);
+    rows.push(`  ${d.padEnd(10)} ${tag[klass].padEnd(34)} ${detail}`);
   }
   if (rows.length) {
     console.log(`\n${C.bold}${slug}${C.reset}`);
@@ -104,6 +112,7 @@ for (const slug of classSlugs) {
 console.log(
   `\n${C.bold}Totals${C.reset}  ` +
     `${C.green}progressive ${totals.PROGRESSIVE}${C.reset}  ` +
+    `${C.green}student-driven+caption ${totals["STUDENT-DRIVEN+CAPTION"]}${C.reset}  ` +
     `${C.green}student-driven ${totals["STUDENT-DRIVEN"]}${C.reset}  ` +
     `${C.red}baked-in ${totals["BAKED-IN"]}${C.reset}  ` +
     `${C.yellow}no-ref ${totals["no-ref"]}${C.reset}` +

@@ -10,5 +10,21 @@
   "title": "Speed building up the barrel — stiffer spring = faster",
   "xLabel": "distance down barrel (m)",
   "yLabel": "dart speed (m/s)",
-  "setup": "# --- plot helper (hidden) — dart speed building up the barrel ---\n# Each curve is integrated using the student's OWN spring_force for the push.\n# If spring_force isn't ready, that curve falls back to the built-in spring so\n# the panel is never blank.\ndef __vtrace_student(x0, k, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        s = x0 - d\n        a = spring_force(s, k) / m       # <- the STUDENT's function\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            pts.append([round(barrel, 4), round(v, 4)])\n            break\n        pts.append([round(d, 4), round(v, 4)])\n    return pts\n\ndef __vtrace_ref(x0, k, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        s = x0 - d\n        a = (k * s if s > 0 else 0.0) / m\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            pts.append([round(barrel, 4), round(v, 4)])\n            break\n        pts.append([round(d, 4), round(v, 4)])\n    return pts\n\ndef __plot(x0, m, barrel, dt):\n    series = []\n    for k in (100, 200, 400):\n        hot = k == 200\n        try:\n            pts = __vtrace_student(x0, k, m, barrel, dt)\n            if pts and len(pts) > 1:\n                series.append({\"name\": \"k=\" + str(k), \"points\": pts, \"highlight\": hot})\n                continue\n        except Exception:\n            pass\n        series.append({\"name\": \"k=\" + str(k), \"points\": __vtrace_ref(x0, k, m, barrel, dt), \"highlight\": hot})\n    return series\n"
+  "setup": "# --- plot helper (hidden) — dart speed building up the barrel ---\n# Each curve is integrated using the student's OWN spring_force for the push.\n# If spring_force isn't ready, that curve falls back to the built-in spring so\n# the panel is never blank.\ndef __vtrace_student(x0, k, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        s = x0 - d\n        a = spring_force(s, k) / m       # <- the STUDENT's function\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            pts.append([round(barrel, 4), round(v, 4)])\n            break\n        pts.append([round(d, 4), round(v, 4)])\n    return pts\n\ndef __vtrace_ref(x0, k, m, barrel, dt):\n    d = 0.0\n    v = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        s = x0 - d\n        a = (k * s if s > 0 else 0.0) / m\n        v += a * dt\n        d += v * dt\n        if d >= barrel:\n            pts.append([round(barrel, 4), round(v, 4)])\n            break\n        pts.append([round(d, 4), round(v, 4)])\n    return pts\n\ndef __plot(x0, m, barrel, dt):\n    series = []\n    for k in (100, 200, 400):\n        hot = k == 200\n        try:\n            pts = __vtrace_student(x0, k, m, barrel, dt)\n            if pts and len(pts) > 1:\n                series.append({\"name\": \"k=\" + str(k), \"points\": pts, \"highlight\": hot})\n                continue\n        except Exception:\n            pass\n        series.append({\"name\": \"k=\" + str(k), \"points\": __vtrace_ref(x0, k, m, barrel, dt), \"highlight\": hot})\n    return series\n",
+  "caption": {
+    "todo": "Finish spring_force to watch your dart speed up the barrel.",
+    "tuning": "Your curve is showing — keep tuning spring_force to match the target.",
+    "match": "✅ Your barrel speed-up matches the exact answer!",
+    "checks": [
+      {
+        "fn": "spring_force",
+        "args": [
+          0.1,
+          200
+        ],
+        "expected": 20,
+        "tol": 0.000001
+      }
+    ]
+  }
 }

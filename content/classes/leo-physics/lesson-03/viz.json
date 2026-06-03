@@ -9,5 +9,22 @@
   "title": "Same shot, with and without air — drag devours the range",
   "xLabel": "distance (m)",
   "yLabel": "height (m)",
-  "setup": "# --- plot helper (hidden) — same launch, with and without air ---\n# The 'with air' arc is bent by the student's OWN drag_accel (applied to each\n# direction). Until drag_accel works, only the vacuum arc shows.\nimport math\n\ndef __traj_vacuum(speed, ang, dt):\n    g = 9.8\n    r = math.radians(ang)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        vy = vy + (-g) * dt\n        x = x + vx * dt\n        y = y + vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __traj_drag(speed, ang, dt, k, m):\n    g = 9.8\n    r = math.radians(ang)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        ax = drag_accel(vx, k, m)         # <- STUDENT's drag, sideways\n        ay = -g + drag_accel(vy, k, m)    # gravity + STUDENT's drag, vertical\n        vx += ax * dt\n        vy += ay * dt\n        x += vx * dt\n        y += vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __plot(speed, ang, dt):\n    series = [{\"name\": \"no air (vacuum)\", \"points\": __traj_vacuum(speed, ang, dt), \"highlight\": False}]\n    try:\n        d = __traj_drag(speed, ang, dt, 0.01, 0.05)\n        if d and len(d) > 1:\n            series.append({\"name\": \"with air (your drag)\", \"points\": d, \"highlight\": True})\n    except Exception:\n        pass\n    if len(series) == 1:\n        series[0][\"highlight\"] = True\n    return series\n"
+  "setup": "# --- plot helper (hidden) — same launch, with and without air ---\n# The 'with air' arc is bent by the student's OWN drag_accel (applied to each\n# direction). Until drag_accel works, only the vacuum arc shows.\nimport math\n\ndef __traj_vacuum(speed, ang, dt):\n    g = 9.8\n    r = math.radians(ang)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        vy = vy + (-g) * dt\n        x = x + vx * dt\n        y = y + vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __traj_drag(speed, ang, dt, k, m):\n    g = 9.8\n    r = math.radians(ang)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(2000000):\n        ax = drag_accel(vx, k, m)         # <- STUDENT's drag, sideways\n        ay = -g + drag_accel(vy, k, m)    # gravity + STUDENT's drag, vertical\n        vx += ax * dt\n        vy += ay * dt\n        x += vx * dt\n        y += vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __plot(speed, ang, dt):\n    series = [{\"name\": \"no air (vacuum)\", \"points\": __traj_vacuum(speed, ang, dt), \"highlight\": False}]\n    try:\n        d = __traj_drag(speed, ang, dt, 0.01, 0.05)\n        if d and len(d) > 1:\n            series.append({\"name\": \"with air (your drag)\", \"points\": d, \"highlight\": True})\n    except Exception:\n        pass\n    if len(series) == 1:\n        series[0][\"highlight\"] = True\n    return series\n",
+  "caption": {
+    "todo": "Finish drag_accel to feel the air push back on your dart.",
+    "tuning": "Your curve is showing — keep tuning drag_accel until it matches the target.",
+    "match": "✅ Your air-drag flight matches the exact answer!",
+    "checks": [
+      {
+        "fn": "drag_accel",
+        "args": [
+          10,
+          0.1,
+          0.5
+        ],
+        "expected": -20,
+        "tol": 0.000001
+      }
+    ]
+  }
 }

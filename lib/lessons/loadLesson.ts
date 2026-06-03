@@ -141,6 +141,36 @@ export interface CrisprVizConfig {
 }
 
 /**
+ * One tolerance-aware check of a curve-driving student function: call `fn(*args)`
+ * and compare to `expected` within `tol`. Used by the progress-aware plot caption
+ * (below) the same way `DrawStage` is used by progressive draw lessons — the
+ * caption can't be inferred from the rendered series (the panel falls back to a
+ * reference curve so it's never blank), so we check the student's functions
+ * directly. `expected`/`tol` come from a representative `tests.json` case and are
+ * cross-checked against `reference.py` by `npm run validate-class`.
+ */
+export interface PlotCaptionCheck {
+  fn: string;
+  args: unknown[];
+  expected: unknown;
+  tol?: number;
+}
+
+/**
+ * Optional progress-aware caption for a plot lesson. Renders one line under the
+ * graph reflecting where the student is: `todo` while a check fn is missing /
+ * errors / returns None, `tuning` while the checks run but don't all match, and
+ * `match` once every check matches within tol. Gate on the curve-driving fn(s)
+ * only, so the caption always agrees with the visible curve.
+ */
+export interface PlotCaptionConfig {
+  todo: string;
+  tuning: string;
+  match: string;
+  checks: PlotCaptionCheck[];
+}
+
+/**
  * Generic line/trajectory plot. The `resultFn` must return JSON-serializable
  * plot data — either a single series `[[x, y], ...]` or multiple series
  * `[{ name, points: [[x, y], ...], highlight? }, ...]`.
@@ -156,6 +186,8 @@ export interface PlotVizConfig {
   title?: string;
   xLabel?: string;
   yLabel?: string;
+  /** Optional progress-aware caption shown under the graph (backward-compatible). */
+  caption?: PlotCaptionConfig;
 }
 
 /**

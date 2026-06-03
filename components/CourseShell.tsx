@@ -348,6 +348,53 @@ try:
     print("__VIZ__:" + __json.dumps(__viz_progress()))
 except Exception as __e:
     print("__VIZ_ERR__:" + str(__e))`;
+        } else if (vizConfig.type === "plot" && vizConfig.caption) {
+          // Progress-aware plot: build the series via resultFn, then pick one of
+          // three captions by checking the curve-driving student fn(s) directly.
+          // The series alone can't tell us where the student is (the panel falls
+          // back to a reference curve so it's never blank), so we call each check
+          // fn and compare to its reference value within tol (mirrors the worker's
+          // valuesMatch). Returns { series, caption } — LinePlot unwraps both.
+          const argsStr = (vizConfig.demoArgs ?? [])
+            .map((a) => JSON.stringify(a))
+            .join(", ");
+          const checksLit = JSON.stringify(
+            JSON.stringify(vizConfig.caption.checks)
+          );
+          const todoLit = JSON.stringify(vizConfig.caption.todo);
+          const tuningLit = JSON.stringify(vizConfig.caption.tuning);
+          const matchLit = JSON.stringify(vizConfig.caption.match);
+          driver = `\nimport json as __json
+def __vm(a, b, tol):
+    if tol is not None:
+        if isinstance(a, bool) or isinstance(b, bool):
+            return a == b
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            return abs(a - b) <= tol
+        if isinstance(a, list) and isinstance(b, list):
+            return len(a) == len(b) and all(__vm(a[__i], b[__i], tol) for __i in range(len(a)))
+    return __json.dumps(a) == __json.dumps(b)
+def __caption(__checks, __todo, __tuning, __match):
+    __ok = True
+    for __c in __checks:
+        __fn = globals().get(__c["fn"])
+        if __fn is None:
+            return __todo
+        try:
+            __out = __fn(*__c["args"])
+        except Exception:
+            return __todo
+        if __out is None:
+            return __todo
+        if not __vm(__out, __c["expected"], __c.get("tol")):
+            __ok = False
+    return __match if __ok else __tuning
+try:
+    __viz_series = ${vizConfig.resultFn}(${argsStr})
+    __viz_cap = __caption(__json.loads(${checksLit}), ${todoLit}, ${tuningLit}, ${matchLit})
+    print("__VIZ__:" + __json.dumps({"series": __viz_series, "caption": __viz_cap}))
+except Exception as __e:
+    print("__VIZ_ERR__:" + str(__e))`;
         } else {
           // Simple mode: call resultFn(demoArgs) and plot/draw its return value.
           const argsStr = (vizConfig.demoArgs ?? [])

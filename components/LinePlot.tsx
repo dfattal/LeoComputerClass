@@ -41,6 +41,25 @@ function normalize(data: unknown): Series[] | null {
   return null;
 }
 
+// Accept either a bare series, or a progress-aware `{ series, caption }` object
+// (the caption is the "where you are" message — see CourseShell's caption driver
+// and PixelCanvas for the draw equivalent).
+function unwrap(data: unknown): { series: Series[] | null; caption?: string } {
+  if (
+    data &&
+    typeof data === "object" &&
+    !Array.isArray(data) &&
+    "series" in data
+  ) {
+    const d = data as { series: unknown; caption?: unknown };
+    return {
+      series: normalize(d.series),
+      caption: typeof d.caption === "string" ? d.caption : undefined,
+    };
+  }
+  return { series: normalize(data) };
+}
+
 function downsample(points: [number, number][]): [number, number][] {
   if (points.length <= MAX_POINTS) return points;
   const step = Math.ceil(points.length / MAX_POINTS);
@@ -78,12 +97,17 @@ export default function LinePlot({
   xLabel?: string;
   yLabel?: string;
 }) {
-  const series = normalize(data);
+  const { series, caption } = unwrap(data);
 
   if (!series) {
     return (
-      <div className="flex h-full min-h-[160px] items-center justify-center rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm text-stone-400 dark:border-stone-800 dark:bg-stone-900">
-        Run your code to see the graph.
+      <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm dark:border-stone-800 dark:bg-stone-900">
+        <span className="text-stone-400">Run your code to see the graph.</span>
+        {caption && (
+          <span className="font-medium text-stone-600 dark:text-stone-300">
+            {caption}
+          </span>
+        )}
       </div>
     );
   }
@@ -244,6 +268,13 @@ export default function LinePlot({
             </span>
           ))}
         </div>
+      )}
+
+      {/* Progress-aware caption (where the student is) */}
+      {caption && (
+        <p className="shrink-0 text-center text-sm font-medium text-stone-600 dark:text-stone-300">
+          {caption}
+        </p>
       )}
     </div>
   );

@@ -10,5 +10,23 @@
   "title": "Angle sweep with air — which launch flies farthest?",
   "xLabel": "distance (m)",
   "yLabel": "height (m)",
-  "setup": "# --- plot helper (hidden) — drag-trajectory angle sweep ---\n# The comparison arcs (15/30/45/60) are fixed. The HIGHLIGHTED 'best' arc is\n# drawn at the angle the student's best_angle() returns; until that works it\n# falls back to a built-in search so the panel always shows a winner.\nimport math\n\ndef __trace_drag(speed, angle, k, m, dt):\n    g = 9.8\n    r = math.radians(angle)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(50000):\n        spd = math.sqrt(vx * vx + vy * vy)\n        ax = -(k / m) * spd * vx\n        ay = -g - (k / m) * spd * vy\n        vx += ax * dt\n        vy += ay * dt\n        x += vx * dt\n        y += vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __best(speed, k, m, dt):\n    best_a, best_r = 10, -1.0\n    for a in range(10, 71):\n        rng = __trace_drag(speed, a, k, m, dt)[-1][0]\n        if rng > best_r:\n            best_r, best_a = rng, a\n    return best_a\n\ndef __plot(speed, k, m, dt):\n    series = []\n    for ang in (15, 30, 45, 60):\n        series.append({\n            \"name\": str(ang) + \"°\",\n            \"points\": __trace_drag(speed, ang, k, m, dt),\n            \"highlight\": False,\n        })\n    best = None\n    try:\n        b = best_angle(speed, k, m, dt)          # <- the STUDENT's function\n        if isinstance(b, (int, float)) and 0 < b <= 90:\n            best = int(round(b))\n    except Exception:\n        best = None\n    if best is None:\n        best = __best(speed, k, m, dt)\n        label = \"best ≈ \" + str(best) + \"°\"\n    else:\n        label = \"your best ≈ \" + str(best) + \"°\"\n    series.append({\n        \"name\": label,\n        \"points\": __trace_drag(speed, best, k, m, dt),\n        \"highlight\": True,\n    })\n    return series\n"
+  "setup": "# --- plot helper (hidden) — drag-trajectory angle sweep ---\n# The comparison arcs (15/30/45/60) are fixed. The HIGHLIGHTED 'best' arc is\n# drawn at the angle the student's best_angle() returns; until that works it\n# falls back to a built-in search so the panel always shows a winner.\nimport math\n\ndef __trace_drag(speed, angle, k, m, dt):\n    g = 9.8\n    r = math.radians(angle)\n    vx = speed * math.cos(r)\n    vy = speed * math.sin(r)\n    x = 0.0\n    y = 0.0\n    pts = [[0.0, 0.0]]\n    for _ in range(50000):\n        spd = math.sqrt(vx * vx + vy * vy)\n        ax = -(k / m) * spd * vx\n        ay = -g - (k / m) * spd * vy\n        vx += ax * dt\n        vy += ay * dt\n        x += vx * dt\n        y += vy * dt\n        if y < 0:\n            break\n        pts.append([round(x, 3), round(y, 3)])\n    return pts\n\ndef __best(speed, k, m, dt):\n    best_a, best_r = 10, -1.0\n    for a in range(10, 71):\n        rng = __trace_drag(speed, a, k, m, dt)[-1][0]\n        if rng > best_r:\n            best_r, best_a = rng, a\n    return best_a\n\ndef __plot(speed, k, m, dt):\n    series = []\n    for ang in (15, 30, 45, 60):\n        series.append({\n            \"name\": str(ang) + \"°\",\n            \"points\": __trace_drag(speed, ang, k, m, dt),\n            \"highlight\": False,\n        })\n    best = None\n    try:\n        b = best_angle(speed, k, m, dt)          # <- the STUDENT's function\n        if isinstance(b, (int, float)) and 0 < b <= 90:\n            best = int(round(b))\n    except Exception:\n        best = None\n    if best is None:\n        best = __best(speed, k, m, dt)\n        label = \"best ≈ \" + str(best) + \"°\"\n    else:\n        label = \"your best ≈ \" + str(best) + \"°\"\n    series.append({\n        \"name\": label,\n        \"points\": __trace_drag(speed, best, k, m, dt),\n        \"highlight\": True,\n    })\n    return series\n",
+  "caption": {
+    "todo": "Finish best_angle to find your farthest launch on the graph.",
+    "tuning": "Your curve is showing — keep tuning until the best angle lines up with the target.",
+    "match": "✅ Your best-angle curve matches the exact answer!",
+    "checks": [
+      {
+        "fn": "best_angle",
+        "args": [
+          20,
+          0.01,
+          0.05,
+          0.005
+        ],
+        "expected": 33,
+        "tol": 1
+      }
+    ]
+  }
 }
