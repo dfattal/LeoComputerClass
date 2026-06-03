@@ -359,6 +359,60 @@ try:
     print("__VIZ__:" + __json.dumps(__viz_progress()))
 except Exception as __e:
     print("__VIZ_ERR__:" + str(__e))`;
+        } else if (vizConfig.type === "plot" && vizConfig.stages) {
+          // Progressive plot (pin-to-play): each stage owns a resultFn that
+          // builds its own series list and a `check` that gates its status. We
+          // run every stage each Run (so the student can pin any one instantly),
+          // returning each stage's live series + status, plus `auto` = the
+          // furthest stage in the leading run of correct steps (the default
+          // view). Mirrors the draw-stages driver; LinePlot owns the chip UI.
+          const stagesLit = JSON.stringify(JSON.stringify(vizConfig.stages));
+          const todoLit = JSON.stringify(
+            vizConfig.todo ?? "Run your code to see the graph!"
+          );
+          driver = `\nimport json as __json
+def __vm(a, b, tol):
+    if tol is not None:
+        if isinstance(a, bool) or isinstance(b, bool):
+            return a == b
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            return abs(a - b) <= tol
+        if isinstance(a, list) and isinstance(b, list):
+            return len(a) == len(b) and all(__vm(a[__i], b[__i], tol) for __i in range(len(a)))
+    return __json.dumps(a) == __json.dumps(b)
+def __viz_plot_stages():
+    __stages = __json.loads(${stagesLit})
+    __results = []
+    __match_count = 0
+    __still_matching = True
+    for __s in __stages:
+        __rf = globals().get(__s["resultFn"])
+        try:
+            __series = __rf(*__s["demoArgs"]) if __rf is not None else None
+        except Exception:
+            __series = None
+        __c = __s["check"]
+        __cf = globals().get(__c["fn"])
+        __status = "todo"
+        if __cf is not None:
+            try:
+                __out = __cf(*__c["args"])
+            except Exception:
+                __out = None
+            if __out is not None:
+                __status = "match" if __vm(__out, __c["expected"], __c.get("tol")) else "wip"
+        if __status == "match":
+            if __still_matching:
+                __match_count += 1
+        else:
+            __still_matching = False
+        __results.append({"label": __s.get("label"), "caption": __s["caption"], "series": __series, "status": __status})
+    __auto = __match_count - 1 if __match_count > 0 else 0
+    return {"stages": __results, "auto": __auto, "matchCount": __match_count, "todo": ${todoLit}}
+try:
+    print("__VIZ__:" + __json.dumps(__viz_plot_stages()))
+except Exception as __e:
+    print("__VIZ_ERR__:" + str(__e))`;
         } else if (vizConfig.type === "plot" && vizConfig.caption) {
           // Progress-aware plot: build the series via resultFn, then pick one of
           // three captions by checking the curve-driving student fn(s) directly.

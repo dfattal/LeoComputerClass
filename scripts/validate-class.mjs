@@ -95,13 +95,27 @@ if load_error is None:
             # so the graph can call the lesson's own functions if it needs to.
             if v.get("setup"):
                 exec(v["setup"], mod.__dict__)
-            fn = mod.__dict__.get(v["resultFn"])
-            if fn is None:
-                out["viz"] = {"error": "no resultFn named " + v["resultFn"]}
+            if v.get("resultFns") is not None:
+                # Progressive plot: run every stage's producer; each must return
+                # plottable data when driven by the reference solution.
+                vals = []
+                for rf in v["resultFns"]:
+                    fn = mod.__dict__.get(rf["resultFn"])
+                    if fn is None:
+                        vals.append({"error": "no resultFn named " + rf["resultFn"]})
+                    else:
+                        result = fn(*rf.get("demoArgs", []))
+                        json.dumps(result)  # must be serializable
+                        vals.append({"value": result})
+                out["viz"] = {"values": vals}
             else:
-                result = fn(*v.get("demoArgs", []))
-                json.dumps(result)  # must be serializable
-                out["viz"] = {"value": result}
+                fn = mod.__dict__.get(v["resultFn"])
+                if fn is None:
+                    out["viz"] = {"error": "no resultFn named " + v["resultFn"]}
+                else:
+                    result = fn(*v.get("demoArgs", []))
+                    json.dumps(result)  # must be serializable
+                    out["viz"] = {"value": result}
         except Exception as e:
             out["viz"] = {"error": repr(e)}
 
@@ -255,15 +269,30 @@ function validateLesson(lessonDir) {
       viz && viz.type === "plot" && viz.caption && Array.isArray(viz.caption.checks)
         ? viz.caption.checks.map((c) => ({ entry: c.fn, args: c.args || [], expected: c.expected, tol: c.tol }))
         : [];
-    const usesResultFn = viz && !(viz.type === "draw" && Array.isArray(viz.stages));
-    const allCases = [...flatCases, ...stageCases, ...captionCases];
+    // Progressive "plot" lessons (pin-to-play) declare stages, each with its own
+    // resultFn producer + a `check`. The check's expected/tol must agree with
+    // reference.py (same honesty guarantee as the draw stages / plot caption).
+    const isPlotStages = viz && viz.type === "plot" && Array.isArray(viz.stages);
+    const plotStageCases = isPlotStages
+      ? viz.stages.map((s) => ({ entry: s.check.fn, args: s.check.args || [], expected: s.check.expected, tol: s.check.tol }))
+      : [];
+    const usesResultFn =
+      viz && !(viz.type === "draw" && Array.isArray(viz.stages)) && !isPlotStages;
+    const allCases = [...flatCases, ...stageCases, ...captionCases, ...plotStageCases];
 
     let res;
     try {
       res = runPython({
         refPath,
         cases: allCases.map(({ entry, args }) => ({ entry, args })),
-        viz: usesResultFn ? { setup: viz.setup || "", resultFn: viz.resultFn, demoArgs: viz.demoArgs || [] } : null,
+        viz: isPlotStages
+          ? {
+              setup: viz.setup || "",
+              resultFns: viz.stages.map((s) => ({ resultFn: s.resultFn, demoArgs: s.demoArgs || [] })),
+            }
+          : usesResultFn
+            ? { setup: viz.setup || "", resultFn: viz.resultFn, demoArgs: viz.demoArgs || [] }
+            : null,
       });
     } catch (e) {
       add(false, "python3 reference run", String(e.stderr || e.message).trim());
@@ -317,6 +346,38 @@ function validateLesson(lessonDir) {
           ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(a.value)}`
         );
       });
+
+      // viz check for progressive plot lessons: each stage's `check` must agree
+      // with reference.py, and each stage's producer must return plottable data.
+      plotStageCases.forEach((c, k) => {
+        const a = res.actuals[flatCases.length + stageCases.length + captionCases.length + k];
+        if (!a || "error" in a) {
+          add(false, `viz plot stage check ${c.entry}()`, a ? a.error : "no result");
+          return;
+        }
+        const ok = valuesMatch(a.value, c.expected, c.tol);
+        add(
+          ok,
+          `viz plot stage check ${c.entry}() matches reference`,
+          ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(a.value)}`
+        );
+      });
+      if (isPlotStages) {
+        const vals = res.viz && Array.isArray(res.viz.values) ? res.viz.values : null;
+        if (!vals) {
+          add(false, "viz plot stages run", res.viz ? res.viz.error : "no viz result");
+        } else {
+          viz.stages.forEach((s, k) => {
+            const a = vals[k];
+            if (!a || "error" in a) {
+              add(false, `viz stage ${s.resultFn}() runs`, a ? a.error : "no result");
+              return;
+            }
+            const ok = isPlotSeries(a.value);
+            add(ok, `viz stage ${s.resultFn}() returns plottable series`, ok ? undefined : "not a [x,y] / points series");
+          });
+        }
+      }
 
       // viz check for simple-mode (resultFn) draw / plot lessons.
       if (usesResultFn) {

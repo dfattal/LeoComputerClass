@@ -171,16 +171,46 @@ export interface PlotCaptionConfig {
 }
 
 /**
+ * One stage of a progressive PLOT lesson — the plot analog of `DrawStage`. Each
+ * stage owns a `resultFn` that builds its own series list (it may include muted
+ * comparison curves), and a `check` that gates the stage's status. The engine
+ * runs every stage each Run; by default LinePlot shows the furthest stage in the
+ * leading run of correct steps (`auto`), but the student can pin an earlier one
+ * via the chip row to experiment with that function's curve live.
+ *
+ * Use this ONLY when a lesson has two-or-more functions that each draw a
+ * genuinely separate curve (e.g. RSA "lock" = encrypt(m) vs "unlock" =
+ * decrypt(encrypt(m))). When the functions compose into one curve, or the plot
+ * shows intentional comparison series, keep the single `caption` form instead.
+ */
+export interface PlotStage {
+  /** Builds this stage's series (defined in the student's code or `setup`). */
+  resultFn: string;
+  /** Args to pass to this stage's resultFn. */
+  demoArgs: unknown[];
+  /** Gates this stage's status (match / wip / todo) by checking a student fn. */
+  check: PlotCaptionCheck;
+  /** Shown under the graph once this stage is the furthest correct one. */
+  caption: string;
+  /** Optional short chip label (defaults to "Step N"). */
+  label?: string;
+}
+
+/**
  * Generic line/trajectory plot. The `resultFn` must return JSON-serializable
  * plot data — either a single series `[[x, y], ...]` or multiple series
  * `[{ name, points: [[x, y], ...], highlight? }, ...]`.
  */
 export interface PlotVizConfig {
   type: "plot";
-  /** The function (defined in the student's code or in `setup`) that returns plot data. */
-  resultFn: string;
+  /**
+   * The function (defined in the student's code or in `setup`) that returns plot
+   * data. Required for single/simple plots; omit when using `stages` (each stage
+   * carries its own resultFn).
+   */
+  resultFn?: string;
   /** Args to pass to resultFn for the demo. */
-  demoArgs: unknown[];
+  demoArgs?: unknown[];
   /** Optional Python prelude appended after the student's code (e.g. plot helpers). */
   setup?: string;
   title?: string;
@@ -188,6 +218,14 @@ export interface PlotVizConfig {
   yLabel?: string;
   /** Optional progress-aware caption shown under the graph (backward-compatible). */
   caption?: PlotCaptionConfig;
+  /**
+   * Optional progressive stages (pin-to-play). When present, LinePlot shows a
+   * chip row and the student can pin a stage's curve. Mutually exclusive with the
+   * single `resultFn`/`caption` form. See `PlotStage`.
+   */
+  stages?: PlotStage[];
+  /** Fallback caption shown while a pinned/auto stage isn't correct yet. */
+  todo?: string;
 }
 
 /**

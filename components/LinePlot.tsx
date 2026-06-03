@@ -7,12 +7,42 @@
 // Accepts either a single series of points `[[x, y], ...]` or multiple series
 // `[{ name, points, highlight? }, ...]`. The highlighted series is drawn in the
 // warm accent color and on top; the rest are muted.
+//
+// Three input shapes (all flow through `parse`):
+//   - bare series / multi-series                 → simple mode
+//   - { series, caption }                        → progress-aware single plot
+//   - { stages:[{label,caption,series,status}], auto, matchCount, todo }
+//                                                → progressive multi-stage plot.
+//     The student sees the furthest correct stage by default (`auto`), but can
+//     click a chip to PIN an earlier stage and experiment with that function's
+//     curve; the view re-snaps to `auto` whenever progress advances. This is the
+//     plot twin of PixelCanvas's draw-stage chips.
+
+import { useState } from "react";
 
 interface Series {
   name?: string;
   points: [number, number][];
   highlight?: boolean;
 }
+
+type StageResult = {
+  label?: string | null;
+  caption: string;
+  series: unknown;
+  status: "match" | "wip" | "todo";
+};
+
+type Parsed =
+  | { mode: "empty" }
+  | { mode: "single"; series: Series[] | null; caption?: string }
+  | {
+      mode: "multi";
+      stages: StageResult[];
+      auto: number;
+      matchCount: number;
+      todo: string;
+    };
 
 // SVG canvas in user units; scales responsively via viewBox.
 const W = 640;
@@ -41,23 +71,42 @@ function normalize(data: unknown): Series[] | null {
   return null;
 }
 
-// Accept either a bare series, or a progress-aware `{ series, caption }` object
-// (the caption is the "where you are" message — see CourseShell's caption driver
-// and PixelCanvas for the draw equivalent).
-function unwrap(data: unknown): { series: Series[] | null; caption?: string } {
+function parse(data: unknown): Parsed {
+  if (data == null) return { mode: "empty" };
   if (
-    data &&
+    typeof data === "object" &&
+    !Array.isArray(data) &&
+    "stages" in data &&
+    Array.isArray((data as { stages: unknown }).stages)
+  ) {
+    const d = data as {
+      stages: StageResult[];
+      auto?: number;
+      matchCount?: number;
+      todo?: string;
+    };
+    return {
+      mode: "multi",
+      stages: d.stages,
+      auto: typeof d.auto === "number" ? d.auto : 0,
+      matchCount: typeof d.matchCount === "number" ? d.matchCount : 0,
+      todo: typeof d.todo === "string" ? d.todo : "",
+    };
+  }
+  // Progress-aware single plot, or a bare series.
+  if (
     typeof data === "object" &&
     !Array.isArray(data) &&
     "series" in data
   ) {
     const d = data as { series: unknown; caption?: unknown };
     return {
+      mode: "single",
       series: normalize(d.series),
       caption: typeof d.caption === "string" ? d.caption : undefined,
     };
   }
-  return { series: normalize(data) };
+  return { mode: "single", series: normalize(data) };
 }
 
 function downsample(points: [number, number][]): [number, number][] {
@@ -86,28 +135,22 @@ function niceTicks(min: number, max: number, count = 4): number[] {
   return ticks;
 }
 
-export default function LinePlot({
-  data,
+// The actual plot drawing. Returns the placeholder when there's nothing to show.
+function PlotSvg({
+  series,
   title,
   xLabel,
   yLabel,
 }: {
-  data?: unknown;
+  series: Series[] | null;
   title?: string;
   xLabel?: string;
   yLabel?: string;
 }) {
-  const { series, caption } = unwrap(data);
-
   if (!series) {
     return (
-      <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm dark:border-stone-800 dark:bg-stone-900">
+      <div className="flex min-h-[120px] flex-1 items-center justify-center rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm dark:border-stone-800 dark:bg-stone-900">
         <span className="text-stone-400">Run your code to see the graph.</span>
-        {caption && (
-          <span className="font-medium text-stone-600 dark:text-stone-300">
-            {caption}
-          </span>
-        )}
       </div>
     );
   }
@@ -156,12 +199,7 @@ export default function LinePlot({
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2">
-      {title && (
-        <h4 className="shrink-0 text-xs font-semibold uppercase tracking-wider text-stone-500">
-          {title}
-        </h4>
-      )}
+    <>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="xMidYMid meet"
@@ -269,8 +307,136 @@ export default function LinePlot({
           ))}
         </div>
       )}
+    </>
+  );
+}
 
-      {/* Progress-aware caption (where the student is) */}
+export default function LinePlot({
+  data,
+  title,
+  xLabel,
+  yLabel,
+}: {
+  data?: unknown;
+  title?: string;
+  xLabel?: string;
+  yLabel?: string;
+}) {
+  const parsed = parse(data);
+
+  // Which stage the student has pinned (null = "follow the furthest step").
+  const [pinned, setPinned] = useState<number | null>(null);
+  // The last `auto` we saw, kept in state so we can re-snap when it advances.
+  const [prevAuto, setPrevAuto] = useState(-1);
+
+  const auto = parsed.mode === "multi" ? parsed.auto : 0;
+  // Adjust state during render (React's sanctioned pattern): when the student
+  // pushes their progress further, drop the pin and follow the new furthest
+  // step — so experimenting on an earlier step never strands them behind.
+  let pinnedNow = pinned;
+  if (parsed.mode === "multi" && auto !== prevAuto) {
+    setPrevAuto(auto);
+    if (auto > prevAuto && pinned !== null) {
+      setPinned(null);
+      pinnedNow = null;
+    }
+  }
+
+  const header = title && (
+    <h4 className="shrink-0 text-xs font-semibold uppercase tracking-wider text-stone-500">
+      {title}
+    </h4>
+  );
+
+  if (parsed.mode === "empty") {
+    return (
+      <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 rounded-lg border border-stone-200 bg-stone-50 p-4 text-center text-sm dark:border-stone-800 dark:bg-stone-900">
+        <span className="text-stone-400">Run your code to see the graph.</span>
+      </div>
+    );
+  }
+
+  if (parsed.mode === "single") {
+    return (
+      <div className="flex h-full min-h-0 flex-col gap-2">
+        {header}
+        <PlotSvg
+          series={parsed.series}
+          title={title}
+          xLabel={xLabel}
+          yLabel={yLabel}
+        />
+        {parsed.caption && (
+          <p className="shrink-0 text-center text-sm font-medium text-stone-600 dark:text-stone-300">
+            {parsed.caption}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // --- Multi-stage progressive mode ---
+  const { stages, matchCount, todo } = parsed;
+  const following = pinnedNow === null;
+  const selected = Math.min(Math.max(pinnedNow ?? auto, 0), stages.length - 1);
+  const stage = stages[selected];
+  const series = normalize(stage?.series);
+
+  // Caption: a matched stage shows its own "you did it" line; anything else
+  // (still tuning, or not written yet) shows the lesson's todo nudge.
+  const caption = stage?.status === "match" ? stage.caption : todo;
+
+  // Only show chips when there's a real choice to make.
+  const showChips = stages.length > 1;
+
+  return (
+    <div className="flex h-full min-h-0 flex-col gap-2">
+      {header}
+
+      {showChips && (
+        <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setPinned(null)}
+            aria-pressed={following}
+            title="Follow the furthest step you've finished"
+            className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
+              following
+                ? "bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900"
+                : "bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700"
+            }`}
+          >
+            ▶ Auto
+          </button>
+          {stages.map((s, i) => {
+            const isSelected = i === selected;
+            const isMatch = s.status === "match" && i < matchCount;
+            const label = s.label || `Step ${i + 1}`;
+            return (
+              <button
+                key={`${label}-${i}`}
+                type="button"
+                onClick={() => setPinned(i)}
+                aria-pressed={isSelected}
+                title={`Show step ${i + 1}`}
+                className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
+                  isSelected
+                    ? "bg-sky-600 text-white"
+                    : isMatch
+                      ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:hover:bg-emerald-900/70"
+                      : "bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700"
+                }`}
+              >
+                {isMatch ? "✓ " : ""}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <PlotSvg series={series} title={title} xLabel={xLabel} yLabel={yLabel} />
+
       {caption && (
         <p className="shrink-0 text-center text-sm font-medium text-stone-600 dark:text-stone-300">
           {caption}
