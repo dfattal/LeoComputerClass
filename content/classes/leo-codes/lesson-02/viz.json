@@ -1,9 +1,25 @@
 {
   "type": "plot",
   "resultFn": "__plot",
-  "demoArgs": ["aol xbpjr iyvdu mve huk aol shgf kvn"],
+  "demoArgs": [
+    "aol xbpjr iyvdu mve huk aol shgf kvn"
+  ],
   "title": "Brute force: one shift spikes far above the rest — that's the key",
   "xLabel": "shift tried (0–25)",
   "yLabel": "English score (common words found)",
-  "setup": "# --- plot helper (hidden) — English score for every Caesar shift ---\n# Each bar is the student's OWN english_score of their caesar_decrypt at that\n# shift. Falls back to a built-in scorer until those work.\n__COMMON = {\"the\", \"and\", \"you\", \"that\", \"was\", \"for\", \"are\", \"with\", \"his\", \"they\", \"this\", \"have\", \"from\", \"one\", \"had\", \"not\", \"but\", \"what\", \"all\", \"when\", \"your\", \"can\", \"there\", \"she\", \"how\", \"their\", \"will\", \"about\", \"out\", \"them\", \"then\", \"some\", \"her\", \"would\", \"make\", \"like\", \"him\", \"into\", \"time\", \"has\", \"two\", \"more\", \"see\", \"way\", \"could\", \"who\", \"now\", \"did\", \"get\", \"come\", \"is\", \"to\", \"of\", \"in\", \"it\", \"he\", \"on\", \"as\", \"at\", \"be\", \"we\", \"or\", \"by\", \"a\", \"an\", \"my\", \"so\", \"up\"}\n\ndef __decrypt_ref(msg, n):\n    return \"\".join(chr((ord(c) - 97 - n) % 26 + 97) if \"a\" <= c <= \"z\" else c for c in msg)\n\ndef __score_ref(text):\n    return sum(1 for w in text.split() if w in __COMMON)\n\ndef __plot(cipher):\n    try:\n        pts = [[n, english_score(caesar_decrypt(cipher, n))] for n in range(26)]   # <- STUDENT's functions\n        if len(pts) == 26 and any(p[1] for p in pts):\n            return [{\"name\": \"English score for each shift (your code)\", \"points\": pts, \"highlight\": True}]\n    except Exception:\n        pass\n    pts = [[n, __score_ref(__decrypt_ref(cipher, n))] for n in range(26)]\n    return [{\"name\": \"English score for each shift\", \"points\": pts, \"highlight\": True}]\n"
+  "setup": "# --- plot helper (hidden) — English score for every Caesar shift ---\n# Each bar is the student's OWN english_score of their caesar_decrypt at that\n# shift. Falls back to a built-in scorer until those work.\n__COMMON = {\"the\", \"and\", \"you\", \"that\", \"was\", \"for\", \"are\", \"with\", \"his\", \"they\", \"this\", \"have\", \"from\", \"one\", \"had\", \"not\", \"but\", \"what\", \"all\", \"when\", \"your\", \"can\", \"there\", \"she\", \"how\", \"their\", \"will\", \"about\", \"out\", \"them\", \"then\", \"some\", \"her\", \"would\", \"make\", \"like\", \"him\", \"into\", \"time\", \"has\", \"two\", \"more\", \"see\", \"way\", \"could\", \"who\", \"now\", \"did\", \"get\", \"come\", \"is\", \"to\", \"of\", \"in\", \"it\", \"he\", \"on\", \"as\", \"at\", \"be\", \"we\", \"or\", \"by\", \"a\", \"an\", \"my\", \"so\", \"up\"}\n\ndef __decrypt_ref(msg, n):\n    return \"\".join(chr((ord(c) - 97 - n) % 26 + 97) if \"a\" <= c <= \"z\" else c for c in msg)\n\ndef __score_ref(text):\n    return sum(1 for w in text.split() if w in __COMMON)\n\ndef __plot(cipher):\n    try:\n        pts = [[n, english_score(caesar_decrypt(cipher, n))] for n in range(26)]   # <- STUDENT's functions\n        if len(pts) == 26 and any(p[1] for p in pts):\n            return [{\"name\": \"English score for each shift (your code)\", \"points\": pts, \"highlight\": True}]\n    except Exception:\n        pass\n    pts = [[n, __score_ref(__decrypt_ref(cipher, n))] for n in range(26)]\n    return [{\"name\": \"English score for each shift\", \"points\": pts, \"highlight\": True}]\n",
+  "caption": {
+    "todo": "Finish english_score to make the secret key spike on the graph.",
+    "tuning": "Your scores are showing — keep tuning english_score to match the target.",
+    "match": "✅ Your key-finding spike matches the exact answer!",
+    "checks": [
+      {
+        "fn": "english_score",
+        "args": [
+          "the cat and the dog"
+        ],
+        "expected": 3
+      }
+    ]
+  }
 }

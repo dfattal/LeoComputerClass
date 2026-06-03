@@ -1,9 +1,28 @@
 {
   "type": "plot",
   "resultFn": "__plot",
-  "demoArgs": [5, 23],
+  "demoArgs": [
+    5,
+    23
+  ],
   "title": "The one-way mix: g^secret mod p bounces all over the clock",
   "xLabel": "secret number (the exponent)",
   "yLabel": "the mix you'd send: g^secret mod p",
-  "setup": "# --- plot helper (hidden) — modular powers bounce unpredictably ---\n# The curve is the student's OWN power_mod at each secret. Falls back to Python's\n# built-in pow until power_mod works.\ndef __plot(g, p):\n    try:\n        pts = [[x, power_mod(g, x, p)] for x in range(1, p)]   # <- the STUDENT's function\n        if pts and all(isinstance(pt[1], int) for pt in pts):\n            return [{\"name\": \"g^secret mod p (your code)\", \"points\": pts, \"highlight\": True}]\n    except Exception:\n        pass\n    pts = [[x, pow(g, x, p)] for x in range(1, p)]\n    return [{\"name\": \"g^secret mod p\", \"points\": pts, \"highlight\": True}]\n"
+  "setup": "# --- plot helper (hidden) — modular powers bounce unpredictably ---\n# The curve is the student's OWN power_mod at each secret. Falls back to Python's\n# built-in pow until power_mod works.\ndef __plot(g, p):\n    try:\n        pts = [[x, power_mod(g, x, p)] for x in range(1, p)]   # <- the STUDENT's function\n        if pts and all(isinstance(pt[1], int) for pt in pts):\n            return [{\"name\": \"g^secret mod p (your code)\", \"points\": pts, \"highlight\": True}]\n    except Exception:\n        pass\n    pts = [[x, pow(g, x, p)] for x in range(1, p)]\n    return [{\"name\": \"g^secret mod p\", \"points\": pts, \"highlight\": True}]\n",
+  "caption": {
+    "todo": "Finish power_mod to bounce your numbers all over the clock.",
+    "tuning": "Your bounce is showing — keep tuning power_mod to match the target.",
+    "match": "✅ Your one-way mix matches the exact answer!",
+    "checks": [
+      {
+        "fn": "power_mod",
+        "args": [
+          5,
+          6,
+          23
+        ],
+        "expected": 8
+      }
+    ]
+  }
 }

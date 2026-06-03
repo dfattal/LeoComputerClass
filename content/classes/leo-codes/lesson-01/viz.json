@@ -1,9 +1,26 @@
 {
   "type": "plot",
   "resultFn": "__plot",
-  "demoArgs": [3],
+  "demoArgs": [
+    3
+  ],
   "title": "The cipher wheel: every letter slides over by the same key",
   "xLabel": "original letter (a=0, b=1, … z=25)",
   "yLabel": "where it lands after the shift",
-  "setup": "# --- plot helper (hidden) — the Caesar shift as a mapping ---\n# The shifted-alphabet curve is built by calling the student's OWN shift_letter\n# on every letter. Falls back to the built-in shift until it works. The 'no\n# shift' diagonal is a fixed comparison.\ndef __identity():\n    return [[i, i] for i in range(26)]\n\ndef __shift_map_ref(n):\n    return [[i, (i + n) % 26] for i in range(26)]\n\ndef __shift_map_student(n):\n    pts = []\n    for i in range(26):\n        landed = shift_letter(chr(97 + i), n)   # <- the STUDENT's function\n        pts.append([i, ord(landed) - 97])\n    return pts\n\ndef __plot(n):\n    try:\n        m = __shift_map_student(n)\n        if m and len(m) == 26:\n            shifted = {\"name\": \"shifted alphabet (your key)\", \"points\": m, \"highlight\": True}\n        else:\n            raise ValueError()\n    except Exception:\n        shifted = {\"name\": \"shifted alphabet (key)\", \"points\": __shift_map_ref(n), \"highlight\": True}\n    return [shifted, {\"name\": \"no shift (key = 0)\", \"points\": __identity(), \"highlight\": False}]\n"
+  "setup": "# --- plot helper (hidden) — the Caesar shift as a mapping ---\n# The shifted-alphabet curve is built by calling the student's OWN shift_letter\n# on every letter. Falls back to the built-in shift until it works. The 'no\n# shift' diagonal is a fixed comparison.\ndef __identity():\n    return [[i, i] for i in range(26)]\n\ndef __shift_map_ref(n):\n    return [[i, (i + n) % 26] for i in range(26)]\n\ndef __shift_map_student(n):\n    pts = []\n    for i in range(26):\n        landed = shift_letter(chr(97 + i), n)   # <- the STUDENT's function\n        pts.append([i, ord(landed) - 97])\n    return pts\n\ndef __plot(n):\n    try:\n        m = __shift_map_student(n)\n        if m and len(m) == 26:\n            shifted = {\"name\": \"shifted alphabet (your key)\", \"points\": m, \"highlight\": True}\n        else:\n            raise ValueError()\n    except Exception:\n        shifted = {\"name\": \"shifted alphabet (key)\", \"points\": __shift_map_ref(n), \"highlight\": True}\n    return [shifted, {\"name\": \"no shift (key = 0)\", \"points\": __identity(), \"highlight\": False}]\n",
+  "caption": {
+    "todo": "Finish shift_letter to spin your own cipher wheel on the graph.",
+    "tuning": "Your wheel is showing — keep tuning shift_letter to match the target.",
+    "match": "✅ Your cipher wheel matches the exact answer!",
+    "checks": [
+      {
+        "fn": "shift_letter",
+        "args": [
+          "a",
+          3
+        ],
+        "expected": "d"
+      }
+    ]
+  }
 }

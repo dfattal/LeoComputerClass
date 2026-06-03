@@ -1,9 +1,52 @@
 {
   "type": "plot",
   "resultFn": "__plot",
-  "demoArgs": ["zit ltektz dtllqut iortl of hsqof louiz wxz zit stzztkl ziqz qhhtqk zit dglz gyztf qkt zit tqln gftl zg uxtll"],
+  "demoArgs": [
+    "zit ltektz dtllqut iortl of hsqof louiz wxz zit stzztkl ziqz qhhtqk zit dglz gyztf qkt zit tqln gftl zg uxtll"
+  ],
   "title": "Letter fingerprints: the secret message vs typical English",
   "xLabel": "letter (a=0, b=1, … z=25)",
   "yLabel": "how often it appears (count)",
-  "setup": "# --- plot helper (hidden) — letter frequencies of a ciphertext vs English ---\n# The 'secret message' bars are the student's OWN letter_counts. Falls back to a\n# built-in counter until it works. The English curve is a fixed comparison.\n__ENG_PCT = [8.2, 1.5, 2.8, 4.3, 12.7, 2.2, 2.0, 6.1, 7.0, 0.15, 0.77, 4.0, 2.4, 6.7, 7.5, 1.9, 0.095, 6.0, 6.3, 9.1, 2.8, 0.98, 2.4, 0.15, 2.0, 0.074]\n\ndef __counts_ref(text):\n    c = [0] * 26\n    for ch in text:\n        if \"a\" <= ch <= \"z\":\n            c[ord(ch) - 97] += 1\n    return c\n\ndef __plot(cipher):\n    try:\n        counts = letter_counts(cipher)   # <- the STUDENT's function\n        if not (isinstance(counts, list) and len(counts) == 26):\n            raise ValueError()\n        label = \"secret message (your counts)\"\n    except Exception:\n        counts = __counts_ref(cipher)\n        label = \"secret message\"\n    total = sum(counts)\n    cipher_pts = [[i, counts[i]] for i in range(26)]\n    eng_pts = [[i, round(__ENG_PCT[i] / 100.0 * total, 2)] for i in range(26)]\n    return [\n        {\"name\": label, \"points\": cipher_pts, \"highlight\": True},\n        {\"name\": \"typical English (scaled)\", \"points\": eng_pts, \"highlight\": False},\n    ]\n"
+  "setup": "# --- plot helper (hidden) — letter frequencies of a ciphertext vs English ---\n# The 'secret message' bars are the student's OWN letter_counts. Falls back to a\n# built-in counter until it works. The English curve is a fixed comparison.\n__ENG_PCT = [8.2, 1.5, 2.8, 4.3, 12.7, 2.2, 2.0, 6.1, 7.0, 0.15, 0.77, 4.0, 2.4, 6.7, 7.5, 1.9, 0.095, 6.0, 6.3, 9.1, 2.8, 0.98, 2.4, 0.15, 2.0, 0.074]\n\ndef __counts_ref(text):\n    c = [0] * 26\n    for ch in text:\n        if \"a\" <= ch <= \"z\":\n            c[ord(ch) - 97] += 1\n    return c\n\ndef __plot(cipher):\n    try:\n        counts = letter_counts(cipher)   # <- the STUDENT's function\n        if not (isinstance(counts, list) and len(counts) == 26):\n            raise ValueError()\n        label = \"secret message (your counts)\"\n    except Exception:\n        counts = __counts_ref(cipher)\n        label = \"secret message\"\n    total = sum(counts)\n    cipher_pts = [[i, counts[i]] for i in range(26)]\n    eng_pts = [[i, round(__ENG_PCT[i] / 100.0 * total, 2)] for i in range(26)]\n    return [\n        {\"name\": label, \"points\": cipher_pts, \"highlight\": True},\n        {\"name\": \"typical English (scaled)\", \"points\": eng_pts, \"highlight\": False},\n    ]\n",
+  "caption": {
+    "todo": "Finish letter_counts to draw your message's letter fingerprint.",
+    "tuning": "Your fingerprint is showing — keep tuning letter_counts to match the target.",
+    "match": "✅ Your letter fingerprint matches the exact answer!",
+    "checks": [
+      {
+        "fn": "letter_counts",
+        "args": [
+          "hello"
+        ],
+        "expected": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  }
 }

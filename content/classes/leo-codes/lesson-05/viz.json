@@ -1,9 +1,30 @@
 {
   "type": "plot",
   "resultFn": "__plot",
-  "demoArgs": ["secret message", 42],
+  "demoArgs": [
+    "secret message",
+    42
+  ],
   "title": "XOR scrambles the numbers — the cipher hides in the bits",
   "xLabel": "position in the message",
   "yLabel": "byte value (the number)",
-  "setup": "# --- plot helper (hidden) — letters as numbers, before and after XOR ---\n# The cipher curve is the student's OWN xor_encrypt output. Falls back to a\n# built-in XOR until it works. The plain-letters curve is a fixed comparison.\ndef __plot(message, key):\n    plain = [[i, ord(c)] for i, c in enumerate(message)]\n    try:\n        nums = xor_encrypt(message, key)   # <- the STUDENT's function\n        if isinstance(nums, list) and len(nums) == len(message):\n            cipher = [[i, nums[i]] for i in range(len(nums))]\n            clabel = \"after XOR (your cipher)\"\n        else:\n            raise ValueError()\n    except Exception:\n        cipher = [[i, ord(c) ^ key] for i, c in enumerate(message)]\n        clabel = \"after XOR (the cipher)\"\n    return [\n        {\"name\": clabel, \"points\": cipher, \"highlight\": True},\n        {\"name\": \"plain letters (as numbers)\", \"points\": plain, \"highlight\": False},\n    ]\n"
+  "setup": "# --- plot helper (hidden) — letters as numbers, before and after XOR ---\n# The cipher curve is the student's OWN xor_encrypt output. Falls back to a\n# built-in XOR until it works. The plain-letters curve is a fixed comparison.\ndef __plot(message, key):\n    plain = [[i, ord(c)] for i, c in enumerate(message)]\n    try:\n        nums = xor_encrypt(message, key)   # <- the STUDENT's function\n        if isinstance(nums, list) and len(nums) == len(message):\n            cipher = [[i, nums[i]] for i in range(len(nums))]\n            clabel = \"after XOR (your cipher)\"\n        else:\n            raise ValueError()\n    except Exception:\n        cipher = [[i, ord(c) ^ key] for i, c in enumerate(message)]\n        clabel = \"after XOR (the cipher)\"\n    return [\n        {\"name\": clabel, \"points\": cipher, \"highlight\": True},\n        {\"name\": \"plain letters (as numbers)\", \"points\": plain, \"highlight\": False},\n    ]\n",
+  "caption": {
+    "todo": "Finish xor_encrypt to scramble the secret numbers in the graph.",
+    "tuning": "Your scramble is showing — keep tuning xor_encrypt to match the target.",
+    "match": "✅ Your XOR scramble matches the exact answer!",
+    "checks": [
+      {
+        "fn": "xor_encrypt",
+        "args": [
+          "hi",
+          42
+        ],
+        "expected": [
+          66,
+          67
+        ]
+      }
+    ]
+  }
 }
