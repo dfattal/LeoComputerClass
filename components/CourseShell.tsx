@@ -371,15 +371,41 @@ except Exception as __e:
   const handleRun = useCallback(async () => {
     setStdout("");
     setStderr("");
-    setDrawerTab("Output");
-    setDrawerCollapsed(false);
-    localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
     const result = await run(code);
     setStdout(result.stdout);
     setStderr(result.stderr);
 
     await captureViz(code, !!result.error);
-  }, [run, code, captureViz]);
+
+    // Decide what the bottom drawer should do — don't pop it open empty. The
+    // bottom section only surfaces when it has something to read; on a clean run
+    // of a visual lesson, the picture/graph is the output.
+    const hasError = !!result.error || !!result.stderr?.trim();
+    const hasOutput = !!result.stdout?.trim();
+    const hasGraph = vizConfig?.type === "plot" || vizConfig?.type === "draw";
+    const openDrawer = (tab: DrawerTab) => {
+      setDrawerTab(tab);
+      setDrawerCollapsed(false);
+      localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
+    };
+    if (hasError || hasOutput) {
+      openDrawer("Output"); // an error or a print to read
+    } else if (hasGraph) {
+      // The picture is the output. Desktop shows it in the right column, so hide
+      // the (empty) bottom drawer; mobile shows it as the Canvas/Graph tab.
+      const isDesktop =
+        typeof window !== "undefined" &&
+        window.matchMedia("(min-width: 1024px)").matches;
+      if (isDesktop) {
+        setDrawerCollapsed(true);
+        localStorage.setItem(DRAWER_COLLAPSED_KEY, "true");
+      } else {
+        openDrawer("Graph");
+      }
+    } else {
+      openDrawer("Output"); // no visual, no output: keep the old behavior
+    }
+  }, [run, code, captureViz, vizConfig]);
 
   const handleRunTests = useCallback(async () => {
     setTestResults([]);
