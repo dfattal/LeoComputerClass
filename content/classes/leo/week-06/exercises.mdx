@@ -110,14 +110,17 @@ Build a 4-way multiplexer — the tournament bracket! It picks one of four value
 
 ```python
 def mux4(a, b, c, d, s1, s0):
-    # Use three mux calls — like a tournament bracket!
+    # a, b, c, d are whole numbers, and your mux is a 1-bit gate — so mux each
+    # BIT, just like reg4 ran each bit through reg_bit. Loop over the bit
+    # positions (6 bits is plenty for numbers up to 63) and for each one:
     #
-    # Round 1: s0 picks between a/b and between c/d
-    #   top = mux(a, b, s0)     — picks a if s0=0, b if s0=1
-    #   bottom = mux(c, d, s0)  — picks c if s0=0, d if s0=1
+    #   ai, bi, ci, di = get_bit(a, i), get_bit(b, i), get_bit(c, i), get_bit(d, i)
+    #   top    = mux(ai, bi, s0)        — round 1: pick a's bit or b's bit
+    #   bottom = mux(ci, di, s0)        — round 1: pick c's bit or d's bit
+    #   bit    = mux(top, bottom, s1)   — final round
     #
-    # Final: s1 picks between the two round-1 winners
-    #   return mux(top, bottom, s1)
+    # Collect each result bit back into the answer with (bit << i), OR-ing them
+    # together (start from result = 0, then result = result | (bit << i)).
     #
     # Address map: (s1=0,s0=0)→a, (s1=0,s0=1)→b, (s1=1,s0=0)→c, (s1=1,s0=1)→d
     #
