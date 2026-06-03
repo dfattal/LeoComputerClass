@@ -144,6 +144,16 @@ function isPlotSeries(result) {
 function isDrawGrid(result) {
   // A pixel-grid drawing: a non-empty list of rows, each row a list of cells
   // (color name / emoji string, number, or null/"" for empty).
+  // Also accept a { grid, caption } wrapper — the same shape PixelCanvas renders
+  // (lets a simple-mode draw ship a readable caption/legend with its grid).
+  if (
+    result &&
+    typeof result === "object" &&
+    !Array.isArray(result) &&
+    "grid" in result
+  ) {
+    result = result.grid;
+  }
   if (!Array.isArray(result) || result.length === 0) return false;
   return result.every(
     (row) =>
