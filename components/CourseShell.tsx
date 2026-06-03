@@ -316,9 +316,13 @@ function CourseShellInner({
 
         let driver: string;
         if (vizConfig.type === "draw" && vizConfig.stages) {
-          // Progressive mode: walk the stages, draw the furthest one whose output
-          // matches its expected grid, and report that stage's caption. While a
-          // stage is still being worked on, show its raw output for feedback.
+          // Progressive mode: run EVERY stage's function and report each one's
+          // live grid + status (match / wip / todo), plus `auto` = the furthest
+          // stage in the leading run of correct steps (the default view, which
+          // reproduces the old "show the furthest correct step" behavior). The
+          // canvas can then let the student pin an earlier stage to experiment
+          // with it without losing their place. `matchCount` only counts the
+          // leading consecutive matches so progress can't appear to skip ahead.
           const stagesLit = JSON.stringify(JSON.stringify(vizConfig.stages));
           const todoLit = JSON.stringify(
             vizConfig.todo ?? "Run your code to see your picture!"
@@ -326,8 +330,9 @@ function CourseShellInner({
           driver = `\nimport json as __json
 def __viz_progress():
     __stages = __json.loads(${stagesLit})
-    __shown = None
-    __cap = ${todoLit}
+    __results = []
+    __match_count = 0
+    __still_matching = True
     for __s in __stages:
         __fn = globals().get(__s["fn"])
         try:
@@ -335,15 +340,21 @@ def __viz_progress():
         except Exception:
             __out = None
         if __out == __s["expected"]:
-            __shown = __out
-            __cap = __s["caption"]
-            continue
-        if __shown is None and isinstance(__out, list) and len(__out) > 0:
-            __shown = __out
-        break
-    if __shown is None:
-        __shown = [[""]]
-    return {"grid": __shown, "caption": __cap}
+            __status = "match"
+            __grid = __out
+            if __still_matching:
+                __match_count += 1
+        elif isinstance(__out, list) and len(__out) > 0:
+            __status = "wip"
+            __grid = __out
+            __still_matching = False
+        else:
+            __status = "todo"
+            __grid = None
+            __still_matching = False
+        __results.append({"fn": __s["fn"], "label": __s.get("label"), "caption": __s["caption"], "grid": __grid, "status": __status})
+    __auto = __match_count - 1 if __match_count > 0 else 0
+    return {"stages": __results, "auto": __auto, "matchCount": __match_count, "todo": ${todoLit}}
 try:
     print("__VIZ__:" + __json.dumps(__viz_progress()))
 except Exception as __e:

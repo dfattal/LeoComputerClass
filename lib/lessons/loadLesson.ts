@@ -200,6 +200,8 @@ export interface DrawStage {
   args: unknown[];
   expected: unknown;
   caption: string;
+  /** Optional short label for this stage's chip in the canvas (defaults to "Step N"). */
+  label?: string;
 }
 
 /**
@@ -209,10 +211,13 @@ export interface DrawStage {
  * the same __VIZ__ stdout channel as plots. Two modes:
  *
  * - Simple: `resultFn` returns the grid directly.
- * - Progressive (`stages`): the engine walks the stages, draws the furthest one
- *   whose output matches `expected`, and shows that stage's caption — so the
- *   panel tracks how far the student has correctly gotten. `resultFn` returns
- *   `{ grid, caption }` in this mode (built by the engine).
+ * - Progressive (`stages`): the engine runs every stage's function each Run and
+ *   reports each one's live grid + status. By default the canvas shows the
+ *   furthest stage in the leading run of correct steps (so the panel tracks how
+ *   far the student has correctly gotten), but the student can pin an earlier
+ *   stage via the chip row to experiment with it. In this mode the engine
+ *   returns `{ stages: [{fn, label, caption, grid, status}], auto, matchCount,
+ *   todo }`; PixelCanvas owns the stage-selection UI.
  */
 export interface DrawVizConfig {
   type: "draw";
