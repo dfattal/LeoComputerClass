@@ -2,10 +2,26 @@
   "type": "plot",
   "resultFn": "__plot",
   "demoArgs": [
-    5.972e24
+    5.972e+24
   ],
   "title": "Three launches from the same spot — circle, crash, or fly away",
   "xLabel": "x (m)",
   "yLabel": "y (m)",
-  "setup": "# --- plot helper (hidden) — 2D orbits from (7e6, 0) at three speeds ---\n# The 'just right' circular speed comes from the student's OWN orbital_speed:\n# get it right and the middle orbit closes into a clean ring. Too-slow and\n# too-fast are fixed comparisons. Falls back to the textbook 7546 m/s.\nimport math as __m\ndef __orbit(M, v, dt, steps, every):\n    G = 6.674e-11\n    x = 7e6; y = 0.0; vx = 0.0; vy = v\n    pts = [[round(x, 1), round(y, 1)]]\n    for i in range(steps):\n        r = __m.sqrt(x * x + y * y)\n        if r < 1.0:\n            break\n        f = G * M / (r * r * r)\n        vx += -f * x * dt; vy += -f * y * dt\n        x += vx * dt; y += vy * dt\n        if i % every == 0:\n            pts.append([round(x, 1), round(y, 1)])\n    return pts\n\ndef __plot(M):\n    v_just = None\n    try:\n        s = orbital_speed(M, 7e6)   # <- the STUDENT's function\n        if isinstance(s, (int, float)) and s > 0:\n            v_just = s\n    except Exception:\n        v_just = None\n    if v_just is None:\n        v_just = 7546.0\n        just_label = \"just right (7546) — a circle\"\n    else:\n        just_label = \"your circular speed (\" + str(round(v_just)) + \") — a circle\"\n    return [\n        {\"name\": \"too slow (6400) — crashes in\", \"points\": __orbit(M, 6400, 2.0, 3000, 15), \"highlight\": False},\n        {\"name\": just_label, \"points\": __orbit(M, v_just, 2.0, 3000, 15), \"highlight\": True},\n        {\"name\": \"too fast (8700) — flies away\", \"points\": __orbit(M, 8700, 2.0, 3000, 15), \"highlight\": False},\n    ]\n"
+  "setup": "# --- plot helper (hidden) — 2D orbits from (7e6, 0) at three speeds ---\n# The 'just right' circular speed comes from the student's OWN orbital_speed:\n# get it right and the middle orbit closes into a clean ring. Too-slow and\n# too-fast are fixed comparisons. Falls back to the textbook 7546 m/s.\nimport math as __m\ndef __orbit(M, v, dt, steps, every):\n    G = 6.674e-11\n    x = 7e6; y = 0.0; vx = 0.0; vy = v\n    pts = [[round(x, 1), round(y, 1)]]\n    for i in range(steps):\n        r = __m.sqrt(x * x + y * y)\n        if r < 1.0:\n            break\n        f = G * M / (r * r * r)\n        vx += -f * x * dt; vy += -f * y * dt\n        x += vx * dt; y += vy * dt\n        if i % every == 0:\n            pts.append([round(x, 1), round(y, 1)])\n    return pts\n\ndef __plot(M):\n    v_just = None\n    try:\n        s = orbital_speed(M, 7e6)   # <- the STUDENT's function\n        if isinstance(s, (int, float)) and s > 0:\n            v_just = s\n    except Exception:\n        v_just = None\n    if v_just is None:\n        v_just = 7546.0\n        just_label = \"just right (7546) — a circle\"\n    else:\n        just_label = \"your circular speed (\" + str(round(v_just)) + \") — a circle\"\n    return [\n        {\"name\": \"too slow (6400) — crashes in\", \"points\": __orbit(M, 6400, 2.0, 3000, 15), \"highlight\": False},\n        {\"name\": just_label, \"points\": __orbit(M, v_just, 2.0, 3000, 15), \"highlight\": True},\n        {\"name\": \"too fast (8700) — flies away\", \"points\": __orbit(M, 8700, 2.0, 3000, 15), \"highlight\": False},\n    ]\n",
+  "caption": {
+    "todo": "Finish orbital_speed to draw your own orbit on the graph.",
+    "tuning": "Your orbit is showing — keep tuning orbital_speed to match the target.",
+    "match": "✅ Your orbit matches the exact answer!",
+    "checks": [
+      {
+        "fn": "orbital_speed",
+        "args": [
+          5.972e+24,
+          7000000
+        ],
+        "expected": 7545.78,
+        "tol": 0.5
+      }
+    ]
+  }
 }

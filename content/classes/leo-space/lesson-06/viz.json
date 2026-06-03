@@ -7,5 +7,27 @@
   "title": "Dropping from 50 m: a weak engine crashes fast, a strong one glides in",
   "xLabel": "time (s)",
   "yLabel": "height (m)",
-  "setup": "# --- plot helper (hidden) — Moon descents at different thrusts ---\n# Each descent is stepped with the student's OWN lander_step. Falls back per\n# curve to the built-in step until lander_step works, so it's never blank.\ndef __descend_ref(thrust, dt, steps, every):\n    g = 1.62; h = 50.0; v = 0.0; t = 0.0\n    pts = [[0.0, 50.0]]\n    for i in range(steps):\n        v += (thrust - g) * dt\n        h += v * dt; t += dt\n        if h <= 0:\n            pts.append([round(t, 2), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 2), round(h, 2)])\n    return pts\n\ndef __descend_student(thrust, dt, steps, every):\n    h = 50.0; v = 0.0; t = 0.0\n    pts = [[0.0, 50.0]]\n    for i in range(steps):\n        res = lander_step(h, v, thrust, 1.62, dt)   # <- the STUDENT's function\n        h = res[0]; v = res[1]\n        t += dt\n        if h <= 0:\n            pts.append([round(t, 2), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 2), round(h, 2)])\n    return pts\n\ndef __plot(_):\n    series = []\n    for thrust, hot, label in (\n        (0.0, False, \"engine off (0.0) — crash\"),\n        (1.0, False, \"weak (1.0)\"),\n        (1.61, True, \"strong (1.61) — gentle glide\"),\n    ):\n        try:\n            p = __descend_student(thrust, 0.05, 3000, 20)\n            if p and len(p) > 1:\n                series.append({\"name\": label, \"points\": p, \"highlight\": hot})\n                continue\n        except Exception:\n            pass\n        series.append({\"name\": label, \"points\": __descend_ref(thrust, 0.05, 3000, 20), \"highlight\": hot})\n    return series\n"
+  "setup": "# --- plot helper (hidden) — Moon descents at different thrusts ---\n# Each descent is stepped with the student's OWN lander_step. Falls back per\n# curve to the built-in step until lander_step works, so it's never blank.\ndef __descend_ref(thrust, dt, steps, every):\n    g = 1.62; h = 50.0; v = 0.0; t = 0.0\n    pts = [[0.0, 50.0]]\n    for i in range(steps):\n        v += (thrust - g) * dt\n        h += v * dt; t += dt\n        if h <= 0:\n            pts.append([round(t, 2), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 2), round(h, 2)])\n    return pts\n\ndef __descend_student(thrust, dt, steps, every):\n    h = 50.0; v = 0.0; t = 0.0\n    pts = [[0.0, 50.0]]\n    for i in range(steps):\n        res = lander_step(h, v, thrust, 1.62, dt)   # <- the STUDENT's function\n        h = res[0]; v = res[1]\n        t += dt\n        if h <= 0:\n            pts.append([round(t, 2), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 2), round(h, 2)])\n    return pts\n\ndef __plot(_):\n    series = []\n    for thrust, hot, label in (\n        (0.0, False, \"engine off (0.0) — crash\"),\n        (1.0, False, \"weak (1.0)\"),\n        (1.61, True, \"strong (1.61) — gentle glide\"),\n    ):\n        try:\n            p = __descend_student(thrust, 0.05, 3000, 20)\n            if p and len(p) > 1:\n                series.append({\"name\": label, \"points\": p, \"highlight\": hot})\n                continue\n        except Exception:\n            pass\n        series.append({\"name\": label, \"points\": __descend_ref(thrust, 0.05, 3000, 20), \"highlight\": hot})\n    return series\n",
+  "caption": {
+    "todo": "Finish lander_step to fly your own landing on the graph.",
+    "tuning": "Your descent is showing — keep tuning lander_step to match the target.",
+    "match": "✅ Your landing matches the exact answer!",
+    "checks": [
+      {
+        "fn": "lander_step",
+        "args": [
+          100,
+          -10,
+          1.5,
+          1.62,
+          0.5
+        ],
+        "expected": [
+          94.97,
+          -10.06
+        ],
+        "tol": 0.01
+      }
+    ]
+  }
 }

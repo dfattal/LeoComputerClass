@@ -2,10 +2,29 @@
   "type": "plot",
   "resultFn": "__plot",
   "demoArgs": [
-    5.972e24
+    5.972e+24
   ],
   "title": "Faster launches stretch the circle into taller and taller ellipses",
   "xLabel": "x (m)",
   "yLabel": "y (m)",
-  "setup": "# --- plot helper (hidden) — ellipses from (7e6, 0) at three speeds ---\n# The highlighted ellipse is drawn out to the apogee the student's OWN\n# farthest_point computes for the 8200 m/s launch (perigee 7e6, focus at the\n# planet). Until it works, falls back to the simulated 8200 ellipse. The circle\n# and tall ellipse are fixed comparisons.\nimport math as __m\ndef __orbit(M, v, dt, steps, every):\n    G = 6.674e-11\n    x = 7e6; y = 0.0; vx = 0.0; vy = v\n    pts = [[round(x, 1), round(y, 1)]]\n    for i in range(steps):\n        r = __m.sqrt(x * x + y * y)\n        if r < 1.0:\n            break\n        f = G * M / (r * r * r)\n        vx += -f * x * dt; vy += -f * y * dt\n        x += vx * dt; y += vy * dt\n        if i % every == 0:\n            pts.append([round(x, 1), round(y, 1)])\n    return pts\n\ndef __ellipse_from_apo(rp, ra, n):\n    a = (rp + ra) / 2; c = (ra - rp) / 2; b = __m.sqrt(rp * ra)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __plot(M):\n    series = [{\"name\": \"circle (7546)\", \"points\": __orbit(M, 7546, 4.0, 3000, 15), \"highlight\": False}]\n    done = False\n    try:\n        ra = farthest_point(M, 7e6, 8200, 4.0, 3000)   # <- the STUDENT's function\n        if isinstance(ra, (int, float)) and ra > 7e6 * 1.001:\n            series.append({\"name\": \"your ellipse (apogee from your code)\", \"points\": __ellipse_from_apo(7e6, ra, 120), \"highlight\": True})\n            done = True\n    except Exception:\n        pass\n    if not done:\n        series.append({\"name\": \"ellipse (8200)\", \"points\": __orbit(M, 8200, 4.0, 3000, 15), \"highlight\": True})\n    series.append({\"name\": \"tall ellipse (8700)\", \"points\": __orbit(M, 8700, 4.0, 3000, 15), \"highlight\": False})\n    return series\n"
+  "setup": "# --- plot helper (hidden) — ellipses from (7e6, 0) at three speeds ---\n# The highlighted ellipse is drawn out to the apogee the student's OWN\n# farthest_point computes for the 8200 m/s launch (perigee 7e6, focus at the\n# planet). Until it works, falls back to the simulated 8200 ellipse. The circle\n# and tall ellipse are fixed comparisons.\nimport math as __m\ndef __orbit(M, v, dt, steps, every):\n    G = 6.674e-11\n    x = 7e6; y = 0.0; vx = 0.0; vy = v\n    pts = [[round(x, 1), round(y, 1)]]\n    for i in range(steps):\n        r = __m.sqrt(x * x + y * y)\n        if r < 1.0:\n            break\n        f = G * M / (r * r * r)\n        vx += -f * x * dt; vy += -f * y * dt\n        x += vx * dt; y += vy * dt\n        if i % every == 0:\n            pts.append([round(x, 1), round(y, 1)])\n    return pts\n\ndef __ellipse_from_apo(rp, ra, n):\n    a = (rp + ra) / 2; c = (ra - rp) / 2; b = __m.sqrt(rp * ra)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __plot(M):\n    series = [{\"name\": \"circle (7546)\", \"points\": __orbit(M, 7546, 4.0, 3000, 15), \"highlight\": False}]\n    done = False\n    try:\n        ra = farthest_point(M, 7e6, 8200, 4.0, 3000)   # <- the STUDENT's function\n        if isinstance(ra, (int, float)) and ra > 7e6 * 1.001:\n            series.append({\"name\": \"your ellipse (apogee from your code)\", \"points\": __ellipse_from_apo(7e6, ra, 120), \"highlight\": True})\n            done = True\n    except Exception:\n        pass\n    if not done:\n        series.append({\"name\": \"ellipse (8200)\", \"points\": __orbit(M, 8200, 4.0, 3000, 15), \"highlight\": True})\n    series.append({\"name\": \"tall ellipse (8700)\", \"points\": __orbit(M, 8700, 4.0, 3000, 15), \"highlight\": False})\n    return series\n",
+  "caption": {
+    "todo": "Finish farthest_point to stretch your own ellipse on the graph.",
+    "tuning": "Your ellipse is showing — keep tuning farthest_point to match the target.",
+    "match": "✅ Your ellipse matches the exact answer!",
+    "checks": [
+      {
+        "fn": "farthest_point",
+        "args": [
+          5.972e+24,
+          7000000,
+          8200,
+          1,
+          10000
+        ],
+        "expected": 10092322,
+        "tol": 100000
+      }
+    ]
+  }
 }

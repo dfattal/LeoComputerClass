@@ -2,10 +2,26 @@
   "type": "plot",
   "resultFn": "__plot",
   "demoArgs": [
-    5.972e24
+    5.972e+24
   ],
   "title": "Gravity collapses with distance — twice as far, four times weaker",
   "xLabel": "distance from Earth's center (Earth-radii)",
   "yLabel": "gravity (m/s²)",
-  "setup": "# --- plot helper (hidden) — Newton's gravity vs distance from a planet ---\n# The collapsing curve is plotted from the student's OWN gravity_accel at each\n# distance. Until that works it falls back to the built-in curve, so the panel\n# is never blank. The flat '9.8' line is a fixed comparison.\ndef __g_curve_ref(M):\n    G = 6.674e-11\n    R = 6.371e6\n    pts = []\n    n = 1.0\n    while n <= 60.0:\n        r = n * R\n        pts.append([round(n, 2), round(G * M / (r * r), 4)])\n        n += 0.5\n    return pts\n\ndef __g_curve_student(M):\n    R = 6.371e6\n    pts = []\n    n = 1.0\n    while n <= 60.0:\n        a = gravity_accel(M, n * R)   # <- the STUDENT's function\n        pts.append([round(n, 2), round(a, 4)])\n        n += 0.5\n    return pts\n\ndef __flat():\n    return [[1.0, 9.8], [60.0, 9.8]]\n\ndef __plot(M):\n    series = []\n    try:\n        c = __g_curve_student(M)\n        if c and len(c) > 1:\n            series.append({\"name\": \"your gravity (1/r²)\", \"points\": c, \"highlight\": True})\n    except Exception:\n        pass\n    if not series:\n        series.append({\"name\": \"real gravity (1/r²)\", \"points\": __g_curve_ref(M), \"highlight\": True})\n    series.append({\"name\": \"if gravity stayed 9.8 (it doesn't!)\", \"points\": __flat(), \"highlight\": False})\n    return series\n"
+  "setup": "# --- plot helper (hidden) — Newton's gravity vs distance from a planet ---\n# The collapsing curve is plotted from the student's OWN gravity_accel at each\n# distance. Until that works it falls back to the built-in curve, so the panel\n# is never blank. The flat '9.8' line is a fixed comparison.\ndef __g_curve_ref(M):\n    G = 6.674e-11\n    R = 6.371e6\n    pts = []\n    n = 1.0\n    while n <= 60.0:\n        r = n * R\n        pts.append([round(n, 2), round(G * M / (r * r), 4)])\n        n += 0.5\n    return pts\n\ndef __g_curve_student(M):\n    R = 6.371e6\n    pts = []\n    n = 1.0\n    while n <= 60.0:\n        a = gravity_accel(M, n * R)   # <- the STUDENT's function\n        pts.append([round(n, 2), round(a, 4)])\n        n += 0.5\n    return pts\n\ndef __flat():\n    return [[1.0, 9.8], [60.0, 9.8]]\n\ndef __plot(M):\n    series = []\n    try:\n        c = __g_curve_student(M)\n        if c and len(c) > 1:\n            series.append({\"name\": \"your gravity (1/r²)\", \"points\": c, \"highlight\": True})\n    except Exception:\n        pass\n    if not series:\n        series.append({\"name\": \"real gravity (1/r²)\", \"points\": __g_curve_ref(M), \"highlight\": True})\n    series.append({\"name\": \"if gravity stayed 9.8 (it doesn't!)\", \"points\": __flat(), \"highlight\": False})\n    return series\n",
+  "caption": {
+    "todo": "Finish gravity_accel to plot your own gravity-vs-distance curve.",
+    "tuning": "Your curve is showing — keep tuning gravity_accel to match the target.",
+    "match": "✅ Your gravity curve matches the exact answer!",
+    "checks": [
+      {
+        "fn": "gravity_accel",
+        "args": [
+          5.972e+24,
+          6371000
+        ],
+        "expected": 9.82,
+        "tol": 0.01
+      }
+    ]
+  }
 }

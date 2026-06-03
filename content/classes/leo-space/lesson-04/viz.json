@@ -7,5 +7,21 @@
   "title": "Straight up from Earth: too slow falls back, escape speed keeps climbing",
   "xLabel": "time (s)",
   "yLabel": "height above surface (m)",
-  "setup": "# --- plot helper (hidden) — vertical launches at three speeds ---\n# The highlighted 'escape speed' launch uses the speed the student's OWN\n# escape_speed returns: get it right and this is the curve that just barely\n# climbs forever. Too-slow and fast are fixed comparisons. Falls back to 11186.\nimport math as __m\ndef __launch(v0, dt, steps, every):\n    G = 6.674e-11; M = 5.972e24; r0 = 6.371e6\n    r = r0; v = v0; t = 0.0\n    pts = [[0.0, 0.0]]\n    for i in range(steps):\n        a = -G * M / (r * r)\n        v += a * dt; r += v * dt; t += dt\n        if r < r0:\n            pts.append([round(t, 1), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 1), round(r - r0, 1)])\n    return pts\n\ndef __plot(_):\n    v_esc = None\n    try:\n        s = escape_speed(5.972e24, 6.371e6)   # <- the STUDENT's function\n        if isinstance(s, (int, float)) and s > 0:\n            v_esc = s\n    except Exception:\n        v_esc = None\n    if v_esc is None:\n        v_esc = 11186.0\n        esc_label = \"escape speed (11186) — climbs forever\"\n    else:\n        esc_label = \"your escape speed (\" + str(round(v_esc)) + \") — climbs forever\"\n    return [\n        {\"name\": \"too slow (9000) — falls back\", \"points\": __launch(9000, 5.0, 4000, 20), \"highlight\": False},\n        {\"name\": esc_label, \"points\": __launch(v_esc, 5.0, 4000, 20), \"highlight\": True},\n        {\"name\": \"fast (13000) — long gone\", \"points\": __launch(13000, 5.0, 4000, 20), \"highlight\": False},\n    ]\n"
+  "setup": "# --- plot helper (hidden) — vertical launches at three speeds ---\n# The highlighted 'escape speed' launch uses the speed the student's OWN\n# escape_speed returns: get it right and this is the curve that just barely\n# climbs forever. Too-slow and fast are fixed comparisons. Falls back to 11186.\nimport math as __m\ndef __launch(v0, dt, steps, every):\n    G = 6.674e-11; M = 5.972e24; r0 = 6.371e6\n    r = r0; v = v0; t = 0.0\n    pts = [[0.0, 0.0]]\n    for i in range(steps):\n        a = -G * M / (r * r)\n        v += a * dt; r += v * dt; t += dt\n        if r < r0:\n            pts.append([round(t, 1), 0.0]); break\n        if i % every == 0:\n            pts.append([round(t, 1), round(r - r0, 1)])\n    return pts\n\ndef __plot(_):\n    v_esc = None\n    try:\n        s = escape_speed(5.972e24, 6.371e6)   # <- the STUDENT's function\n        if isinstance(s, (int, float)) and s > 0:\n            v_esc = s\n    except Exception:\n        v_esc = None\n    if v_esc is None:\n        v_esc = 11186.0\n        esc_label = \"escape speed (11186) — climbs forever\"\n    else:\n        esc_label = \"your escape speed (\" + str(round(v_esc)) + \") — climbs forever\"\n    return [\n        {\"name\": \"too slow (9000) — falls back\", \"points\": __launch(9000, 5.0, 4000, 20), \"highlight\": False},\n        {\"name\": esc_label, \"points\": __launch(v_esc, 5.0, 4000, 20), \"highlight\": True},\n        {\"name\": \"fast (13000) — long gone\", \"points\": __launch(13000, 5.0, 4000, 20), \"highlight\": False},\n    ]\n",
+  "caption": {
+    "todo": "Finish escape_speed to see how fast you need to break free of Earth.",
+    "tuning": "Your curve is showing — keep tuning escape_speed to match the target.",
+    "match": "✅ Your escape-speed climb matches the exact answer!",
+    "checks": [
+      {
+        "fn": "escape_speed",
+        "args": [
+          5.972e+24,
+          6371000
+        ],
+        "expected": 11185.73,
+        "tol": 0.5
+      }
+    ]
+  }
 }

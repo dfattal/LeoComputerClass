@@ -7,5 +7,35 @@
   "title": "Roundness drops to a sharp minimum at the formula speed (factor = 1.0)",
   "xLabel": "speed factor (x the formula speed)",
   "yLabel": "apogee minus perigee (m)",
-  "setup": "# --- plot helper (hidden) — roundness across the speed sweep ---\n# The curve plots the student's OWN roundness at each speed factor, and the\n# vertical marker is where their best_factor lands. Falls back to the built-in\n# sweep until roundness works.\nimport math as __m\ndef __sweep_ref():\n    G = 6.674e-11; M = 5.972e24; r0 = 7e6; dt = 3.0; steps = 2000\n    vc = __m.sqrt(G * M / r0)\n    pts = []\n    f = 0.80\n    while f <= 1.20 + 1e-9:\n        x = r0; y = 0.0; vx = 0.0; vy = f * vc; mn = r0; mx = r0\n        for _ in range(steps):\n            r = __m.sqrt(x * x + y * y); ff = G * M / (r * r * r)\n            vx += -ff * x * dt; vy += -ff * y * dt; x += vx * dt; y += vy * dt\n            d = __m.sqrt(x * x + y * y)\n            if d < mn: mn = d\n            if d > mx: mx = d\n        pts.append([round(f, 2), round(mx - mn, 1)])\n        f += 0.02\n    return pts\n\ndef __sweep_student():\n    G = 6.674e-11; M = 5.972e24; r0 = 7e6; dt = 3.0; steps = 2000\n    vc = __m.sqrt(G * M / r0)\n    pts = []\n    f = 0.80\n    while f <= 1.20 + 1e-9:\n        y = roundness(M, r0, f * vc, dt, steps)   # <- the STUDENT's function\n        pts.append([round(f, 2), round(y, 1)])\n        f += 0.02\n    return pts\n\ndef __plot(_):\n    pts = None\n    try:\n        p = __sweep_student()\n        if p and len(p) > 1:\n            pts = p\n    except Exception:\n        pts = None\n    if pts is None:\n        series = [{\"name\": \"roundness (gap) vs speed factor\", \"points\": __sweep_ref(), \"highlight\": True}]\n        return series\n    series = [{\"name\": \"your roundness vs speed factor\", \"points\": pts, \"highlight\": True}]\n    try:\n        bf = best_factor(5.972e24, 7e6, 3, 2000)   # <- the STUDENT's function\n        if isinstance(bf, (int, float)) and 0.7 < bf < 1.3:\n            ymax = max(p[1] for p in pts)\n            series.append({\"name\": \"your best factor \\u2248 \" + str(round(bf, 2)), \"points\": [[round(bf, 2), 0.0], [round(bf, 2), round(ymax, 1)]], \"highlight\": True})\n    except Exception:\n        pass\n    return series\n"
+  "setup": "# --- plot helper (hidden) — roundness across the speed sweep ---\n# The curve plots the student's OWN roundness at each speed factor, and the\n# vertical marker is where their best_factor lands. Falls back to the built-in\n# sweep until roundness works.\nimport math as __m\ndef __sweep_ref():\n    G = 6.674e-11; M = 5.972e24; r0 = 7e6; dt = 3.0; steps = 2000\n    vc = __m.sqrt(G * M / r0)\n    pts = []\n    f = 0.80\n    while f <= 1.20 + 1e-9:\n        x = r0; y = 0.0; vx = 0.0; vy = f * vc; mn = r0; mx = r0\n        for _ in range(steps):\n            r = __m.sqrt(x * x + y * y); ff = G * M / (r * r * r)\n            vx += -ff * x * dt; vy += -ff * y * dt; x += vx * dt; y += vy * dt\n            d = __m.sqrt(x * x + y * y)\n            if d < mn: mn = d\n            if d > mx: mx = d\n        pts.append([round(f, 2), round(mx - mn, 1)])\n        f += 0.02\n    return pts\n\ndef __sweep_student():\n    G = 6.674e-11; M = 5.972e24; r0 = 7e6; dt = 3.0; steps = 2000\n    vc = __m.sqrt(G * M / r0)\n    pts = []\n    f = 0.80\n    while f <= 1.20 + 1e-9:\n        y = roundness(M, r0, f * vc, dt, steps)   # <- the STUDENT's function\n        pts.append([round(f, 2), round(y, 1)])\n        f += 0.02\n    return pts\n\ndef __plot(_):\n    pts = None\n    try:\n        p = __sweep_student()\n        if p and len(p) > 1:\n            pts = p\n    except Exception:\n        pts = None\n    if pts is None:\n        series = [{\"name\": \"roundness (gap) vs speed factor\", \"points\": __sweep_ref(), \"highlight\": True}]\n        return series\n    series = [{\"name\": \"your roundness vs speed factor\", \"points\": pts, \"highlight\": True}]\n    try:\n        bf = best_factor(5.972e24, 7e6, 3, 2000)   # <- the STUDENT's function\n        if isinstance(bf, (int, float)) and 0.7 < bf < 1.3:\n            ymax = max(p[1] for p in pts)\n            series.append({\"name\": \"your best factor \\u2248 \" + str(round(bf, 2)), \"points\": [[round(bf, 2), 0.0], [round(bf, 2), round(ymax, 1)]], \"highlight\": True})\n    except Exception:\n        pass\n    return series\n",
+  "caption": {
+    "todo": "Finish roundness and best_factor to find the roundest orbit.",
+    "tuning": "Your curve is showing — keep tuning until the roundest orbit matches the target.",
+    "match": "✅ Your roundness curve matches the exact answer!",
+    "checks": [
+      {
+        "fn": "roundness",
+        "args": [
+          5.972e+24,
+          7000000,
+          7545.78,
+          3,
+          2000
+        ],
+        "expected": 22637,
+        "tol": 3000
+      },
+      {
+        "fn": "best_factor",
+        "args": [
+          5.972e+24,
+          7000000,
+          3,
+          2000
+        ],
+        "expected": 1,
+        "tol": 0.02
+      }
+    ]
+  }
 }

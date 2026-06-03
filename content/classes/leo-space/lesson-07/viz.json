@@ -7,5 +7,21 @@
   "title": "The Hohmann transfer: a half-ellipse from Earth's orbit out to Mars's",
   "xLabel": "x (m)",
   "yLabel": "y (m)",
-  "setup": "# --- plot helper (hidden) — orbits and the transfer ellipse around the Sun ---\n# The transfer ellipse is sized by the semi-major axis the student's OWN\n# transfer_axis returns. Falls back to the built-in ellipse until it works. The\n# two planet orbits are fixed comparisons.\nimport math as __m\ndef __circle(r, n):\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(r * __m.cos(th), 1), round(r * __m.sin(th), 1)])\n    return pts\n\ndef __ellipse_ref(r1, r2, n):\n    a = (r1 + r2) / 2; c = (r2 - r1) / 2; b = __m.sqrt(r1 * r2)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __ellipse_student(r1, r2, a, n):\n    c = a - r1; b = __m.sqrt(r1 * r2)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __plot(_):\n    r1 = 1.496e11; r2 = 2.279e11\n    series = [\n        {\"name\": \"Earth's orbit\", \"points\": __circle(r1, 80), \"highlight\": False},\n        {\"name\": \"Mars's orbit\", \"points\": __circle(r2, 80), \"highlight\": False},\n    ]\n    done = False\n    try:\n        a = transfer_axis(r1, r2)   # <- the STUDENT's function\n        if isinstance(a, (int, float)) and a > 0:\n            series.append({\"name\": \"your transfer ellipse\", \"points\": __ellipse_student(r1, r2, a, 80), \"highlight\": True})\n            done = True\n    except Exception:\n        pass\n    if not done:\n        series.append({\"name\": \"transfer ellipse\", \"points\": __ellipse_ref(r1, r2, 80), \"highlight\": True})\n    return series\n"
+  "setup": "# --- plot helper (hidden) — orbits and the transfer ellipse around the Sun ---\n# The transfer ellipse is sized by the semi-major axis the student's OWN\n# transfer_axis returns. Falls back to the built-in ellipse until it works. The\n# two planet orbits are fixed comparisons.\nimport math as __m\ndef __circle(r, n):\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(r * __m.cos(th), 1), round(r * __m.sin(th), 1)])\n    return pts\n\ndef __ellipse_ref(r1, r2, n):\n    a = (r1 + r2) / 2; c = (r2 - r1) / 2; b = __m.sqrt(r1 * r2)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __ellipse_student(r1, r2, a, n):\n    c = a - r1; b = __m.sqrt(r1 * r2)\n    pts = []\n    for i in range(n + 1):\n        th = 2 * __m.pi * i / n\n        pts.append([round(-c + a * __m.cos(th), 1), round(b * __m.sin(th), 1)])\n    return pts\n\ndef __plot(_):\n    r1 = 1.496e11; r2 = 2.279e11\n    series = [\n        {\"name\": \"Earth's orbit\", \"points\": __circle(r1, 80), \"highlight\": False},\n        {\"name\": \"Mars's orbit\", \"points\": __circle(r2, 80), \"highlight\": False},\n    ]\n    done = False\n    try:\n        a = transfer_axis(r1, r2)   # <- the STUDENT's function\n        if isinstance(a, (int, float)) and a > 0:\n            series.append({\"name\": \"your transfer ellipse\", \"points\": __ellipse_student(r1, r2, a, 80), \"highlight\": True})\n            done = True\n    except Exception:\n        pass\n    if not done:\n        series.append({\"name\": \"transfer ellipse\", \"points\": __ellipse_ref(r1, r2, 80), \"highlight\": True})\n    return series\n",
+  "caption": {
+    "todo": "Finish transfer_axis to draw your own half-ellipse hop to Mars.",
+    "tuning": "Your transfer is showing — keep tuning transfer_axis to match the target.",
+    "match": "✅ Your Hohmann transfer matches the exact answer!",
+    "checks": [
+      {
+        "fn": "transfer_axis",
+        "args": [
+          149600000000,
+          227900000000
+        ],
+        "expected": 188750000000,
+        "tol": 1
+      }
+    ]
+  }
 }
