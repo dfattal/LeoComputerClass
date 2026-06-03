@@ -118,6 +118,36 @@ returning either a single `[[x,y],...]` series or a list of series objects
 prepends the student's code before `setup`; the validator prepends
 `reference.py`), so the graph can show off what the student just built.
 
+**Make the curve student-driven, with a fallback.** Build the highlighted
+"your answer" series by calling the student's function(s) by name, wrapped in
+`try/except` + a type/truthiness check so an unfinished or wrong implementation
+falls back to a built-in reference curve — the panel must never go blank or
+crash. (See `leo-physics/lesson-02` calling `velocity_components`.)
+
+**Optional: a progress-aware caption** (GH #4). A plot lesson can show one line
+under the graph telling the student where they are: *"Finish `step_velocity` to
+see your own curve"* → *"keep tuning it"* → *"✅ your curve matches the exact
+answer!"*. Because the curve always renders (the fallback above), the caption
+**can't** be read from the series — the engine instead checks the *curve-driving*
+student function(s) directly. Add it last, after the graph works:
+
+```bash
+node scripts/scaffold-captions.mjs <slug> lesson-0N
+```
+
+This reads `tests.json` + `viz.json` and prints a paste-ready `caption` block:
+one `{fn, args, expected, tol}` check per curve-driving function (the ones the
+`setup` actually calls), plus three `TODO` strings. Paste it into `viz.json` and
+rewrite the three strings in the lesson's voice (the `todo` names the
+curve-driving fn; the `match` references the lesson's concrete thing — dart
+flight, orbit, cipher wheel). Gate the ✅ on the curve-driving fn(s) only, so the
+caption always agrees with the visible curve. **Verify the check case is
+discriminating** — a `pass`-stub that returns a placeholder must NOT satisfy it
+(e.g. an integrator stub that returns its starting value will match a degenerate
+"no motion" case; pick a case where the answer genuinely moves). `validate-class`
+cross-checks each caption's `expected`/`tol` against `reference.py`. Optional —
+skip it for lessons that read fine with just the student-driven curve.
+
 **Pixel-grid drawings** (`type: "draw"`, Pixel Wizards). Here the panel paints a
 picture the student's code returns, which is hugely motivating for absolute
 beginners. Point `resultFn` directly at the student's own function (no `__plot`
@@ -167,6 +197,8 @@ clean.
 ## Quick checklist
 
 1. `scaffold-lesson.mjs` (`--viz draw` for a drawing class) → 2. write
-`reference.py` → 3. generate `tests.json` values from it → 4. design the panel →
-5. write the 6 files (10-yo voice) → 6. `npm run validate-class <slug>` green →
-7. flip `syllabus.ts` to `published` + `npm run build`.
+`reference.py` → 3. generate `tests.json` values from it → 4. design the panel
+(student-driven curve + fallback; optional `scaffold-captions.mjs` for a
+progress-aware caption) → 5. write the 6 files (10-yo voice) → 6. `npm run
+validate-class <slug>` green → 7. flip `syllabus.ts` to `published` + `npm run
+build`.
