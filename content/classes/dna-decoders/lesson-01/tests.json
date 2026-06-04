@@ -1,0 +1,37 @@
+[
+  {
+    "entry": "first_base",
+    "cases": [
+      {
+        "name": "first_base(\"ATCGTAGC\") is \"A\"",
+        "args": ["ATCGTAGC"],
+        "expected": "A"
+      },
+      {
+        "name": "first_base(\"GC\") is \"G\"",
+        "args": ["GC"],
+        "expected": "G"
+      },
+      {
+        "name": "first_base(\"T\") is \"T\" (a one-base strand)",
+        "args": ["T"],
+        "expected": "T"
+      }
+    ]
+  },
+  {
+    "entry": "last_base",
+    "cases": [
+      {
+        "name": "last_base(\"ATCGTAGC\") is \"C\"",
+        "args": ["ATCGTAGC"],
+        "expected": "C"
+      },
+      {
+        "name": "last_base(\"GC\") is \"C\"",
+        "args": ["GC"],
+        "expected": "C"
+      }
+    ]
+  }
+]

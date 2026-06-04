@@ -88,6 +88,18 @@ export const classes: ClassDef[] = [
     language: "python",
   },
   {
+    slug: "dna-decoders",
+    name: "DNA Decoders",
+    tagline: "Crack the Code of Life",
+    description:
+      "Brand new to Python? Start here. Paint strands of DNA as colored squares and discover strings, lists, loops, and dictionaries by solving real DNA puzzles — the gentle, visual on-ramp that gets you ready for Bio Lab.",
+    accentColor: "lime",
+    heroImage: "/hero-dna-decoders.webp",
+    studentName: "Leila",
+    contentDir: "dna-decoders",
+    language: "python",
+  },
+  {
     slug: "leila",
     name: "Leila's Bio Lab",
     tagline: "Code Your Way Through Biology",

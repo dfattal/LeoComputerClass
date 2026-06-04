@@ -49,6 +49,7 @@ they're "watch it happen" panels. Accent colors live in one place,
 | Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8) |
 | Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) |
 | Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) |
+| DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | In progress (1/7) 🆕 |
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | 8 published, 2 planned |
 
 ---
@@ -195,7 +196,11 @@ the natural next order is:
 
 For an **absolute beginner** (a younger kid, or Leila starting out), the ladder
 now starts earlier: **Pixel Wizards** (✅ built) → **Python Primer** → a subject
-class. Pixel Wizards is the gentlest first contact and feeds everything else.
+class. Pixel Wizards is the gentlest first contact and feeds everything else. For
+a beginner specifically headed into **Bio Lab**, **DNA Decoders** (in progress) is
+the targeted bridge: it teaches the exact Python (strings, slicing, lists, loops,
+dicts, chunking) Bio Lab assumes, in the visual `draw`-canvas style, and ends one
+step short of Bio Lab's creature-decoder.
 
 Pictures from Math / Game of Life are now unblocked by the `draw` pixel-grid viz
 (see above) and make strong any-time detours; **Sound by Code** is still gated on

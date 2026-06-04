@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The bases are right",
+    "weight": 55,
+    "description": "first_base gives back the base at spot 0 and last_base gives back the base at spot -1, for any strand."
+  },
+  {
+    "criterion": "Used indexing",
+    "weight": 30,
+    "description": "Grabbed the base with square-bracket spots (dna[0], dna[-1]) instead of hard-coding a letter like \"A\"."
+  },
+  {
+    "criterion": "Understood the idea",
+    "weight": 15,
+    "description": "Gets that a strand is one string and any base can be reached by its spot, with counting starting at 0."
+  }
+]

@@ -24,6 +24,11 @@ Codes is "send messages your sister can't read, then crack hers"; Space School i
 "fly a mission to the Moon"), not a grab-bag of topics. Every lesson must be
 expressible as testable pure functions a 10-year-old can write.
 
+**This skill also keeps `docs/CLASS-ROADMAP.md` current** — you record the class
+there when you start it (step 1) and write it up when it's done (step 8). The
+roadmap is the project's memory of what exists and what's planned, so it must not
+fall behind reality.
+
 ## Workflow
 
 ### 1. Settle the concept first
@@ -41,7 +46,15 @@ Pin down, with the user if anything's unclear:
   the `--viz` flag you'll pass to `/new-lesson`. A drawing canvas is a great fit
   for a true-beginner / visual class.
 
-### 2. Scaffold the shell
+**Record it in the roadmap now.** Once the concept is settled, add the class to
+`docs/CLASS-ROADMAP.md` so the planning doc reflects that it's being built:
+- Add a row to the **Current classes** table with the slug, through-line, and a
+  status like `In progress (0/N)`.
+- If the class came from the **Candidate classes** or **Honorable mentions**
+  lists, leave that sketch in place (you'll convert it to a "Shipped" write-up in
+  step 8) but make the table row the source of truth for status.
+- Keep the planned lesson count (`N`) so the status reads `In progress (k/N)` as
+  lessons land.
 
 ```bash
 node scripts/scaffold-class.mjs <slug> "<Name>" "<tagline>" <accentColor>
@@ -81,10 +94,31 @@ this file, so that's the only edit needed.
   `Week` with `status: "planned"` for now (flip to `"published"` per lesson as you
   build it). Keep the arc tight and building toward the through-line.
 
-### 5. Add the hero image
+### 5. Generate the hero image (don't ship a placeholder)
 
-Drop an illustration at `public/hero-<slug>.webp` (the other classes' heroes show
-the style). The class card and landing banner use it.
+Every class needs its own hero at `public/hero-<slug>.webp` — the class card and
+landing banner use it. **Generate real art for it with the `/ask-gemini` skill;
+do not leave a copied/placeholder image.** First open one or two existing heroes
+(`public/hero-pixels.webp`, `public/hero-bio.webp`) to match the house style:
+bright, playful, kid-friendly illustration; a little arcade/UI text is fine.
+
+Then call `/ask-gemini` in image mode with a prompt that bakes in: the class
+name + tagline, the **through-line** subject, the **accent color** as the dominant
+palette, and a concrete scene (a character + the thing the class builds toward).
+For a drawing class, ask for a **pixel-art** style (`--styles="pixel-art"`); plot
+classes can use a richer illustration. Ask for a **16:9 landscape** image.
+
+`/ask-gemini` writes to the gitignored `nanobanana-output/` as a `.jpeg`. Convert
+it to webp at the standard hero size (1376×768, matching the other heroes) and put
+it in place:
+
+```bash
+cwebp -q 88 nanobanana-output/<generated>.jpeg -o public/hero-<slug>.webp
+# (falls back to: sips -s format webp <src> --out public/hero-<slug>.webp)
+```
+
+Eyeball the result in the running app (home page card + class landing). If it's
+off, regenerate with a tweaked prompt — it's cheap.
 
 ### 6. Build the lessons
 
@@ -100,10 +134,37 @@ npm run build            # SSG clean, class card + landing render
 npm run validate-class <slug>   # once lessons exist
 ```
 
+### 8. Update the roadmap on completion
+
+When the class is done (all planned lessons published, or the agreed first batch
+shipped), bring `docs/CLASS-ROADMAP.md` up to date so it reflects reality:
+
+- **Current classes table** — flip the status to `Published (N) ✅` (or, for a
+  partial ship, `Published (k/N), rest planned`). Update the `✅ new` marker if
+  you use one.
+- **Add a "Shipped from this list" write-up** — a short section like the existing
+  Pixel Wizards / Secret Codes entries: the through-line, the as-shipped lesson
+  arc (numbered titles), and an **As-built notes** bullet list of anything that
+  diverged from the original sketch or any reusable tech the class introduced (a
+  new viz type, a new accent, a novel pattern). If the class came from the
+  Candidate/Honorable-mention list, move its sketch into this section rather than
+  leaving it as a "future idea."
+- **Suggested sequence / unblocks** — if the new class changes the recommended
+  ladder for a kid, or unblocks an honorable-mention class, note it.
+
+Do this as the final step of the build so the roadmap never lags behind what's
+actually published. (If you're building lessons across multiple sessions, update
+the table's `k/N` status as each batch lands and write the full section when the
+last lesson ships.)
+
 ## Quick checklist
 
-1. concept (slug/name/tagline/through-line/accent/panel kind) →
+1. concept (slug/name/tagline/through-line/accent/panel kind) **+ record it in
+`docs/CLASS-ROADMAP.md`** (Current-classes row, `In progress (0/N)`) →
 2. `scaffold-class.mjs` (move the entry up if it should lead the home page) →
 3. add accent to `lib/accents.ts` if new → 4. fill description + ai-prompt +
-syllabus (weeks `planned`) → 5. hero image → 6. `/new-lesson` per lesson
-(`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`.
+syllabus (weeks `planned`) → 5. generate the hero with `/ask-gemini` (real art,
+not a placeholder) + convert to `public/hero-<slug>.webp` → 6. `/new-lesson` per
+lesson (`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`
+→ 8. **update `docs/CLASS-ROADMAP.md`** (flip table status to `Published ✅`, add
+the "Shipped from this list" write-up).

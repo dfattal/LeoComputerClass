@@ -1,0 +1,27 @@
+## Your mission
+
+### Exercise 1 — `first_base(dna)`
+
+Give back the **first base** of the strand. Remember: the first spot is `0`.
+
+```python
+first_base("ATCGTAGC")   # -> "A"
+first_base("GC")         # -> "G"
+```
+
+**Hint:** reach into the strand at spot 0 — `dna[0]` — and `return` it.
+
+---
+
+### Exercise 2 — `last_base(dna)`
+
+Give back the **last base** of the strand. You don't have to count to the end — `-1` means the last spot.
+
+```python
+last_base("ATCGTAGC")   # -> "C"
+last_base("GC")         # -> "C"
+```
+
+**Hint:** `dna[-1]` is the very last base, no matter how long the strand is.
+
+When both work, press Run and watch the Graph panel paint your strand. The little square underneath lights up under the base you grabbed — first on the left, last on the right. 🧬

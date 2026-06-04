@@ -1,0 +1,58 @@
+# DNA is a String of Letters
+
+> Every living thing — you, your dog, a dinosaur — is built from a secret code called DNA. In this class you'll learn to read that code with Python, one base at a time, until you can grow a whole creature from it. Let's start. 🧬
+
+## Phase 1: Read the Code
+
+---
+
+## The problem: how do you hand DNA to a computer?
+
+Real DNA is written with just four letters: **A**, **T**, **C**, and **G**. Each letter is one **base**. A piece of DNA is a long line of them, like this:
+
+```
+ATCGTAGC
+```
+
+Now imagine you wanted the computer to remember every base on its own. You'd make a box for the first one, a box for the second, a box for the third... a strand can have *thousands* of bases. You'd be making boxes forever. 😫
+
+There has to be a better way. There is.
+
+## The big idea: a strand is a string
+
+In Python, a line of letters in quotes is called a **string**. One string holds the *whole* strand:
+
+```python
+dna = "ATCGTAGC"
+```
+
+And here's the trick: every base has a **spot**, called its **index**, and you grab a base by its spot with square brackets `[ ]`. **Counting starts at 0**, not 1:
+
+```python
+dna = "ATCGTAGC"
+dna[0]    # -> "A"   the FIRST base (spot 0)
+dna[1]    # -> "T"   the second base
+```
+
+Want the **last** base without counting all the way to the end? Use `-1`. It means "one step back from the end":
+
+```python
+dna[-1]   # -> "C"   the LAST base
+```
+
+So one string holds the whole strand, and one little number in brackets reaches in and grabs any base you want. No boxes-forever. 🎉
+
+## See your DNA
+
+When you press **Run**, the Graph panel paints your strand as colored squares — one square per base:
+
+🟩 A is green · 🟥 T is red · 🟦 C is blue · 🟨 G is yellow
+
+The square *below* the strand marks the exact base your code grabbed. Watch it light up!
+
+## What you'll build
+
+- **`first_base(dna)`** — give back the first base of the strand (spot `0`).
+- **`last_base(dna)`** — give back the last base of the strand (spot `-1`).
+
+These are your first tools. By the end of the class, tools like these will let you read a whole genome and decode it into a living creature. Ready, {{FIRST_NAME}}? 🔬
