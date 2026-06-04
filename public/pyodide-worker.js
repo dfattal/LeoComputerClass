@@ -170,8 +170,12 @@ self.onmessage = async function (e) {
       for (const testEntry of tests) {
         for (const tc of testEntry.cases) {
           try {
-            const argsStr = tc.args.map((a) => JSON.stringify(a)).join(", ");
-            const callCode = `${testEntry.entry}(${argsStr})`;
+            // Serialize args as JSON and parse them inside Python via
+            // json.loads, so JS booleans/null map to Python True/False/None
+            // (interpolating them into source would yield true/false/null,
+            // which are NameErrors in Python). Mirrors validate-class.mjs.
+            py.globals.set("__test_args", JSON.stringify(tc.args));
+            const callCode = `${testEntry.entry}(*__import__("json").loads(__test_args))`;
             const result = py.runPython(callCode);
 
             let actual;
