@@ -17,7 +17,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Absolute base for resolving Open Graph / Twitter image URLs. On Vercel this
+// is the production domain (VERCEL_PROJECT_PRODUCTION_URL); override locally or
+// for a custom domain with NEXT_PUBLIC_SITE_URL. Without this, relative image
+// URLs resolve against http://localhost:3000 and social previews break.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Family Classroom",
   description: "Interactive coding classes for curious kids",
   openGraph: {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -6,6 +7,40 @@ import { getAccent } from "@/lib/accents";
 
 export function generateStaticParams() {
   return getClassSlugs().map((classSlug) => ({ classSlug }));
+}
+
+// Per-class social-share card: when a class link is pasted into iMessage,
+// Slack, X, etc., show that class's own image + name instead of the generic
+// site card. The /og-<slug>.jpg files are built by scripts/generate-og-images.mjs.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ classSlug: string }>;
+}): Promise<Metadata> {
+  const { classSlug } = await params;
+  const classDef = getClassBySlug(classSlug);
+  if (!classDef) return {};
+
+  const title = `${classDef.name} — ${classDef.tagline}`;
+  const description = classDef.description;
+  const ogImage = { url: `/og-${classSlug}.jpg`, width: 1200, height: 630, alt: classDef.name };
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `/classes/${classSlug}`,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage.url],
+    },
+  };
 }
 
 export default async function ClassHomePage({

@@ -32,9 +32,14 @@ export async function updateSession(request: NextRequest) {
 
   // Redirect unauthenticated users to login (skip auth pages and static assets)
   const path = request.nextUrl.pathname;
+  // The class LANDING page (/classes/<slug> — hero, tagline, syllabus list) is
+  // public so shared links show a real preview and recipients see the class
+  // before signing in. Lesson pages (/classes/<slug>/<lesson>) stay gated.
+  const isClassLanding = /^\/classes\/[^/]+$/.test(path);
   const isPublicPath =
     path === "/" ||
     path === "/login" ||
+    isClassLanding ||
     path.startsWith("/auth/") ||
     path.startsWith("/_next/") ||
     path.startsWith("/api/") ||

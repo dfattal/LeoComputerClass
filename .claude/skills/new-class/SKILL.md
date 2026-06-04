@@ -120,6 +120,26 @@ cwebp -q 88 nanobanana-output/<generated>.jpeg -o public/hero-<slug>.webp
 Eyeball the result in the running app (home page card + class landing). If it's
 off, regenerate with a tweaked prompt — it's cheap.
 
+**Then generate the social-share card.** When a class link
+(`/classes/<slug>`) is pasted into iMessage, Slack, X, etc., the class landing
+page serves its own Open Graph / Twitter card (via `generateMetadata` in
+`app/classes/[classSlug]/page.tsx`), pointing at `public/og-<slug>.jpg` — a
+1200×630 JPEG cropped from the hero (JPEG, not webp, because LinkedIn/iMessage/
+some unfurlers don't reliably render webp OG images). Regenerate the cards for
+**all** classes from their heroes with:
+
+```bash
+node scripts/generate-og-images.mjs   # reads heroImage from content/classes.ts → public/og-<slug>.jpg
+```
+
+Run it whenever you add a class or swap a hero. (No code change needed per class —
+the metadata derives the path as `/og-<slug>.jpg`.) The class **landing** page is
+public in `lib/supabase/middleware.ts` (`updateSession`, called from root
+`proxy.ts` — this repo uses Next 16 `proxy.ts`, **not** a root `middleware.ts`) so
+crawlers and link recipients can see it; lesson pages stay gated. After deploying,
+shared links cache — re-scrape via Facebook's Sharing Debugger / X Card Validator
+to refresh an already-shared URL.
+
 ### 6. Build the lessons
 
 Now build lessons one at a time with `/new-lesson <slug> <N> "<title>"` (add
@@ -164,7 +184,8 @@ last lesson ships.)
 2. `scaffold-class.mjs` (move the entry up if it should lead the home page) →
 3. add accent to `lib/accents.ts` if new → 4. fill description + ai-prompt +
 syllabus (weeks `planned`) → 5. generate the hero with `/ask-gemini` (real art,
-not a placeholder) + convert to `public/hero-<slug>.webp` → 6. `/new-lesson` per
+not a placeholder) + convert to `public/hero-<slug>.webp` + `node
+scripts/generate-og-images.mjs` (social-share card) → 6. `/new-lesson` per
 lesson (`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`
 → 8. **update `docs/CLASS-ROADMAP.md`** (flip table status to `Published ✅`, add
 the "Shipped from this list" write-up).
