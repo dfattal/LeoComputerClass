@@ -1,0 +1,28 @@
+{
+  "type": "draw",
+  "title": "Top row is the strand — the bottom row is your tally bar, then your RNA",
+  "todo": "Finish count_base() to build a tally bar — one square per matching base!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\n\ndef __paint(dna):\n    return [BASE_COLOR.get(base, \"\") for base in dna]\n\ndef __show_count(dna=\"AATTTGCA\", base=\"T\"):\n    n = count_base(dna, base)\n    color = BASE_COLOR.get(base, \"\")\n    bottom = [color] * n + [\"\"] * (len(dna) - n)\n    return [__paint(dna), bottom]\n\ndef __show_rna(dna=\"ATCGTAGC\"):\n    return [__paint(dna), __paint(to_rna(dna))]\n",
+  "stages": [
+    {
+      "fn": "__show_count",
+      "args": [],
+      "label": "Count T",
+      "expected": [
+        ["green", "green", "red", "red", "red", "yellow", "blue", "green"],
+        ["red", "red", "red", "", "", "", "", ""]
+      ],
+      "caption": "✅ Three red squares — there are 3 T's in this strand!"
+    },
+    {
+      "fn": "__show_rna",
+      "args": [],
+      "label": "To RNA",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"],
+        ["green", "purple", "blue", "yellow", "purple", "green", "yellow", "blue"]
+      ],
+      "caption": "🧪 Every red T turned purple — that's U. You just made RNA!"
+    }
+  ]
+}

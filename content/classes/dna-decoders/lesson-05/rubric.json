@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The partner strand is right",
+    "weight": 45,
+    "description": "complement pairs every base correctly (A↔T, C↔G) for any strand, including a one-base strand."
+  },
+  {
+    "criterion": "The reverse complement is right",
+    "weight": 30,
+    "description": "reverse_complement gives back the complement read end-to-end the other way."
+  },
+  {
+    "criterion": "Used a loop that builds up",
+    "weight": 25,
+    "description": "Visited every base with a for loop and grew the result (out += ...) instead of hard-coding or only handling one base."
+  }
+]

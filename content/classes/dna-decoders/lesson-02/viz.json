@@ -1,0 +1,28 @@
+{
+  "type": "draw",
+  "title": "Your strand — the top row is the whole DNA, the bottom row is the piece your code made",
+  "todo": "Finish snip() to light up just the middle piece of the strand!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\n\ndef __paint(dna):\n    return [BASE_COLOR.get(base, \"\") for base in dna]\n\ndef __show_snip(dna=\"ATCGTAGC\", start=2, end=5):\n    piece = snip(dna, start, end)\n    bottom = [\"\" for _ in dna]\n    for i, base in enumerate(piece):\n        bottom[start + i] = BASE_COLOR.get(base, \"\")\n    return [__paint(dna), bottom]\n\ndef __show_flip(dna=\"ATCGTAGC\"):\n    return [__paint(dna), __paint(flip(dna))]\n",
+  "stages": [
+    {
+      "fn": "__show_snip",
+      "args": [],
+      "label": "Snip",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"],
+        ["", "", "blue", "yellow", "red", "", "", ""]
+      ],
+      "caption": "✅ You snipped out spots 2–4! Only the middle piece lights up."
+    },
+    {
+      "fn": "__show_flip",
+      "args": [],
+      "label": "Flip",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"],
+        ["blue", "yellow", "green", "red", "yellow", "blue", "red", "green"]
+      ],
+      "caption": "🔄 The bottom row is the whole strand read backwards — you flipped it!"
+    }
+  ]
+}

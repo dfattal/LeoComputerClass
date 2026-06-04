@@ -1,0 +1,57 @@
+# Loops: Do It to Every Base
+
+> DNA almost never travels alone. Every strand has a **partner strand** zipped to it, where A always faces T and C always faces G. To build that partner, you have to do the same little job to *every single base*. Doing it one by one would take forever — unless you teach the computer to repeat. 🔁
+
+## Phase 2: Crack the Code
+
+---
+
+## The problem: the same job, a thousand times
+
+To build the partner of `"ATCG"` you swap **each** base for its partner: A→T, T→A, C→G, G→C. For four bases that's four swaps. For a real strand it's *millions*. You are not going to write a million lines.
+
+When you need to do the same thing to every item, you reach for a **loop**.
+
+## The big idea: a `for` loop visits every base
+
+A `for` loop runs the same block of code once for each base in the strand:
+
+```python
+for base in "ATCG":
+    print(base)
+# prints A, then T, then C, then G
+```
+
+`base` becomes each letter in turn. Whatever you write inside happens once per base.
+
+## Build a new strand as you go
+
+To *grow* a result, start with an empty string and **add to it** each time the loop runs. `out += partner` means "stick `partner` onto the end of `out`":
+
+```python
+PARTNER = {"A": "T", "T": "A", "C": "G", "G": "C"}
+
+out = ""
+for base in "ATCG":
+    out += PARTNER[base]   # add this base's partner
+# out is now "TAGC"
+```
+
+Step by step, `out` grows: `""` → `"T"` → `"TA"` → `"TAG"` → `"TAGC"`. That pattern — *start empty, add each time* — is one you'll use over and over.
+
+## Reverse complement
+
+Scientists usually want the partner strand read the **other direction** — the **reverse complement**. That's just two tools you already have, stacked: take the complement, then flip it with `[::-1]`.
+
+## See it
+
+Press **Run**. The **Partner** chip paints your strand on top and the partner strand your loop built below — watch the colors flip (green↔red, blue↔yellow). The **Rev-comp** chip shows the reverse complement.
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G
+
+## What you'll build
+
+- **`complement(dna)`** — loop over the strand, building its A↔T / C↔G partner.
+- **`reverse_complement(dna)`** — the complement, flipped end-to-end.
+
+Loops are the engine of everything ahead. With one you can touch every base in a genome — exactly what you'll need to chop it up and decode a creature. 🔬

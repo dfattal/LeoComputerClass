@@ -1,0 +1,28 @@
+{
+  "type": "draw",
+  "title": "Top row is your strand — the bottom row is the partner strand your loop built",
+  "todo": "Finish complement() so every base on top gets its partner below!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\n\ndef __paint(dna):\n    return [BASE_COLOR.get(base, \"\") for base in dna]\n\ndef __show_complement(dna=\"ATCGTAGC\"):\n    return [__paint(dna), __paint(complement(dna))]\n\ndef __show_revcomp(dna=\"ATCGTAGC\"):\n    return [__paint(dna), __paint(reverse_complement(dna))]\n",
+  "stages": [
+    {
+      "fn": "__show_complement",
+      "args": [],
+      "label": "Partner",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"],
+        ["red", "green", "yellow", "blue", "green", "red", "blue", "yellow"]
+      ],
+      "caption": "✅ Every base met its partner — green↔red (A↔T), blue↔yellow (C↔G)!"
+    },
+    {
+      "fn": "__show_revcomp",
+      "args": [],
+      "label": "Rev-comp",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"],
+        ["yellow", "blue", "red", "green", "blue", "yellow", "green", "red"]
+      ],
+      "caption": "🔄 The partner strand, flipped end-to-end — that's the reverse complement!"
+    }
+  ]
+}

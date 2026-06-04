@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Codons are right",
+    "weight": 35,
+    "description": "codons chops the genome into 3-letter chunks in order, using range(0, len, 3) + slicing (a leftover short chunk at the end is fine)."
+  },
+  {
+    "criterion": "The creature is right",
+    "weight": 40,
+    "description": "decode_creature reads codon 0/1/2 through table['fur']/['eyes']/['tail'] and returns the correct trait for each."
+  },
+  {
+    "criterion": "Keys in fur, eyes, tail order",
+    "weight": 25,
+    "description": "The returned dict uses the keys fur, eyes, tail in that order, as taught — so the answer matches the checker."
+  }
+]

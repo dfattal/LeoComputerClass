@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The piece is right",
+    "weight": 45,
+    "description": "snip gives back exactly dna[start:end] — from start up to (not including) end — for any strand and spots."
+  },
+  {
+    "criterion": "The flip is right",
+    "weight": 30,
+    "description": "flip gives back the whole strand reversed, for any length (including a one-base strand)."
+  },
+  {
+    "criterion": "Used slicing",
+    "weight": 25,
+    "description": "Grabbed the stretch with a slice (dna[start:end]) and reversed with dna[::-1], instead of looping or hard-coding letters."
+  }
+]

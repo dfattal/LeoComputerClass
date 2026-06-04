@@ -1,0 +1,42 @@
+[
+  {
+    "entry": "snip",
+    "cases": [
+      {
+        "name": "snip(\"ATCGTAGC\", 2, 5) is \"CGT\"",
+        "args": ["ATCGTAGC", 2, 5],
+        "expected": "CGT"
+      },
+      {
+        "name": "snip(\"ATCGTAGC\", 0, 3) is \"ATC\" (start at the very front)",
+        "args": ["ATCGTAGC", 0, 3],
+        "expected": "ATC"
+      },
+      {
+        "name": "snip(\"GATTACA\", 1, 4) is \"ATT\"",
+        "args": ["GATTACA", 1, 4],
+        "expected": "ATT"
+      }
+    ]
+  },
+  {
+    "entry": "flip",
+    "cases": [
+      {
+        "name": "flip(\"ATCGTAGC\") is \"CGATGCTA\"",
+        "args": ["ATCGTAGC"],
+        "expected": "CGATGCTA"
+      },
+      {
+        "name": "flip(\"GATTACA\") is \"ACATTAG\"",
+        "args": ["GATTACA"],
+        "expected": "ACATTAG"
+      },
+      {
+        "name": "flip(\"A\") is \"A\" (one base flips to itself)",
+        "args": ["A"],
+        "expected": "A"
+      }
+    ]
+  }
+]

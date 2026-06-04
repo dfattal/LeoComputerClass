@@ -1,0 +1,27 @@
+## Your mission
+
+### Exercise 1 — `bases_list(dna)`
+
+Unpack the strand string into a **list** (backpack) of single bases.
+
+```python
+bases_list("ATCG")   # -> ["A", "T", "C", "G"]
+bases_list("G")      # -> ["G"]
+```
+
+**Hint:** `list(dna)` drops every base into its own pocket. Return what it makes.
+
+---
+
+### Exercise 2 — `add_base(genes, base)`
+
+Drop one more `base` onto the **back** of the `genes` list, then give the list back.
+
+```python
+add_base(["A", "T"], "G")   # -> ["A", "T", "G"]
+add_base([], "A")           # -> ["A"]   (start from an empty backpack)
+```
+
+**Hint:** `genes.append(base)` pushes it on the end. Then `return genes`. (`.append` changes the backpack but hands back `None`, so don't `return genes.append(base)` — do the two steps.)
+
+When both work, press Run. The **Unpack** chip spreads your strand into squares, and **Add one** shows a new square dropping in. 🎒

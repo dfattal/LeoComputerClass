@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The tally is right",
+    "weight": 40,
+    "description": "count_base gives back the exact number of times base appears, including 0 when it never appears."
+  },
+  {
+    "criterion": "The RNA is right",
+    "weight": 35,
+    "description": "to_rna swaps every T for a U and leaves every other base alone (a strand with no T's comes back unchanged)."
+  },
+  {
+    "criterion": "Used the built-in helpers",
+    "weight": 25,
+    "description": "Used dna.count(...) and dna.replace(...) instead of writing the tally or the swap out by hand."
+  }
+]

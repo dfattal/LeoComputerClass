@@ -1,0 +1,27 @@
+## Your mission
+
+### Exercise 1 — `snip(dna, start, end)`
+
+Give back the **piece** of the strand from spot `start` up to (but **not including**) spot `end`.
+
+```python
+snip("ATCGTAGC", 2, 5)   # -> "CGT"   (spots 2, 3, 4)
+snip("ATCGTAGC", 0, 3)   # -> "ATC"   (the first three bases)
+```
+
+**Hint:** put both spots in the brackets with a colon between them — `dna[start:end]` — and `return` it.
+
+---
+
+### Exercise 2 — `flip(dna)`
+
+Give back the whole strand read **backwards**.
+
+```python
+flip("ATCGTAGC")   # -> "CGATGCTA"
+flip("GATTACA")    # -> "ACATTAG"
+```
+
+**Hint:** `dna[::-1]` walks the strand from the end to the start. That's the whole thing.
+
+When both work, press Run and watch the Graph panel. The bottom row shows the piece you snipped — then tap the **Flip** chip to see the strand reverse. 🧬

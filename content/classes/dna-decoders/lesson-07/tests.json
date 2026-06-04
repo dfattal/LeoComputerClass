@@ -1,0 +1,51 @@
+[
+  {
+    "entry": "codons",
+    "cases": [
+      {
+        "name": "codons(\"AAATTTCCC\") is [\"AAA\",\"TTT\",\"CCC\"]",
+        "args": ["AAATTTCCC"],
+        "expected": ["AAA", "TTT", "CCC"]
+      },
+      {
+        "name": "codons(\"ATCGGGTAA\") is [\"ATC\",\"GGG\",\"TAA\"]",
+        "args": ["ATCGGGTAA"],
+        "expected": ["ATC", "GGG", "TAA"]
+      },
+      {
+        "name": "codons(\"GG\") is [\"GG\"] (a leftover short chunk)",
+        "args": ["GG"],
+        "expected": ["GG"]
+      }
+    ]
+  },
+  {
+    "entry": "decode_creature",
+    "cases": [
+      {
+        "name": "decode_creature(\"AAATTTCCC\", table) -> white fur, red eyes, curly tail",
+        "args": [
+          "AAATTTCCC",
+          {
+            "fur": {"AAA": "white", "TTT": "golden", "CCC": "brown", "GGG": "black"},
+            "eyes": {"AAA": "blue", "TTT": "red", "CCC": "brown", "GGG": "green"},
+            "tail": {"AAA": "long", "TTT": "fluffy", "CCC": "curly", "GGG": "short"}
+          }
+        ],
+        "expected": {"fur": "white", "eyes": "red", "tail": "curly"}
+      },
+      {
+        "name": "decode_creature(\"GGGAAATTT\", table) -> black fur, blue eyes, fluffy tail",
+        "args": [
+          "GGGAAATTT",
+          {
+            "fur": {"AAA": "white", "TTT": "golden", "CCC": "brown", "GGG": "black"},
+            "eyes": {"AAA": "blue", "TTT": "red", "CCC": "brown", "GGG": "green"},
+            "tail": {"AAA": "long", "TTT": "fluffy", "CCC": "curly", "GGG": "short"}
+          }
+        ],
+        "expected": {"fur": "black", "eyes": "blue", "tail": "fluffy"}
+      }
+    ]
+  }
+]

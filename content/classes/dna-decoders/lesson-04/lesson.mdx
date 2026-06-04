@@ -1,0 +1,61 @@
+# Lists: a Backpack of Bases
+
+> A string is great for holding a strand — but you can't *grow* it. Once a strand is `"ATCG"`, you can't easily push a new base onto the end. To build DNA up piece by piece, you need a container that can grow. You need a backpack. 🎒
+
+## Phase 1: Read the Code
+
+---
+
+## The problem: strings can't grow
+
+So far your strands have been **strings**. Strings are read-only — you can look at any base, but you can't tack a new one on. If a cell is *building* a strand one base at a time, a string fights you every step.
+
+What you want is a container you can keep dropping bases into. Python has exactly that: a **list**.
+
+## The big idea: a list is a backpack
+
+A list holds many items **in order**, written with square brackets and commas:
+
+```python
+genes = ["A", "T", "C", "G"]
+```
+
+It's a backpack: items sit in a line, each in its own pocket. And you grab one by its spot, just like a string:
+
+```python
+genes[0]    # -> "A"
+len(genes)  # -> 4   how many items the backpack holds
+```
+
+### Unpack a strand into a backpack
+
+Hand a string to `list(...)` and it drops every base into its own pocket:
+
+```python
+list("ATCG")    # -> ["A", "T", "C", "G"]
+```
+
+### Drop one more in
+
+The magic move is `.append()` — it pushes a new item onto the **back**:
+
+```python
+genes = ["A", "T"]
+genes.append("G")
+genes    # -> ["A", "T", "G"]
+```
+
+Now your container can **grow**. That's the whole point. 🎉
+
+## See it
+
+Press **Run**. The **Unpack** chip shows your strand spread out as a backpack of separate base-squares. The **Add one** chip shows a brand-new square dropping in at the end when you `append`.
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G
+
+## What you'll build
+
+- **`bases_list(dna)`** — unpack a strand string into a list of single bases.
+- **`add_base(genes, base)`** — drop one more base onto the back of the list.
+
+Lists are how you'll *build* things: next lesson you'll grow a whole new strand one base at a time, on the way to assembling a creature's genes. 🔬

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Unpacks to a list",
+    "weight": 40,
+    "description": "bases_list gives back a real list of the single bases, in order (a one-base strand gives a one-item list)."
+  },
+  {
+    "criterion": "Appends and returns",
+    "weight": 40,
+    "description": "add_base adds the base to the back of the list AND returns the list (not None) — works even starting from an empty list."
+  },
+  {
+    "criterion": "Used list tools",
+    "weight": 20,
+    "description": "Used list(...) and .append(...) instead of building the result by hand or with string tricks."
+  }
+]

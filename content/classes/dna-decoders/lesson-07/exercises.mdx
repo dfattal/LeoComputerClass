@@ -1,0 +1,34 @@
+## Your mission
+
+### Exercise 1 — `codons(dna)`
+
+Chop the genome into a **list of 3-letter codons**.
+
+```python
+codons("AAATTTCCC")   # -> ["AAA", "TTT", "CCC"]
+codons("ATCGGGTAA")   # -> ["ATC", "GGG", "TAA"]
+codons("GG")          # -> ["GG"]   (a leftover short chunk is fine)
+```
+
+**Hint:** loop `for i in range(0, len(dna), 3):` and `append(dna[i:i+3])` to a list. The `range` jumps by 3, and the slice grabs three bases at a time.
+
+---
+
+### Exercise 2 — `decode_creature(dna, table)`
+
+Decode the first three codons into a creature. Codon 0 → **fur**, codon 1 → **eyes**, codon 2 → **tail**. Return a dict with keys in the order **fur, eyes, tail**.
+
+```python
+table = {
+    "fur":  {"AAA": "white", "TTT": "golden", "CCC": "brown", "GGG": "black"},
+    "eyes": {"AAA": "blue",  "TTT": "red",    "CCC": "brown", "GGG": "green"},
+    "tail": {"AAA": "long",  "TTT": "fluffy", "CCC": "curly", "GGG": "short"},
+}
+
+decode_creature("AAATTTCCC", table)   # -> {"fur": "white", "eyes": "red", "tail": "curly"}
+decode_creature("GGGAAATTT", table)   # -> {"fur": "black", "eyes": "blue", "tail": "fluffy"}
+```
+
+**Hint:** call `codons(dna)` to get the chunks, then look up `table["fur"][chunks[0]]`, `table["eyes"][chunks[1]]`, `table["tail"][chunks[2]]`. Build the dict with the keys in **fur, eyes, tail** order.
+
+When both work, press Run. The **Codons** chip shows the chunks; the **Creature** chip hatches your creature. Change the genome and meet a new one! 🐾

@@ -1,0 +1,32 @@
+[
+  {
+    "entry": "bases_list",
+    "cases": [
+      {
+        "name": "bases_list(\"ATCG\") is [\"A\",\"T\",\"C\",\"G\"]",
+        "args": ["ATCG"],
+        "expected": ["A", "T", "C", "G"]
+      },
+      {
+        "name": "bases_list(\"G\") is [\"G\"] (a one-base strand)",
+        "args": ["G"],
+        "expected": ["G"]
+      }
+    ]
+  },
+  {
+    "entry": "add_base",
+    "cases": [
+      {
+        "name": "add_base([\"A\",\"T\"], \"G\") is [\"A\",\"T\",\"G\"]",
+        "args": [["A", "T"], "G"],
+        "expected": ["A", "T", "G"]
+      },
+      {
+        "name": "add_base([], \"A\") is [\"A\"] (start from an empty backpack)",
+        "args": [[], "A"],
+        "expected": ["A"]
+      }
+    ]
+  }
+]

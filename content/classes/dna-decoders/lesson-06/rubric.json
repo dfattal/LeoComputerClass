@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "The tally table is right",
+    "weight": 45,
+    "description": "count_bases returns a dict with the correct count for each of A, T, C, G (including 0 for a base that never appears)."
+  },
+  {
+    "criterion": "Keys in A, T, C, G order",
+    "weight": 20,
+    "description": "The table is built with its keys in the order A, T, C, G, as taught — so the answer matches the checker."
+  },
+  {
+    "criterion": "Look-up is right",
+    "weight": 35,
+    "description": "look_up returns the value stored under the given codon, using table[codon] instead of searching by hand."
+  }
+]

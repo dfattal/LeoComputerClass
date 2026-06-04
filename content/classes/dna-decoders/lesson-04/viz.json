@@ -1,0 +1,27 @@
+{
+  "type": "draw",
+  "title": "Your bases as a backpack of squares — then watch one more drop in at the end",
+  "todo": "Finish bases_list() to unpack the strand into a backpack of base-squares!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\n\ndef __paint(bases):\n    return [BASE_COLOR.get(base, \"\") for base in bases]\n\ndef __show_list(dna=\"ATCGTAGC\"):\n    return [__paint(bases_list(dna))]\n\ndef __show_add(dna=\"ATC\", base=\"G\"):\n    genes = bases_list(dna)\n    before = __paint(genes)\n    after = __paint(add_base(genes, base))\n    return [before, after]\n",
+  "stages": [
+    {
+      "fn": "__show_list",
+      "args": [],
+      "label": "Unpack",
+      "expected": [
+        ["green", "red", "blue", "yellow", "red", "green", "yellow", "blue"]
+      ],
+      "caption": "🎒 The strand is now a backpack — each base is its own square."
+    },
+    {
+      "fn": "__show_add",
+      "args": [],
+      "label": "Add one",
+      "expected": [
+        ["green", "red", "blue"],
+        ["green", "red", "blue", "yellow"]
+      ],
+      "caption": "✅ A new yellow G dropped into the back of the backpack!"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+# Chunk the Genome → Decode a Creature
+
+> This is it — the finale. Everything you've learned comes together right here. You're going to take a raw strand of DNA and turn it into a **living creature**. 🎉🐾
+
+## Phase 2: Crack the Code
+
+---
+
+## The secret cells have always known
+
+Cells don't read DNA one base at a time. They read it **three letters at a time**. Each three-letter word is called a **codon**, and every codon means something:
+
+```
+AAATTTCCC
+└┬┘└┬┘└┬┘
+ │  │  └── tail
+ │  └───── eyes
+ └──────── fur
+```
+
+`AAA` might mean *white fur*. `TTT` might mean *red eyes*. `CCC` might mean *a curly tail*. String enough codons together and you've described a whole animal. That's the genetic code — and you're about to run it yourself.
+
+## Step 1: chop the genome into codons
+
+To read three letters at a time, jump through the strand in steps of 3 and slice 3 at each stop. `range(0, len(dna), 3)` gives you the start of every codon:
+
+```python
+chunks = []
+for i in range(0, len(dna), 3):
+    chunks.append(dna[i:i + 3])
+# "AAATTTCCC" -> ["AAA", "TTT", "CCC"]
+```
+
+That's a **loop**, a **slice**, and a **list** — three tools you already own, working together. 💪
+
+## Step 2: look up each codon
+
+Now decode. You're handed a `table` — the genetic code — with one little lookup table per trait:
+
+```python
+table["fur"]["AAA"]    # -> "white"
+table["eyes"]["TTT"]   # -> "red"
+table["tail"]["CCC"]   # -> "curly"
+```
+
+Read codon 0 for fur, codon 1 for eyes, codon 2 for tail, and pack the answers into a dict:
+
+```python
+{"fur": "white", "eyes": "red", "tail": "curly"}
+```
+
+A **dict** lookup, just like last lesson — only now the values describe a creature. 🧬
+
+## See it
+
+Press **Run**. The **Codons** chip shows the genome chopped into rows of three. The **Creature** chip is the payoff: your decoded traits drawn as a real little creature — two eyes, a fur-colored body, a tail. Change the genome and watch a *different* creature hatch.
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G
+
+## What you'll build
+
+- **`codons(dna)`** — chop the genome into 3-letter codons.
+- **`decode_creature(dna, table)`** — read the codons through the table into a creature's traits.
+
+Strings, slices, loops, lists, dicts — every tool from this whole class, snapped together to bring a creature to life. You can now read the code of life. Next stop: **Leila's Bio Lab.** 🔬✨

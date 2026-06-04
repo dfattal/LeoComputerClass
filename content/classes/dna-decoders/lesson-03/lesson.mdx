@@ -1,0 +1,52 @@
+# Counting & Swapping Bases
+
+> Scientists ask two questions about a strand all the time: *"How much of this base is in here?"* and *"Can you turn this DNA into RNA?"* You could do both by hand... or you could let Python do them in one line. 🧮
+
+## Phase 1: Read the Code
+
+---
+
+## The problem: doing it the slow way
+
+Say you want to know how many **T**'s are in a strand. The slow way is to look at every base, keep a counter, and add one each time you spot a T. That's a lot of work for one little number.
+
+And turning DNA into RNA? RNA is almost the same — it just uses **U** (uracil) everywhere DNA uses **T**. Swapping every T for a U by hand would take forever on a long strand. 😵
+
+Strings already know how to do both. You just have to ask.
+
+## Big idea #1: `.count()` tallies for you
+
+Stick `.count()` onto a string and tell it what to look for. It walks the whole strand and hands you the total:
+
+```python
+dna = "AATTTGCA"
+dna.count("T")    # -> 3
+dna.count("A")    # -> 3
+dna.count("Z")    # -> 0   (not there at all)
+```
+
+One move, one answer. No counter, no loop.
+
+## Big idea #2: `.replace()` swaps for you
+
+`.replace(old, new)` finds **every** copy of `old` and swaps in `new`, then hands back the new string:
+
+```python
+dna = "ATCGTAGC"
+dna.replace("T", "U")    # -> "AUCGUAGC"
+```
+
+That single line is the whole recipe for turning DNA into RNA: swap every **T** for a **U**. 🧪
+
+## See it
+
+Press **Run** and the Graph panel paints the strand on top. The **Count T** chip shows a tally bar — one square for each T your code found. The **To RNA** chip shows your RNA underneath, where every red T has turned into a purple U.
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G · 🟪 U
+
+## What you'll build
+
+- **`count_base(dna, base)`** — give back how many times `base` appears.
+- **`to_rna(dna)`** — give back the strand with every `T` swapped for a `U`.
+
+Counting bases is how you'll measure a strand later. And RNA is the real first step a cell takes to read DNA — you're now one step closer to decoding a whole creature. 🔬

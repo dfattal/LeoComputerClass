@@ -1,0 +1,28 @@
+## Your mission
+
+### Exercise 1 — `complement(dna)`
+
+Build the **partner strand**: swap every base for its partner. A↔T, C↔G.
+
+```python
+complement("ATCG")       # -> "TAGC"
+complement("ATCGTAGC")   # -> "TAGCATCG"
+complement("A")          # -> "T"
+```
+
+**Hint:** start with `out = ""`, then loop `for base in dna:` and do `out += PARTNER[base]`. Return `out` at the end.
+
+---
+
+### Exercise 2 — `reverse_complement(dna)`
+
+Give back the partner strand read the **other way**.
+
+```python
+reverse_complement("ATCGTAGC")   # -> "GCTACGAT"
+reverse_complement("GATTACA")    # -> "TGTAATC"
+```
+
+**Hint:** you already have both pieces — take `complement(dna)`, then flip it with `[::-1]`.
+
+When both work, press Run. The **Partner** chip flips every color to its pair; the **Rev-comp** chip flips the whole partner strand around. 🧬

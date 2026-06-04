@@ -1,0 +1,28 @@
+## Your mission
+
+### Exercise 1 — `count_base(dna, base)`
+
+Give back **how many times** `base` shows up in the strand.
+
+```python
+count_base("AATTTGCA", "T")   # -> 3
+count_base("ATCGTAGC", "G")   # -> 2
+count_base("GGGG", "A")       # -> 0   (no A's at all)
+```
+
+**Hint:** the string already knows how to tally — `dna.count(base)` — just `return` it.
+
+---
+
+### Exercise 2 — `to_rna(dna)`
+
+Give back the **RNA**: the same strand, but every `T` swapped for a `U`.
+
+```python
+to_rna("ATCGTAGC")   # -> "AUCGUAGC"
+to_rna("GCGC")       # -> "GCGC"   (no T's, so nothing changes)
+```
+
+**Hint:** `dna.replace("T", "U")` swaps *every* T at once. Return what it gives back.
+
+When both work, press Run. The **Count T** chip builds your tally bar; the **To RNA** chip turns every red T into a purple U. 🧬

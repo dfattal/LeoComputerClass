@@ -1,0 +1,58 @@
+# Dictionaries: the Lookup Table
+
+> Here's the secret at the heart of all life: cells read DNA three letters at a time, and each three-letter word means something. **GGG → a bear's fur. AAA → a fox's tail.** How does a cell "know" what each word means? It uses a lookup table. And so will you. 🗂️
+
+## Phase 2: Crack the Code
+
+---
+
+## The problem: searching is slow
+
+Imagine a giant chart: "GGG means bear, AAA means fox, TTT means turtle..." If you had to read the whole chart top to bottom every time to find one word, it would crawl. You want to *jump straight* to the answer.
+
+You also keep wanting to store **pairs**: base → how many, codon → creature. A list can't do that neatly — a list only knows about *spots*, not *names*.
+
+## The big idea: a dict pairs a key with a value
+
+A **dictionary** (dict) is a lookup table. Each entry pairs a **key** with a **value**, written with curly braces and colons:
+
+```python
+PARTNER = {"A": "T", "T": "A", "C": "G", "G": "C"}
+```
+
+To get a value, look it up by its key with square brackets — and it's *instant*, no searching:
+
+```python
+PARTNER["A"]    # -> "T"
+PARTNER["C"]    # -> "G"
+```
+
+You already used a dict last lesson (`PARTNER`)! Now you'll **build** them and **read** them.
+
+## Tally into a table
+
+A dict is the perfect place to keep a count of every base at once:
+
+```python
+{
+    "A": dna.count("A"),
+    "T": dna.count("T"),
+    "C": dna.count("C"),
+    "G": dna.count("G"),
+}
+```
+
+One table, four answers. ⚠️ Build the keys in the order **A, T, C, G** — that's the order the checker expects, so everyone's table matches.
+
+## See it
+
+Press **Run**. The **Tally** chip draws one bar per base — the height of each bar is its count, straight from your table. The **Look up** chip takes a codon and jumps to the creature it codes for. 🐻
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G
+
+## What you'll build
+
+- **`count_bases(dna)`** — tally all four bases into one lookup table.
+- **`look_up(table, codon)`** — jump straight to a table's value by its key.
+
+This is the exact trick the genetic code uses. Next lesson you'll chop a genome into codons and feed them through a lookup table — and a whole creature falls out. 🔬

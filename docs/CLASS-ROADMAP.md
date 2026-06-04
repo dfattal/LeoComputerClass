@@ -49,7 +49,7 @@ they're "watch it happen" panels. Accent colors live in one place,
 | Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8) |
 | Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) |
 | Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) |
-| DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | In progress (1/7) 🆕 |
+| DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | Published (7) ✅ |
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | 8 published, 2 planned |
 
 ---
@@ -116,6 +116,43 @@ The top candidate, now live. Final lesson arc (titles as shipped):
   surfaced that accent colors are hardcoded in three files (`AccentContext.tsx`,
   `app/page.tsx`, `app/classes/[classSlug]/page.tsx`) — `rose` and the previously-missing
   `sky` were added to all three.
+
+### DNA Decoders — ✅ built as `dna-decoders`, 7 lessons published
+**Through-line:** "One strand of DNA → a living creature." A visual, draw-canvas
+Python primer that bridges **Pixel Wizards → Leila's Bio Lab**: it teaches the exact
+Python concepts Bio Lab assumes (strings, slicing, methods, lists, loops, dicts,
+chunking), each motivated by a *DNA pain point* the concept relieves, with DNA painted
+as colored pixels. Accent `lime`, studentName Leila; the registry entry sits just
+before `leila` so it reads as the on-ramp. Built entirely with `/new-lesson`,
+reference.py-first.
+
+**Lesson arc (each: feel the DNA *pain* → the Python idea as relief → paint it):**
+1. DNA is a String of Letters — strings + indexing (`dna[0]`, `dna[-1]`) — *built earlier*
+2. Slicing the Strand — `dna[start:end]` snips a gene; `dna[::-1]` flips the strand
+3. Counting & Swapping Bases — `.count()` tallies a base; `.replace("T","U")` makes RNA
+4. Lists: a Backpack of Bases — `list(dna)`, `.append()` (a container that can *grow*)
+5. Loops: Do It to Every Base — `for` + `out += ...` to build the complement / reverse-complement
+6. Dictionaries: the Lookup Table — dict literal + `d[key]`: tally table + codon→creature look-up
+7. Chunk the Genome → Decode a Creature (capstone) — `range(0,len,3)` + slicing → codons,
+   then nested-dict lookups hatch a creature (mirrors Bio Lab L7's `decode_traits`)
+
+**As-built notes:**
+- **Novel reusable technique — "hidden painter in viz `setup`":** students return real
+  Bio-Lab-style values (`str`/`list`/`dict`) validated by `tests.json`, and a hidden
+  `__paint`/`__show_*` painter turns them into a `draw` grid. The painter helpers are
+  **duplicated in both** the draw `viz.json` `setup` (the live app prepends student code
+  then `setup`) **and** `reference.py` (so `validate-class` can run each stage's `fn`
+  against the answer key). Draw `stages` (`{fn,args,expected,caption,label}`) give the
+  pin-to-play chips. First class to drive a `draw` panel from `setup`.
+- **Relaxed the "never return a dict" rule** (L6/L7). The Pyodide grader compares with
+  key-order-sensitive `JSON.stringify`, so the old blanket ban existed to avoid a student
+  being marked wrong for a different key order. Bio Lab L1/L7 already prove dicts are safe
+  when the lesson **pins one natural key order** (`A,T,C,G`; `fur,eyes,tail`) that the
+  starter/exercises teach. The `/new-lesson` SKILL was updated from a hard ban to that
+  nuance. Dict *args* also work — a JSON object literal is a valid Python dict literal, so
+  `look_up(table, codon)` and `decode_creature(dna, table)` take dicts directly.
+- Base palette reused from L1: A=green, T=red, C=blue, G=yellow, U=purple, `""`=empty;
+  traits/creatures use emoji cells. Hero `/hero-dna-decoders.webp`.
 
 ---
 
@@ -197,7 +234,7 @@ the natural next order is:
 For an **absolute beginner** (a younger kid, or Leila starting out), the ladder
 now starts earlier: **Pixel Wizards** (✅ built) → **Python Primer** → a subject
 class. Pixel Wizards is the gentlest first contact and feeds everything else. For
-a beginner specifically headed into **Bio Lab**, **DNA Decoders** (in progress) is
+a beginner specifically headed into **Bio Lab**, **DNA Decoders** (✅ built) is
 the targeted bridge: it teaches the exact Python (strings, slicing, lists, loops,
 dicts, chunking) Bio Lab assumes, in the visual `draw`-canvas style, and ends one
 step short of Bio Lab's creature-decoder.

@@ -1,0 +1,29 @@
+## Your mission
+
+### Exercise 1 — `count_bases(dna)`
+
+Tally **all four** bases into one dictionary. Build the keys in the order **A, T, C, G**.
+
+```python
+count_bases("AATTTGCA")   # -> {"A": 3, "T": 3, "C": 1, "G": 1}
+count_bases("ATCG")       # -> {"A": 1, "T": 1, "C": 1, "G": 1}
+count_bases("GGGCCC")     # -> {"A": 0, "T": 0, "C": 3, "G": 3}
+```
+
+**Hint:** make one dict where each value is `dna.count(...)` for that base — `{"A": dna.count("A"), "T": dna.count("T"), ...}`. Keep the keys in the **A, T, C, G** order shown.
+
+---
+
+### Exercise 2 — `look_up(table, codon)`
+
+A `table` pairs a three-letter `codon` with a creature. Jump straight to the creature for the given codon.
+
+```python
+table = {"AAA": "🦊", "TTT": "🐢", "CCC": "🐰", "GGG": "🐻"}
+look_up(table, "GGG")   # -> "🐻"
+look_up(table, "AAA")   # -> "🦊"
+```
+
+**Hint:** `table[codon]` reaches right into the table and pulls out the value. Return it.
+
+When both work, press Run. The **Tally** chip draws a bar per base; the **Look up** chip turns a codon into a creature. 🗂️

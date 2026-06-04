@@ -1,0 +1,30 @@
+{
+  "type": "draw",
+  "title": "A bar for each base from your tally table — then a codon looked up to a creature",
+  "todo": "Finish count_bases() to build a bar for each base: A, T, C, G!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\nCREATURE_TABLE = {\"AAA\": \"🦊\", \"TTT\": \"🐢\", \"CCC\": \"🐰\", \"GGG\": \"🐻\"}\n\ndef __paint(dna):\n    return [BASE_COLOR.get(base, \"\") for base in dna]\n\ndef __show_counts(dna=\"AATTTGCA\"):\n    counts = count_bases(dna)\n    return [[BASE_COLOR[b]] * counts[b] for b in \"ATCG\"]\n\ndef __show_lookup(table=CREATURE_TABLE, codon=\"GGG\"):\n    return [__paint(codon), [look_up(table, codon)]]\n",
+  "stages": [
+    {
+      "fn": "__show_counts",
+      "args": [],
+      "label": "Tally",
+      "expected": [
+        ["green", "green", "green"],
+        ["red", "red", "red"],
+        ["blue"],
+        ["yellow"]
+      ],
+      "caption": "✅ One bar per base: 3 A's, 3 T's, 1 C, 1 G — all from one table!"
+    },
+    {
+      "fn": "__show_lookup",
+      "args": [],
+      "label": "Look up",
+      "expected": [
+        ["yellow", "yellow", "yellow"],
+        ["🐻"]
+      ],
+      "caption": "🐻 The codon GGG looked straight up to a bear — that's the genetic code!"
+    }
+  ]
+}

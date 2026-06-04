@@ -1,0 +1,37 @@
+[
+  {
+    "entry": "complement",
+    "cases": [
+      {
+        "name": "complement(\"ATCGTAGC\") is \"TAGCATCG\"",
+        "args": ["ATCGTAGC"],
+        "expected": "TAGCATCG"
+      },
+      {
+        "name": "complement(\"GATTACA\") is \"CTAATGT\"",
+        "args": ["GATTACA"],
+        "expected": "CTAATGT"
+      },
+      {
+        "name": "complement(\"A\") is \"T\" (A always pairs with T)",
+        "args": ["A"],
+        "expected": "T"
+      }
+    ]
+  },
+  {
+    "entry": "reverse_complement",
+    "cases": [
+      {
+        "name": "reverse_complement(\"ATCGTAGC\") is \"GCTACGAT\"",
+        "args": ["ATCGTAGC"],
+        "expected": "GCTACGAT"
+      },
+      {
+        "name": "reverse_complement(\"GATTACA\") is \"TGTAATC\"",
+        "args": ["GATTACA"],
+        "expected": "TGTAATC"
+      }
+    ]
+  }
+]

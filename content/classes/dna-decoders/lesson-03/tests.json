@@ -1,0 +1,42 @@
+[
+  {
+    "entry": "count_base",
+    "cases": [
+      {
+        "name": "count_base(\"AATTTGCA\", \"T\") is 3",
+        "args": ["AATTTGCA", "T"],
+        "expected": 3
+      },
+      {
+        "name": "count_base(\"ATCGTAGC\", \"G\") is 2",
+        "args": ["ATCGTAGC", "G"],
+        "expected": 2
+      },
+      {
+        "name": "count_base(\"GGGG\", \"A\") is 0 (not there at all)",
+        "args": ["GGGG", "A"],
+        "expected": 0
+      }
+    ]
+  },
+  {
+    "entry": "to_rna",
+    "cases": [
+      {
+        "name": "to_rna(\"ATCGTAGC\") is \"AUCGUAGC\"",
+        "args": ["ATCGTAGC"],
+        "expected": "AUCGUAGC"
+      },
+      {
+        "name": "to_rna(\"GATTACA\") is \"GAUUACA\"",
+        "args": ["GATTACA"],
+        "expected": "GAUUACA"
+      },
+      {
+        "name": "to_rna(\"GCGC\") is \"GCGC\" (no T's, nothing changes)",
+        "args": ["GCGC"],
+        "expected": "GCGC"
+      }
+    ]
+  }
+]

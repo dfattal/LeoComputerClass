@@ -1,0 +1,30 @@
+{
+  "type": "draw",
+  "title": "Chop the genome into codons — then watch a whole creature hatch from it!",
+  "todo": "Finish codons() to chop the genome into 3-letter chunks, one per row!",
+  "setup": "BASE_COLOR = {\"A\": \"green\", \"T\": \"red\", \"C\": \"blue\", \"G\": \"yellow\", \"U\": \"purple\"}\n\nCREATURE_TABLE = {\n    \"fur\": {\"AAA\": \"white\", \"TTT\": \"golden\", \"CCC\": \"brown\", \"GGG\": \"black\"},\n    \"eyes\": {\"AAA\": \"blue\", \"TTT\": \"red\", \"CCC\": \"brown\", \"GGG\": \"green\"},\n    \"tail\": {\"AAA\": \"long\", \"TTT\": \"fluffy\", \"CCC\": \"curly\", \"GGG\": \"short\"},\n}\nFUR_PAINT = {\"white\": \"white\", \"golden\": \"orange\", \"brown\": \"brown\", \"black\": \"black\"}\nEYE_PAINT = {\"blue\": \"💙\", \"red\": \"❤️\", \"brown\": \"🤎\", \"green\": \"💚\"}\nTAIL_PAINT = {\"long\": \"〰️\", \"fluffy\": \"☁️\", \"curly\": \"➰\", \"short\": \"▪️\"}\n\ndef __paint(dna):\n    return [BASE_COLOR.get(base, \"\") for base in dna]\n\ndef __show_codons(dna=\"AAATTTCCC\"):\n    return [__paint(chunk) for chunk in codons(dna)]\n\ndef __show_creature(dna=\"AAATTTCCC\", table=CREATURE_TABLE):\n    traits = decode_creature(dna, table)\n    eye = EYE_PAINT[traits[\"eyes\"]]\n    fur = FUR_PAINT[traits[\"fur\"]]\n    tail = TAIL_PAINT[traits[\"tail\"]]\n    return [[eye, \"\", eye], [fur, fur, fur], [\"\", tail, \"\"]]\n",
+  "stages": [
+    {
+      "fn": "__show_codons",
+      "args": [],
+      "label": "Codons",
+      "expected": [
+        ["green", "green", "green"],
+        ["red", "red", "red"],
+        ["blue", "blue", "blue"]
+      ],
+      "caption": "✅ The genome is chopped into 3-letter codons — one per row!"
+    },
+    {
+      "fn": "__show_creature",
+      "args": [],
+      "label": "Creature",
+      "expected": [
+        ["❤️", "", "❤️"],
+        ["white", "white", "white"],
+        ["", "➰", ""]
+      ],
+      "caption": "🎉 You decoded a whole creature: white fur, red eyes, a curly tail!"
+    }
+  ]
+}

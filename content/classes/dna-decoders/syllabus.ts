@@ -37,7 +37,7 @@ export const weeks: Week[] = [
     title: "Slicing the Strand",
     summary: "Snip out a piece of DNA — or flip the whole strand backwards",
     phase: 1,
-    status: "planned",
+    status: "published",
   },
   {
     week: 3,
@@ -45,7 +45,7 @@ export const weeks: Week[] = [
     title: "Counting & Swapping Bases",
     summary: "Tally bases in one line, and turn DNA into RNA all at once",
     phase: 1,
-    status: "planned",
+    status: "published",
   },
   {
     week: 4,
@@ -53,7 +53,7 @@ export const weeks: Week[] = [
     title: "Lists: a Backpack of Bases",
     summary: "Hold many bases in one backpack instead of a jar for each",
     phase: 1,
-    status: "planned",
+    status: "published",
   },
   {
     week: 5,
@@ -61,7 +61,7 @@ export const weeks: Week[] = [
     title: "Loops: Do It to Every Base",
     summary: "Build the matching strand by visiting every base with a loop",
     phase: 2,
-    status: "planned",
+    status: "published",
   },
   {
     week: 6,
@@ -69,7 +69,7 @@ export const weeks: Week[] = [
     title: "Dictionaries: the Lookup Table",
     summary: "Look up answers instantly — the trick behind the genetic code",
     phase: 2,
-    status: "planned",
+    status: "published",
   },
   {
     week: 7,
@@ -77,7 +77,7 @@ export const weeks: Week[] = [
     title: "Chunk the Genome → Decode a Creature",
     summary: "Read DNA three letters at a time and hatch a living creature",
     phase: 2,
-    status: "planned",
+    status: "published",
   },
 ];
 

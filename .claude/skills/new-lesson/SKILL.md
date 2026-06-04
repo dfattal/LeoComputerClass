@@ -61,10 +61,18 @@ Open `content/classes/<slug>/lesson-0N/reference.py` and implement every
 function the lesson will teach. Rename the placeholder `first_function` to your
 real exercise names. A few conventions that keep the test runner happy:
 
-- **Return plain JSON-friendly types** — `str`, `int`, `bool`, `list`. Never
-  return a `dict` (the Pyodide worker compares results by JSON equality, and dict
-  ordering/serialization makes that brittle). This is a hard rule across the
-  platform.
+- **Return plain JSON-friendly types** — `str`, `int`, `bool`, `list`, and (with
+  care) `dict`. The Pyodide worker compares results with **key-order-sensitive**
+  `JSON.stringify` (`public/pyodide-worker.js`), and a Python dict round-trips
+  preserving insertion order — so a student who builds the *right* dict in a
+  *different* key order would be marked wrong. **Prefer non-dict returns when one
+  works.** Return a `dict` only when the data genuinely is a mapping (a lookup
+  table, a tally, decoded traits) AND you **pin a single, natural key order** that
+  the `starter.py`/`exercises.mdx` teach explicitly, so every correct student
+  produces the same order. Bio Lab does exactly this — `leila/lesson-01`
+  (`count_bases` → `{"A","T","C","G"}`) and `leila/lesson-07` (`decode_traits` →
+  `{"fur","eyes","tail"}`) — and DNA Decoders L6/L7 follow it. Avoid float-valued
+  dicts (combine the dict caveat with the float-equality caveat).
 - Keep helpers the student is "given" (not asked to write) in `reference.py` too,
   so it runs standalone.
 - Match the domain conventions of the class (e.g. Secret Codes works on lowercase

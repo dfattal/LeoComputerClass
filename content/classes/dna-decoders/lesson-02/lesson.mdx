@@ -1,0 +1,53 @@
+# Slicing the Strand
+
+> A real genome can be *billions* of letters long. You almost never want the whole thing — you want one little gene hiding inside it. How do you grab just that piece? ✂️
+
+## Phase 1: Read the Code
+
+---
+
+## The problem: the strand is too long
+
+Last lesson you learned to grab **one** base by its spot: `dna[0]`, `dna[-1]`. But a single gene is a *stretch* of bases — maybe spots 2 through 4. You don't want to call `dna[2]`, then `dna[3]`, then `dna[4]` and glue them back together. That's slow and silly. 😫
+
+You want to say "give me the piece from here to there" in one move.
+
+## The big idea: a slice grabs a stretch
+
+In Python you grab a stretch with **two** spots inside the brackets, split by a colon:
+
+```python
+dna = "ATCGTAGC"
+dna[2:5]    # -> "CGT"   spots 2, 3, 4
+```
+
+Read `dna[2:5]` as **"from spot 2 up to spot 5"** — it keeps 2, 3, and 4, but **stops just before 5**. The second number is where you *stop*, not the last base you keep. That trips everyone up at first, so remember: *up to, not including.*
+
+You can start from the very front with spot `0`:
+
+```python
+dna[0:3]    # -> "ATC"   the first three bases
+```
+
+## Flip it backwards
+
+Here's a bonus trick. Scientists often need to read a strand **backwards**. Python does it with a tiny spell:
+
+```python
+dna[::-1]   # -> "CGATGCTA"   the whole strand, reversed
+```
+
+The `-1` means "step backwards, one base at a time," starting from the end. You'll use this again soon when you build a strand's mirror-image partner.
+
+## See it
+
+When you press **Run**, the Graph panel paints your strand on top. The bottom row lights up with just the piece your code made — the snipped gene, or the flipped strand. Use the chips to switch between **Snip** and **Flip**.
+
+🟩 A · 🟥 T · 🟦 C · 🟨 G
+
+## What you'll build
+
+- **`snip(dna, start, end)`** — give back the piece from `start` up to (not including) `end`.
+- **`flip(dna)`** — give back the whole strand read backwards.
+
+Snipping is how you'll pull a single gene out of a genome later. Flipping is the first half of building DNA's matching partner strand. Two tiny tools, both on the road to growing a creature. 🔬
