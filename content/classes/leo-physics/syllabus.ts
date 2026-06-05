@@ -22,6 +22,7 @@ export const phases: Phase[] = [
   { phase: 2, name: "The Real World Fights Back", weeks: [3, 4] },
   { phase: 3, name: "Powering the Shot", weeks: [5, 6] },
   { phase: 4, name: "Engineering the Blaster", weeks: [7, 8] },
+  { phase: 5, name: "The Big Picture", weeks: [9] },
 ];
 
 export const weeks: Week[] = [
@@ -87,6 +88,14 @@ export const weeks: Week[] = [
     title: "Design Optimizer (Capstone)",
     summary: "Sweep the settings and find the dart that flies the farthest",
     phase: 4,
+    status: "published",
+  },
+  {
+    week: 9,
+    slug: "lesson-09",
+    title: "The Big Picture: Who Invented Calculus",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 5,
     status: "published",
   },
 ];

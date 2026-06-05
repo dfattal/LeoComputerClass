@@ -1,0 +1,11 @@
+{
+  "question": "Why does chopping motion into tiny time steps let us predict where a Nerf dart will land?",
+  "guidance": "You did this every lesson with v = v + a*dt and x = x + v*dt. Explain in your own words why taking tiny steps works.",
+  "lookFor": [
+    "On each tiny step you update velocity from acceleration and position from velocity (step forward a little bit at a time)",
+    "Over one tiny time step the speed barely changes, so pretending it's constant for that instant is a good-enough approximation",
+    "Smaller steps make the approximation closer to the true motion",
+    "This works even when forces like air resistance make the motion too messy for a single clean formula — you simulate instead of solving by hand"
+  ],
+  "exemplar": "Instead of needing one big formula, you cut the flight into tons of tiny time steps. On each step you update the velocity using the acceleration, then move the position using that velocity, then repeat. The trick is that during one super-short step the speed barely changes, so it's fine to pretend it's constant for just that instant — and if you make the steps smaller, the answer gets even closer to the real motion. This is great for a Nerf dart because once you add air resistance there's no neat formula anymore, so you just simulate it step by step and watch where it lands."
+}

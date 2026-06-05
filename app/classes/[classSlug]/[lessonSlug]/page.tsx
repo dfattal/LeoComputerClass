@@ -65,6 +65,21 @@ export default async function LessonPage({
     ? personalizeText(lessonData.starterCode, studentName)
     : undefined;
 
+  // Only the question + guidance reach the browser. `lookFor` and `exemplar`
+  // (the model answer) are grader-only — they stay on the server so a curious
+  // kid can't view-source the answer; the AI route reads reflection.json fresh.
+  const reflectionConfig = lessonData.reflectionConfig
+    ? {
+        question: personalizeText(
+          lessonData.reflectionConfig.question,
+          studentName,
+        ),
+        guidance: lessonData.reflectionConfig.guidance
+          ? personalizeText(lessonData.reflectionConfig.guidance, studentName)
+          : undefined,
+      }
+    : undefined;
+
   // Load class-specific syllabus
   const syllabus = await import(
     `@/content/classes/${classSlug}/syllabus`
@@ -101,6 +116,7 @@ export default async function LessonPage({
       weeks={weeks}
       starterCode={starterCode}
       vizConfig={lessonData.vizConfig}
+      reflectionConfig={reflectionConfig}
     />
   );
 }

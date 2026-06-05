@@ -23,6 +23,7 @@ export default function BottomDrawer({
   labContent,
   graphContent,
   graphLabel = "Graph",
+  tabs,
 }: {
   activeTab: DrawerTab;
   onTabChange: (tab: DrawerTab) => void;
@@ -35,6 +36,9 @@ export default function BottomDrawer({
   graphContent?: ReactNode;
   /** Display label for the graph tab (key stays "Graph"); e.g. "Canvas" for drawings. */
   graphLabel?: string;
+  /** Explicit tab set, overriding the default Output/Tests/Graph/Lab/Review. Used
+   *  by reflection lessons to show only the Review (feedback) tab. */
+  tabs?: DrawerTab[];
 }) {
   // Safe to use lazy init: this component only renders client-side (behind CourseShell's mounted guard)
   const [height, setHeight] = useState(() => {
@@ -84,7 +88,7 @@ export default function BottomDrawer({
     localStorage.setItem(DRAWER_COLLAPSED_KEY, (!collapsed).toString());
   }, [collapsed, onCollapsedChange]);
 
-  const drawerTabs: DrawerTab[] = [
+  const drawerTabs: DrawerTab[] = tabs ?? [
     "Output",
     "Tests",
     ...(graphContent ? (["Graph"] as const) : []),

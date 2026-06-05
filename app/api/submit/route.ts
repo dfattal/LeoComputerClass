@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { resolveLessonId, ensureLessonId } from "@/lib/lessons/resolveLessonId";
+import { loadLessonContent } from "@/lib/lessons/loadLesson";
 
 export async function GET(request: Request) {
   try {
@@ -128,12 +129,25 @@ export async function POST(request: Request) {
       .eq("user_id", user.id)
       .eq("lesson_id", lesson.id);
 
-    // Auto-update progress if all tests pass
-    if (
+    // A reflection lesson (no Python, no tests) has no pass/fail to gate on — it
+    // completes on submit (participation-based), so the kid is never stuck on the
+    // very last lesson. Detect it from the lesson's reflection.json on disk.
+    let isReflection = false;
+    if (classSlug) {
+      try {
+        isReflection = !!loadLessonContent(classSlug, lessonSlug)
+          .reflectionConfig;
+      } catch {
+        // Missing/unreadable content — treat as a normal lesson.
+      }
+    }
+
+    // Auto-update progress if all tests pass, or on submit for reflection lessons.
+    const testsPassed =
       Array.isArray(testResults) &&
       testResults.length > 0 &&
-      testResults.every((r: { passed: boolean }) => r.passed)
-    ) {
+      testResults.every((r: { passed: boolean }) => r.passed);
+    if (testsPassed || isReflection) {
       await serviceClient.from("lesson_progress").upsert(
         {
           user_id: user.id,

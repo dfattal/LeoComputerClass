@@ -12,9 +12,13 @@ const panelId = (tab: MobileView) => `mobile-panel-${tab.toLowerCase()}`;
 export default function MobileTabBar({
   active,
   onChange,
+  secondLabel,
 }: {
   active: MobileView;
   onChange: (view: MobileView) => void;
+  /** Override the displayed text of the second tab (key stays "Code");
+   *  e.g. "Answer" for reflection lessons. */
+  secondLabel?: string;
 }) {
   const accent = useAccent();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -63,7 +67,7 @@ export default function MobileTabBar({
                 : "text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
             }`}
           >
-            {tab}
+            {tab === "Code" ? secondLabel ?? "Code" : tab}
             {active === tab && (
               <span className={`absolute inset-x-0 -bottom-px h-0.5 ${accent.underline}`} />
             )}

@@ -20,6 +20,7 @@ export const phases: Phase[] = [
   { phase: 2, name: "Decode Biology", weeks: [4, 5] },
   { phase: 3, name: "Edit DNA", weeks: [6, 7, 8] },
   { phase: 4, name: "Compare Living Things", weeks: [9, 10] },
+  { phase: 5, name: "The Big Picture", weeks: [11] },
 ];
 
 export const weeks: Week[] = [
@@ -102,6 +103,14 @@ export const weeks: Week[] = [
     summary: "Use DNA differences to figure out which creatures are related",
     phase: 4,
     status: "planned",
+  },
+  {
+    week: 11,
+    slug: "lesson-11",
+    title: "The Big Picture: From Pea Plants to CRISPR",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 5,
+    status: "published",
   },
 ];
 

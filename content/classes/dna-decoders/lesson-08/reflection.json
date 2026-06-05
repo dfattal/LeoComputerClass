@@ -1,0 +1,11 @@
+{
+  "question": "Why do scientists say DNA is like a written code or a recipe?",
+  "guidance": "Think about the letters, their order, and how the cell reads them three at a time. Explain it in your own words.",
+  "lookFor": [
+    "DNA is made of four letters/bases (A, T, C, G) arranged in a specific order",
+    "The order of the letters is information — it's the instructions for building a living thing",
+    "The cell reads DNA in order (three letters at a time) and follows it step by step, like following a recipe",
+    "Changing a letter changes the instructions, which can change the living thing"
+  ],
+  "exemplar": "DNA is made of just four letters — A, T, C, G — lined up in a long order. Like words in a book, it's the ORDER of the letters that carries the meaning. That order is really a set of instructions for building a living thing. The cell reads it in order, three letters at a time, and each little three-letter word tells it what to add next, just like following the steps of a recipe to bake something. And if you change one of the letters, you change the instructions, so you can change the creature. That's why people call DNA a code or a recipe — it's information written in a tiny alphabet that tells a body how to build itself."
+}

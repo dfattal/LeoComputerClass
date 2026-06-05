@@ -1,0 +1,11 @@
+{
+  "question": "Why does the Moon keep circling Earth instead of crashing into it, even though it's always falling?",
+  "guidance": "You simulated this yourself. Explain in your own words what an orbit really is — falling plus moving sideways.",
+  "lookFor": [
+    "Earth's gravity really is pulling the Moon toward it — the Moon is not floating free",
+    "The Moon is also moving sideways (forward) very fast",
+    "As gravity pulls it down, the round Earth curves away beneath it, so it keeps falling and keeps missing — that loop is an orbit",
+    "It doesn't crash because it never stops moving sideways, and it doesn't fly away because gravity never stops pulling — the two are balanced"
+  ],
+  "exemplar": "The Moon really is falling toward Earth — gravity is pulling on it the whole time, it's not floating. But the Moon is also zooming sideways really fast. So every second gravity bends its path down a little, but in that same second it moves sideways enough that the curved Earth falls away underneath it. It keeps falling and keeps missing the ground, over and over, which makes a loop. That loop is an orbit. It doesn't crash because it never stops moving sideways, and it doesn't fly off into space because gravity never stops pulling it back. Falling plus sideways speed equals going around."
+}

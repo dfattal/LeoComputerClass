@@ -56,6 +56,13 @@ export function loadLessonContent(
     ? JSON.parse(fs.readFileSync(vizPath, "utf-8"))
     : undefined;
 
+  const reflectionPath = path.join(lessonDir, "reflection.json");
+  const reflectionConfig: ReflectionConfig | undefined = fs.existsSync(
+    reflectionPath
+  )
+    ? JSON.parse(fs.readFileSync(reflectionPath, "utf-8"))
+    : undefined;
+
   return {
     slug: lessonSlug,
     lessonSource,
@@ -64,6 +71,7 @@ export function loadLessonContent(
     rubric,
     starterCode,
     vizConfig,
+    reflectionConfig,
   };
 }
 
@@ -274,7 +282,31 @@ export interface DrawVizConfig {
 
 export type VizConfig = CrisprVizConfig | PlotVizConfig | DrawVizConfig;
 
+/**
+ * A "reflection" lesson: no Python, no tests. The student answers one open
+ * question in their own words and the AI coach assesses whether they truly
+ * understand the core idea (formative, not deterministic). Signalled purely by
+ * the presence of a `reflection.json` file in the lesson directory — when set,
+ * the lesson UI swaps the code editor for a prose answer box.
+ *
+ * `question` and `guidance` are shown to the student (and run through the
+ * {{FIRST_NAME}} personalizer). `lookFor` and `exemplar` are grader-only: they
+ * give the AI the key ideas a good answer should touch and an optional model
+ * answer, and are never shown to the student.
+ */
+export interface ReflectionConfig {
+  /** The open question the student re-explains in their own words. */
+  question: string;
+  /** Optional hint shown next to the answer box. */
+  guidance?: string;
+  /** Key ideas a strong answer should convey (grader context only). */
+  lookFor: string[];
+  /** Optional model answer, used only as grader context. */
+  exemplar?: string;
+}
+
 export interface LessonContent extends WeekContent {
   starterCode?: string;
   vizConfig?: VizConfig;
+  reflectionConfig?: ReflectionConfig;
 }

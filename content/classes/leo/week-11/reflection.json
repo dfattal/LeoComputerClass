@@ -1,0 +1,11 @@
+{
+  "question": "Explain how a machine that only understands 0 and 1 can do something as clever as adding two numbers.",
+  "guidance": "You built this yourself — gates, then a half adder, then a full adder. Explain it in your own words, like you're showing a friend how the inside works.",
+  "lookFor": [
+    "Gates (AND, OR, NOT, XOR) work only with 1s and 0s — true and false",
+    "Numbers can be written in binary, as patterns of 1s and 0s",
+    "Combining simple gates builds an adder (half adder / full adder) that produces the right sum bit and carry bit",
+    "Chaining adders together adds bigger numbers — so 'just 1s and 0s' becomes real arithmetic when you wire enough simple gates together"
+  ],
+  "exemplar": "A computer only knows 1 and 0, true and false. But numbers can be written in binary, which is also just 1s and 0s. Gates like AND, OR, and XOR take 1s and 0s in and give a 1 or 0 out following a fixed rule. If you wire the right gates together you get a half adder, which adds two bits and gives you the answer bit plus a carry bit. A full adder also takes a carry coming in. Chain a bunch of full adders side by side and you can add big numbers, carrying just like you do on paper. So adding isn't magic — it's a pile of simple gates working on 1s and 0s. Simple parts, wired cleverly, do something clever."
+}

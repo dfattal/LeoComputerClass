@@ -22,6 +22,7 @@ export const phases: Phase[] = [
   { phase: 2, name: "Scramble & Crack", weeks: [3, 4] },
   { phase: 3, name: "Secrets in Bits", weeks: [5, 6] },
   { phase: 4, name: "Sharing Keys", weeks: [7, 8] },
+  { phase: 5, name: "The Big Picture", weeks: [9] },
 ];
 
 export const weeks: Week[] = [
@@ -87,6 +88,14 @@ export const weeks: Week[] = [
     title: "The Public Lock (Capstone)",
     summary: "Build tiny RSA: a lock anyone can snap shut, that only your private key opens",
     phase: 4,
+    status: "published",
+  },
+  {
+    week: 9,
+    slug: "lesson-09",
+    title: "The Big Picture: The History of Secret Codes",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 5,
     status: "published",
   },
 ];

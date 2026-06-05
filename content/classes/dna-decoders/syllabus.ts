@@ -20,6 +20,7 @@ export interface Week {
 export const phases: Phase[] = [
   { phase: 1, name: "Read the Code", weeks: [1, 2, 3, 4] },
   { phase: 2, name: "Crack the Code", weeks: [5, 6, 7] },
+  { phase: 3, name: "The Big Picture", weeks: [8] },
 ];
 
 export const weeks: Week[] = [
@@ -77,6 +78,14 @@ export const weeks: Week[] = [
     title: "Chunk the Genome → Decode a Creature",
     summary: "Read DNA three letters at a time and hatch a living creature",
     phase: 2,
+    status: "published",
+  },
+  {
+    week: 8,
+    slug: "lesson-08",
+    title: "The Big Picture: Cracking the Code of Life",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 3,
     status: "published",
   },
 ];

@@ -18,6 +18,7 @@ export interface Week {
 export const phases: Phase[] = [
   { phase: 1, name: "Python Basics", weeks: [1, 2, 3] },
   { phase: 2, name: "Power Tools", weeks: [4, 5] },
+  { phase: 3, name: "The Big Picture", weeks: [6] },
 ];
 
 export const weeks: Week[] = [
@@ -59,6 +60,14 @@ export const weeks: Week[] = [
     title: "While Loops & Bit Magic",
     summary: "While loops, break, and the binary language of computers",
     phase: 2,
+    status: "published",
+  },
+  {
+    week: 6,
+    slug: "lesson-06",
+    title: "The Big Picture: Why Python Exists",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 3,
     status: "published",
   },
 ];

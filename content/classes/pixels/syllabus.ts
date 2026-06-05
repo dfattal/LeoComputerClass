@@ -19,6 +19,7 @@ export const phases: Phase[] = [
   { phase: 1, name: "First Pictures", weeks: [1, 2, 3] },
   { phase: 2, name: "Spells & Choices", weeks: [4, 5, 6] },
   { phase: 3, name: "Loops", weeks: [7] },
+  { phase: 4, name: "The Big Picture", weeks: [8] },
 ];
 
 export const weeks: Week[] = [
@@ -76,6 +77,14 @@ export const weeks: Week[] = [
     title: "Do It Again",
     summary: "Loops fill a whole grid from just a few lines",
     phase: 3,
+    status: "published",
+  },
+  {
+    week: 8,
+    slug: "lesson-08",
+    title: "The Big Picture: Where Pixels Came From",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 4,
     status: "published",
   },
 ];

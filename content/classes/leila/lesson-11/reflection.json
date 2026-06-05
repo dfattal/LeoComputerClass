@@ -1,0 +1,11 @@
+{
+  "question": "Explain why changing just one letter in a creature's DNA can change something about it.",
+  "guidance": "Think about the chain DNA → RNA → protein → trait, and how DNA is read in order. Explain it in your own words.",
+  "lookFor": [
+    "DNA letters are instructions that get read in order, three at a time, to build proteins",
+    "Proteins are what actually create a creature's traits (like fur color or eye shape)",
+    "Changing one letter can change a three-letter word, which can change which building block/amino acid is used, changing the protein",
+    "A changed protein can change a visible trait — so one tiny letter can ripple out to something you can see (though sometimes a one-letter change does nothing)"
+  ],
+  "exemplar": "A creature's DNA is a set of instructions, read in order, three letters at a time. Each three-letter word tells the cell which building block to add to make a protein, and proteins are what actually build the creature's traits, like fur color. So if you change just one letter, you can change one of those three-letter words. That can change which building block gets used, which changes the protein, which can change the trait you actually see — like turning brown fur white. One tiny change near the start of the chain can ripple all the way out. Sometimes a one-letter change doesn't matter, but sometimes it changes everything, because the whole creature is built by reading those letters in order."
+}

@@ -21,6 +21,17 @@ a correct solution produces**, or every student gets marked wrong on right
 answers (or, worse, right on wrong ones). This skill keeps that honest by making
 you write the real solution first and generate the test values from it.
 
+## Two kinds of lesson
+
+Most lessons are **coding lessons** (the rest of this skill). But some ideas can't
+be tested as code — understanding them *is* the point. For those, author a
+**reflection lesson**: no Python, no tests, just one open question the kid
+re-explains in their own words, graded by the AI coach for *understanding*. These
+are great as a class's final "looking back / big picture" capstone (history of the
+idea → one question). If that's what you're building, **skip to
+[Reflection lessons](#reflection-lessons-no-python) at the bottom** — the
+`reference.py`-before-`tests.json` workflow below does not apply.
+
 ## The core invariant: reference.py before tests.json
 
 `reference.py` is the answer key — the real, correct implementation of every
@@ -244,3 +255,65 @@ clean.
 5. write the 6 files (10-yo voice) → 6. `npm run
 validate-class <slug>` green → 7. flip `syllabus.ts` to `published` + `npm run
 build`.
+
+## Reflection lessons (no Python)
+
+A reflection lesson swaps the code editor for a **prose answer box**. The kid
+re-explains a core idea in their own words; the AI coach assesses *understanding*
+(warm, formative — never spelling/grammar) and the lesson completes **on submit**
+(participation-based, so a kid is never stuck on the last lesson). It reuses the
+whole submission pipeline — the answer is stored where code normally is, and the
+same feedback panel renders the grade — so there's nothing to wire up. The lesson
+is **signalled purely by a `reflection.json` file**; no scaffold script.
+
+Use it for the kind of question that has no single right wording — *"explain why
+the Moon doesn't crash into Earth even though it's always falling."* Great as a
+class's final capstone: a `lesson.mdx` that tells the **history** of the idea (what
+problem it solved, who, when), then one question that makes the kid prove they
+*get* it. The existing pattern across all 8 classes is a final phase named
+**"The Big Picture"**; study `content/classes/leo-space/lesson-09` as the model.
+
+### Files
+
+A reflection lesson dir has **only three files** (no `tests.json`, `starter.py`,
+`viz.json`, `rubric.json`, or `reference.py`):
+
+- `lesson.mdx` — the narrative (for a capstone: the history of the idea). 10-yo
+  voice, `{{FIRST_NAME}}` tokens, anchored to what the kid actually built in the
+  class. Standard markdown (headings, bold, tables, blockquotes) renders fine.
+- `exercises.mdx` — frames the question and explains *how* to answer: there's no
+  code, write a few sentences in the box on the right, click **Submit answer**. A
+  short "Think about…" list of 3 sub-prompts helps. (Keep this file — the loader
+  requires both `lesson.mdx` and `exercises.mdx`.)
+- `reflection.json`:
+
+```json
+{
+  "question": "The open question, shown to the student (supports {{FIRST_NAME}}).",
+  "guidance": "Optional one-line hint shown next to the answer box.",
+  "lookFor": ["key idea a strong answer conveys", "another", "..."],
+  "exemplar": "Optional model answer."
+}
+```
+
+**Privacy:** `question` and `guidance` are shown to the student; `lookFor` and
+`exemplar` are **grader-only** — the lesson page strips them before sending props
+to the browser, and `/api/ai-review` reads `reflection.json` fresh server-side. So
+a curious kid can't view-source the answer. Write `lookFor` as the concrete ideas
+the AI should reward; write `exemplar` as a real kid-level answer (it's reference,
+not a wording template the kid must match).
+
+### Workflow
+
+1. Create the lesson dir and write the three files above (no scaffold script).
+   Pick a slug that sorts last among the class's existing dirs and matches the
+   class's naming (`lesson-0N`, or `week-NN` for `leo`). For a class with
+   planned-but-unbuilt future weeks (`leo`, `leila`), use the **highest** week
+   number in a new final phase so it lands last without colliding with a planned
+   slug (e.g. `leo/week-11`, `leila/lesson-11`).
+2. `npm run validate-class <slug>` — confirms `reflection.json` parses and has a
+   `question` + non-empty `lookFor`. (Value checks are skipped — there's no
+   `reference.py`, which is expected.)
+3. Add the `Week` to `syllabus.ts` under a final phase (the convention is
+   `{ phase: N, name: "The Big Picture" }`), `status: "published"`, then
+   `npm run build`.

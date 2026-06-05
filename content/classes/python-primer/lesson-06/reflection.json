@@ -1,0 +1,11 @@
+{
+  "question": "Why did people invent programming languages like Python instead of just talking to computers in plain English?",
+  "guidance": "Explain it like you're telling a friend who has never coded. Your own words and examples are perfect.",
+  "lookFor": [
+    "At the very bottom a computer only understands 1s and 0s (on/off, machine code), not English",
+    "Writing pure 1s and 0s is miserable and error-prone for humans, so we needed something easier",
+    "Plain English is too messy/ambiguous — a computer can't guess what you mean, so it needs exact rules",
+    "A programming language is a middle ground: real words humans can read, plus strict no-guessing rules a translator turns into the computer's 1s and 0s"
+  ],
+  "exemplar": "Deep down a computer only understands 1s and 0s — on and off. Humans are really bad at writing long strings of 1s and 0s, so we needed an easier way to give it instructions. But we can't just use plain English, because English is full of guesses — 'grab the bat' could mean two things, and a computer can't guess. So people invented programming languages like Python. They use real words like 'if' and 'print' so a human can read them, but they have exact rules so the computer always knows precisely what you mean. Then a translator program turns your Python into the 1s and 0s the machine actually runs."
+}

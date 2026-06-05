@@ -1,0 +1,11 @@
+{
+  "question": "How can a screen show a colorful picture using only a grid of tiny squares and numbers?",
+  "guidance": "Explain it like you're telling a friend who has never coded. Use your own words — even a silly example is great.",
+  "lookFor": [
+    "A picture is broken up into a grid of tiny squares called pixels (picture elements)",
+    "Each pixel is given one color, which can be written as a number, so the whole picture becomes a list of numbers the computer can store or send",
+    "The screen colors in the grid square by square to rebuild the picture",
+    "The squares are so tiny (and far from our eyes) that the picture looks smooth, so we don't notice them"
+  ],
+  "exemplar": "A picture gets chopped into a big grid of tiny squares called pixels. Each pixel is just one color, and a color can be written as a number, so the whole picture turns into a long list of numbers. Numbers are easy for a computer to store or send through a wire. To show the picture, the screen just colors in every square in the grid using those numbers. The squares are super tiny, so our eyes blur them together and it looks like a smooth photo instead of a bunch of blocks."
+}

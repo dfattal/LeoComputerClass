@@ -11,6 +11,10 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
 import type { TestEntry, VizConfig } from "@/lib/lessons/loadLesson";
+
+/** The subset of a reflection lesson that's safe to send to the browser: just
+ *  what the student sees. The grader-only `lookFor`/`exemplar` stay server-side. */
+type ClientReflectionConfig = { question: string; guidance?: string };
 import { getClassBySlug } from "@/content/classes";
 import { AccentProvider, useAccent } from "./AccentContext";
 import dynamic from "next/dynamic";
@@ -32,6 +36,7 @@ import MobileActionBar from "./MobileActionBar";
 import RunPanel from "./RunPanel";
 import TestResults from "./TestResults";
 import AIFeedback from "./AIFeedback";
+import ReflectionPanel from "./ReflectionPanel";
 import LinePlot from "./LinePlot";
 import PixelCanvas from "./PixelCanvas";
 import EditorGraphSplit from "./EditorGraphSplit";
@@ -60,6 +65,7 @@ export default function CourseShell({
   weeks,
   starterCode,
   vizConfig,
+  reflectionConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -70,6 +76,7 @@ export default function CourseShell({
   weeks: SidebarWeek[];
   starterCode?: string;
   vizConfig?: VizConfig;
+  reflectionConfig?: ClientReflectionConfig;
 }) {
   const accentColor = getClassBySlug(classSlug)?.accentColor ?? "indigo";
 
@@ -85,6 +92,7 @@ export default function CourseShell({
         weeks={weeks}
         starterCode={starterCode}
         vizConfig={vizConfig}
+        reflectionConfig={reflectionConfig}
       />
     </AccentProvider>
   );
@@ -100,6 +108,7 @@ function CourseShellInner({
   weeks,
   starterCode,
   vizConfig,
+  reflectionConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -110,8 +119,10 @@ function CourseShellInner({
   weeks: SidebarWeek[];
   starterCode?: string;
   vizConfig?: VizConfig;
+  reflectionConfig?: ClientReflectionConfig;
 }) {
   const accent = useAccent();
+  const isReflection = !!reflectionConfig;
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [mounted, setMounted] = useState(false);
 
@@ -145,8 +156,10 @@ function CourseShellInner({
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Drawer state
-  const [drawerTab, setDrawerTab] = useState<DrawerTab>("Output");
+  // Drawer state — reflection lessons only have a Review (feedback) tab.
+  const [drawerTab, setDrawerTab] = useState<DrawerTab>(
+    isReflection ? "Review" : "Output"
+  );
   const [drawerCollapsed, setDrawerCollapsed] = useState(false);
 
   // Mobile state
@@ -162,14 +175,33 @@ function CourseShellInner({
 
   // Fetch existing submission + auto-saved draft on mount. The draft is the
   // in-progress code; it takes priority over the last submission when restoring.
+  //
+  // The sidebar navigates between lessons with <Link> (client-side), so this
+  // CourseShell instance is REUSED across lessons — only the props change. So we
+  // must RESET the previous lesson's per-lesson state up front and always write
+  // the fetch result (null when none), or a fresh lesson would keep showing the
+  // last lesson's restored answer + feedback. (Without this, opening a not-yet-
+  // attempted lesson after a completed one shows the completed one's code.)
   useEffect(() => {
+    setExistingSubmission(null);
+    setDraftCode(null);
+    setAiFeedback(null);
+    setSubmitted(false);
+    setSubmitError(null);
+    setTestResults([]);
+    setTestError(null);
+    setStdout("");
+    setStderr("");
+    lastSavedCode.current = null;
+
     const query = `classSlug=${encodeURIComponent(classSlug)}&lessonSlug=${encodeURIComponent(lessonSlug)}`;
+    let cancelled = false;
     async function fetchExisting() {
       try {
         const res = await fetch(`/api/submit?${query}`);
         if (res.ok) {
           const { submission } = await res.json();
-          if (submission) setExistingSubmission(submission);
+          if (!cancelled) setExistingSubmission(submission ?? null);
         }
       } catch {
         // Ignore — no existing submission
@@ -180,7 +212,7 @@ function CourseShellInner({
         const res = await fetch(`/api/draft?${query}`);
         if (res.ok) {
           const { draft } = await res.json();
-          if (draft?.code) setDraftCode(draft.code);
+          if (!cancelled) setDraftCode(draft?.code ?? null);
         }
       } catch {
         // Ignore — no saved draft
@@ -188,6 +220,9 @@ function CourseShellInner({
     }
     fetchExisting();
     fetchDraft();
+    return () => {
+      cancelled = true;
+    };
   }, [classSlug, lessonSlug]);
 
   // The editor's restore fallback: prefer the in-progress draft, then the last
@@ -676,7 +711,9 @@ except Exception as __e:
             />
           </svg>
           <span className="text-sm text-stone-600 dark:text-stone-300">
-            Your coach is reading your code…
+            {isReflection
+              ? "Your coach is reading your answer…"
+              : "Your coach is reading your code…"}
           </span>
         </div>
       )}
@@ -695,7 +732,9 @@ except Exception as __e:
       )}
       {!submitted && !displayAiFeedback && !displayInstructorFeedback && (
         <p className="text-sm text-stone-400">
-          Submit your code to get AI feedback.
+          {isReflection
+            ? "Write your answer and submit to get feedback from your coach."
+            : "Submit your code to get AI feedback."}
         </p>
       )}
     </div>
@@ -744,6 +783,97 @@ except Exception as __e:
           <div className="flex min-w-0 flex-1">
             <div className="flex-1" />
           </div>
+        </div>
+      </>
+    );
+  }
+
+  // --- REFLECTION LAYOUT ---
+  // A no-Python capstone: prose answer box instead of the editor, and the drawer
+  // shows only the Review (AI feedback) tab. Reuses the same sidebar, content
+  // panel, split layout, submit flow, and feedback rendering as code lessons.
+  if (isReflection && reflectionConfig) {
+    const reflectionPanel = (
+      <ReflectionPanel
+        classSlug={classSlug}
+        lessonSlug={lessonSlug}
+        question={reflectionConfig.question}
+        guidance={reflectionConfig.guidance}
+        onCodeChange={handleCodeChange}
+        fallbackCode={fallbackCode}
+        onSubmit={handleSubmit}
+        submitting={submitting}
+        hasText={!!code.trim()}
+        hasSubmittedBefore={hasSubmittedBefore}
+        saveStatus={saveStatus}
+      />
+    );
+
+    const reflectionDrawer = (
+      <BottomDrawer
+        activeTab="Review"
+        onTabChange={() => {}}
+        collapsed={drawerCollapsed}
+        onCollapsedChange={setDrawerCollapsed}
+        outputContent={null}
+        testsContent={null}
+        reviewContent={reviewContent}
+        tabs={["Review"]}
+      />
+    );
+
+    if (isDesktop) {
+      return (
+        <>
+          <LessonSidebar {...sidebarProps} />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <SplitLayout
+              leftPanel={
+                <ContentPanel
+                  lessonContent={lessonContent}
+                  exercisesContent={exercisesContent}
+                />
+              }
+              rightPanel={reflectionPanel}
+            />
+            {reflectionDrawer}
+          </div>
+        </>
+      );
+    }
+
+    // Mobile reflection: Learn / Answer toggle, no run/test action bar.
+    return (
+      <>
+        <LessonSidebar {...sidebarProps} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <MobileTabBar
+            active={activeView}
+            onChange={setActiveView}
+            secondLabel="Answer"
+          />
+          <div className="relative min-h-0 flex-1">
+            <div
+              className={`absolute inset-0 overflow-y-auto ${activeView === "Learn" ? "block" : "hidden"}`}
+              id="mobile-panel-learn"
+              role="tabpanel"
+              aria-labelledby="mobile-tab-learn"
+            >
+              <ContentPanel
+                lessonContent={lessonContent}
+                exercisesContent={exercisesContent}
+              />
+            </div>
+            <div
+              className={`absolute inset-0 ${activeView === "Code" ? "block" : "hidden"}`}
+              id="mobile-panel-code"
+              role="tabpanel"
+              aria-labelledby="mobile-tab-code"
+            >
+              {reflectionPanel}
+            </div>
+          </div>
+          {reflectionDrawer}
         </div>
       </>
     );

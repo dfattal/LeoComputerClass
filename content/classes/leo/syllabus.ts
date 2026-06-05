@@ -22,6 +22,7 @@ export const phases: Phase[] = [
   { phase: 3, name: "Memory", weeks: [5, 6] },
   { phase: 4, name: "ALU", weeks: [7, 8] },
   { phase: 5, name: "CPU", weeks: [9, 10] },
+  { phase: 6, name: "The Big Picture", weeks: [11] },
 ];
 
 export const weeks: Week[] = [
@@ -104,6 +105,14 @@ export const weeks: Week[] = [
     summary: "Wire it all together into a working computer",
     phase: 5,
     status: "planned",
+  },
+  {
+    week: 11,
+    slug: "week-11",
+    title: "The Big Picture: From Light Switches to Computers",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 6,
+    status: "published",
   },
 ];
 

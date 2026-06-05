@@ -1,0 +1,61 @@
+# Lesson 9 — The Big Picture: Who Invented Calculus, and Why
+
+## Looking back at the math that ran your blaster
+
+---
+
+## You used a 350-year-old superpower
+
+Every lesson in Motion Lab, {{FIRST_NAME}}, you did the same magic trick: you chopped time into **tiny steps** and updated position and velocity one step at a time. Drop a ball, launch a dart, add air drag, find the best angle — all of it ran on that one idea. You watched a Nerf dart fly with no fancy formula, just **tiny steps**.
+
+That idea has a name: **calculus.** And the story of why it was invented is one of the best in all of science.
+
+---
+
+## The problem: the old math couldn't handle *change*
+
+For thousands of years, math was great at things that **stand still.** The area of a field, the size of a triangle — easy. But the world *moves.* A planet speeds up and slows down. A thrown rock curves. A push from a spring fades as it lets go.
+
+The old math had no good way to answer questions like: *exactly how fast is something going at one single instant?* or *how far does it travel if its speed keeps changing the whole way?* People were stuck. To unlock motion, somebody needed to invent a brand-new kind of math.
+
+---
+
+## Two geniuses, at the same time, separately (around 1666–1680)
+
+Here's the strange part: **two** people invented calculus at almost the same moment, without working together.
+
+- In England, **Isaac Newton** invented it (he called it "fluxions") to solve a giant mystery: *why do the planets move the way they do?* He needed math that could handle a force that's always changing, so he built it himself — around 1666, partly while hiding at home from a plague.
+- In Germany, **Gottfried Leibniz** invented it too, on his own, a few years later. He cared about clear, neat symbols. The notation you'll meet later — the curvy ∫ sign and "dx" — that's **Leibniz's**, and we still use it today.
+
+They later had a famous, grumpy argument about who did it first. The fair answer: **both did.** That's how ready the world was for this idea.
+
+---
+
+## The two halves of calculus — you used both
+
+Calculus has two big moves, and you've secretly been doing **both** all class:
+
+1. **Derivatives** — *splitting change into instants.* "How fast, right now?" Acceleration is how fast velocity is changing; velocity is how fast position is changing. Every time you said `v = v + a*dt`, you were using a derivative *backwards.*
+2. **Integrals** — *adding up tiny pieces.* "If the speed keeps changing, how far did it go in total?" You answered that by adding up the distance from each tiny step. That's an integral, done by hand, one `dt` at a time.
+
+---
+
+## Why tiny steps work: the Euler method
+
+Newton and Leibniz could often find an exact formula. But the moment you added **air resistance**, the neat formula vanished — there *is* no simple equation for it. So what do you do?
+
+You do what you did all class: **take steps so tiny that, for one little moment, the changing thing barely changes.** Pretend the speed is constant for one tiny `dt`, take the step, then update and repeat. Smaller steps → closer to the truth. This trick is named after another mathematician, **Leonhard Euler**, and it's how real engineers fly rockets and predict weather *today* — because most real problems are too messy for a clean formula.
+
+> **That's the punchline of the whole class.** When the world is too complicated for a formula, you don't give up — you **simulate it** in tiny steps. You've been doing real, modern physics this whole time.
+
+---
+
+## From planets to your Nerf blaster
+
+Newton built calculus to chase the planets. 350 years later, *you* used the very same idea to predict where a foam dart lands. Same math, same tiny steps — just a smaller target. That's how powerful the idea is: it runs spacecraft, video games, weather forecasts, and your blaster, all on one trick.
+
+---
+
+## One last thing to think about
+
+You've *used* the tiny-step idea a hundred times. Now explain *why it works* in your own words — that's how you'll know you really own it. Head to the exercise. No code this time. Just you and the idea. 🎯

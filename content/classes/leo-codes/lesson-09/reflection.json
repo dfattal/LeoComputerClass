@@ -1,0 +1,11 @@
+{
+  "question": "How can two people agree on a secret code over the internet even if a spy hears everything they say?",
+  "guidance": "Use the color-mixing paint idea you built if it helps. Explain in your own words why the spy can't figure out the final secret.",
+  "lookFor": [
+    "The problem: to use a normal code both people need the same secret key, but they're far apart and a spy is listening to everything",
+    "Each person mixes their own private secret into a shared public starting point (like mixing paint colors)",
+    "They swap the mixed results in the open, then mix in their private secret again — and both end up with the same final secret",
+    "The spy can't un-mix the colors / reverse the math, so even though they saw every message, they can't get the final shared secret"
+  ],
+  "exemplar": "Normally to share a secret message you both need the same key first, but if you're far apart a spy could hear you trying to agree on one. The trick is like mixing paint. Everyone starts with the same public color. Each person also picks their own secret color and mixes it in, then sends the mixed-up color out in the open. The spy sees those mixed colors, but paint is easy to mix and basically impossible to un-mix, so they can't tell what secret colors went in. Then each person mixes their own secret color into the color they received, and amazingly both end up with the exact same final color. That final color is the shared secret key — and the spy can't make it because they never had either private color."
+}

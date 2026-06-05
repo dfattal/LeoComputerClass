@@ -22,6 +22,7 @@ export const phases: Phase[] = [
   { phase: 2, name: "Real Orbits", weeks: [3, 4] },
   { phase: 3, name: "Flying a Mission", weeks: [5, 6] },
   { phase: 4, name: "To Other Worlds", weeks: [7, 8] },
+  { phase: 5, name: "The Big Picture", weeks: [9] },
 ];
 
 export const weeks: Week[] = [
@@ -87,6 +88,14 @@ export const weeks: Week[] = [
     title: "Mission Control (Capstone)",
     summary: "Let your simulator hunt down the one perfect orbit speed — and rediscover the law",
     phase: 4,
+    status: "published",
+  },
+  {
+    week: 9,
+    slug: "lesson-09",
+    title: "The Big Picture: Why the Moon Doesn't Fall",
+    summary: "A look back at the whole journey — then explain a big idea in your own words",
+    phase: 5,
     status: "published",
   },
 ];

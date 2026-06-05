@@ -193,10 +193,12 @@ function validateLesson(lessonDir) {
   // 1. JSON parse
   let tests = null;
   let viz = null;
+  let reflection = null;
   for (const [name, required] of [
     ["tests.json", false],
     ["rubric.json", false],
     ["viz.json", false],
+    ["reflection.json", false],
   ]) {
     const p = join(lessonDir, name);
     if (!existsSync(p)) {
@@ -208,9 +210,25 @@ function validateLesson(lessonDir) {
       add(true, `${name} parses`);
       if (name === "tests.json") tests = parsed;
       if (name === "viz.json") viz = parsed;
+      if (name === "reflection.json") reflection = parsed;
     } catch (e) {
       add(false, `${name} parses`, e.message);
     }
+  }
+
+  // 1b. Reflection lessons (no Python): must carry a question + non-empty lookFor
+  // so the AI grader has something to assess against.
+  if (reflection) {
+    const hasQ =
+      typeof reflection.question === "string" && reflection.question.trim().length > 0;
+    add(hasQ, "reflection.json has a question", hasQ ? undefined : "missing/empty question");
+    const hasLookFor =
+      Array.isArray(reflection.lookFor) && reflection.lookFor.length > 0;
+    add(
+      hasLookFor,
+      "reflection.json has lookFor key ideas",
+      hasLookFor ? undefined : "lookFor must be a non-empty array"
+    );
   }
 
   // 2. py_compile starter.py and reference.py

@@ -93,6 +93,11 @@ this file, so that's the only edit needed.
 - `content/classes/<slug>/syllabus.ts` — plan the phases and weeks. Add each
   `Week` with `status: "planned"` for now (flip to `"published"` per lesson as you
   build it). Keep the arc tight and building toward the through-line.
+  - **Consider ending with a reflection capstone.** Every class so far closes with
+    a final "The Big Picture" phase: one no-Python lesson that tells the *history*
+    of the idea and asks the kid to re-explain a core concept in their own words
+    (AI-graded for understanding). If you want one, add it as the last phase/week
+    now; build it later via the **Reflection lessons** section of `/new-lesson`.
 
 ### 5. Generate the hero image (don't ship a placeholder)
 
