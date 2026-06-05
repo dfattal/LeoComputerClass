@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import AdminSubmissions from "@/components/AdminSubmissions";
+import { classes } from "@/content/classes";
 
 export default async function AdminPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -46,7 +47,9 @@ export default async function AdminPage() {
   // Fetch all submissions with lesson and profile info
   const { data: submissions } = await serviceClient
     .from("submissions")
-    .select("*, lessons(slug, title, class_slug), profiles(display_name)")
+    .select(
+      "*, lessons(slug, title, class_slug, week_number), profiles(display_name)"
+    )
     .order("created_at", { ascending: false });
 
   // Fetch all users via admin API for display names and avatars
@@ -66,10 +69,27 @@ export default async function AdminPage() {
     };
   }
 
+  // Build a lookup map: class_slug -> { name, accentColor, heroImage }
+  const classMap: Record<
+    string,
+    { name: string; accentColor: string; heroImage: string }
+  > = {};
+  for (const c of classes) {
+    classMap[c.slug] = {
+      name: c.name,
+      accentColor: c.accentColor,
+      heroImage: c.heroImage,
+    };
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">Admin Panel</h1>
-      <AdminSubmissions submissions={submissions || []} userMap={userMap} />
+      <AdminSubmissions
+        submissions={submissions || []}
+        userMap={userMap}
+        classMap={classMap}
+      />
     </div>
   );
 }
