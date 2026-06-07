@@ -1,0 +1,89 @@
+# Lesson 7 — The Great Split
+
+## Phase 4: The Summit
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset **Euler's formula** — the bridge between your tower and your rotations
+- Write **multi-line derivations** with `\begin{align*} … \end{align*}`, `&=`, and `\\`
+- Use function powers like `\cos^2(x)`
+- Publish the algebraic summoning of the **circle**
+
+---
+
+## Big Idea
+
+Everything in your book has been heading here. You have the **tower** ($e^x$, Lesson 4) and you have the **quarter-turn number** ($i$, Lesson 6). Chapter 8 of your curriculum asked the irresistible question: *what happens if you feed a rotation into the tower?*
+
+Plug $ix$ into the series and the powers of $i$ start cycling — $i, -1, -i, 1, i, -1, \dots$ — sorting the tower's floors into two alternating families: the floors that stay **real**, and the floors that keep an **$i$**. You named those two families. They are cosine and sine:
+
+$$e^{ix} = \cos(x) + i\sin(x)$$
+
+No triangles. No circles. You *built* sine and cosine out of pure algebra. Today: publish the split — and then use last week's conjugate twins to summon geometry itself.
+
+---
+
+## Multi-Line Derivations: `align*`
+
+Real proofs don't fit on one line. Open any math book: derivations stack, with every step's $=$ sign **lined up in a column**. The environment that does this is `align*`:
+
+```
+\begin{align*}
+(\text{big thing}) &= \text{first step} \\
+&= \text{final answer}
+\end{align*}
+```
+
+Three new marks, each with one job:
+
+- `\begin{align*}` and `\end{align*}` — open and close the derivation block
+- `&=` — the ampersand pins this spot to the alignment column; every line's `&=` stacks
+- `\\` — end of line, drop to the next
+
+(The `*` means "no equation numbers" — book style for now.) Continuation lines start right at `&=`, with nothing before it — the math is *continuing*, not restarting.
+
+And here's the good news about your grader: it reads an `align*` block as **one long chain of equals** — every line is another link, and every link gets verified numerically. The proof's *whole spine* is checked.
+
+---
+
+## Function Powers: `\cos^2`
+
+"Cosine squared" attaches the power to the function name:
+
+```
+\cos^2(x) + \sin^2(x)
+```
+
+$$\cos^2(x) + \sin^2(x)$$
+
+Same `^` you've always used, riding on `\cos` directly. (Writing $\cos(x)^2$ is legal but ambiguous to readers; $\cos^2(x)$ is book style.)
+
+---
+
+## Summoning the Circle
+
+Now the chapter's magic trick, in three moves you *already own*:
+
+1. Take the split and its **conjugate twin** (Lesson 6): $\cos(x) + i\sin(x)$ and $\cos(x) - i\sin(x)$.
+2. Multiply the twins — and the $i$'s annihilate, exactly like $(2+3i)(2-3i)$ did: out comes $\cos^2(x) + \sin^2(x)$.
+3. But the twins are also $e^{ix}$ and $e^{-ix}$, and your Chapter 4 exponent rule says their product is $e^0 = 1$.
+
+So:
+
+$$\cos^2(x) + \sin^2(x) = 1$$
+
+That equation **is the unit circle** — every point $(\cos x, \sin x)$ sits at distance 1. You summoned the circle, and all of triangle-trigonometry behind it, from a series and an imaginary number. This is the most magician-like page of your book; give it the two-line `align*` it deserves.
+
+---
+
+## One More Gift
+
+Since sine and cosine are now just infinite polynomials, their derivatives come from the **power rule** — Lesson 1's machine, running floor by floor down the tower:
+
+$$\frac{d}{dx}\sin(x) = \cos(x)$$
+
+The grader will verify it the honest way: nudge $x$, measure sine's slope, compare to your cosine. Page seven awaits.

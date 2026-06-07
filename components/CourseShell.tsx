@@ -11,6 +11,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
 import type { TestEntry, VizConfig } from "@/lib/lessons/loadLesson";
+import type { LatexLessonConfig } from "@/lib/latex/check.mjs";
 
 /** The subset of a reflection lesson that's safe to send to the browser: just
  *  what the student sees. The grader-only `lookFor`/`exemplar` stay server-side. */
@@ -23,6 +24,8 @@ const CrisprSimulator = dynamic(
   () => import("./classes/leila/CrisprSimulator"),
   { ssr: false }
 );
+// Lazy so KaTeX + the LaTeX checker only load on latex lessons.
+const LatexPanel = dynamic(() => import("./LatexPanel"), { ssr: false });
 import LessonSidebar, {
   type SidebarPhase,
   type SidebarWeek,
@@ -66,6 +69,7 @@ export default function CourseShell({
   starterCode,
   vizConfig,
   reflectionConfig,
+  latexConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -77,6 +81,7 @@ export default function CourseShell({
   starterCode?: string;
   vizConfig?: VizConfig;
   reflectionConfig?: ClientReflectionConfig;
+  latexConfig?: LatexLessonConfig;
 }) {
   const accentColor = getClassBySlug(classSlug)?.accentColor ?? "indigo";
 
@@ -93,6 +98,7 @@ export default function CourseShell({
         starterCode={starterCode}
         vizConfig={vizConfig}
         reflectionConfig={reflectionConfig}
+        latexConfig={latexConfig}
       />
     </AccentProvider>
   );
@@ -109,6 +115,7 @@ function CourseShellInner({
   starterCode,
   vizConfig,
   reflectionConfig,
+  latexConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -120,9 +127,11 @@ function CourseShellInner({
   starterCode?: string;
   vizConfig?: VizConfig;
   reflectionConfig?: ClientReflectionConfig;
+  latexConfig?: LatexLessonConfig;
 }) {
   const accent = useAccent();
   const isReflection = !!reflectionConfig;
+  const isLatex = !!latexConfig;
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [mounted, setMounted] = useState(false);
 
@@ -156,9 +165,10 @@ function CourseShellInner({
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Drawer state — reflection lessons only have a Review (feedback) tab.
+  // Drawer state — reflection lessons only have a Review (feedback) tab;
+  // latex lessons have Tests + Review (the live page replaces Output).
   const [drawerTab, setDrawerTab] = useState<DrawerTab>(
-    isReflection ? "Review" : "Output"
+    isReflection ? "Review" : isLatex ? "Tests" : "Output"
   );
   const [drawerCollapsed, setDrawerCollapsed] = useState(false);
 
@@ -575,6 +585,31 @@ except Exception as __e:
     await captureViz(code, !!result.error);
   }, [runTests, code, tests, captureViz]);
 
+  // Latex lessons grade synchronously in the browser — no Pyodide. The checker
+  // (KaTeX compile → required commands → is-the-math-true) ships in its own
+  // chunk, dynamically imported so Python lessons never pay for it.
+  const runLatexCheck = useCallback(
+    async (openDrawer = true): Promise<TestResult[]> => {
+      if (!latexConfig) return [];
+      let results: TestResult[] = [];
+      try {
+        const { checkDocument } = await import("@/lib/latex/check.mjs");
+        results = checkDocument(codeRef.current, latexConfig).results;
+        setTestError(null);
+      } catch (err) {
+        setTestError(err instanceof Error ? err.message : String(err));
+      }
+      setTestResults(results);
+      if (openDrawer) {
+        setDrawerTab("Tests");
+        setDrawerCollapsed(false);
+        localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
+      }
+      return results;
+    },
+    [latexConfig]
+  );
+
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
     setReviewing(true);
@@ -583,6 +618,9 @@ except Exception as __e:
     setDrawerTab("Review");
     setDrawerCollapsed(false);
     localStorage.setItem(DRAWER_COLLAPSED_KEY, "false");
+    // Re-grade latex pages at submit time so completion never depends on the
+    // student having clicked "Check" first.
+    const resultsForSubmit = isLatex ? await runLatexCheck(false) : testResults;
     try {
       const submitRes = await fetch("/api/submit", {
         method: "POST",
@@ -593,7 +631,7 @@ except Exception as __e:
           code,
           stdout,
           stderr,
-          testResults,
+          testResults: resultsForSubmit,
         }),
       });
 
@@ -626,7 +664,7 @@ except Exception as __e:
         ai_feedback: feedback,
         instructor_feedback: null,
         status: feedback ? "reviewed" : "submitted",
-        test_results: testResults.map((r) => ({
+        test_results: resultsForSubmit.map((r) => ({
           passed: r.passed,
           name: r.name,
           error: r.error ?? undefined,
@@ -640,7 +678,7 @@ except Exception as __e:
       setSubmitting(false);
       setReviewing(false);
     }
-  }, [classSlug, lessonSlug, code, stdout, stderr, testResults]);
+  }, [classSlug, lessonSlug, code, stdout, stderr, testResults, isLatex, runLatexCheck]);
 
   const hasSubmittedBefore = submitted || !!existingSubmission;
   // While a new review is in flight, suppress stale feedback so the spinner shows instead.
@@ -713,7 +751,9 @@ except Exception as __e:
           <span className="text-sm text-stone-600 dark:text-stone-300">
             {isReflection
               ? "Your coach is reading your answer…"
-              : "Your coach is reading your code…"}
+              : isLatex
+                ? "Your coach is reading your page…"
+                : "Your coach is reading your code…"}
           </span>
         </div>
       )}
@@ -734,7 +774,9 @@ except Exception as __e:
         <p className="text-sm text-stone-400">
           {isReflection
             ? "Write your answer and submit to get feedback from your coach."
-            : "Submit your code to get AI feedback."}
+            : isLatex
+              ? "Submit your page to get feedback from your coach."
+              : "Submit your code to get AI feedback."}
         </p>
       )}
     </div>
@@ -874,6 +916,101 @@ except Exception as __e:
             </div>
           </div>
           {reflectionDrawer}
+        </div>
+      </>
+    );
+  }
+
+  // --- LATEX LAYOUT ---
+  // A typesetting lesson: LaTeX editor + live typeset page instead of the
+  // Python editor + graph, graded in-browser (no Pyodide). The drawer carries
+  // Tests (the tiered checks) + Review; the page itself replaces Output.
+  if (isLatex && latexConfig) {
+    const latexPanel = (
+      <LatexPanel
+        classSlug={classSlug}
+        lessonSlug={lessonSlug}
+        config={latexConfig}
+        code={code}
+        onCodeChange={handleCodeChange}
+        fallbackCode={fallbackCode}
+        starterCode={starterCode}
+        resetKey={resetKey}
+        onCheck={() => runLatexCheck(true)}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+        submitting={submitting}
+        hasCode={!!code.trim()}
+        hasSubmittedBefore={hasSubmittedBefore}
+        saveStatus={saveStatus}
+      />
+    );
+
+    const latexDrawer = (
+      <BottomDrawer
+        activeTab={drawerTab}
+        onTabChange={setDrawerTab}
+        collapsed={drawerCollapsed}
+        onCollapsedChange={setDrawerCollapsed}
+        outputContent={null}
+        testsContent={testsContent}
+        reviewContent={reviewContent}
+        tabs={["Tests", "Review"]}
+      />
+    );
+
+    if (isDesktop) {
+      return (
+        <>
+          <LessonSidebar {...sidebarProps} />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <SplitLayout
+              leftPanel={
+                <ContentPanel
+                  lessonContent={lessonContent}
+                  exercisesContent={exercisesContent}
+                />
+              }
+              rightPanel={latexPanel}
+            />
+            {latexDrawer}
+          </div>
+        </>
+      );
+    }
+
+    // Mobile latex: Learn / Write toggle; the panel carries its own toolbar.
+    return (
+      <>
+        <LessonSidebar {...sidebarProps} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <MobileTabBar
+            active={activeView}
+            onChange={setActiveView}
+            secondLabel="Write"
+          />
+          <div className="relative min-h-0 flex-1">
+            <div
+              className={`absolute inset-0 overflow-y-auto ${activeView === "Learn" ? "block" : "hidden"}`}
+              id="mobile-panel-learn"
+              role="tabpanel"
+              aria-labelledby="mobile-tab-learn"
+            >
+              <ContentPanel
+                lessonContent={lessonContent}
+                exercisesContent={exercisesContent}
+              />
+            </div>
+            <div
+              className={`absolute inset-0 ${activeView === "Code" ? "block" : "hidden"}`}
+              id="mobile-panel-code"
+              role="tabpanel"
+              aria-labelledby="mobile-tab-code"
+            >
+              {latexPanel}
+            </div>
+          </div>
+          {latexDrawer}
         </div>
       </>
     );

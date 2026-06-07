@@ -1,0 +1,76 @@
+# Lesson 5 — The Mirror Universe
+
+## Phase 3: New Numbers
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset the **natural logarithm** with `\ln` (and know why it's not just the letters l-n)
+- Nest functions inside functions: $e^{\ln(x)}$ — a command living inside an exponent
+- Publish the proof-result you're proudest of: $\ln'(x) = \frac{1}{x}$
+- Typeset a **law** — an equation with two free variables, checked at independent values
+
+---
+
+## Big Idea
+
+Last week you built the self-replicating machine $e^x$. This chapter, on paper, you built its **mirror**: the undo button. You *defined* $\ln(x)$ by one demand — that it unwind the exponential:
+
+$$e^{\ln(x)} = x$$
+
+And then came the magic trick: you took your Chain Rule (Lesson 2's gear train!), turned the crank on both sides of that definition, and out fell
+
+$$\ln'(x) = \frac{1}{x}$$
+
+— a mysterious transcendental function whose slope is the plainest fraction there is. Today that proof's results get published.
+
+---
+
+## Function Names Are Commands: `\ln`
+
+Here's a typesetting rule that separates the pros from everyone else. If you type the letters `ln(x)` in math mode, LaTeX thinks you mean $l$ *times* $n$ — two variables multiplied — and typesets them slanted and wrong: $ln(x)$. The command `\ln` typesets the *function*, upright and properly spaced:
+
+```
+\ln(x)
+```
+
+$$\ln(x)$$
+
+Slanted letters mean *variables*; upright letters mean *named functions*. Same reason it's `\sin` and `\cos`, never plain `sin`. Your eye will learn to flinch at slanted ln — every mathematician's does.
+
+---
+
+## Commands Inside Exponents
+
+The undo equation puts an entire function up in an exponent:
+
+```
+e^{\ln(x)}
+```
+
+$$e^{\ln(x)}$$
+
+Nothing new is needed — it's the brace rule from Lesson 1. The braces `{ }` after `^` can hold *anything*, including commands. LaTeX's little toolkit, composing again.
+
+And it works in both directions — $\ln$ also unwinds $e^x$ from the outside: $\ln\left(e^x\right) = x$. (Grow those parentheses with `\left( \right)` — there's a power tower inside.)
+
+---
+
+## Typesetting a LAW
+
+The third line today is different in kind. So far you've typeset *calculations* — things with one variable, or none. But
+
+$$\ln(ab) = \ln(a) + \ln(b)$$
+
+is a **law**: it claims something for *every* $a$ and *every* $b$. It's the mirror image of the exponent rule you proved with the Cauchy product in Chapter 4 — $e^a \cdot e^b = e^{a+b}$ — reflected through the mirror: over there, exponents *add*; over here, **multiplication becomes addition**. (This single fact is why engineers carried slide rules for 300 years.)
+
+How do you check a law for *every* $a$ and $b$? The grader does what it did for the binomial theorem: samples both letters at several **independent** values. A fake law might survive one lucky test point; it won't survive the barrage.
+
+---
+
+## What You'll Typeset Today
+
+Three lines: the double undo (a three-link chain ending at plain $x$), the mirror's slope, and the law that turns multiplication into addition. Page five — your book now has both the machine and its mirror.

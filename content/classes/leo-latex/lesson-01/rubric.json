@@ -1,0 +1,6 @@
+[
+  {"criterion": "The math is true", "weight": 35, "description": "Every =-link in each chain holds: the limit equals 2x, the integral chain equals 2/3, and the antiderivative of 1/(x+1) is ln(x+1) + C"},
+  {"criterion": "Idiomatic LaTeX", "weight": 30, "description": "\\frac instead of /, braces around multi-character exponents like x^{3/2}, \\left[ \\right] for the evaluation bracket, \\, before dx"},
+  {"criterion": "Shows the steps", "weight": 25, "description": "Chains show the derivation (integral = bracket = answer), not just a bare final result"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well together; exercise markers kept; no leftover placeholder comments"}
+]

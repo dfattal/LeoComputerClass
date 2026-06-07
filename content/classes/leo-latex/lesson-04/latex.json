@@ -1,0 +1,30 @@
+{
+  "title": "The Infinite Tower",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "sum-machine",
+      "title": "The Sum Machine",
+      "prompt": "Show that sigma notation IS the spelled-out sum: four terms = one Σ.",
+      "requires": ["\\sum_", "\\frac", "!"],
+      "minSegments": 2,
+      "expect": {}
+    },
+    {
+      "id": "infinite-tower",
+      "title": "The Infinite Tower",
+      "prompt": "Typeset the most important series in mathematics: e^x as an infinite sum.",
+      "requires": ["\\sum_", "\\infty", "e^x"],
+      "minSegments": 2,
+      "expect": {}
+    },
+    {
+      "id": "self-replicating",
+      "title": "The Self-Replicating Machine",
+      "prompt": "The whole reason e^x exists: it is its own derivative.",
+      "requires": ["\\frac{d}{dx}", "e^x"],
+      "minSegments": 2,
+      "expect": {}
+    }
+  ]
+}

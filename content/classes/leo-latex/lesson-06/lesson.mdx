@@ -1,0 +1,70 @@
+# Lesson 6 — A New Dimension
+
+## Phase 3: New Numbers
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset **complex numbers** — and discover the grader computes with them natively
+- Get the typography of $i$ right: when it touches, when it leads, when it trails
+- Publish the rotation facts: $i^2 = -1$, conjugate annihilation, and multiply-to-rotate
+- Meet checks whose **correct answer isn't even a real number**
+
+---
+
+## Big Idea
+
+In your book so far, every answer has lived on the number line. This is the chapter where the line *bursts*.
+
+You found it on paper through rotation: multiplying by $-1$ spins the number line $180°$. So what number gives a **quarter turn** — $90°$ — so that doing it *twice* lands on $-1$? No number on the line can. So you stepped *off* the line:
+
+$$i^2 = -1$$
+
+And suddenly numbers have **two coordinates**: $3 + 2i$ is a *point* — three steps east, two steps north. Today you typeset arithmetic in this new plane. And here's the wonderful part: the grader has been a citizen of the complex plane all along. Your checks this week have answers like $-2 + 3i$, and it verifies *both* coordinates.
+
+---
+
+## The Typography of $i$
+
+No new commands today — $i$ is just the letter `i`. What's new is the *craft* of placing it:
+
+- **Squared:** `i^2` → $i^2$
+- **With a coefficient, $i$ trails:** `3i`, `2i` → $3i,\ 2i$ — the number of steps first, then the direction
+- **As a multiplier out front, $i$ leads:** `i\left(3+2i\right)` → $i\left(3+2i\right)$
+
+One pitfall: in math mode, $i$ slants like every variable — that's correct here ($i$ *is* a number, not a function). The flinch you trained for upright $\ln$ doesn't apply.
+
+---
+
+## Three Facts of the New Plane
+
+**The definition, as arithmetic.** $i^2 = i \cdot i = -1$. Two quarter-turns make a half-turn. When the grader checks this chain, it multiplies $i$ by $i$ *as complex numbers* and confirms it lands exactly on $-1 + 0i$.
+
+**Conjugate partners.** Flip the sign of the imaginary part and you get a number's mirror twin: $2+3i$ and $2-3i$. Multiply them —
+
+$$(2+3i)(2-3i) = 4 - 9i^2 = 13$$
+
+— and the $i$'s annihilate (difference of squares, your old friend, with $i^2 = -1$ doing the flip from $-9$ to $+9$). Twin times twin is always plain and real. Remember this trick: in three weeks it summons a circle out of nothing.
+
+**Multiply to rotate.** Take the point $3+2i$ and multiply by $i$:
+
+$$i\left(3+2i\right) = 3i + 2i^2 = -2 + 3i$$
+
+Plot both points. $(3,2)$ became $(-2,3)$ — the *same arrow*, swung exactly $90°$ counterclockwise. Multiplication by $i$ **is** rotation. That's not a metaphor; it's what the arithmetic does. Hold onto this feeling — it's the secret engine of Euler's formula next week.
+
+---
+
+## When the Answer Isn't Real
+
+Until today, a final answer was one number. Now look at exercise 3: the correct answer is $-2 + 3i$ — **two** numbers wearing one coat. The grader checks the real part is $-2$ *and* the imaginary part is $3$. Drop the $i$ term, or get its sign wrong, and it will tell you which coordinate broke.
+
+You're now writing mathematics that lives in two dimensions. Your book just got a whole new direction.
+
+---
+
+## What You'll Typeset Today
+
+Three chains: the quarter-turn definition, the annihilating twins, and the rotation in action. Page six — the plane is open.

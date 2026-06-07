@@ -1,0 +1,61 @@
+# Lesson 1 — Exercises: Your First Typeset Page
+
+## How This Works
+
+Your editor holds a small LaTeX **page** — it already has a title, some sentences, and three `%% marker` lines, one per exercise. Write each answer **under its marker**, between `$$` and `$$`. The live preview below the editor re-typesets your page as you type, and each exercise's chip flips to ✓ when all its checks pass.
+
+Press **Check my page** anytime for the full report: does it compile, did you use the right commands, and — the big one — **is the math true**. The grader plugs in real numbers, so every `=` you write is a promise it will test.
+
+One rule for the whole class: **show your steps.** A bare answer isn't a derivation. Chain your work together with `=` signs, just like on paper.
+
+---
+
+## Exercise 1: The Slope Machine
+
+Under `%% slope-machine`, typeset the derivative of $x^2$ **from the limit definition**, ending at the answer:
+
+$$\lim_{h \to 0} \frac{(x+h)^2 - x^2}{h} = 2x$$
+
+**You'll need:** `\lim_{h \to 0}`, `\to`, `\frac{...}{...}`, and `^2` powers.
+
+**Hints:**
+- Build it in pieces: get `\lim_{h \to 0}` rendering first, then add the fraction.
+- Want to show off? Put the middle step in the chain too — what the fraction becomes after you expand $(x+h)^2$ and cancel. The grader will verify *every* link.
+- The checker tests your chain at several values of $x$. If two parts of your chain aren't really equal, it will tell you exactly which ones.
+
+---
+
+## Exercise 2: Square-Root Area
+
+Under `%% sqrt-integral`, compute the exact area under $\sqrt{x}$ from $0$ to $1$ — **all three steps**: the integral, the evaluation-bracket step, and the final fraction.
+
+$$\int_0^1 \sqrt{x}\,dx = \left[\, ? \,\right]_0^1 = \;?$$
+
+**You'll need:** `\int_0^1`, `\sqrt{x}`, `\,` before the `dx`, `\left[ ... \right]_0^1`, and `\frac`.
+
+**Hints:**
+- The antiderivative of $x^{1/2}$ comes from your own power rule, run backwards: raise the power by one, divide by the new power.
+- That power is $3/2$ — and remember the **brace rule**: `x^{3/2}`, not `x^3/2`.
+- The grader requires at least **3 chain parts** here (integral = bracket = answer). No skipping the bracket — that step *is* the Fundamental Theorem.
+- Decimal answers are banned on this page. $\frac{2}{3}$ is exact; $0.667$ is an approximation.
+
+---
+
+## Exercise 3: The Impossible Slice
+
+Under `%% log-integral`, typeset the integral the power rule **cannot** solve — and its logarithm answer:
+
+$$\int \frac{dx}{x+1} = \;?$$
+
+**You'll need:** `\int` (no bounds this time!), `\frac{dx}{x+1}`, `\ln`, `\left( ... \right)`, and `+ C`.
+
+**Hints:**
+- Why can't the power rule do this? It's $x^{-1}$ — raise the power by one and you'd divide by zero. This is exactly why $\ln$ had to exist. You proved $\ln'(x) = \frac{1}{x}$; this is that fact, run backwards.
+- No bounds means the answer is a *family* of functions — that's the job of `+ C`.
+- Watch how the grader checks this one: it **differentiates your answer** and tests that it lands back on $\frac{1}{x+1}$. If you write $\ln(x)$ instead of $\ln(x+1)$, the derivative comes out wrong and it will say so.
+
+---
+
+## Finishing Up
+
+When all three chips are green, hit **Submit** — your coach will review your page like an editor reviewing a manuscript: the math *and* the craftsmanship. Page one of your book, done.

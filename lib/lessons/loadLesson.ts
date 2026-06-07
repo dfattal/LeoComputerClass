@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import type { LatexLessonConfig } from "@/lib/latex/check.mjs";
 
 const classesDir = path.join(process.cwd(), "content", "classes");
 
@@ -46,10 +47,16 @@ export function loadLessonContent(
     ? JSON.parse(fs.readFileSync(rubricPath, "utf-8"))
     : [];
 
+  // The working file: starter.py for Python lessons, starter.tex for latex
+  // lessons. Both land in the same `starterCode` field — the editor doesn't
+  // care, only the language/checker wiring does.
   const starterPath = path.join(lessonDir, "starter.py");
+  const starterTexPath = path.join(lessonDir, "starter.tex");
   const starterCode: string | undefined = fs.existsSync(starterPath)
     ? fs.readFileSync(starterPath, "utf-8")
-    : undefined;
+    : fs.existsSync(starterTexPath)
+      ? fs.readFileSync(starterTexPath, "utf-8")
+      : undefined;
 
   const vizPath = path.join(lessonDir, "viz.json");
   const vizConfig: VizConfig | undefined = fs.existsSync(vizPath)
@@ -63,6 +70,15 @@ export function loadLessonContent(
     ? JSON.parse(fs.readFileSync(reflectionPath, "utf-8"))
     : undefined;
 
+  // A "latex" lesson (typesetting class): the student writes a LaTeX math
+  // document instead of Python. Signalled by latex.json (like reflection.json
+  // signals a reflection lesson). reference.tex stays inert, exactly like
+  // reference.py — only validate-class reads it.
+  const latexPath = path.join(lessonDir, "latex.json");
+  const latexConfig: LatexLessonConfig | undefined = fs.existsSync(latexPath)
+    ? JSON.parse(fs.readFileSync(latexPath, "utf-8"))
+    : undefined;
+
   return {
     slug: lessonSlug,
     lessonSource,
@@ -72,6 +88,7 @@ export function loadLessonContent(
     starterCode,
     vizConfig,
     reflectionConfig,
+    latexConfig,
   };
 }
 
@@ -309,4 +326,6 @@ export interface LessonContent extends WeekContent {
   starterCode?: string;
   vizConfig?: VizConfig;
   reflectionConfig?: ReflectionConfig;
+  /** Present only for "latex" lessons — see lib/latex/check.mjs. */
+  latexConfig?: LatexLessonConfig;
 }

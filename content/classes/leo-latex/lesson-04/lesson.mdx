@@ -1,0 +1,80 @@
+# Lesson 4 — The Infinite Tower
+
+## Phase 2: Counting & Infinite Towers
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset **sigma notation** with `\sum_{n=0}^{…}` — a sum folded into one symbol
+- Send a sum to **infinity** with `\infty`
+- Publish the **exponential series** — the function you invented on paper
+- Watch the grader **add up an infinite series** to check your work
+
+---
+
+## Big Idea
+
+This is the chapter where your book gets its engine. On paper, you set yourself the challenge: *invent a function that is its own derivative.* You started with $1$, patched it with $x$, patched that with $\frac{x^2}{2!}$, and discovered the factorials from Lesson 3 were exactly the glue you needed. The tower grew forever:
+
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \frac{x^4}{4!} + \cdots$$
+
+Today you publish it. But first, the notation that makes infinite sums *writable*.
+
+---
+
+## The Sum Machine: `\sum`
+
+Writing "add up a bunch of terms that follow a pattern" term-by-term gets old fast. Mathematicians fold the whole thing into one big sigma:
+
+```
+\sum_{n=0}^{3} \frac{x^n}{n!}
+```
+
+$$\sum_{n=0}^{3} \frac{x^n}{n!}$$
+
+Read its three parts — and notice you already know all the syntax:
+
+- `_{n=0}` — a **subscript**: the counter and where it starts
+- `^{3}` — a **superscript**: where it stops
+- then the **recipe** for one term, with the counter $n$ in it
+
+It's the integral's `_` and `^` bounds all over again. LaTeX keeps reusing the same small toolkit — that's why it's learnable.
+
+The machine runs like a loop: $n=0$ gives $\frac{x^0}{0!} = 1$, then $n=1$ gives $x$, then $\frac{x^2}{2!}$, then $\frac{x^3}{3!}$. Four terms, added. (Yes — $0! = 1$, the empty arrangement. The notation just *works*.)
+
+---
+
+## To Infinity: `\infty`
+
+For the real tower, the top bound isn't a number:
+
+```
+\sum_{n=0}^{\infty} \frac{x^n}{n!}
+```
+
+$$\sum_{n=0}^{\infty} \frac{x^n}{n!}$$
+
+How can the grader possibly *check* an infinite sum? The same way you trusted it on paper: the factorials downstairs grow so monstrously fast that the terms shrink to nothing — by $n = 20$ they're smaller than a dust speck on a dust speck. The grader adds terms until they stop mattering, and compares. (Your Chapter 7 ratio-test proof is exactly *why* it's allowed to stop. The grader is leaning on your theorem.)
+
+---
+
+## The Punchline Pair
+
+Two facts crown this page. First, the tower **is** $e^x$:
+
+$$e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}$$
+
+Second — the reason you built it — it's **self-replicating**:
+
+$$\frac{d}{dx} e^x = e^x$$
+
+Differentiate the tower with your power rule and watch each floor turn into the one below it: $\frac{x^3}{3!}$ becomes $\frac{x^2}{2!}$, which becomes $x$, which becomes $1$. The tower slides down one floor and is *unchanged*. When you typeset `\frac{d}{dx} e^x = e^x`, the grader differentiates one side numerically, evaluates the other, and certifies the most elegant fact you own.
+
+---
+
+## What You'll Typeset Today
+
+Three lines: the spelled-out sum folded into a sigma (the grader proves they're the *same number* — that's what notation means), the infinite tower itself, and the self-replicating fact. Page four — the engine of your book is running.

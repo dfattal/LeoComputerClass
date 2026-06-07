@@ -1,0 +1,30 @@
+{
+  "title": "The Rules of the Machine",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "product-rule",
+      "title": "The Growing Rectangle",
+      "prompt": "Differentiate x²·sin(x) with the product rule — and let the grader differentiate it too.",
+      "requires": ["\\frac{d}{dx}", "\\sin", "\\cos", "\\left(", "\\right)"],
+      "minSegments": 2,
+      "expect": {}
+    },
+    {
+      "id": "chain-rule",
+      "title": "The Gear Train",
+      "prompt": "Differentiate (x²+1)³ with the chain rule — outer gear times inner gear, then simplify.",
+      "requires": ["\\frac{d}{dx}", "\\cdot"],
+      "minSegments": 3,
+      "expect": {}
+    },
+    {
+      "id": "nested-root",
+      "title": "Roots Inside Roots",
+      "prompt": "Differentiate √(x²+1) — a chain rule hiding under a roof.",
+      "requires": ["\\sqrt", "\\frac"],
+      "minSegments": 2,
+      "expect": {}
+    }
+  ]
+}

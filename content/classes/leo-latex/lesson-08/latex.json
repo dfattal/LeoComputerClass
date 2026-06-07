@@ -1,0 +1,30 @@
+{
+  "title": "The Summit: Your Math Book",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "eulers-identity",
+      "title": "Euler's Identity",
+      "prompt": "Set x = π in the great split — the most famous equation in mathematics.",
+      "requires": ["e^{i\\pi}", "\\cos", "\\sin"],
+      "minSegments": 3,
+      "expect": { "value": -1 }
+    },
+    {
+      "id": "impossible-logarithm",
+      "title": "The Impossible Logarithm",
+      "prompt": "Take ln of both sides of Euler's identity — the logarithm of a negative number.",
+      "requires": ["\\ln", "i\\pi"],
+      "minSegments": 2,
+      "expect": { "value": 0, "valueIm": 3.141592653589793 }
+    },
+    {
+      "id": "grand-finale",
+      "title": "The Grand Finale",
+      "prompt": "Close the book the way it opened: an integral, its bracket, and a clean answer — with π in the bounds.",
+      "requires": ["\\int_", "\\left[", "\\right]", "\\sin", "\\pi"],
+      "minSegments": 3,
+      "expect": { "value": 2 }
+    }
+  ]
+}

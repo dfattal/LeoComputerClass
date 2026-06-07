@@ -10,7 +10,7 @@ export interface ClassDef {
   heroImage: string; // Path in /public
   studentName: string; // For AI prompts
   contentDir: string; // Directory name under content/classes/
-  language: "python";
+  language: "python" | "latex";
   comingSoon?: boolean;
 }
 
@@ -86,6 +86,18 @@ export const classes: ClassDef[] = [
     studentName: "Leo",
     contentDir: "leo-codes",
     language: "python",
+  },
+  {
+    slug: "leo-latex",
+    name: "Leo's Proof Press",
+    tagline: "Typeset Math Like a Mathematician",
+    description:
+      "You've derived the math — now publish it. Learn LaTeX, the language real mathematicians use to write beautiful formulas, and build your own math book page by page: from limits and integrals all the way to e^iπ = −1. Your equations aren't just checked for looks — the grader verifies the math is TRUE.",
+    accentColor: "teal",
+    heroImage: "/hero-latex.webp",
+    studentName: "Leo",
+    contentDir: "leo-latex",
+    language: "latex",
   },
   {
     slug: "dna-decoders",

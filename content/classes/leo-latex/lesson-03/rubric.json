@@ -1,0 +1,6 @@
+[
+  {"criterion": "The counting is true", "weight": 35, "description": "5! chain reaches 120, the \\binom formula chain reaches 10, and the (a+b)⁴ expansion holds at independent values of a and b"},
+  {"criterion": "Idiomatic counting notation", "weight": 30, "description": "\\binom (no bar) vs \\frac (bar) used correctly, ! placed after the number, snug implicit multiplication like 4a³b with no \\cdot in the expansion"},
+  {"criterion": "Shows the steps", "weight": 25, "description": "Factorial unrolled into its full \\cdot chain; choose shown symbol → formula → value"},
+  {"criterion": "Clean page", "weight": 10, "description": "Braces only where needed (a^3b not a^{3b}); markers kept; text reads well"}
+]

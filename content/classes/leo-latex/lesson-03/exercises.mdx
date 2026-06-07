@@ -1,0 +1,58 @@
+# Lesson 3 — Exercises: The Art of Counting
+
+## How This Works
+
+Same routine: each answer under its `%% marker`, between `$$ … $$`, live page below, **Check my page** for the full report. Show your chains — every `=` gets verified with real numbers.
+
+---
+
+## Exercise 1: The Arrangement Counter
+
+Under `%% factorial`, unroll $5!$ all the way:
+
+$$5! = \;? \cdot ? \cdot ? \cdot ? \cdot ? = \;?$$
+
+**You'll need:** `!` and `\cdot`. At least **3 chain parts**: the factorial, the unrolled product, the value.
+
+**Hints:**
+- The factorial symbol comes *after* the number: `5!`.
+- Use `\cdot` between every factor — this is the one page where multiplication dots shine.
+- The grader computes $5!$ itself, computes your product, computes your final number — all three must agree.
+
+---
+
+## Exercise 2: Five Choose Two
+
+Under `%% choose`, typeset the full story of $\binom{5}{2}$:
+
+$$\binom{5}{2} = \frac{?!}{?!\;?!} = \;?$$
+
+**You'll need:** `\binom{…}{…}`, `\frac{…}{…}`, `!`. Three chain parts again.
+
+**Hints:**
+- `\binom` works exactly like `\frac` — two brace groups — but renders without the bar.
+- The formula: $5!$ upstairs; $2!$ times $(5-2)! = 3!$ downstairs.
+- Ten ways to pick 2 friends from 5. If your chain says otherwise, the grader will name the step that broke.
+
+---
+
+## Exercise 3: The Instant Expansion
+
+Under `%% binomial-theorem`, expand without multiplying out:
+
+$$(a+b)^4 = \;?$$
+
+Five terms. Coefficients straight from Pascal's row 4: $1, 4, 6, 4, 1$. Powers of $a$ counting down, powers of $b$ counting up.
+
+**You'll need:** `^` (and the brace rule!). **No `\cdot` allowed** — book style is $4a^3b$, everything snug.
+
+**Hints:**
+- Pattern per term: coefficient, then `a^{power}`, then `b^{power}` — like `6a^2b^2`.
+- `a^3b` puts only the 3 up. `a^{3b}` is a different claim entirely — and the grader evaluates at several $(a, b)$ pairs with $a \neq b$, so swapped or mangled terms get caught.
+- Check the edges: first term all $a$, last term all $b$, coefficients symmetric.
+
+---
+
+## Finishing Up
+
+Three green chips → **Submit**. Page three done — and next week, these factorials go to work inside an infinite tower.

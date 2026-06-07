@@ -1,0 +1,30 @@
+{
+  "title": "The Great Split",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "the-split",
+      "title": "The Great Split",
+      "prompt": "Euler's formula: feed a rotation into the tower and it splits into cosine and sine.",
+      "requires": ["e^{ix}", "\\cos", "\\sin"],
+      "minSegments": 2,
+      "expect": {}
+    },
+    {
+      "id": "circle-sum",
+      "title": "Summoning the Circle",
+      "prompt": "Multiply the split by its conjugate in an align* block — and a circle appears.",
+      "requires": ["\\begin{align", "&=", "\\\\", "\\cos^2", "\\sin^2"],
+      "minSegments": 3,
+      "expect": { "value": 1 }
+    },
+    {
+      "id": "sine-slope",
+      "title": "The Sleeping Power Rule",
+      "prompt": "With sine and cosine now defined by series, their derivatives are just the power rule.",
+      "requires": ["\\frac{d}{dx}", "\\sin", "\\cos"],
+      "minSegments": 2,
+      "expect": {}
+    }
+  ]
+}

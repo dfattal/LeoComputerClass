@@ -1,0 +1,29 @@
+{
+  "title": "A New Dimension",
+  "exercises": [
+    {
+      "id": "the-rotation",
+      "title": "The Quarter-Turn Number",
+      "prompt": "Define i by what it does: two quarter-turns land on −1.",
+      "requires": ["i^2", "\\cdot"],
+      "minSegments": 3,
+      "expect": { "value": -1 }
+    },
+    {
+      "id": "conjugate-partners",
+      "title": "Conjugate Partners",
+      "prompt": "Multiply a complex number by its mirror twin — the i's annihilate.",
+      "requires": ["i"],
+      "minSegments": 3,
+      "expect": { "value": 13 }
+    },
+    {
+      "id": "quarter-turn",
+      "title": "Multiply to Rotate",
+      "prompt": "Multiply 3+2i by i and watch the point rotate 90° — the answer has an imaginary part!",
+      "requires": ["\\left(", "\\right)"],
+      "minSegments": 3,
+      "expect": { "value": -2, "valueIm": 3 }
+    }
+  ]
+}

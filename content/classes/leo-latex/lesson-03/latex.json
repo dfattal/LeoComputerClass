@@ -1,0 +1,30 @@
+{
+  "title": "The Art of Counting",
+  "exercises": [
+    {
+      "id": "factorial",
+      "title": "The Arrangement Counter",
+      "prompt": "Typeset 5! unrolled into its multiplication chain — and its value.",
+      "requires": ["!", "\\cdot"],
+      "minSegments": 3,
+      "expect": { "value": 120 }
+    },
+    {
+      "id": "choose",
+      "title": "Five Choose Two",
+      "prompt": "Typeset the choose symbol, its factorial formula, and the count.",
+      "requires": ["\\binom", "\\frac", "!"],
+      "minSegments": 3,
+      "expect": { "value": 10 }
+    },
+    {
+      "id": "binomial-theorem",
+      "title": "The Instant Expansion",
+      "prompt": "Expand (a+b)⁴ — Pascal's row 4, written as algebra.",
+      "requires": ["^"],
+      "forbids": ["\\cdot"],
+      "minSegments": 2,
+      "expect": { "vars": { "a": [0.7, 1.3], "b": [0.4, 2.1] } }
+    }
+  ]
+}

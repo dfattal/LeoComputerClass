@@ -1,0 +1,31 @@
+{
+  "title": "Your First Typeset Page",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "slope-machine",
+      "title": "The Slope Machine",
+      "prompt": "Typeset the limit definition of the derivative of x² — and what it equals.",
+      "requires": ["\\lim_", "\\frac", "\\to"],
+      "minSegments": 2,
+      "expect": { "equivalentTo": "2x", "tol": 0.001 }
+    },
+    {
+      "id": "sqrt-integral",
+      "title": "Square-Root Area",
+      "prompt": "Compute the area under √x from 0 to 1 — integral, bracket step, and answer.",
+      "requires": ["\\int_", "\\sqrt", "\\frac", "\\left[", "\\right]"],
+      "forbids": ["0.6"],
+      "minSegments": 3,
+      "expect": { "value": 0.6666666666666666 }
+    },
+    {
+      "id": "log-integral",
+      "title": "The Impossible Slice",
+      "prompt": "The integral the power rule can't touch — it needs a logarithm (and a + C).",
+      "requires": ["\\int", "\\ln", "\\frac", "C"],
+      "minSegments": 2,
+      "expect": {}
+    }
+  ]
+}

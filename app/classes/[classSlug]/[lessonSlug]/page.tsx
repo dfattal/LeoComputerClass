@@ -117,6 +117,7 @@ export default async function LessonPage({
       starterCode={starterCode}
       vizConfig={lessonData.vizConfig}
       reflectionConfig={reflectionConfig}
+      latexConfig={lessonData.latexConfig}
     />
   );
 }

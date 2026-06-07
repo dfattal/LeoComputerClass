@@ -1,0 +1,6 @@
+[
+  {"criterion": "The complex arithmetic is true", "weight": 35, "description": "i² chain lands on −1, the conjugate product lands on 13 (purely real), and i(3+2i) lands on −2+3i — both coordinates verified"},
+  {"criterion": "Idiomatic complex typesetting", "weight": 30, "description": "Coefficients before i (3i not i3), i^2 in middle steps, \\left( \\right) when i multiplies a grouped point, side-by-side parens for products"},
+  {"criterion": "Shows the steps", "weight": 25, "description": "Each chain shows the distribution/expansion middle step where i² flips the sign — the mechanism, not just the result"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well; markers kept"}
+]

@@ -2,8 +2,50 @@
 
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
+import type { Monaco } from "@monaco-editor/react";
 
 const DEFAULT_STARTER = `# Write your code here\n`;
+const DEFAULT_LATEX_STARTER = `% Write your LaTeX here\n`;
+
+/**
+ * Monaco has no built-in LaTeX mode, so register a small one: enough to color
+ * commands, math delimiters, comments, and our `%% exercise` markers — and to
+ * auto-close braces/$ while a kid types.
+ */
+function ensureLatexLanguage(monaco: Monaco) {
+  if (monaco.languages.getLanguages().some((l: { id: string }) => l.id === "latex"))
+    return;
+  monaco.languages.register({ id: "latex" });
+  monaco.languages.setMonarchTokensProvider("latex", {
+    defaultToken: "",
+    tokenizer: {
+      root: [
+        [/%%.*$/, "type.identifier"], // exercise marker lines
+        [/%.*$/, "comment"],
+        [/\\[a-zA-Z]+/, "keyword"],
+        [/\\./, "keyword"],
+        [/\$\$?/, "string"],
+        [/[{}()[\]]/, "@brackets"],
+        [/[\^_&=+\-*/!|]/, "operator"],
+        [/\d+(\.\d+)?/, "number"],
+      ],
+    },
+  });
+  monaco.languages.setLanguageConfiguration("latex", {
+    comments: { lineComment: "%" },
+    brackets: [
+      ["{", "}"],
+      ["[", "]"],
+      ["(", ")"],
+    ],
+    autoClosingPairs: [
+      { open: "{", close: "}" },
+      { open: "[", close: "]" },
+      { open: "(", close: ")" },
+      { open: "$", close: "$" },
+    ],
+  });
+}
 
 export default function CodeEditor({
   classSlug,
@@ -12,6 +54,7 @@ export default function CodeEditor({
   fallbackCode,
   starterCode,
   resetKey,
+  language = "python",
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -19,23 +62,26 @@ export default function CodeEditor({
   fallbackCode?: string;
   starterCode?: string;
   resetKey?: number;
+  language?: "python" | "latex";
 }) {
   const storageKey = `code-draft-${classSlug}-${lessonSlug}`;
+  const defaultStarter =
+    language === "latex" ? DEFAULT_LATEX_STARTER : DEFAULT_STARTER;
   const [code, setCode] = useState<string>("");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
-    const initial = saved || fallbackCode || starterCode || DEFAULT_STARTER;
+    const initial = saved || fallbackCode || starterCode || defaultStarter;
     setCode(initial);
     onChange(initial);
     setMounted(true);
-  }, [storageKey, onChange, fallbackCode, starterCode]);
+  }, [storageKey, onChange, fallbackCode, starterCode, defaultStarter]);
 
   // Reset editor to starter code when resetKey changes
   useEffect(() => {
     if (resetKey === undefined || resetKey === 0) return;
-    const initial = starterCode || DEFAULT_STARTER;
+    const initial = starterCode || defaultStarter;
     setCode(initial);
     localStorage.removeItem(storageKey);
     onChange(initial);
@@ -60,7 +106,8 @@ export default function CodeEditor({
     <div className="h-full overflow-hidden">
       <Editor
         height="100%"
-        defaultLanguage="python"
+        language={language}
+        beforeMount={language === "latex" ? ensureLatexLanguage : undefined}
         value={code}
         onChange={handleChange}
         theme="vs-dark"

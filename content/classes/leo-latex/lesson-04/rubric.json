@@ -1,0 +1,6 @@
+[
+  {"criterion": "The series are true", "weight": 35, "description": "The four-term sum equals its sigma form at sampled x, e^x equals the infinite series, and d/dx e^x = e^x holds numerically"},
+  {"criterion": "Idiomatic sigma notation", "weight": 30, "description": "\\sum with braced bounds _{n=0}^{\\infty}, the counter n used in the term recipe, \\frac{x^n}{n!} built cleanly"},
+  {"criterion": "Notation understanding", "weight": 25, "description": "The page shows sigma = spelled-out sum (the point of the lesson), not just isolated formulas"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well; markers kept"}
+]

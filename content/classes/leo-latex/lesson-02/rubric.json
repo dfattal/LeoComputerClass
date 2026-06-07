@@ -1,0 +1,6 @@
+[
+  {"criterion": "The calculus is true", "weight": 35, "description": "Each derivative chain holds numerically: the product rule on x²·sin(x), the chain rule on (x²+1)³ with its \\cdot step, and the root derivative"},
+  {"criterion": "Idiomatic operator notation", "weight": 30, "description": "\\frac{d}{dx} as the operator, \\left( \\right) growing around the differentiated expression, \\cdot between the chain-rule factors"},
+  {"criterion": "Shows the steps", "weight": 25, "description": "The chain rule shows the outer·inner middle step before simplifying — the derivation, not just the answer"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well; markers kept; braces tidy"}
+]

@@ -1,0 +1,94 @@
+# Lesson 2 — The Rules of the Machine
+
+## Phase 1: First Marks
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset the **derivative operator** $\frac{d}{dx}$ — it's just a `\frac`!
+- Use `\cdot` for a proper multiplication dot
+- Make brackets **grow** around tall expressions with `\left( … \right)`
+- Publish the product rule and chain rule **in action** — on real functions the grader can verify
+
+---
+
+## Big Idea
+
+On paper, you derived two of the most powerful rules in calculus. The **product rule** came from a growing rectangle: if the width $f$ and the height $g$ are both growing, the new area comes from *both* edges —
+
+$$(fg)' = f'g + fg'$$
+
+And the **chain rule** came from interlocked gears: if gear A turns 3× faster than gear B, and B turns 4× faster than C, then A turns $3 \times 4 = 12$× faster than C. Rates of nested machines **multiply**:
+
+$$\left( f(g(x)) \right)' = f'(g(x)) \cdot g'(x)$$
+
+Today you typeset these rules *doing real work* — applied to actual functions. And here's the fun part: when you press **Check**, the grader doesn't take your word for it. It **takes the derivative itself**, numerically, and compares. You're being checked by a machine that does calculus.
+
+---
+
+## The Derivative Operator Is Just a Fraction
+
+Look closely at how mathematicians write "the derivative of":
+
+```
+\frac{d}{dx}
+```
+
+$$\frac{d}{dx}$$
+
+That's the same `\frac` you learned last week — with a $d$ on top and $dx$ on the bottom. (That's no accident: a derivative *is* a ratio of tiny changes, the very limit you typeset in Lesson 1.) Put the thing you're differentiating right after it:
+
+```
+\frac{d}{dx} x^3
+```
+
+$$\frac{d}{dx} x^3$$
+
+---
+
+## The Multiplication Dot: `\cdot`
+
+When you write the chain rule's "outer times inner", you need a multiplication sign. A `*` is for code; an `x` is a letter. The professional mark is a centered dot:
+
+```
+3(x^2+1)^2 \cdot 2x
+```
+
+$$3(x^2+1)^2 \cdot 2x$$
+
+Use `\cdot` whenever two *separate* results get multiplied. (Side-by-side like $2x\sin(x)$ doesn't need one — touching means multiplied.)
+
+---
+
+## Growing Brackets: `\left(` and `\right)`
+
+Wrap the function you're differentiating in brackets so the reader can see exactly what the operator grabs. And when what's inside is *tall* — a fraction, a power tower — plain `( )` look like they're being crushed. The fix you met last week works on every bracket shape:
+
+```
+\frac{d}{dx}\left( x^2 \sin(x) \right)
+```
+
+$$\frac{d}{dx}\left( x^2 \sin(x) \right)$$
+
+`\left(` and `\right)` always travel as a pair. They measure what's between them and stretch to fit. Editors *will* notice if your brackets don't fit the math inside them.
+
+---
+
+## How the Grader Checks a Derivative
+
+When you write
+
+$$\frac{d}{dx}\left( x^2 \sin(x) \right) = 2x\sin(x) + x^2\cos(x)$$
+
+the grader picks sneaky values of $x$, computes the left side **as an actual derivative** (it nudges $x$ a tiny bit and measures the change — the same limit idea from Lesson 1!), computes your right side as a formula, and demands they match. Every value. If you forget a term — say you write $2x\sin(x)$ and drop the $x^2\cos(x)$ — the numbers disagree instantly and it tells you where.
+
+There is no way to bluff a derivative past this thing. Which means: when your page goes green, **your calculus is certified correct.**
+
+---
+
+## What You'll Typeset Today
+
+Three derivatives, each one rule in action: the growing rectangle on $x^2\sin(x)$, the gear train on $(x^2+1)^3$ — with the middle "outer $\cdot$ inner" step shown, because the *step* is the rule — and a root with a function hiding inside it. Page two of your book.

@@ -2,7 +2,8 @@
 name: new-lesson
 description: >-
   Author a new lesson for a Family Classroom class (Leo's Computer Class, Secret
-  Codes, Motion Lab, Space School, Python Primer, Pixel Wizards, Bio Lab, etc.).
+  Codes, Motion Lab, Space School, Python Primer, Pixel Wizards, Bio Lab,
+  Proof Press, etc.).
   Use this
   whenever the user wants to add, build, write, or scaffold a lesson, week, or
   exercise for one of the classes in this repo — even if they just say "add
@@ -10,6 +11,9 @@ description: >-
   proven workflow: scaffold → write reference.py FIRST → generate exact test
   values from it → design the graph → write the 6 student files for a 10-year-old
   → validate until green → publish. Enforces "reference.py before tests.json."
+  Also covers the two no-Python lesson kinds: reflection lessons
+  (reflection.json) and LaTeX typesetting lessons (latex.json, with
+  reference.tex as the answer key).
 ---
 
 # Author a new lesson
@@ -21,16 +25,22 @@ a correct solution produces**, or every student gets marked wrong on right
 answers (or, worse, right on wrong ones). This skill keeps that honest by making
 you write the real solution first and generate the test values from it.
 
-## Two kinds of lesson
+## Three kinds of lesson
 
-Most lessons are **coding lessons** (the rest of this skill). But some ideas can't
-be tested as code — understanding them *is* the point. For those, author a
-**reflection lesson**: no Python, no tests, just one open question the kid
-re-explains in their own words, graded by the AI coach for *understanding*. These
-are great as a class's final "looking back / big picture" capstone (history of the
-idea → one question). If that's what you're building, **skip to
-[Reflection lessons](#reflection-lessons-no-python) at the bottom** — the
-`reference.py`-before-`tests.json` workflow below does not apply.
+Most lessons are **coding lessons** (the rest of this skill). Two other kinds
+swap Python out entirely:
+
+- **Reflection lessons** — no code at all; one open question the kid re-explains
+  in their own words, graded by the AI coach for *understanding*. Great as a
+  class's final "big picture" capstone. **Skip to
+  [Reflection lessons](#reflection-lessons-no-python)**.
+- **LaTeX lessons** (Leo's Proof Press, `language: "latex"` in the registry) —
+  the kid typesets a small math document instead of writing Python, with a live
+  KaTeX preview, and the grader verifies the **math is numerically true**, not
+  just that it compiles. **Skip to [LaTeX lessons](#latex-lessons-typesetting)**
+  — the analogous invariant there is `reference.tex` before `latex.json`.
+
+For both, the `reference.py`-before-`tests.json` workflow below does not apply.
 
 ## The core invariant: reference.py before tests.json
 
@@ -317,3 +327,107 @@ not a wording template the kid must match).
 3. Add the `Week` to `syllabus.ts` under a final phase (the convention is
    `{ phase: N, name: "The Big Picture" }`), `status: "published"`, then
    `npm run build`.
+
+## LaTeX lessons (typesetting)
+
+A latex lesson swaps the Python editor for a **LaTeX editor + live typeset page**
+(KaTeX, re-rendered as the kid types). The student edits ONE small document;
+exercises are regions of that document. Grading runs in-browser (no Pyodide) in
+three tiers per exercise: **compiles** (KaTeX) → **right commands**
+(`requires`/`forbids` tokens) → **the math is TRUE** — every `=`-separated
+segment of the equation chain is evaluated numerically at sampled variable
+values by `lib/latex/evaluate.mjs` (complex-valued). Indefinite integrals are
+graded by **differentiating the student's answer back to the integrand** (the
+FTC as grader). Signalled purely by a `latex.json` file; no scaffold script —
+copy `content/classes/leo-latex/lesson-01` as the template.
+
+### The core invariant: reference.tex before latex.json
+
+`reference.tex` is the answer key — a complete document that passes every check.
+Write it FIRST, prove it (`npm run validate-class <slug>` runs it through the
+**same checker module the browser imports**), and only then consider the
+exercise checks trustworthy. Like `reference.py`, it is inert: never served,
+never built.
+
+### Files
+
+- `lesson.mdx` / `exercises.mdx` — as usual (10-yo voice; show LaTeX *source* in
+  code spans and the *rendered* result via `$$…$$`, since remark-math renders
+  math in MDX).
+- `starter.tex` — the student's starting document: a little intro text, then one
+  `%% exercise-id` **marker line per exercise** (a LaTeX comment; the validator
+  requires a marker for every exercise) with a `% hint comment` under it. Leave
+  the math itself for the kid to write — a region with no `$$…$$` block reads as
+  "not written yet" (todo), which is the desired starting state. Supports
+  `{{FIRST_NAME}}`.
+- `latex.json`:
+
+```json
+{
+  "title": "Lesson Title",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "matches-the-marker",
+      "title": "Shown in chips + results",
+      "prompt": "One-line instruction",
+      "requires": ["\\frac", "\\int_"],
+      "forbids": ["0.6"],
+      "minSegments": 3,
+      "expect": {
+        "value": 0.6666667,
+        "valueIm": 0,
+        "equivalentTo": "\\frac{2}{3}",
+        "vars": { "x": [0.4, 1.3, 2.7] },
+        "tol": 0.001
+      }
+    }
+  ]
+}
+```
+
+All `expect` fields optional. `value`(+`valueIm`) pins the final segment's
+number; `equivalentTo` compares the final segment to a reference expression at
+sampled vars; chain consistency (segment N = segment N+1 everywhere) and the
+indefinite-integral FTC check run automatically. `minSegments` forces showing
+work ("integral = bracket = answer"). Default `tol` 1e-3. Unlisted free vars
+sample at a fixed constant — **list distinct sample arrays in `vars` when two
+variables must be distinguishable** (e.g. `a³b` vs `ab³` needs `a ≠ b`).
+- `reference.tex` — the answer key (see invariant).
+- `rubric.json` — as usual (the AI coach reviews *craftsmanship*: `\,` before
+  dx, braces on multi-char exponents, `\left(\right)` sizing).
+
+### The evaluator's LaTeX subset (don't exceed it in checked math)
+
+The grader can evaluate: numbers, single-letter vars (+ subscripted `x_0`),
+`\pi`, `e`, `i` (complex!), `+ - * / ^ !`, implicit multiplication, `\frac`
+(incl. `\frac{d}{dx}` as derivative), `\sqrt[n]{}`, `\binom`, `\cdot \times
+\div`, `\left(\right)` + `| |`, functions `\sin \cos \tan \sinh \cosh \tanh
+\exp \ln \log` (+ `\sin^2 x` powers), `\int_a^b f \,dx` (quadrature),
+`\int f\,dx` (indefinite → FTC check), `\left[F\right]_a^b` (evaluation
+bracket, substitutes the lesson `var`), `\sum_{n=a}^{b|\infty}`,
+`\lim_{h \to c}`, `\begin{align*}…\end{align*}` (`&` and `\\` are invisible, so
+a multi-line derivation checks as one chain). **Not evaluable:** `\dots`
+(ellipses), abstract functions like `f'(x)` with no definition, matrices. Teach
+those in prose; keep checked exercises concrete (e.g. check the product rule on
+`x^2 \sin x`, not on abstract `fg`).
+
+Exercise design tips: every `=` the kid writes is verified, so prefer **chains
+that show the derivation** over bare answers. Mind sampling domains (defaults
+are positive ~0.4–2.7 — safe for `\ln`, `\sqrt`, division); singular points
+need custom `vars`. `requires` matches raw source text — keep tokens short and
+unavoidable (`"\\int_"` not `"\\int_0^1"`, since `\int_{0}^{1}` is also
+correct).
+
+### Workflow
+
+1. Copy `leo-latex/lesson-01`'s file set; pick exercise math that's **checkable
+   numerically** (see subset above) and tells one story per lesson.
+2. Write `reference.tex` (full solutions, ideal craftsmanship — it's also your
+   sanity check that the evaluator handles every formula).
+3. Write `latex.json` checks; `npm run validate-class <slug>` until green — it
+   render-checks every math block, requires the `%% id` markers in
+   `starter.tex`, and runs `reference.tex` through the real checker.
+4. Write `starter.tex` + the two MDX files + `rubric.json` (10-yo voice; the
+   class through-line is "you're typesetting your own math book").
+5. Flip `syllabus.ts` to `published`, `npm run build`.

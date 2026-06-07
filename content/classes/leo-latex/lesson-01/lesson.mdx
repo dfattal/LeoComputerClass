@@ -1,0 +1,140 @@
+# Lesson 1 — Your First Typeset Page
+
+## Phase 1: First Marks
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Know what **LaTeX** is and why every real math book is written in it
+- Write math between `$$ … $$` and watch it typeset itself **live**
+- Build **fractions** (`\frac`), **roots** (`\sqrt`), **powers** (`^`) and **subscripts** (`_`)
+- Typeset a **limit**, a **definite integral**, and an **indefinite integral** — math you already proved on paper
+- Meet the grader that doesn't just check your symbols — it checks your math is **true**
+
+---
+
+## Big Idea
+
+You've already done something most adults never do: you **derived** calculus from first principles. The limit definition of the derivative. The power rule. Integrals as area. That math lives in your head and on scratch paper.
+
+But look at any real math book — the formulas are *beautiful*. Crisp fractions, stretching brackets, perfect little exponents. Nobody draws those by hand. Every mathematician and physicist on Earth writes them in a language called **LaTeX** (say it "LAH-tek").
+
+LaTeX is like Python, but instead of *computing* things, it *typesets* them. You write a recipe in plain text, and out comes a page that looks like it was printed in a textbook. In this class you're going to typeset **your own math book** — chapter by chapter, all the way to the most famous equation in mathematics, $e^{i\pi} = -1$. This week: page one.
+
+---
+
+## The Two Magic Dollars
+
+LaTeX has two modes, and you switch with dollar signs:
+
+- `$ … $` — **inline math**, for math inside a sentence. `$f(x) = x^2$` gives you $f(x) = x^2$ right in the middle of your text.
+- `$$ … $$` — **display math**, for math that deserves its own line, centered like in a book.
+
+Everything else you type is just normal text. One more trick: any line starting with `%` is a **comment** — notes to yourself the reader never sees. (And `%%` lines are special markers that tell the checker where each exercise lives. Don't delete those!)
+
+---
+
+## Powers and Subscripts
+
+Two of the most-used symbols in all of math:
+
+- `^` raises: `x^2` → $x^2$
+- `_` lowers: `x_0` → $x_0$
+
+**The brace rule** — this one matters: `^` and `_` only grab **one character**. If your exponent is longer, wrap it in braces `{ }`:
+
+- `x^23` → $x^23$ ← LaTeX read that as "x squared, then a 3"!
+- `x^{23}` → $x^{23}$ ← braces say "all of this goes up"
+- `x^{3/2}` → $x^{3/2}$ — you'll need exactly this one today
+
+---
+
+## Fractions: `\frac`
+
+Commands in LaTeX start with a backslash `\`. The king of them all:
+
+```
+\frac{top}{bottom}
+```
+
+`\frac{2}{3}` → $\frac{2}{3}$. And fractions nest — `\frac{x+1}{\frac{1}{2}}` works fine. Never write `2/3` in display math in this class. We're typesetting like professionals now.
+
+---
+
+## Roots: `\sqrt`
+
+`\sqrt{x}` → $\sqrt{x}$. The braces hold whatever lives under the roof: `\sqrt{x+1}` → $\sqrt{x+1}$. (Want a cube root? `\sqrt[3]{27}` → $\sqrt[3]{27}$.)
+
+---
+
+## The Limit — Math You Already Own
+
+Remember the machine you built that finds the slope at a single frozen instant? Here is how the pros write it:
+
+```
+\lim_{h \to 0} \frac{f(x+h) - f(x)}{h}
+```
+
+$$\lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+
+Read the pieces:
+- `\lim` — the limit command
+- `_{h \to 0}` — a *subscript* holding "$h$ approaches $0$"; `\to` draws the arrow $\to$
+- then the difference quotient as one big `\frac`
+
+You **derived** this. Now you can **publish** it.
+
+---
+
+## Integrals — and the Little `dx`
+
+The integral sign is `\int`, and bounds attach exactly like subscripts and powers:
+
+```
+\int_0^1 \sqrt{x} \, dx
+```
+
+$$\int_0^1 \sqrt{x} \, dx$$
+
+Two professional touches:
+- `_0^1` — lower bound down, upper bound up. Same `_` and `^` you already know!
+- `\,` — a **thin space** before the $dx$. Tiny detail, but it's what separates book-quality typesetting from homework. Editors notice.
+
+---
+
+## The Evaluation Bracket — FTC in One Symbol
+
+When you compute an integral, there's that middle step where you've found the antiderivative and you're about to plug in the bounds. Mathematicians write it with a tall bracket:
+
+$$\int_0^1 \sqrt{x}\,dx = \left[ \frac{2}{3} x^{3/2} \right]_0^1 = \frac{2}{3}$$
+
+That bracket **is** the Fundamental Theorem you derived: the antiderivative at the top bound, minus it at the bottom. The code:
+
+```
+\left[ \frac{2}{3} x^{3/2} \right]_0^1
+```
+
+`\left[` and `\right]` are a team — they **grow the brackets** to fit whatever's inside. (Plain `[ ]` would look tiny and sad next to a tall fraction. Try both and see!) The `_0^1` after `\right]` hangs the bounds on the bracket.
+
+---
+
+## The Grader Checks Your MATH
+
+Here's the part that makes this class different from every LaTeX tutorial on Earth. When you press **Check my page**, three graders read your work, in order:
+
+1. **Does it compile?** — like a Python syntax error, but for LaTeX.
+2. **Did you use the right tools?** — a real `\frac`, a real `\lim`, no `2/3` shortcuts.
+3. **Is the math TRUE?** — it takes every `=` in your chain and *tests it with actual numbers*. Write $\int_0^1 \sqrt{x}\,dx = \frac{3}{2}$ and it will catch you, because it *computes the integral* and gets $\frac{2}{3}$.
+
+And for an integral with no bounds — like $\int \frac{dx}{x+1}$ — the grader does something you'll recognize: it **takes the derivative of your answer** and checks it lands back on the thing inside the integral. That's the Fundamental Theorem of Calculus, working as your proofreader.
+
+So you can't bluff this class with pretty symbols. The page has to *compile*, *look* professional, and *be true*. Just like a real publication.
+
+---
+
+## What You'll Typeset Today
+
+Three lines of mathematics you already own — the derivative of $x^2$ from the limit, the area under $\sqrt{x}$, and the integral that needs a logarithm. Head to the exercises, and watch your page build itself in the live preview as you type.

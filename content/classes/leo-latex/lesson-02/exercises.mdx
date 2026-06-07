@@ -1,0 +1,58 @@
+# Lesson 2 — Exercises: The Rules of the Machine
+
+## How This Works
+
+Same as last week: write each answer under its `%% marker`, between `$$` and `$$`. The page typesets live; **Check my page** runs the three graders — and this week the third grader *does calculus*: it differentiates your left side numerically and tests your right side against it.
+
+---
+
+## Exercise 1: The Growing Rectangle
+
+Under `%% product-rule`, typeset the product rule doing real work:
+
+$$\frac{d}{dx}\left( x^2 \sin(x) \right) = \;?$$
+
+The rectangle's width is $x^2$, its height is $\sin(x)$. Derivative of the first times the second, **plus** the first times the derivative of the second.
+
+**You'll need:** `\frac{d}{dx}`, `\left( … \right)`, `\sin`, `\cos`.
+
+**Hints:**
+- $\frac{d}{dx} x^2 = 2x$ (your own power rule) and $\frac{d}{dx}\sin(x) = \cos(x)$.
+- Side-by-side things multiply: `2x\sin(x)` renders as $2x\sin(x)$.
+- Drop either term and the grader will catch the disagreement at its sample points — try it once on purpose and read the error!
+
+---
+
+## Exercise 2: The Gear Train
+
+Under `%% chain-rule`, typeset the chain rule **with its middle step showing** — that's where the rule lives:
+
+$$\frac{d}{dx}\left( (x^2+1)^3 \right) = \underbrace{?\cdot?}_{\text{outer} \,\cdot\, \text{inner}} = \;?$$
+
+**You'll need:** `\frac{d}{dx}`, `^` powers, `\cdot` between the two gear rates. The grader wants at least **3 chain parts** — operator form, the $\cdot$ step, and the simplified answer.
+
+**Hints:**
+- Outer gear: something-cubed, so $3(\text{something})^2$ — keep the inside untouched.
+- Inner gear: $\frac{d}{dx}(x^2+1) = 2x$.
+- Then tidy up: $3(x^2+1)^2 \cdot 2x = 6x(x^2+1)^2$. The grader verifies the tidy-up too — every `=` is a promise.
+
+---
+
+## Exercise 3: Roots Inside Roots
+
+Under `%% nested-root`, differentiate a root with a machine hiding inside:
+
+$$\frac{d}{dx} \sqrt{x^2+1} = \;?$$
+
+**You'll need:** `\sqrt{…}`, `\frac` for the answer.
+
+**Hints:**
+- $\sqrt{u}$ is $u^{1/2}$, so the outer gear is $\frac{1}{2\sqrt{u}}$ — and the inner gear is $2x$ again.
+- The $2$s cancel. The answer is a clean fraction with the same root downstairs: $\frac{x}{\sqrt{x^2+1}}$.
+- Brace check: the whole $x^2+1$ lives inside the `\sqrt{ }` braces, both times.
+
+---
+
+## Finishing Up
+
+Three green chips → **Submit**. Your editor will be looking for growing brackets and proper `\cdot`s. Page two: the rules of the machine, certified by a machine.

@@ -1,0 +1,55 @@
+# Lesson 4 — Exercises: The Infinite Tower
+
+## How This Works
+
+Each answer under its `%% marker`, between `$$ … $$`. This week the grader gains a new power: it can **run your sigma like a loop** and add the terms up — finite or infinite.
+
+---
+
+## Exercise 1: The Sum Machine
+
+Under `%% sum-machine`, prove the notation by equating both spellings:
+
+$$1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} \;=\; \sum_{n=?}^{?} \;?$$
+
+**You'll need:** `\sum_{n=0}^{3}`, `\frac{x^n}{n!}`, `!`.
+
+**Hints:**
+- The sigma's bottom is a tiny equation: `_{n=0}` — braces because it's more than one character.
+- The recipe uses the counter: `\frac{x^n}{n!}`.
+- The grader evaluates the left side AND runs your sum at several values of $x$ — if your bounds are off by one, the totals won't match and it'll say so.
+
+---
+
+## Exercise 2: The Infinite Tower
+
+Under `%% infinite-tower`, publish the series you invented:
+
+$$e^x = \sum_{n=0}^{?} \;?$$
+
+**You'll need:** `\sum_`, `\infty` as the top bound, and `e^x` on the left.
+
+**Hints:**
+- Infinity is a command: `^{\infty}`.
+- Same recipe as Exercise 1 — only the top bound changes. That one symbol is the whole difference between "four terms" and "the most famous function in mathematics."
+- Yes, the grader really sums it (the factorials kill the terms fast — your ratio test at work).
+
+---
+
+## Exercise 3: The Self-Replicating Machine
+
+Under `%% self-replicating`, typeset the fact the whole tower was built for:
+
+$$\frac{d}{dx} e^x = \;?$$
+
+**You'll need:** `\frac{d}{dx}` (Lesson 2!) and `e^x`.
+
+**Hints:**
+- The shortest line in your whole book — and maybe the deepest.
+- The grader nudges $x$, measures how fast $e^x$ changes, and checks the answer is… $e^x$ again. The function that grows exactly as fast as it is tall.
+
+---
+
+## Finishing Up
+
+Three green chips → **Submit**. Your editor will check sigma hygiene (braced bounds, the counter actually used in the recipe). Page four done: the engine is alive, and next week you build its mirror.

@@ -97,6 +97,12 @@ export async function POST(request: Request) {
     // and what we judge differ.
     const reflection = weekData.reflectionConfig;
 
+    // A "latex" lesson: the student typeset a small math page. The
+    // deterministic checker already verified compile/commands/math-truth (its
+    // results ride along as test_results) — the coach reviews craftsmanship
+    // and the mathematical understanding the page shows.
+    const latex = weekData.latexConfig;
+
     const userPayload = reflection
       ? `## Lesson: ${lesson.title}
 
@@ -128,7 +134,41 @@ Respond with ONLY valid JSON in this exact format:
   "challenge_question": "one fun, concrete question that nudges them to think a little deeper about this same idea (everyday examples a 10-year-old loves — NOT abstract jargon)",
   "common_pitfalls_to_watch": ["a common mix-up people have about this idea", "another if helpful"]
 }`
-      : `## Lesson: ${lesson.title}
+      : latex
+        ? `## Lesson: ${lesson.title}
+
+## What the Lesson Teaches
+${weekData.lessonSource}
+
+## Exercise Instructions
+${weekData.exercisesSource}
+
+## Rubric
+${JSON.stringify(weekData.rubric, null, 2)}
+
+## The Student's LaTeX Page
+\`\`\`latex
+${submission.code}
+\`\`\`
+
+## Checker Results (a deterministic grader already verified that the LaTeX compiles and that the math is numerically TRUE — trust these as ground truth)
+${JSON.stringify(submission.test_results, null, 2)}
+
+## Instructions
+The student is learning to TYPESET mathematics in LaTeX. Review two things:
+1. **LaTeX craftsmanship** — clean, idiomatic typesetting: \\frac instead of /, proper \\left( \\right) sizing, braces around multi-character exponents, \\, before dx, readable structure. Praise specifics; suggest at most the one or two most valuable polish improvements.
+2. **The math the page shows** — does the equation chain show real understanding (the steps, not just the answer)?
+Judge the page by what it actually contains. Trust the checker results for whether the math is correct.
+Respond with ONLY valid JSON in this exact format:
+{
+  "verdict": "pass|partial|fail",
+  "correctness": "short, warm explanation of what's right/wrong in the page (both the LaTeX and the math)",
+  "concepts": "which LaTeX ideas they've clearly got, and the one to practice next",
+  "improvements": ["one concrete typesetting improvement", "another if helpful"],
+  "challenge_question": "one fun mini typesetting challenge that uses the same commands in a new way (concrete and small — something they could add to this very page)",
+  "common_pitfalls_to_watch": ["a common LaTeX mix-up to watch for", "another if helpful"]
+}`
+        : `## Lesson: ${lesson.title}
 
 ## What the Lesson Teaches
 ${weekData.lessonSource}
@@ -164,6 +204,9 @@ Respond with ONLY valid JSON in this exact format:
     // of a written explanation rather than grading code.
     if (reflection) {
       systemPrompt = `${systemPrompt}\n\nFor THIS task, the student is not writing code — they wrote a short explanation of an idea in their own words. Assess whether they truly understand it. Never grade spelling, grammar, or wording. Reward a correct idea explained in a kid's own way. Stay warm and encouraging.`;
+    }
+    if (latex) {
+      systemPrompt = `${systemPrompt}\n\nFor THIS task, the student is not writing Python — they are typesetting real mathematics in LaTeX. Review their LaTeX craftsmanship and the understanding their derivation shows. Celebrate that they're writing like a real mathematician. Stay warm and encouraging.`;
     }
 
     // Call OpenAI

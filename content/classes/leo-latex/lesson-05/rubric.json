@@ -1,0 +1,6 @@
+[
+  {"criterion": "The mirror facts are true", "weight": 35, "description": "The double-undo chain ends at x, d/dx ln(x) = 1/x holds numerically, and ln(ab) = ln(a)+ln(b) survives independent (a,b) samples"},
+  {"criterion": "Idiomatic function typesetting", "weight": 30, "description": "\\ln as a command (upright), the whole \\ln(x) braced inside the exponent of e, \\left( \\right) around tall contents"},
+  {"criterion": "Understanding the mirror", "weight": 25, "description": "The page presents ln as the inverse of e^x (the chain ending at plain x) and the log law as the mirror of the exponent rule"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well; markers kept"}
+]

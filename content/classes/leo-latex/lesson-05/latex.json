@@ -1,0 +1,30 @@
+{
+  "title": "The Mirror Universe",
+  "var": "x",
+  "exercises": [
+    {
+      "id": "undo-button",
+      "title": "The Undo Button",
+      "prompt": "Show that ln undoes e^x in BOTH directions — a three-link chain ending at plain x.",
+      "requires": ["e^{\\ln", "\\ln", "\\left(", "\\right)"],
+      "minSegments": 3,
+      "expect": { "equivalentTo": "x" }
+    },
+    {
+      "id": "mirror-slope",
+      "title": "The Mirror's Slope",
+      "prompt": "The fact you proved with the chain rule: the derivative of ln(x) is 1/x.",
+      "requires": ["\\frac{d}{dx}", "\\ln", "\\frac{1}{x}"],
+      "minSegments": 2,
+      "expect": {}
+    },
+    {
+      "id": "log-law",
+      "title": "Multiplication Becomes Addition",
+      "prompt": "The mirror of e^a · e^b = e^(a+b): logs turn products into sums.",
+      "requires": ["\\ln"],
+      "minSegments": 2,
+      "expect": { "vars": { "a": [0.7, 1.9], "b": [0.5, 2.3] } }
+    }
+  ]
+}

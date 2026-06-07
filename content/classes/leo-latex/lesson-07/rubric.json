@@ -1,0 +1,6 @@
+[
+  {"criterion": "The split is true", "weight": 35, "description": "e^{ix} = cos(x) + i·sin(x) holds in both coordinates, the conjugate-product derivation reaches 1 at every sample, and sin' = cos numerically"},
+  {"criterion": "Idiomatic align* derivation", "weight": 30, "description": "\\begin{align*}…\\end{align*} with stacked &= columns and \\\\ line breaks; continuation lines start at &=; \\cos^2(x) style function powers"},
+  {"criterion": "Shows the derivation", "weight": 25, "description": "The circle is summoned in steps (twins → expansion → 1), not just asserted; the split is presented as the tower fed with ix"},
+  {"criterion": "Clean page", "weight": 10, "description": "Text and math read well; markers kept; grown parens around the twins"}
+]

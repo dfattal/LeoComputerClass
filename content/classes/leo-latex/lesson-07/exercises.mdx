@@ -1,0 +1,60 @@
+# Lesson 7 — Exercises: The Great Split
+
+## How This Works
+
+One new tool this week: the `align*` block for multi-line derivations. The grader reads the whole block as a single chain — every `&=` line is a link, and every link is verified with real (well… complex) numbers.
+
+---
+
+## Exercise 1: The Great Split
+
+Under `%% the-split`, typeset Euler's formula:
+
+$$e^{ix} = \;? + i\,?$$
+
+**You'll need:** `e^{ix}` (both letters inside the exponent braces!), `\cos`, `\sin`.
+
+**Hints:**
+- The real family first, then $i$ times the imaginary family.
+- The grader evaluates $e^{ix}$ as a true complex exponential at several $x$ and matches **both coordinates** against your right side. The formula has to be exactly right.
+- Feel what it says: as $x$ grows, $e^{ix}$ *walks around a circle* — cosine is its east-west shadow, sine its north-south.
+
+---
+
+## Exercise 2: Summoning the Circle
+
+Under `%% circle-sum`, multiply the split by its conjugate twin in a proper two-line derivation:
+
+```
+$$ \begin{align*}
+(the twins, multiplied) &= (what the product expands to) \\
+&= (the famous number)
+\end{align*} $$
+```
+
+**You'll need:** `\begin{align*}`/`\end{align*}`, `&=` on both lines, `\\` between them, `\left( \right)` around each twin, `\cos^2(x)`, `\sin^2(x)`.
+
+**Hints:**
+- The twins: $\cos(x) + i\sin(x)$ and $\cos(x) - i\sin(x)$. Side by side, each in grown parens.
+- Their product is last week's annihilation: $\cos^2 - i^2\sin^2$, and $i^2 = -1$ flips the minus to a **plus**.
+- The last line is the whole unit circle in one digit. The grader checks every link at several $x$ — your derivation's spine, certified.
+
+---
+
+## Exercise 3: The Sleeping Power Rule
+
+Under `%% sine-slope`, publish the derivative that comes free with the series:
+
+$$\frac{d}{dx} \sin(x) = \;?$$
+
+**You'll need:** `\frac{d}{dx}`, `\sin`, `\cos`.
+
+**Hints:**
+- No memorizing — sine is an infinite polynomial now, and polynomials bow to the power rule.
+- The grader measures sine's actual slope at its sample points. Only one function matches it everywhere.
+
+---
+
+## Finishing Up
+
+Three green chips → **Submit**. Editor's eye: alignment column straight (every `&=` stacked), continuation lines starting at `&=`, function powers as `\cos^2(x)`. Page seven: geometry, summoned. One page left — the summit.

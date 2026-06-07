@@ -24,6 +24,9 @@ import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+// The latex-lesson grader — the SAME module the browser runs, so reference.tex
+// is proven against exactly what students are graded with.
+import { checkDocument } from "../lib/latex/check.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CLASSES_DIR = join(ROOT, "content", "classes");
@@ -194,11 +197,13 @@ function validateLesson(lessonDir) {
   let tests = null;
   let viz = null;
   let reflection = null;
+  let latex = null;
   for (const [name, required] of [
     ["tests.json", false],
     ["rubric.json", false],
     ["viz.json", false],
     ["reflection.json", false],
+    ["latex.json", false],
   ]) {
     const p = join(lessonDir, name);
     if (!existsSync(p)) {
@@ -211,6 +216,7 @@ function validateLesson(lessonDir) {
       if (name === "tests.json") tests = parsed;
       if (name === "viz.json") viz = parsed;
       if (name === "reflection.json") reflection = parsed;
+      if (name === "latex.json") latex = parsed;
     } catch (e) {
       add(false, `${name} parses`, e.message);
     }
@@ -229,6 +235,50 @@ function validateLesson(lessonDir) {
       "reflection.json has lookFor key ideas",
       hasLookFor ? undefined : "lookFor must be a non-empty array"
     );
+  }
+
+  // 1c. Latex lessons (no Python): the answer key is reference.tex, and it must
+  // pass EVERY exercise check from latex.json under the real checker. Also make
+  // sure starter.tex carries a `%% id` marker for each exercise so the student
+  // has somewhere to write.
+  const refTexPath = join(lessonDir, "reference.tex");
+  const hasRefTex = existsSync(refTexPath);
+  if (latex) {
+    const exercises = Array.isArray(latex.exercises) ? latex.exercises : [];
+    add(
+      exercises.length > 0,
+      "latex.json has exercises",
+      exercises.length ? undefined : "exercises must be a non-empty array"
+    );
+    const ids = new Set(exercises.map((e) => e.id));
+    add(
+      ids.size === exercises.length,
+      "latex.json exercise ids are unique",
+      ids.size === exercises.length ? undefined : "duplicate exercise id"
+    );
+
+    const starterTexPath = join(lessonDir, "starter.tex");
+    if (existsSync(starterTexPath)) {
+      const starterTex = readFileSync(starterTexPath, "utf-8");
+      for (const ex of exercises) {
+        const has = new RegExp(`^\\s*%%\\s*${ex.id}\\s*$`, "m").test(starterTex);
+        add(has, `starter.tex has marker %% ${ex.id}`, has ? undefined : "no marker line");
+      }
+    } else {
+      add(false, "starter.tex present", "missing");
+    }
+
+    if (hasRefTex) {
+      try {
+        const { results } = checkDocument(readFileSync(refTexPath, "utf-8"), latex);
+        for (const r of results)
+          add(r.passed, `reference.tex: ${r.name}`, r.error ?? undefined);
+      } catch (e) {
+        add(false, "reference.tex passes the checker", e.message);
+      }
+    } else {
+      add(false, "reference.tex present (answer key)", "missing — write it before latex.json");
+    }
   }
 
   // 2. py_compile starter.py and reference.py
@@ -416,7 +466,9 @@ function validateLesson(lessonDir) {
     add(true, "viz.json parses (viz run skipped — no reference.py)");
   }
 
-  return { checks, skippedRef: !hasRef };
+  // Latex and reflection lessons have no reference.py by design — don't count
+  // them as "missing the answer key".
+  return { checks, skippedRef: !hasRef && !latex && !reflection };
 }
 
 // Map a flat case index back to its human-readable name from tests.json.

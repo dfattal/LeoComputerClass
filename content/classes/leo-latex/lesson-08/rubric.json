@@ -1,0 +1,6 @@
+[
+  {"criterion": "The summit facts are true", "weight": 35, "description": "e^{iπ} chain lands exactly on −1 through the split, ln(−1) = iπ in both coordinates, and the sine-arch integral chain reaches 2 through its bracket step"},
+  {"criterion": "Summit-level craftsmanship", "weight": 30, "description": "i\\pi fully braced in the exponent, \\pi in the integral bound braces, minus sign inside the evaluation bracket, \\, before dx"},
+  {"criterion": "Shows the steps", "weight": 25, "description": "The identity goes through cos(π) + i·sin(π), and the finale shows integral = bracket = answer — derivations to the very last line"},
+  {"criterion": "A finished book page", "weight": 10, "description": "The page reads as a closing chapter: clean text, markers kept, the loop back to page one visible"}
+]

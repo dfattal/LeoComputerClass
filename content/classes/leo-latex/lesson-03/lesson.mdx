@@ -1,0 +1,77 @@
+# Lesson 3 — The Art of Counting
+
+## Phase 2: Counting & Infinite Towers
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Typeset **factorials** with `!` — the arrangement counter
+- Build the **choose symbol** $\binom{n}{k}$ with `\binom`
+- Publish the **binomial theorem's** instant expansion of $(a+b)^4$
+- Learn why the grader uses **two different letters** to catch sneaky mistakes
+
+---
+
+## Big Idea
+
+Remember why this chapter exists in your book: you're building toward the exponential series, and that infinite tower runs on **factorials**. So before the tower, the counting tools — and their notation is some of the most satisfying LaTeX there is.
+
+A **factorial** counts arrangements: $5!$ is the number of ways five things can stand in line. Its symbol could not be simpler — it's literally an exclamation mark:
+
+```
+5! = 120
+```
+
+$$5! = 120$$
+
+No backslash, no braces. Math got excited.
+
+---
+
+## The Choose Symbol: `\binom`
+
+"How many ways can I pick 2 friends from 5?" has its own famous symbol — $n$ over $k$ in tall parentheses, **without** a fraction bar:
+
+```
+\binom{5}{2}
+```
+
+$$\binom{5}{2}$$
+
+It takes two brace groups, exactly like `\frac` — top then bottom. And its formula is pure factorials:
+
+$$\binom{n}{k} = \frac{n!}{k!\,(n-k)!}$$
+
+Watch the typography there: `\binom` has *no* bar, `\frac` *has* one. Mixing them up is the classic beginner's tell — your editor will be watching.
+
+---
+
+## Pascal's Triangle Becomes Algebra
+
+Here's the chapter's mind-blow, the one you proved on paper: the numbers in row 4 of Pascal's triangle — $1, 4, 6, 4, 1$ — are **exactly** the coefficients when you expand $(a+b)^4$:
+
+$$(a+b)^4 = a^4 + 4a^3b + 6a^2b^2 + 4ab^3 + b^4$$
+
+No multiplying-out needed, for any power. That's the **binomial theorem**, and it's what will let you multiply infinite series next week like it's nothing.
+
+Typesetting it teaches two habits:
+
+1. **Touching means multiplied.** `4a^3b` renders as $4a^3b$ — coefficient, power, letter, all snug. No `\cdot` needed (in fact this page *bans* it — book style).
+2. **The brace rule, again.** `a^3b` puts only the 3 up. If you wrote `a^{3b}` you'd get $a^{3b}$ — a completely different (and wrong) claim, and the grader *will* compute the difference.
+
+---
+
+## Why the Grader Uses Two Letters
+
+For the expansion, the grader can't just try one value — here's the sneaky part. Suppose you accidentally swapped two terms and wrote $4ab^3$ where $4a^3b$ should be. If the grader only tested $a = b$, the mistake would be **invisible** — the two wrong terms would trade places and the total would come out right!
+
+So it samples $a$ and $b$ at *different* values, several pairs of them. Symmetric mistakes have nowhere to hide. (This is a real technique — scientists call it *testing with independent inputs*. You'll meet it again when you test code.)
+
+---
+
+## What You'll Typeset Today
+
+Three lines: a factorial unrolled into its multiplication chain, the choose symbol with its factorial formula, and the instant expansion of $(a+b)^4$. Page three of your book — the counting engine, ready for the infinite tower.
