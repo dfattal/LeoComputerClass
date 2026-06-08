@@ -48,7 +48,7 @@ export default function ArcadePlayer({
           href={`/classes/${classSlug}`}
           className={`font-semibold ${className} hover:underline`}
         >
-          Leo&apos;s Game Studio
+          Game Studio
         </Link>{" "}
         — build your own game in code. 🎮
       </footer>

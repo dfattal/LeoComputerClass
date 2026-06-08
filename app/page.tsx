@@ -82,9 +82,15 @@ function ClassCard({ cls }: { cls: (typeof classes)[number] }) {
   );
 }
 
+const LEVELS: { key: (typeof classes)[number]["level"]; label: string; blurb: string }[] = [
+  { key: "basics", label: "Basics", blurb: "Brand new to coding? Start here." },
+  { key: "intermediate", label: "Intermediate", blurb: "Once you know a little Python." },
+  { key: "advanced", label: "Advanced", blurb: "Sequels and heavier math." },
+];
+
 export default function Home() {
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center bg-stone-50 px-4 py-16 dark:bg-stone-950">
+    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col items-center bg-stone-50 px-4 py-16 dark:bg-stone-950">
       <h1 className="mb-3 text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100 sm:text-5xl">
         Family Classroom
       </h1>
@@ -92,10 +98,28 @@ export default function Home() {
         Pick your class and start learning
       </p>
 
-      <div className="grid w-full max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {classes.map((cls) => (
-          <ClassCard key={cls.slug} cls={cls} />
-        ))}
+      <div className="w-full max-w-4xl space-y-12">
+        {LEVELS.map(({ key, label, blurb }) => {
+          const group = classes.filter((cls) => cls.level === key);
+          if (group.length === 0) return null;
+          return (
+            <section key={key}>
+              <div className="mb-4 flex items-baseline gap-3">
+                <h2 className="text-sm font-semibold uppercase tracking-widest text-stone-400">
+                  {label}
+                </h2>
+                <span className="text-sm text-stone-400 dark:text-stone-500">
+                  {blurb}
+                </span>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {group.map((cls) => (
+                  <ClassCard key={cls.slug} cls={cls} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ export async function generateMetadata({
   if (!share) return { title: "Game not found" };
   const cls = getClassBySlug(share.class_slug);
   const title = `${share.title ?? "An Arcade Game"} 🎮`;
-  const description = `Play this game, made with ${cls?.name ?? "Leo's Game Studio"}.`;
+  const description = `Play this game, made with ${cls?.name ?? "Game Studio"}.`;
   const ogImage = `/og-${share.class_slug}.jpg`;
   return {
     title,

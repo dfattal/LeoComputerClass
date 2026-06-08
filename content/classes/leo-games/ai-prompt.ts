@@ -1,4 +1,4 @@
-// Leo's Game Studio AI coaching system prompt for code review.
+// Game Studio AI coaching system prompt for code review.
 // Name-agnostic: the API route prepends the student's real Google login first
 // name and tells you to greet them by it. Never hardcode a student name here —
 // always address "the student" / "they".
