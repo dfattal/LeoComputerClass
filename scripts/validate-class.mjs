@@ -7,6 +7,9 @@
 //   - a viz graph that crashes or returns non-plottable data
 //   - starter.py / reference.py that don't compile
 //   - a tests.json entry with no matching stub in starter.py
+//   - lesson.mdx / exercises.mdx that don't compile as MDX (e.g. raw {braces}
+//     in prose are parsed as a JSX expression and 500 the page at request
+//     time — `npm run build` stays green because lesson pages render on demand)
 //
 // Usage:
 //   node scripts/validate-class.mjs            # every class
@@ -27,6 +30,13 @@ import { dirname, join } from "node:path";
 // The latex-lesson grader — the SAME module the browser runs, so reference.tex
 // is proven against exactly what students are graded with.
 import { checkDocument } from "../lib/latex/check.mjs";
+// The MDX compiler + the SAME plugin pipeline the lesson page renders with
+// (app/classes/[classSlug]/[lessonSlug]/page.tsx), so a file that compiles here
+// can't fail there.
+import { compile as mdxCompile } from "@mdx-js/mdx";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CLASSES_DIR = join(ROOT, "content", "classes");
@@ -189,9 +199,32 @@ function lessonDirs(classDir) {
 // ---------------------------------------------------------------------------
 // Validate one lesson. Returns { checks: [{ok, label, detail?}], skippedRef }
 // ---------------------------------------------------------------------------
-function validateLesson(lessonDir) {
+async function validateLesson(lessonDir) {
   const checks = [];
   const add = (ok, label, detail) => checks.push({ ok, label, detail });
+
+  // 0. MDX compile: both prose files must compile with the page's exact
+  // pipeline. Personalization tokens are substituted first, like the page does
+  // (personalizeText runs before <MDXRemote>). strict:"ignore" only silences
+  // KaTeX's emoji/unicode warnings — it can't change pass/fail.
+  for (const name of ["lesson.mdx", "exercises.mdx"]) {
+    const p = join(lessonDir, name);
+    if (!existsSync(p)) {
+      add(false, `${name} present`, "missing — loadLesson.ts requires it");
+      continue;
+    }
+    const src = readFileSync(p, "utf-8").replace(/\{\{[A-Z_]+\}\}/g, "Leo");
+    try {
+      await mdxCompile(src, {
+        remarkPlugins: [remarkGfm, remarkMath],
+        rehypePlugins: [[rehypeKatex, { strict: "ignore" }]],
+      });
+      add(true, `${name} compiles (MDX)`);
+    } catch (e) {
+      const where = e.line ? ` (line ${e.line})` : "";
+      add(false, `${name} compiles (MDX)`, `${e.message}${where}`);
+    }
+  }
 
   // 1. JSON parse
   let tests = null;
@@ -519,7 +552,7 @@ for (const cls of classDirs(slug)) {
   console.log(`\n${BOLD}${cls}${RESET}`);
 
   for (const lesson of lessons) {
-    const { checks, skippedRef } = validateLesson(join(classDir, lesson));
+    const { checks, skippedRef } = await validateLesson(join(classDir, lesson));
     const failed = checks.filter((c) => !c.ok);
     totalChecks += checks.length;
     totalFailed += failed.length;
