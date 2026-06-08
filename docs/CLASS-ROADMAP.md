@@ -15,12 +15,16 @@ class should keep all five:
 
 1. **A single build-toward-something through-line.** Not a grab-bag of topics —
    one concrete goal the whole class marches toward (build a CPU, engineer a
-   Nerf blaster, fly a mission to the Moon). The arc is the motivation.
+   Nerf blaster, fly a mission to the Moon, publish your own math book). The arc
+   is the motivation.
 2. **Every lesson is one (or a few) testable function(s).** Exercises map to
    `tests.json` entries that run in-browser via Pyodide. Pure, deterministic
-   functions only — no network, no filesystem, no GUI.
-3. **Python is the lab bench, not the subject.** Kids learn the *domain* by
+   functions only — no network, no filesystem, no GUI. *(Two no-Python lesson
+   kinds now exist as deliberate exceptions — see below — but the deterministic
+   auto-grading spirit holds for both.)*
+3. **Code is the lab bench, not the subject.** Kids learn the *domain* by
    writing code that *does* the thing. Code is the tool; the wonder is the topic.
+   (Usually Python; the Proof Press class made LaTeX the lab bench instead.)
 4. **Written for a 10-year-old.** Simple language, concrete analogies, warm and
    encouraging. Teach the real words, but always anchor them to a picture.
 5. **A payoff worth wanting.** Each lesson ends with a visible win, and the class
@@ -37,20 +41,39 @@ they're "watch it happen" panels. Accent colors live in one place,
 `lib/accents.ts` (don't hardcode them). To scaffold a drawing lesson, pass
 `--viz draw` to `scaffold-lesson.mjs` / `/new-lesson`.
 
+**Two no-Python lesson kinds** are also available (both documented in
+`/new-lesson`):
+
+- **Reflection lessons** (`reflection.json`) — one open question the kid
+  re-explains in their own words; the AI coach grades *understanding*. Every
+  class now ends with a "The Big Picture" reflection capstone.
+- **LaTeX lessons** (`latex.json`, Proof Press) — the kid typesets a small math
+  document with a live KaTeX page; a numeric evaluator (`lib/latex/`) verifies
+  the **math is true**, not just the syntax (equation chains sampled at real
+  values, complex-valued, indefinite integrals checked by differentiating the
+  answer — the FTC as grader). Answer key is `reference.tex`, proven by
+  `validate-class` against the same checker the browser runs. A whole class can
+  be built on this kind — or a single latex lesson could land inside a Python
+  class where typesetting fits the story.
+
 ---
 
 ## Current classes
 
+Every class below also ships a final **"The Big Picture" reflection capstone**
+(the `+1` in the counts).
+
 | Class | Slug | Through-line | Status |
 |-------|------|--------------|--------|
-| Pixel Wizards | `pixels` | Absolute basics: draw pictures with code (variables → loops) | Published (7) ✅ new |
-| Python Primer | `python-primer` | Real Python, one step up from Pixel Wizards | Published (5) |
-| Leo's Computer Class | `leo` | Logic gates → a working CPU | Phases 1–3 published, ALU/CPU planned |
-| Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8) |
-| Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8) |
-| Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8) |
-| DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | Published (7) ✅ |
-| Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | 8 published, 2 planned |
+| Pixel Wizards | `pixels` | Absolute basics: draw pictures with code (variables → loops) | Published (7+1) |
+| Python Primer | `python-primer` | Real Python, one step up from Pixel Wizards | Published (5+1) |
+| Leo's Computer Class | `leo` | Logic gates → a working CPU | Phases 1–3 (6+1) published, ALU/CPU planned |
+| Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8+1) |
+| Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8+1) |
+| Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8+1) |
+| DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | Published (7+1) |
+| Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | Published (8+1), 2 planned |
+| Leo's Proof Press | `leo-latex` | Typeset your own math book in LaTeX → e^{iπ} = −1 | Published (8) ✅ new — no reflection capstone (L8 *is* the capstone) |
 
 ---
 
@@ -154,6 +177,42 @@ reference.py-first.
 - Base palette reused from L1: A=green, T=red, C=blue, G=yellow, U=purple, `""`=empty;
   traits/creatures use emoji cells. Hero `/hero-dna-decoders.webp`.
 
+### Leo's Proof Press — ✅ built as `leo-latex`, 8 lessons published
+**Through-line:** "You've derived the math — now publish it." Like Pixel
+Wizards, not originally on this list: a **LaTeX typesetting** class that uses
+the *Building the Universe from First Principles* curriculum Leo already worked
+through on paper as its backdrop. Each lesson teaches the LaTeX needed to
+typeset one chapter of math he already understands; the capstone is his own
+math book ending at $e^{i\pi} = -1$. Accent `teal`, hero `/hero-latex.webp`.
+
+**Lesson arc (LaTeX skill ladder riding the math he owns):**
+1. Your First Typeset Page — `$$`, `^`/`_`, `\frac`, `\sqrt`, `\lim`, `\int`, evaluation brackets
+2. The Rules of the Machine — `\frac{d}{dx}`, `\cdot`, `\left( \right)` (product/chain rules in action)
+3. The Art of Counting — `!`, `\binom`, the binomial expansion
+4. The Infinite Tower — `\sum`, `\infty` (the e^x series)
+5. The Mirror Universe — `\ln`, commands inside exponents, typesetting a *law*
+6. A New Dimension — complex numbers; answers with imaginary parts
+7. The Great Split — `align*` multi-line derivations; Euler's formula; the unit circle summoned
+8. The Summit — Euler's identity, ln(−1) = iπ, one closing FTC integral
+
+**As-built notes:**
+- Shipped a whole new **"latex" lesson kind** (see "Two no-Python lesson kinds"
+  above): Monaco LaTeX mode, live KaTeX page with per-exercise status chips,
+  3-tier in-browser grading (compiles → required commands → **the math is
+  numerically true**), no Pyodide. The math-truth tier is the class's
+  signature: it evaluates every `=`-segment at sampled values (complex-valued —
+  it verifies $e^{i\pi} = -1$ itself), integrates definite integrals
+  numerically, and checks indefinite integrals by differentiating the student's
+  answer back to the integrand.
+- The `reference.py`-before-`tests.json` invariant carries over as
+  **`reference.tex`-before-`latex.json`**: `validate-class` proves the answer
+  key against the exact checker module the browser imports.
+- Numeric grading can't distinguish *forms* (a re-stated left side passes by
+  value) — `requires`/`forbids` tokens + `minSegments` ("show your work") +
+  the AI editor persona carry the craftsmanship judgment instead.
+- No reflection capstone: lesson 8 already *is* the looking-back chapter, and
+  the finished typeset book is the artifact.
+
 ---
 
 ## Candidate classes (ranked by fit)
@@ -227,8 +286,10 @@ Given what Leo has done (Primer → Computer Class → Motion Lab → Space Scho
 the natural next order is:
 
 1. ~~**Secret Codes**~~ — ✅ built (`leo-codes`).
-2. **Game Bot** — introduces recursion/search with a big payoff.
-3. **Build a Programming Language** — the grand finale that closes the
+2. ~~**Proof Press**~~ — ✅ built (`leo-latex`); pairs naturally with the paper
+   math curriculum he just finished — publish what you proved.
+3. **Game Bot** — introduces recursion/search with a big payoff.
+4. **Build a Programming Language** — the grand finale that closes the
    hardware→software loop from the Computer Class.
 
 For an **absolute beginner** (a younger kid, or Leila starting out), the ladder
