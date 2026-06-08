@@ -1234,13 +1234,18 @@ except Exception as __e:
           onRunTests={handleRunTests}
           onSubmit={handleSubmit}
           onReset={handleReset}
+          onShare={isJs ? handleShare : undefined}
           loading={loading}
           submitting={submitting}
+          sharing={sharing}
           hasCode={!!code.trim()}
           hasSubmittedBefore={hasSubmittedBefore}
           saveStatus={saveStatus}
         />
       </div>
+      {shareUrl && (
+        <ShareDialog url={shareUrl} onClose={() => setShareUrl(null)} />
+      )}
     </>
   );
 }
