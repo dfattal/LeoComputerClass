@@ -9,8 +9,10 @@ export default function EditorToolbar({
   onRunTests,
   onSubmit,
   onReset,
+  onShare,
   loading,
   submitting,
+  sharing,
   hasCode,
   hasSubmittedBefore,
   saveStatus = "idle",
@@ -19,8 +21,11 @@ export default function EditorToolbar({
   onRunTests: () => void;
   onSubmit: () => void;
   onReset: () => void;
+  /** Game Studio only: publish the game to a public /arcade link. */
+  onShare?: () => void;
   loading: boolean;
   submitting: boolean;
+  sharing?: boolean;
   hasCode: boolean;
   hasSubmittedBefore: boolean;
   saveStatus?: SaveStatus;
@@ -86,8 +91,31 @@ export default function EditorToolbar({
         Reset
       </button>
 
-      {/* Save status + Submit — pushed to right */}
+      {/* Share (Game Studio) + Save status + Submit — pushed to right */}
       <div className="ml-auto flex items-center gap-3">
+        {onShare && (
+          <button
+            onClick={onShare}
+            disabled={sharing || !hasCode}
+            className="inline-flex items-center gap-1.5 rounded-md border border-stone-300 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-stone-100 disabled:opacity-50 dark:border-stone-700 dark:hover:bg-stone-800"
+            title="Publish your game to a public link"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              className="h-3.5 w-3.5"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="3.5" r="1.8" />
+              <circle cx="4" cy="8" r="1.8" />
+              <circle cx="12" cy="12.5" r="1.8" />
+              <path d="M5.6 7l4.8-2.6M5.6 9l4.8 2.6" />
+            </svg>
+            {sharing ? "Publishing…" : "Share"}
+          </button>
+        )}
         <SaveStatusBadge status={saveStatus} />
         <button
           onClick={onSubmit}

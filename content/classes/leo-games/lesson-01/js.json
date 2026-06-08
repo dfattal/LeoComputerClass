@@ -1,0 +1,9 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "render": "render",
+    "still": true,
+    "caption": "Your scene, drawn by your render() function. Press Run to repaint it."
+  }
+}

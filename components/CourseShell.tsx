@@ -9,8 +9,13 @@ import {
 } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePyodide } from "@/lib/pyodide/usePyodide";
+import { useJsRunner } from "@/lib/js/useJsRunner";
 import type { TestResult } from "@/lib/pyodide/usePyodide";
-import type { TestEntry, VizConfig } from "@/lib/lessons/loadLesson";
+import type {
+  TestEntry,
+  VizConfig,
+  JsLessonConfig,
+} from "@/lib/lessons/loadLesson";
 import type { LatexLessonConfig } from "@/lib/latex/check.mjs";
 
 /** The subset of a reflection lesson that's safe to send to the browser: just
@@ -26,6 +31,8 @@ const CrisprSimulator = dynamic(
 );
 // Lazy so KaTeX + the LaTeX checker only load on latex lessons.
 const LatexPanel = dynamic(() => import("./LatexPanel"), { ssr: false });
+// Lazy: the live game canvas only loads on javascript lessons.
+const GamePreview = dynamic(() => import("./GamePreview"), { ssr: false });
 import LessonSidebar, {
   type SidebarPhase,
   type SidebarWeek,
@@ -43,6 +50,7 @@ import ReflectionPanel from "./ReflectionPanel";
 import LinePlot from "./LinePlot";
 import PixelCanvas from "./PixelCanvas";
 import EditorGraphSplit from "./EditorGraphSplit";
+import ShareDialog from "./ShareDialog";
 
 const DRAWER_COLLAPSED_KEY = "drawer-collapsed";
 const DRAFT_SAVE_DEBOUNCE_MS = 2000;
@@ -70,6 +78,7 @@ export default function CourseShell({
   vizConfig,
   reflectionConfig,
   latexConfig,
+  jsConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -82,6 +91,7 @@ export default function CourseShell({
   vizConfig?: VizConfig;
   reflectionConfig?: ClientReflectionConfig;
   latexConfig?: LatexLessonConfig;
+  jsConfig?: JsLessonConfig;
 }) {
   const accentColor = getClassBySlug(classSlug)?.accentColor ?? "indigo";
 
@@ -99,6 +109,7 @@ export default function CourseShell({
         vizConfig={vizConfig}
         reflectionConfig={reflectionConfig}
         latexConfig={latexConfig}
+        jsConfig={jsConfig}
       />
     </AccentProvider>
   );
@@ -116,6 +127,7 @@ function CourseShellInner({
   vizConfig,
   reflectionConfig,
   latexConfig,
+  jsConfig,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -128,15 +140,26 @@ function CourseShellInner({
   vizConfig?: VizConfig;
   reflectionConfig?: ClientReflectionConfig;
   latexConfig?: LatexLessonConfig;
+  jsConfig?: JsLessonConfig;
 }) {
   const accent = useAccent();
   const isReflection = !!reflectionConfig;
   const isLatex = !!latexConfig;
+  const isJs = !!jsConfig;
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [mounted, setMounted] = useState(false);
 
-  // Pyodide + code state
-  const { run, runTests, loading } = usePyodide();
+  // Code execution: Python lessons run in Pyodide, javascript lessons in the JS
+  // sandbox worker. Both hooks expose the same run/runTests/loading shape; the
+  // unused one never spins up a worker (lazy), so calling both is free.
+  const pyRunner = usePyodide();
+  const jsRunner = useJsRunner();
+  const { run, runTests, loading } = isJs ? jsRunner : pyRunner;
+  // Bumped on each Run so the live <GamePreview> recompiles the student's code.
+  const [previewGen, setPreviewGen] = useState(0);
+  // Game Studio "Share": publish the current game to a public /arcade link.
+  const [sharing, setSharing] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [stdout, setStdout] = useState("");
   const [stderr, setStderr] = useState("");
@@ -344,6 +367,29 @@ function CourseShellInner({
     setResetKey((k) => k + 1);
   }, []);
 
+  // Publish the current game to a stable public /arcade link and show the dialog.
+  const handleShare = useCallback(async () => {
+    if (!code.trim() || sharing) return;
+    setSharing(true);
+    try {
+      const res = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ classSlug, lessonSlug, code }),
+      });
+      const data = await res.json();
+      if (res.ok && data.path) {
+        setShareUrl(`${window.location.origin}${data.path}`);
+      } else {
+        window.alert(data.error || "Couldn't publish your game. Try again.");
+      }
+    } catch {
+      window.alert("Couldn't publish your game. Check your connection and try again.");
+    } finally {
+      setSharing(false);
+    }
+  }, [classSlug, lessonSlug, code, sharing]);
+
   // Run the lesson's viz function via the __VIZ__ stdout channel and capture
   // its JSON return value. Shared by Run and Run-Tests.
   const captureViz = useCallback(
@@ -532,14 +578,23 @@ except Exception as __e:
     setStdout(result.stdout);
     setStderr(result.stderr);
 
-    await captureViz(code, !!result.error);
+    if (isJs) {
+      // The live <GamePreview> recompiles on this bump and runs the student's
+      // code itself (canvas needs the main thread) — no Pyodide viz channel.
+      setPreviewGen((g) => g + 1);
+    } else {
+      await captureViz(code, !!result.error);
+    }
 
     // Decide what the bottom drawer should do — don't pop it open empty. The
     // bottom section only surfaces when it has something to read; on a clean run
     // of a visual lesson, the picture/graph is the output.
     const hasError = !!result.error || !!result.stderr?.trim();
     const hasOutput = !!result.stdout?.trim();
-    const hasGraph = vizConfig?.type === "plot" || vizConfig?.type === "draw";
+    const hasGraph =
+      vizConfig?.type === "plot" ||
+      vizConfig?.type === "draw" ||
+      (isJs && !!jsConfig?.preview);
     const openDrawer = (tab: DrawerTab) => {
       setDrawerTab(tab);
       setDrawerCollapsed(false);
@@ -562,7 +617,7 @@ except Exception as __e:
     } else {
       openDrawer("Output"); // no visual, no output: keep the old behavior
     }
-  }, [run, code, captureViz, vizConfig]);
+  }, [run, code, captureViz, vizConfig, isJs, jsConfig]);
 
   const handleRunTests = useCallback(async () => {
     setTestResults([]);
@@ -574,16 +629,21 @@ except Exception as __e:
     setTestResults(result.testResults);
     if (result.error === "timeout") {
       setTestError(
-        "Tests took too long — your code probably has a loop that never stops. " +
-          "Check each `while True:` block: it needs a way out (like `if y <= 0: break`), " +
-          "and the variable the `if` checks has to be updated inside the loop."
+        isJs
+          ? "Tests took too long — your code probably has a loop that never stops. " +
+              "Check each `while (...)` loop: it needs a way out, and the variable " +
+              "the condition checks has to change inside the loop."
+          : "Tests took too long — your code probably has a loop that never stops. " +
+              "Check each `while True:` block: it needs a way out (like `if y <= 0: break`), " +
+              "and the variable the `if` checks has to be updated inside the loop."
       );
     } else if (result.error) {
       setTestError(`Tests couldn't finish: ${result.error}`);
     }
 
-    await captureViz(code, !!result.error);
-  }, [runTests, code, tests, captureViz]);
+    if (isJs) setPreviewGen((g) => g + 1);
+    else await captureViz(code, !!result.error);
+  }, [runTests, code, tests, captureViz, isJs]);
 
   // Latex lessons grade synchronously in the browser — no Pyodide. The checker
   // (KaTeX compile → required commands → is-the-math-true) ships in its own
@@ -791,7 +851,8 @@ except Exception as __e:
   ) : undefined;
 
   // Right-column graph panel (also a drawer "Graph" tab on mobile): a line plot
-  // for "plot" lessons, or a pixel-grid drawing for "draw" lessons.
+  // for "plot" lessons, a pixel-grid drawing for "draw" lessons, or the live
+  // game canvas for "javascript" lessons.
   const graphContent =
     vizConfig?.type === "plot" ? (
       <LinePlot
@@ -802,12 +863,25 @@ except Exception as __e:
       />
     ) : vizConfig?.type === "draw" ? (
       <PixelCanvas data={vizResult} title={vizConfig.title} />
+    ) : isJs && jsConfig?.preview ? (
+      // The surrounding panel (EditorGraphSplit header / drawer tab) already
+      // labels this "Game", so the canvas itself needs no title.
+      <GamePreview
+        code={code}
+        config={jsConfig.preview}
+        generation={previewGen}
+      />
     ) : undefined;
 
-  // The panel isn't always a "graph": a pixel-drawing lesson shows a canvas.
+  // The panel isn't always a "graph": a pixel-drawing lesson shows a canvas, a
+  // javascript lesson shows the live game.
   const isDrawViz = vizConfig?.type === "draw";
-  const graphTabLabel = isDrawViz ? "Canvas" : "Graph";
-  const graphHeaderLabel = isDrawViz ? "🎨 Canvas" : "📈 Graph";
+  const graphTabLabel = isJs ? "Game" : isDrawViz ? "Canvas" : "Graph";
+  const graphHeaderLabel = isJs
+    ? "🎮 Game"
+    : isDrawViz
+      ? "🎨 Canvas"
+      : "📈 Graph";
 
   const sidebarProps = {
     phases,
@@ -1044,12 +1118,15 @@ except Exception as __e:
                       onRunTests={handleRunTests}
                       onSubmit={handleSubmit}
                       onReset={handleReset}
+                      onShare={isJs ? handleShare : undefined}
                       loading={loading}
                       submitting={submitting}
+                      sharing={sharing}
                       hasCode={!!code.trim()}
                       hasSubmittedBefore={hasSubmittedBefore}
                       resetKey={resetKey}
                       saveStatus={saveStatus}
+                      language={isJs ? "javascript" : undefined}
                     />
                   }
                   graph={graphContent}
@@ -1066,12 +1143,15 @@ except Exception as __e:
                   onRunTests={handleRunTests}
                   onSubmit={handleSubmit}
                   onReset={handleReset}
+                  onShare={isJs ? handleShare : undefined}
                   loading={loading}
                   submitting={submitting}
+                  sharing={sharing}
                   hasCode={!!code.trim()}
                   hasSubmittedBefore={hasSubmittedBefore}
                   resetKey={resetKey}
                   saveStatus={saveStatus}
+                  language={isJs ? "javascript" : undefined}
                 />
               )
             }
@@ -1088,6 +1168,9 @@ except Exception as __e:
             labContent={labContent}
           />
         </div>
+        {shareUrl && (
+          <ShareDialog url={shareUrl} onClose={() => setShareUrl(null)} />
+        )}
       </>
     );
   }
@@ -1126,6 +1209,7 @@ except Exception as __e:
               fallbackCode={fallbackCode}
               starterCode={starterCode}
               resetKey={resetKey}
+              language={isJs ? "javascript" : undefined}
             />
           </div>
         </div>

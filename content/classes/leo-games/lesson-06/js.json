@@ -1,0 +1,12 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "fps": 60,
+    "init": "init",
+    "update": "update",
+    "render": "render",
+    "keys": ["ArrowLeft", "ArrowRight"],
+    "caption": "Score points, guard your 3 lives — don't let it hit the floor!"
+  }
+}

@@ -107,11 +107,20 @@ do not leave a copied/placeholder image.** First open one or two existing heroes
 (`public/hero-pixels.webp`, `public/hero-bio.webp`) to match the house style:
 bright, playful, kid-friendly illustration; a little arcade/UI text is fine.
 
-Then call `/ask-gemini` in image mode with a prompt that bakes in: the class
-name + tagline, the **through-line** subject, the **accent color** as the dominant
-palette, and a concrete scene (a character + the thing the class builds toward).
-For a drawing class, ask for a **pixel-art** style (`--styles="pixel-art"`); plot
-classes can use a richer illustration. Ask for a **16:9 landscape** image.
+Then call `/ask-gemini` in image mode with a prompt for: the **through-line**
+subject, the **accent color** as the dominant palette, and a concrete scene (a
+character + the thing the class builds toward). For a drawing class, ask for a
+**pixel-art** style (`--styles="pixel-art"`); plot classes can use a richer
+illustration. Ask for a **16:9 landscape** image.
+
+**Do NOT bake the class name or any title/headline text into the image.** The
+class landing page renders its own title + tagline as real HTML over/under the
+hero, so a name baked into the art is redundant and usually gets *duplicated*
+(the leo-games hero first came back with "Leo's Game Studio" printed twice).
+Prompt for the scene/subject/mood/palette only, and add an explicit negative like
+*"no title text, no class name, no headline, no large words baked into the
+image."* Tiny in-scene UI is fine (a small SCORE readout, short code snippets, a
+game's own marquee) — just not the class's name or a banner headline.
 
 `/ask-gemini` writes to the gitignored `nanobanana-output/` as a `.jpeg`. Convert
 it to webp at the standard hero size (1376×768, matching the other heroes) and put

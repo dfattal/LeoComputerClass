@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Movement",
+    "weight": 60,
+    "description": "step() returns a ball whose x increased by vx and y by vy."
+  },
+  {
+    "criterion": "Returns new state",
+    "weight": 25,
+    "description": "Returns a NEW ball object (with vx, vy, r carried over) instead of mutating the argument."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear and simple; a single return statement."
+  }
+]

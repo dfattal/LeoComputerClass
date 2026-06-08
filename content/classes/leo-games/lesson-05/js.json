@@ -1,0 +1,11 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "init": "init",
+    "update": "update",
+    "render": "render",
+    "keys": ["ArrowLeft", "ArrowRight"],
+    "caption": "Keep the ball alive — it bounces off your paddle now!"
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "entry": "step",
+    "cases": [
+      { "name": "a ball at (0,0) moving right+down", "args": [{ "x": 0, "y": 0, "vx": 2, "vy": 1, "r": 7 }], "expected": { "x": 2, "y": 1, "vx": 2, "vy": 1, "r": 7 } },
+      { "name": "the starting ball moves by its velocity", "args": [{ "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }], "expected": { "x": 242.4, "y": 181.8, "vx": 2.4, "vy": 1.8, "r": 7 } },
+      { "name": "negative velocity moves up+left", "args": [{ "x": 100, "y": 50, "vx": -3, "vy": -2, "r": 7 }], "expected": { "x": 97, "y": 48, "vx": -3, "vy": -2, "r": 7 } }
+    ]
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "entry": "makeBricks",
+    "cases": [
+      {
+        "name": "one row, one column makes one brick at the top-left",
+        "args": [1, 1],
+        "expected": [{ "x": 9, "y": 30, "w": 50, "h": 16 }]
+      },
+      {
+        "name": "2 rows x 3 columns makes a grid of 6 bricks",
+        "args": [2, 3],
+        "expected": [
+          { "x": 9, "y": 30, "w": 50, "h": 16 },
+          { "x": 65, "y": 30, "w": 50, "h": 16 },
+          { "x": 121, "y": 30, "w": 50, "h": 16 },
+          { "x": 9, "y": 52, "w": 50, "h": 16 },
+          { "x": 65, "y": 52, "w": 50, "h": 16 },
+          { "x": 121, "y": 52, "w": 50, "h": 16 }
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "removeHit",
+    "cases": [
+      {
+        "name": "a box on the first brick knocks just that brick out",
+        "args": [
+          [
+            { "x": 9, "y": 30, "w": 50, "h": 16 },
+            { "x": 65, "y": 30, "w": 50, "h": 16 }
+          ],
+          { "x": 20, "y": 35, "w": 10, "h": 10 }
+        ],
+        "expected": [{ "x": 65, "y": 30, "w": 50, "h": 16 }]
+      },
+      {
+        "name": "a box that misses every brick leaves the wall whole",
+        "args": [
+          [
+            { "x": 9, "y": 30, "w": 50, "h": 16 },
+            { "x": 65, "y": 30, "w": 50, "h": 16 }
+          ],
+          { "x": 400, "y": 300, "w": 10, "h": 10 }
+        ],
+        "expected": [
+          { "x": 9, "y": 30, "w": 50, "h": 16 },
+          { "x": 65, "y": 30, "w": 50, "h": 16 }
+        ]
+      }
+    ]
+  }
+]

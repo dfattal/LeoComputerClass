@@ -1,0 +1,11 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "init": "init",
+    "update": "update",
+    "render": "render",
+    "keys": ["ArrowLeft", "ArrowRight"],
+    "caption": "Click the game and steer with ← →. (The ball ignores the paddle… for now.)"
+  }
+}

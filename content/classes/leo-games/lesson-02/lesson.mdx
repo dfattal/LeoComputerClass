@@ -1,0 +1,51 @@
+# The Game Loop
+
+> A cartoon is just lots of pictures shown fast. A game is the same trick — but it draws the next picture itself, 60 times a second. Today you make something **move**.
+
+## A game is a flip-book
+
+Flip a pad of paper where each page is a tiny bit different, and the drawing comes
+alive. A game does exactly that, about **60 times every second**. Each one of
+those moments is called a **frame**, and every frame the game does two jobs:
+
+1. **UPDATE** — change the numbers a little (move the ball, the paddle, the score).
+2. **RENDER** — draw the picture from those numbers.
+
+Update, render, update, render… faster than your eye can see. That's motion.
+
+```javascript
+// every frame:
+state = update(state);   // change the numbers
+render(ctx, state);      // draw them
+```
+
+Keeping these two jobs **separate** is the secret of the whole class: the UPDATE
+math is pure (numbers in, numbers out), which is exactly why we can test it.
+
+## Velocity = how far each frame
+
+Our ball carries its own speed with it:
+
+```javascript
+let ball = { x: 240, y: 180, vx: 2.4, vy: 1.8, r: 7 };
+//           where it is      how far it moves      size
+```
+
+`vx` is how far it slides right each frame, `vy` how far down. To take ONE step,
+you just add the velocity to the position:
+
+```javascript
+x  →  x + vx
+y  →  y + vy
+```
+
+That's the same idea you used in Motion Lab: new position = old position + speed.
+
+## What you'll build
+
+You'll write **`step(ball)`** — it returns a **new** ball nudged one frame by its
+velocity. The game loop (already written for you) will call it ~60×/sec, so the
+moment it works you'll see your ball glide across the screen.
+
+It won't stop at the walls yet — it'll sail right off the edge. That's on purpose:
+next lesson you'll teach it to **bounce**. 🏓

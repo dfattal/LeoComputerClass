@@ -1,0 +1,51 @@
+## Your mission
+
+### The big one — `update(state, input)`
+
+This is the only function you write today, and it's the heart of the whole game.
+It takes the world right now (`state`) and what keys are pressed (`input`), and it
+returns the world **one frame later**. Every helper you need is already in the file —
+your job is to call them in the right order.
+
+Walk through this checklist, top to bottom, then `return` the new state:
+
+1. **Game over?** If `isGameOver(state)` is true, just `return state` — frozen.
+2. **Move the ball + steer the paddle.**
+   - `let ball = bounce(step(state.ball), W, H);`
+   - `const paddle = movePaddle(state.paddle, input, W);`
+   - Build a fresh state to work with:
+     `let next = { ball: ball, paddle: paddle, bricks: state.bricks, score: state.score, lives: state.lives };`
+3. **Paddle bounce (+10).** If `overlaps(ballBox(next.ball), next.paddle)` is true
+   **and** `next.ball.vy > 0` (the ball is heading down), flip the ball's `vy` and
+   `addScore(next, 10)`.
+4. **Brick hits (+10 each).** Find the bricks the ball touches. If there are any,
+   flip the ball's `vy`, `removeHit` them, and `addScore(next, 10 * howMany)`.
+5. **Floor.** If `next.ball.y - next.ball.r > H`, the ball fell off the bottom:
+   `loseLife(next)` and reset the ball to `{ x: 240, y: 240, vx: 2.4, vy: -2.4, r: 7 }`.
+6. **`return next;`**
+
+Keep the state keys in this order every time: `ball, paddle, bricks, score, lives`.
+
+What each one-frame transition should do:
+
+```javascript
+// ball in open space, no keys -> it just glides by its velocity:
+update({ ball: { x: 240, y: 200, vx: 2.4, vy: -2.4, r: 7 }, paddle: { x: 200, y: 336, w: 80, h: 12 }, bricks: [], score: 0, lives: 3 }, { keys: {} })
+//   -> ball x 242.4, y 197.6, everything else unchanged
+
+// ball touching a brick -> brick gone, score +10:
+//   bricks goes from [one brick] to [], score 0 -> 10
+```
+
+**Hint — flip a velocity without mutating.** To bounce, build a new ball that copies
+everything but swaps the sign of `vy`:
+
+```javascript
+next = { ...next, ball: { ...next.ball, vy: -next.ball.vy } };
+```
+
+`{ ...next.ball }` copies the ball, and `vy: -next.ball.vy` overwrites just that one
+number. Same trick `addScore` and `loseLife` use on the state.
+
+Press **Run**, then click the Game panel and steer with **← →**. When it plays —
+you shipped it. 🎉

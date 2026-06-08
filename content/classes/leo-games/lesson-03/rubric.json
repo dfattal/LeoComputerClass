@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Bounces correctly",
+    "weight": 60,
+    "description": "Flips vx when the ball reaches a left/right wall and flips vy when it reaches the top/floor (using the ball's radius r in the check)."
+  },
+  {
+    "criterion": "Returns a new ball",
+    "weight": 25,
+    "description": "Returns a NEW ball object (x, y, and r carried over) instead of mutating the argument; a ball away from every wall comes back unchanged."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear and simple — two if-checks and one return, easy to read."
+  }
+]

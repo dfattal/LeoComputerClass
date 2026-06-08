@@ -1,0 +1,12 @@
+[
+  {
+    "entry": "overlaps",
+    "cases": [
+      { "name": "two boxes clearly overlapping crash", "args": [{ "x": 10, "y": 10, "w": 40, "h": 40 }, { "x": 30, "y": 30, "w": 40, "h": 40 }], "expected": true },
+      { "name": "two boxes far apart miss", "args": [{ "x": 0, "y": 0, "w": 20, "h": 20 }, { "x": 200, "y": 200, "w": 20, "h": 20 }], "expected": false },
+      { "name": "edges just touching is NOT a crash", "args": [{ "x": 0, "y": 0, "w": 50, "h": 50 }, { "x": 50, "y": 0, "w": 50, "h": 50 }], "expected": false },
+      { "name": "one box fully inside the other crashes", "args": [{ "x": 0, "y": 0, "w": 100, "h": 100 }, { "x": 30, "y": 30, "w": 20, "h": 20 }], "expected": true },
+      { "name": "lined up on x but in different rows misses", "args": [{ "x": 0, "y": 0, "w": 50, "h": 20 }, { "x": 10, "y": 100, "w": 50, "h": 20 }], "expected": false }
+    ]
+  }
+]

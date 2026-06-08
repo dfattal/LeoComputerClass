@@ -103,6 +103,11 @@ export async function POST(request: Request) {
     // and the mathematical understanding the page shows.
     const latex = weekData.latexConfig;
 
+    // A "javascript" lesson (Game Studio): the student wrote JS game functions,
+    // graded by the JS sandbox (results ride along as test_results). Same review
+    // shape as Python, but the code is JavaScript.
+    const js = weekData.jsConfig;
+
     const userPayload = reflection
       ? `## Lesson: ${lesson.title}
 
@@ -168,7 +173,39 @@ Respond with ONLY valid JSON in this exact format:
   "challenge_question": "one fun mini typesetting challenge that uses the same commands in a new way (concrete and small — something they could add to this very page)",
   "common_pitfalls_to_watch": ["a common LaTeX mix-up to watch for", "another if helpful"]
 }`
-        : `## Lesson: ${lesson.title}
+        : js
+          ? `## Lesson: ${lesson.title}
+
+## What the Lesson Teaches
+${weekData.lessonSource}
+
+## Exercise Instructions
+${weekData.exercisesSource}
+
+## Rubric
+${JSON.stringify(weekData.rubric, null, 2)}
+
+## Student Code (JavaScript)
+\`\`\`javascript
+${submission.code}
+\`\`\`
+
+## Test Results
+${JSON.stringify(submission.test_results, null, 2)}
+
+## Instructions
+Evaluate the student's JavaScript against the lesson content and rubric. The lesson and exercises above define what is correct — use them as your ground truth. This is a game-making class: the functions are small, PURE building blocks (like update(state, input) or isHit(a, b)) that a live game loop runs ~60×/sec. Trust the test results as ground truth for whether the code works.
+IMPORTANT: Judge the code by what it actually DOES, not by leftover comments like "// your code here". Remember this is the student's first time in JavaScript even though they know Python — when relevant, connect an idea back to Python (a function is like a def; { } is like indentation) and watch for first-week JS slips (== vs ===, forgetting to return the new state, mutating state instead of returning it, Math.random() instead of the seeded RNG, y growing downward on the canvas).
+Respond with ONLY valid JSON in this exact format:
+{
+  "verdict": "pass|partial|fail",
+  "correctness": "short explanation of what is right/wrong",
+  "concepts": "what they understood well and what they might have missed",
+  "improvements": ["actionable suggestion 1", "actionable suggestion 2"],
+  "challenge_question": "one fun question a 10-year-old game-maker would find exciting (concrete game ideas — make the ball speed up, add a second paddle, flash the bricks — NOT abstract jargon)",
+  "common_pitfalls_to_watch": ["pitfall 1", "pitfall 2"]
+}`
+          : `## Lesson: ${lesson.title}
 
 ## What the Lesson Teaches
 ${weekData.lessonSource}
@@ -207,6 +244,9 @@ Respond with ONLY valid JSON in this exact format:
     }
     if (latex) {
       systemPrompt = `${systemPrompt}\n\nFor THIS task, the student is not writing Python — they are typesetting real mathematics in LaTeX. Review their LaTeX craftsmanship and the understanding their derivation shows. Celebrate that they're writing like a real mathematician. Stay warm and encouraging.`;
+    }
+    if (js) {
+      systemPrompt = `${systemPrompt}\n\nFor THIS task, the student is writing JavaScript to build a game (their first language after Python). Connect ideas back to Python when it helps, celebrate that they're making a real game, and frame the next step as a fun feature to add. Stay warm and encouraging.`;
     }
 
     // Call OpenAI

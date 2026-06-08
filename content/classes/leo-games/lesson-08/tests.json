@@ -1,0 +1,190 @@
+[
+  {
+    "entry": "update",
+    "cases": [
+      {
+        "name": "in open space the ball just glides by its velocity (paddle stays put)",
+        "args": [
+          {
+            "ball": {
+              "x": 240,
+              "y": 200,
+              "vx": 2.4,
+              "vy": -2.4,
+              "r": 7
+            },
+            "paddle": {
+              "x": 200,
+              "y": 336,
+              "w": 80,
+              "h": 12
+            },
+            "bricks": [],
+            "score": 0,
+            "lives": 3
+          },
+          {
+            "keys": {}
+          }
+        ],
+        "expected": {
+          "ball": {
+            "x": 242.4,
+            "y": 197.6,
+            "vx": 2.4,
+            "vy": -2.4,
+            "r": 7
+          },
+          "paddle": {
+            "x": 200,
+            "y": 336,
+            "w": 80,
+            "h": 12
+          },
+          "bricks": [],
+          "score": 0,
+          "lives": 3
+        }
+      },
+      {
+        "name": "heading into the right wall flips the ball's vx this frame",
+        "args": [
+          {
+            "ball": {
+              "x": 472,
+              "y": 200,
+              "vx": 2.4,
+              "vy": -2.4,
+              "r": 7
+            },
+            "paddle": {
+              "x": 200,
+              "y": 336,
+              "w": 80,
+              "h": 12
+            },
+            "bricks": [],
+            "score": 0,
+            "lives": 3
+          },
+          {
+            "keys": {}
+          }
+        ],
+        "expected": {
+          "ball": {
+            "x": 474.4,
+            "y": 197.6,
+            "vx": -2.4,
+            "vy": -2.4,
+            "r": 7
+          },
+          "paddle": {
+            "x": 200,
+            "y": 336,
+            "w": 80,
+            "h": 12
+          },
+          "bricks": [],
+          "score": 0,
+          "lives": 3
+        }
+      },
+      {
+        "name": "hitting a brick removes it and adds 10 points",
+        "args": [
+          {
+            "ball": {
+              "x": 34,
+              "y": 40,
+              "vx": 1.2,
+              "vy": -2.4,
+              "r": 7
+            },
+            "paddle": {
+              "x": 200,
+              "y": 336,
+              "w": 80,
+              "h": 12
+            },
+            "bricks": [
+              {
+                "x": 9,
+                "y": 30,
+                "w": 50,
+                "h": 16
+              }
+            ],
+            "score": 0,
+            "lives": 3
+          },
+          {
+            "keys": {}
+          }
+        ],
+        "expected": {
+          "ball": {
+            "x": 35.2,
+            "y": 37.6,
+            "vx": 1.2,
+            "vy": 2.4,
+            "r": 7
+          },
+          "paddle": {
+            "x": 200,
+            "y": 336,
+            "w": 80,
+            "h": 12
+          },
+          "bricks": [],
+          "score": 10,
+          "lives": 3
+        }
+      },
+      {
+        "name": "a ball that fell past the floor costs one life",
+        "args": [
+          {
+            "ball": {
+              "x": 240,
+              "y": 400,
+              "vx": 0,
+              "vy": 2.4,
+              "r": 7
+            },
+            "paddle": {
+              "x": 200,
+              "y": 336,
+              "w": 80,
+              "h": 12
+            },
+            "bricks": [],
+            "score": 0,
+            "lives": 3
+          },
+          {
+            "keys": {}
+          }
+        ],
+        "expected": {
+          "ball": {
+            "x": 240,
+            "y": 240,
+            "vx": 2.4,
+            "vy": -2.4,
+            "r": 7
+          },
+          "paddle": {
+            "x": 200,
+            "y": 336,
+            "w": 80,
+            "h": 12
+          },
+          "bricks": [],
+          "score": 0,
+          "lives": 2
+        }
+      }
+    ]
+  }
+]

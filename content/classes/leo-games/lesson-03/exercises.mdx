@@ -1,0 +1,34 @@
+## Your mission
+
+### Exercise — `bounce(ball, width, height)`
+
+A `ball` is `{ x, y, vx, vy, r }`. The canvas is `width` wide and `height` tall.
+Return a **new** ball with the same position and size, but:
+
+- flip `vx` if the ball touched the **left or right** wall, and
+- flip `vy` if it touched the **ceiling** (the top).
+
+There's **no floor** to bounce off — leave the bottom alone. A ball that's nowhere
+near a wall comes back exactly the same.
+
+```javascript
+// right wall: x + r is 480, so vx flips from 2.4 to -2.4
+bounce({ x: 473, y: 180, vx: 2.4, vy: 1.8, r: 7 }, 480, 360)
+//   -> { x: 473, y: 180, vx: -2.4, vy: 1.8, r: 7 }
+
+// ceiling: y - r is 0, so vy flips from -1.8 to 1.8
+bounce({ x: 240, y: 7, vx: 2.4, vy: -1.8, r: 7 }, 480, 360)
+//   -> { x: 240, y: 7, vx: 2.4, vy: 1.8, r: 7 }
+
+// near the open floor: NOTHING changes — there's no floor wall!
+bounce({ x: 240, y: 353, vx: 2.4, vy: 1.8, r: 7 }, 480, 360)
+//   -> { x: 240, y: 353, vx: 2.4, vy: 1.8, r: 7 }
+```
+
+**Hint:** start by copying the current speeds into `let vx = ball.vx` and
+`let vy = ball.vy`. Then write one `if` for the side walls that does `vx = -vx`,
+and one `if` for the **ceiling only** (`y - r <= 0`) that does `vy = -vy`. Finally
+`return` a brand-new ball using `vx` and `vy` (and the unchanged `x`, `y`, `r`).
+
+Press **Run** and watch your ball ricochet off the walls and ceiling in the Game
+panel — and drop through the open floor!

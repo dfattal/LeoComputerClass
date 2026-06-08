@@ -74,6 +74,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | DNA Decoders | `dna-decoders` | Visual Python primer: paint DNA as pixels → decode a creature (on-ramp to Bio Lab) | Published (7+1) |
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | Published (8+1), 2 planned |
 | Leo's Proof Press | `leo-latex` | Typeset your own math book in LaTeX → e^{iπ} = −1 | Published (8) ✅ new — no reflection capstone (L8 *is* the capstone) |
+| Leo's Game Studio | `leo-games` | JavaScript → build an arcade game (Breakout) → publish it online for friends | Published (8) ✅ new "javascript" lesson kind; L8 *is* the capstone (no reflection) |
 
 ---
 
@@ -217,10 +218,93 @@ math book ending at $e^{i\pi} = -1$. Accent `teal`, hero `/hero-latex.webp`.
 
 ## Candidate classes (ranked by fit)
 
-### 1. Build an Unbeatable Game Bot — *gateway to recursion*
-**Through-line:** "A robot that never loses at tic-tac-toe… then Connect 4."
+### 1. Leo's Game Studio — *JavaScript + build a real online game* (next up — Leo asked for it)
+**Through-line:** "Build your own arcade game and put it online for friends to play."
+**Why it fits:** Leo explicitly asked for JavaScript leading to online games —
+motivation is the platform's strongest fuel. It's also the cheapest language
+swap yet: Proof Press proved a new lesson kind can change the lab bench
+(LaTeX/`latex.json`), and JS runs *natively* in the browser — no Pyodide, no
+worker round-trips. And it's a Trojan horse: Leo discovers that variables,
+functions, and loops transfer to a second language, and lesson 3 quietly reuses
+his Motion Lab physics (velocity, bouncing).
+**How it keeps the class DNA (testability):** teach the **update/render split**.
+Students write **pure functions** — `update(state, input) → newState`,
+`isHit(ball, paddle) → bool` — deterministic and auto-gradeable with the same
+`TestResult` shape, while a built-in game loop in the preview panel calls them
+~60×/sec to make the game *live* (the `__VIZ__` "watch it happen" philosophy at
+its peak). Randomness via a seeded RNG passed in as an argument.
+**New engineering — the "javascript" lesson kind — ✅ SHIPPED (2026-06-07):**
+- `js.json` signal file (presence ⇒ JS lesson, like `latex.json`), carrying an
+  optional `preview` (live game canvas config). `reference.js` is the inert
+  answer key — **write it before `tests.json`/`js.json`**, same invariant as
+  `reference.py`/`reference.tex`.
+- Grading: `tests.json` (same shape) runs in `public/js-worker.js` (a sandboxed
+  Web Worker) using the SAME `valuesMatch` as Python — now extracted to one
+  shared `public/values-match.js` that both workers `importScripts` and
+  `validate-class` reads, so the three graders can't drift. Same `TestResult`
+  shape ⇒ submit/completion/AI-review unchanged. `lib/js/useJsRunner.ts` mirrors
+  `usePyodide` (owns the timeout, terminates a runaway worker).
+- Live preview: `components/GamePreview.tsx` runs the student's code on the main
+  thread (canvas needs it) in a rAF loop — `update(state, input) → state` then
+  `render(ctx, state)` each frame, with keyboard/mouse `input`. Recompiles only
+  on Run (a half-typed `while(true)` can't freeze the tab on keystroke), with
+  Play/Pause/Restart + error overlay. Monaco JS mode is built-in.
+- `validate-class` runs `reference.js` in a `node:vm` sandbox the same way the
+  worker does (proves the answer key passes every case + the preview fns exist
+  and init/update run). `scaffold-lesson.mjs --kind js` scaffolds the JS files;
+  the ai-review route has a JavaScript branch (Python-aware coaching voice).
+- Proven L1 "The Canvas" (`rightEdge`, `isOnScreen`, a `render` scene) validates
+  15/15; all 1244 checks across every class still pass (no Python regression).
+
+**All 8 lessons SHIPPED ✅ (2026-06-07).** Arc: 1 The Canvas (coordinates +
+`render`) · 2 The Game Loop (`step`, update-vs-render) · 3 Make It Move (`bounce`,
+the Motion-Lab sign-flip) · 4 You're in Control (`movePaddle`, keyboard) · 5 Crash!
+(`overlaps`, AABB) · 6 Keeping Score (`addScore`/`loseLife`/`isGameOver`, immutable
+state) · 7 The Brick Wall (`makeBricks`/`removeHit`) · 8 Ship It (the master
+`update`, full Breakout). Each lesson's `starter.js` IS the whole little program
+with the day's function(s) stubbed; the file grows lesson to lesson and the live
+canvas shows the cumulative game. **Key design call:** the game's bottom is OPEN
+(bounce flips vy on the ceiling only) — a 4-wall bounce makes losing a life
+impossible, so the open floor is what makes the paddle and lives real; verified by
+node sim (tracking paddle clears all 32 bricks → win; parked paddle → 3 misses →
+GAME OVER). Built by 6 parallel subagents against `docs/game-studio-spec.md` (the
+canonical Breakout data model + per-lesson contracts), then integrated + the
+open-floor fix applied.
+
+**"Publish online" — ✅ SHIPPED (the `/arcade` share route).** A **Share** button
+in the JS editor toolbar POSTs the current game to `POST /api/share`, which
+snapshots the code into a new `shared_games` table (public-read RLS) under a
+stable short id and returns `/arcade/<id>`. That public, no-auth page
+(`app/arcade/[shareId]/page.tsx`, allowlisted in `lib/supabase/middleware.ts`)
+loads the lesson's `js.json` preview and runs the saved code full-screen via a
+reused `<GamePreview>` (`components/ArcadePlayer.tsx`), with its own OG/Twitter
+card so the link unfurls. One share per (user, lesson) so re-publishing keeps the
+same link. **One deploy step:** apply `lib/supabase/migration-shared-games.sql` to
+prod (same as the drafts table). L8 ships the full playable game *and* a real
+shareable URL.
+**Prereqs:** Python Primer + one subject class (Leo is far past this).
+**8-lesson sketch:**
+1. The Canvas — draw shapes at (x, y); JS syntax via pure "what to draw" functions
+2. The Game Loop — frames; update vs render
+3. Make It Move — velocity, bouncing off walls (Motion Lab callback)
+4. You're in Control — keyboard input, move the paddle/ship
+5. Crash! — collision functions (rect/circle overlap — beautifully testable)
+6. Keeping Score — game state: score, lives, game-over
+7. Enemies & Surprises — spawning, seeded randomness, difficulty
+8. Capstone — assemble the full game (Breakout or Snake) **and publish it at a
+   real URL** to send to friends
+**Viz/assets:** the live game canvas *is* the viz. Hero: arcade/joystick motif.
+**Risks:** scope creep ("can I add multiplayer?") — pin the capstone to one
+finished, polished game; the new lesson-kind plumbing must land before lesson 1.
+
+### 2. Build an Unbeatable Game Bot — *gateway to recursion* (now the Game Studio sequel)
+**Through-line:** "Your game needs an opponent — a robot that never loses at
+tic-tac-toe… then Connect 4."
 **Why it fits:** The natural on-ramp to recursion and search, with an immediate
 payoff (beating Dad). Boards are grids (lists), every helper is testable.
+Re-positioned as the **sequel to Game Studio**: recursion/minimax lands with
+more punch when the AI plays inside a game world the kid built himself (language
+TBD — Python or JS, decide when building).
 **Prereqs:** Python Primer (Leo has already done Secret Codes & Motion Lab — plenty of confidence).
 **8-lesson sketch:**
 1. The board — represent and print a grid
@@ -237,7 +321,7 @@ custom. Hero: game-grid/robot motif.
 **Risks:** Minimax recursion is the conceptual peak — scaffold heavily; keep
 tic-tac-toe small enough to search fully.
 
-### 2. Build a Programming Language — *the software bookend to the CPU class*
+### 3. Build a Programming Language — *the software bookend to the CPU class*
 **Through-line:** "You built the CPU — now build the language that runs on it."
 **Why it fits:** The most satisfying long-term capstone class; directly completes
 the Computer Class arc (hardware → software). Tokenizer/parser/evaluator are each
@@ -288,8 +372,11 @@ the natural next order is:
 1. ~~**Secret Codes**~~ — ✅ built (`leo-codes`).
 2. ~~**Proof Press**~~ — ✅ built (`leo-latex`); pairs naturally with the paper
    math curriculum he just finished — publish what you proved.
-3. **Game Bot** — introduces recursion/search with a big payoff.
-4. **Build a Programming Language** — the grand finale that closes the
+3. **Game Studio** — JavaScript + a real online game (Leo's own request); ships
+   the new "javascript" lesson kind.
+4. **Game Bot** — the sequel: recursion/search gives his game an unbeatable
+   opponent.
+5. **Build a Programming Language** — the grand finale that closes the
    hardware→software loop from the Computer Class.
 
 For an **absolute beginner** (a younger kid, or Leila starting out), the ladder

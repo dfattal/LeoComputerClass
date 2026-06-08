@@ -1,0 +1,41 @@
+## Your mission
+
+### Exercise — `overlaps(a, b)`
+
+`a` and `b` are both boxes — each one is `{ x, y, w, h }` (top-left corner plus
+width and height). Return `true` if the two boxes **touch**, and `false` if they
+**miss**.
+
+Remember the rule: they crash **only if they overlap on the x-axis AND on the
+y-axis**. Here are real examples your code must get right:
+
+```javascript
+// clearly overlapping → they crash
+overlaps({ x: 10, y: 10, w: 40, h: 40 }, { x: 30, y: 30, w: 40, h: 40 });   // -> true
+
+// far apart → they miss
+overlaps({ x: 0, y: 0, w: 20, h: 20 }, { x: 200, y: 200, w: 20, h: 20 });   // -> false
+
+// edges only just touching (a ends at x=50, b starts at x=50) → NOT a crash
+overlaps({ x: 0, y: 0, w: 50, h: 50 }, { x: 50, y: 0, w: 50, h: 50 });      // -> false
+
+// one box completely inside the other → crash
+overlaps({ x: 0, y: 0, w: 100, h: 100 }, { x: 30, y: 30, w: 20, h: 20 });   // -> true
+
+// lined up left-to-right but in different rows → miss
+overlaps({ x: 0, y: 0, w: 50, h: 20 }, { x: 10, y: 100, w: 50, h: 20 });    // -> false
+```
+
+**Hint:** you need **four** comparisons joined with `&&`. Two check the x-axis,
+two check the y-axis:
+
+```javascript
+return a.x < b.x + b.w  &&  a.x + a.w > b.x      // x-shadows overlap?
+    && a.y < b.y + b.h  &&  a.y + a.h > b.y;     // y-shadows overlap?
+```
+
+Use `<` and `>` (not `<=` / `>=`) so boxes that merely kiss at an edge count as a
+miss.
+
+Press **Run**, click the Game panel, and steer with ← →. Your ball will finally
+**bounce off your paddle** — keep it alive! 🏓

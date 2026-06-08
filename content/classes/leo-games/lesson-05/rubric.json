@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Both axes checked",
+    "weight": 55,
+    "description": "overlaps() returns true only when the boxes overlap on the x-axis AND the y-axis, using all four comparisons joined with &&."
+  },
+  {
+    "criterion": "Edges don't count",
+    "weight": 30,
+    "description": "Uses strict < and > so boxes that merely touch at an edge (a.x + a.w === b.x) return false, not true."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "A single, readable return statement that reads the boxes' { x, y, w, h } directly."
+  }
+]

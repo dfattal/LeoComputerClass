@@ -1,0 +1,44 @@
+## Your mission
+
+### Exercise 1 — `rightEdge(box)`
+
+A `box` is an object like `{ x: 200, y: 330, w: 80, h: 14 }`. Return the
+x-coordinate of its **right edge**.
+
+```javascript
+rightEdge({ x: 200, y: 330, w: 80, h: 14 })   // -> 280
+rightEdge({ x: 0, y: 0, w: 10, h: 10 })        // -> 10
+```
+
+**Hint:** the left edge is `box.x`, and the box is `box.w` wide. Use `return`.
+
+### Exercise 2 — `isOnScreen(box, width, height)`
+
+The canvas is `width` wide and `height` tall. Return `true` only if the **whole
+box** fits inside it, and `false` if any part pokes out.
+
+```javascript
+isOnScreen({ x: 200, y: 330, w: 80, h: 14 }, 480, 360)   // -> true
+isOnScreen({ x: 450, y: 10,  w: 80, h: 14 }, 480, 360)   // -> false  (off the right)
+isOnScreen({ x: -5,  y: 10,  w: 20, h: 20 }, 480, 360)   // -> false  (off the left)
+```
+
+**Hint:** there are four ways to fall off — left (`x < 0`), top (`y < 0`),
+right (`x + w > width`), bottom (`y + h > height`). Join your four checks with
+`&&` (that's JavaScript's "and").
+
+### Exercise 3 — `render(ctx)` 🎨
+
+This is the fun one. `ctx` is your paintbrush. Two spells:
+
+```javascript
+ctx.fillStyle = "orange";            // pick a color
+ctx.fillRect(x, y, width, height);   // paint a filled box at (x, y)
+```
+
+The starter already paints the dark background. Add an **orange paddle** near the
+bottom and a small **white ball** somewhere in the middle. Press **Run** and watch
+your scene appear in the Game panel!
+
+**Hint:** a paddle is a wide, short box low on the screen (big `y`). A ball is a
+tiny box — try `w` and `h` of about `10`.

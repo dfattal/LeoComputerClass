@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Coordinates",
+    "weight": 50,
+    "description": "rightEdge and isOnScreen use x, y, w, h correctly — right edge is x + w, and a box is on-screen only if it's fully inside the canvas."
+  },
+  {
+    "criterion": "Edges",
+    "weight": 30,
+    "description": "isOnScreen catches every way a box can leave the screen: off the left/top (negative) and past the right/bottom."
+  },
+  {
+    "criterion": "Drawing",
+    "weight": 20,
+    "description": "render() paints a background plus a paddle and a ball using fillStyle + fillRect."
+  }
+]

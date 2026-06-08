@@ -1,0 +1,112 @@
+[
+  {
+    "entry": "bounce",
+    "cases": [
+      {
+        "name": "the ball smacks the RIGHT wall — vx flips",
+        "args": [
+          {
+            "x": 473,
+            "y": 180,
+            "vx": 2.4,
+            "vy": 1.8,
+            "r": 7
+          },
+          480,
+          360
+        ],
+        "expected": {
+          "x": 473,
+          "y": 180,
+          "vx": -2.4,
+          "vy": 1.8,
+          "r": 7
+        }
+      },
+      {
+        "name": "the ball smacks the LEFT wall — vx flips",
+        "args": [
+          {
+            "x": 7,
+            "y": 180,
+            "vx": -2.4,
+            "vy": 1.8,
+            "r": 7
+          },
+          480,
+          360
+        ],
+        "expected": {
+          "x": 7,
+          "y": 180,
+          "vx": 2.4,
+          "vy": 1.8,
+          "r": 7
+        }
+      },
+      {
+        "name": "the ball bonks the CEILING — vy flips",
+        "args": [
+          {
+            "x": 240,
+            "y": 7,
+            "vx": 2.4,
+            "vy": -1.8,
+            "r": 7
+          },
+          480,
+          360
+        ],
+        "expected": {
+          "x": 240,
+          "y": 7,
+          "vx": 2.4,
+          "vy": 1.8,
+          "r": 7
+        }
+      },
+      {
+        "name": "the ball reaches the OPEN floor — it does NOT bounce",
+        "args": [
+          {
+            "x": 240,
+            "y": 353,
+            "vx": 2.4,
+            "vy": 1.8,
+            "r": 7
+          },
+          480,
+          360
+        ],
+        "expected": {
+          "x": 240,
+          "y": 353,
+          "vx": 2.4,
+          "vy": 1.8,
+          "r": 7
+        }
+      },
+      {
+        "name": "the ball is flying free in the middle — nothing changes",
+        "args": [
+          {
+            "x": 240,
+            "y": 180,
+            "vx": 2.4,
+            "vy": 1.8,
+            "r": 7
+          },
+          480,
+          360
+        ],
+        "expected": {
+          "x": 240,
+          "y": 180,
+          "vx": 2.4,
+          "vy": 1.8,
+          "r": 7
+        }
+      }
+    ]
+  }
+]

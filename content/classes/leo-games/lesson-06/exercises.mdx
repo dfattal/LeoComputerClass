@@ -1,0 +1,52 @@
+## Your mission
+
+Three little functions run your scoreboard. **Each one returns a NEW state** —
+copy everything with `...state`, then change just one number. Never edit the state
+you were handed.
+
+### Exercise 1 — `addScore(state, points)`
+
+Return a new state with `points` added onto the score. Everything else (ball,
+paddle, lives) stays exactly the same.
+
+```javascript
+// with score 0:  addScore(state, 10)  ->  a new state with score 10
+// with score 80: addScore(state, 10)  ->  a new state with score 90
+```
+
+**Hint:** copy the whole state, then write a fresh `score` on top:
+
+```javascript
+return { ...state, score: state.score + points };
+```
+
+### Exercise 2 — `loseLife(state)`
+
+Return a new state with **one fewer** life. Score and everything else stay the
+same.
+
+```javascript
+// with lives 3:  loseLife(state)  ->  a new state with lives 2
+// with lives 1:  loseLife(state)  ->  a new state with lives 0
+```
+
+**Hint:** same spread trick, but change `lives` this time:
+
+```javascript
+return { ...state, lives: state.lives - 1 };
+```
+
+### Exercise 3 — `isGameOver(state)`
+
+Return `true` when there are no lives left, and `false` while the player can still
+keep going. (No spread here — you're just answering a yes/no question.)
+
+```javascript
+// with lives 0:  isGameOver(state)  ->  true
+// with lives 2:  isGameOver(state)  ->  false
+```
+
+**Hint:** "no lives left" means `lives` is 0 **or less**, so `state.lives <= 0`.
+
+Press **Run**, click the game, and steer with **← →**. Catch the ball for **+10**,
+miss it to lose a heart, and watch **GAME OVER** flash when your lives hit zero. 🏆

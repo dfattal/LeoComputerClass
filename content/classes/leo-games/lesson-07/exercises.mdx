@@ -1,0 +1,50 @@
+## Your mission
+
+### Exercise 1 — `makeBricks(rows, cols)`
+
+Build the wall. Return an **array** of brick boxes, `rows` of them stacked down
+and `cols` across each row. Each brick is `w: 50, h: 16`. Use a loop inside a
+loop, and place each brick with `x = 9 + c * 56` and `y = 30 + r * 22` (that's
+`left + c * (w + gapX)` and `top + r * (h + gapY)`).
+
+```javascript
+makeBricks(1, 1)   // -> [{ x: 9, y: 30, w: 50, h: 16 }]
+
+makeBricks(2, 3)
+// -> [
+//   { x: 9,   y: 30, w: 50, h: 16 },
+//   { x: 65,  y: 30, w: 50, h: 16 },
+//   { x: 121, y: 30, w: 50, h: 16 },
+//   { x: 9,   y: 52, w: 50, h: 16 },
+//   { x: 65,  y: 52, w: 50, h: 16 },
+//   { x: 121, y: 52, w: 50, h: 16 },
+// ]
+```
+
+**Hint:** start with `const bricks = []`, push one box each time through the
+inner loop with `bricks.push({ x: ..., y: ..., w: w, h: h })`, then `return
+bricks` at the very end.
+
+### Exercise 2 — `removeHit(bricks, box)`
+
+Return a **new** array with every brick the `box` touched removed. Use `.filter`
+and keep a brick only when it does **not** overlap the box.
+
+```javascript
+const wall = [
+  { x: 9,  y: 30, w: 50, h: 16 },
+  { x: 65, y: 30, w: 50, h: 16 },
+];
+
+removeHit(wall, { x: 20, y: 35, w: 10, h: 10 })  // box sits on the FIRST brick
+// -> [{ x: 65, y: 30, w: 50, h: 16 }]            // first brick is gone
+
+removeHit(wall, { x: 400, y: 300, w: 10, h: 10 }) // box misses everything
+// -> [{ x: 9, y: 30, w: 50, h: 16 }, { x: 65, y: 30, w: 50, h: 16 }]
+```
+
+**Hint:** you already wrote `overlaps(a, b)` back in Lesson 5 — reuse it. The
+filter test is `return !overlaps(b, box)` (the `!` means "not").
+
+Press **Run** and watch the ball blast through your wall. Clear it all for the
+**YOU WIN!** banner. 🎉

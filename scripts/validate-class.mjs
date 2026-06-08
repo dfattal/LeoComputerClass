@@ -20,13 +20,15 @@
 // source of truth: tests.json expected values are generated from it.
 //
 // IMPORTANT: the expected-vs-actual comparison reuses the REAL valuesMatch()
-// from public/pyodide-worker.js (read + eval'd below) so it can never drift from
-// what students' code is graded against in the browser.
+// from public/values-match.js (read + eval'd below) — the SAME file both the
+// Python (pyodide-worker.js) and JS (js-worker.js) graders importScripts, so it
+// can never drift from what students' code is graded against in the browser.
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import vm from "node:vm";
 // The latex-lesson grader — the SAME module the browser runs, so reference.tex
 // is proven against exactly what students are graded with.
 import { checkDocument } from "../lib/latex/check.mjs";
@@ -40,15 +42,16 @@ import rehypeKatex from "rehype-katex";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CLASSES_DIR = join(ROOT, "content", "classes");
-const WORKER = join(ROOT, "public", "pyodide-worker.js");
+const VALUES_MATCH_SRC = join(ROOT, "public", "values-match.js");
 
 // ---------------------------------------------------------------------------
-// Borrow the real valuesMatch() from the worker (do NOT reimplement it).
+// Borrow the real valuesMatch() from the shared file (do NOT reimplement it).
 // ---------------------------------------------------------------------------
 function loadValuesMatch() {
-  const src = readFileSync(WORKER, "utf-8");
+  const src = readFileSync(VALUES_MATCH_SRC, "utf-8");
   const start = src.indexOf("function valuesMatch");
-  if (start === -1) throw new Error("Could not find valuesMatch in " + WORKER);
+  if (start === -1)
+    throw new Error("Could not find valuesMatch in " + VALUES_MATCH_SRC);
   // Balance braces from the first "{" after the signature to grab the whole fn.
   const braceStart = src.indexOf("{", start);
   let depth = 0;
@@ -145,6 +148,25 @@ function runPython(spec) {
 }
 
 // ---------------------------------------------------------------------------
+// JavaScript reference runner (for "javascript" lessons). Loads reference.js in
+// a node:vm context the SAME way public/js-worker.js does (wrap in a function,
+// return the named entries) so the answer key is exercised exactly as a
+// student's code is in the browser. Returns { [name]: fn|undefined }.
+// ---------------------------------------------------------------------------
+function loadJsReference(src, names) {
+  const uniq = [...new Set(names.filter(Boolean))];
+  const exports = uniq
+    .map(
+      (n) => `${JSON.stringify(n)}: (typeof ${n} !== "undefined" ? ${n} : undefined)`
+    )
+    .join(", ");
+  const wrapped = `(function(){ "use strict";\n${src}\n;\nreturn { ${exports} }; })`;
+  const context = vm.createContext({ console, Math, JSON });
+  const factory = vm.runInContext(wrapped, context, { timeout: 5000 });
+  return factory();
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 function pyCompile(file) {
@@ -231,12 +253,14 @@ async function validateLesson(lessonDir) {
   let viz = null;
   let reflection = null;
   let latex = null;
+  let js = null;
   for (const [name, required] of [
     ["tests.json", false],
     ["rubric.json", false],
     ["viz.json", false],
     ["reflection.json", false],
     ["latex.json", false],
+    ["js.json", false],
   ]) {
     const p = join(lessonDir, name);
     if (!existsSync(p)) {
@@ -250,6 +274,7 @@ async function validateLesson(lessonDir) {
       if (name === "viz.json") viz = parsed;
       if (name === "reflection.json") reflection = parsed;
       if (name === "latex.json") latex = parsed;
+      if (name === "js.json") js = parsed;
     } catch (e) {
       add(false, `${name} parses`, e.message);
     }
@@ -311,6 +336,102 @@ async function validateLesson(lessonDir) {
       }
     } else {
       add(false, "reference.tex present (answer key)", "missing — write it before latex.json");
+    }
+  }
+
+  // 1d. Javascript lessons (Game Studio): the answer key is reference.js. It must
+  // define every tests.json entry and produce each case's expected value under
+  // the SAME valuesMatch the browser uses; starter.js must carry a stub for each
+  // entry; and any preview fns named in js.json must exist (and init/update run).
+  const refJsPath = join(lessonDir, "reference.js");
+  const starterJsPath = join(lessonDir, "starter.js");
+  if (js) {
+    const preview = js.preview || null;
+
+    if (existsSync(starterJsPath)) {
+      const starterJs = readFileSync(starterJsPath, "utf-8");
+      if (tests) {
+        for (const t of tests) {
+          const re = new RegExp(
+            `(function\\s+${t.entry}\\s*\\(|\\b(?:const|let|var)\\s+${t.entry}\\s*=)`
+          );
+          const has = re.test(starterJs);
+          add(has, `starter.js defines ${t.entry}`, has ? undefined : "no stub (function or const)");
+        }
+      }
+    } else {
+      add(false, "starter.js present", "missing");
+    }
+
+    if (existsSync(refJsPath)) {
+      const refSrc = readFileSync(refJsPath, "utf-8");
+      const names = [];
+      if (tests) for (const t of tests) names.push(t.entry);
+      if (preview)
+        for (const k of ["init", "update", "render"]) if (preview[k]) names.push(preview[k]);
+      let fns = null;
+      try {
+        fns = loadJsReference(refSrc, names);
+        add(true, "reference.js loads");
+      } catch (e) {
+        add(false, "reference.js loads", e.message);
+      }
+
+      if (fns && tests) {
+        for (const t of tests) {
+          const fn = fns[t.entry];
+          for (const c of t.cases || []) {
+            if (typeof fn !== "function") {
+              add(false, `${t.entry}: ${c.name}`, `reference.js has no function named ${t.entry}`);
+              continue;
+            }
+            let actual;
+            try {
+              actual = fn(...(c.args ? JSON.parse(JSON.stringify(c.args)) : []));
+            } catch (e) {
+              add(false, `${t.entry}: ${c.name}`, String(e.message || e));
+              continue;
+            }
+            const ok = valuesMatch(actual, c.expected, c.tol ?? t.tol);
+            add(
+              ok,
+              `${t.entry}: ${c.name}`,
+              ok ? undefined : `expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(actual)}`
+            );
+          }
+        }
+      }
+
+      if (fns && preview) {
+        for (const k of ["init", "update", "render"]) {
+          if (preview[k]) {
+            const ok = typeof fns[preview[k]] === "function";
+            add(ok, `reference.js preview ${k}() = ${preview[k]}`, ok ? undefined : "not a function");
+          }
+        }
+        if (preview.init && typeof fns[preview.init] === "function") {
+          try {
+            const state = fns[preview.init](...(preview.initArgs || []));
+            if (preview.update && typeof fns[preview.update] === "function") {
+              const input = {
+                keys: {},
+                mouseX: 0,
+                mouseY: 0,
+                mouseDown: false,
+                width: preview.width || 480,
+                height: preview.height || 360,
+                frame: 0,
+              };
+              fns[preview.update](state, input);
+            }
+            add(true, "reference.js preview init/update run");
+          } catch (e) {
+            add(false, "reference.js preview init/update run", String(e.message || e));
+          }
+        }
+      }
+    } else {
+      add(false, "reference.js present (answer key)", "missing — write it before js.json");
     }
   }
 
@@ -499,9 +620,9 @@ async function validateLesson(lessonDir) {
     add(true, "viz.json parses (viz run skipped — no reference.py)");
   }
 
-  // Latex and reflection lessons have no reference.py by design — don't count
-  // them as "missing the answer key".
-  return { checks, skippedRef: !hasRef && !latex && !reflection };
+  // Latex, reflection, and javascript lessons have no reference.py by design —
+  // don't count them as "missing the answer key" (js has reference.js instead).
+  return { checks, skippedRef: !hasRef && !latex && !reflection && !js };
 }
 
 // Map a flat case index back to its human-readable name from tests.json.

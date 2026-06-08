@@ -1,0 +1,10 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "init": "init",
+    "update": "update",
+    "render": "render",
+    "caption": "Your ball moves! But it flies off the screen... we'll keep it in next lesson."
+  }
+}

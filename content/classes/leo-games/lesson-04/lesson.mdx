@@ -1,0 +1,59 @@
+# You're in Control
+
+> So far the game plays itself. Today you grab the controls — the paddle moves when YOU press the arrow keys. 🕹️
+
+## The keyboard is just data
+
+When you hold down an arrow key, the game writes that fact into a little
+notebook called `input`. Every frame, `update` gets handed that notebook and
+peeks inside.
+
+The part we care about is `input.keys`. It's a box of true/false flags — one per
+key. Hold the right arrow and `input.keys["ArrowRight"]` is `true`. Let go and it
+flips back to `false`.
+
+```javascript
+if (input.keys["ArrowRight"]) {
+  // the right arrow is held RIGHT NOW — slide right!
+}
+```
+
+That's the whole trick: your `update` doesn't *listen* for keys. It just **reads
+the flags** that are already there, every single frame. (Remember `if` from
+Python? Same idea, new costume.)
+
+## Move by a speed
+
+The paddle is a box `{ x, y, w, h }`. To slide it, change its `x`:
+
+```javascript
+let x = paddle.x;
+const speed = 6;
+if (input.keys["ArrowLeft"])  x -= speed;   // go left
+if (input.keys["ArrowRight"]) x += speed;   // go right
+```
+
+Bigger `speed` = zippier paddle. We'll use `6`.
+
+## Clamp it — keep it on screen
+
+Without a fence, the paddle would slide right off the edge and vanish. So after
+moving, we **clamp** `x`: squeeze it back inside the legal range.
+
+The left edge is `0`. The right edge is trickier: `x` is the paddle's *left*
+side, so its far side is `x + w`. To keep the whole paddle on a canvas of width
+`480` with `w = 80`, the biggest `x` can be is `480 - 80 = 400`.
+
+```javascript
+if (x < 0) x = 0;                              // can't go past the left wall
+if (x + paddle.w > width) x = width - paddle.w; // can't go past the right wall
+```
+
+Clamping just means: *"if you went too far, snap back to the edge."*
+
+## What you'll build
+
+You'll write **`movePaddle(paddle, input, width)`** — read the arrow keys, slide
+the paddle, and clamp it so it never escapes. Once it works, click the game and
+drive your paddle with **← →**. (The ball still ignores it — catching the ball is
+next lesson's job!) 🏓

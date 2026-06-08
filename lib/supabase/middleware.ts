@@ -36,14 +36,20 @@ export async function updateSession(request: NextRequest) {
   // public so shared links show a real preview and recipients see the class
   // before signing in. Lesson pages (/classes/<slug>/<lesson>) stay gated.
   const isClassLanding = /^\/classes\/[^/]+$/.test(path);
+  // Published games (/arcade/<id>) are public so a kid can text the link to a
+  // friend and they can play without signing in.
+  const isArcade = path.startsWith("/arcade/");
   const isPublicPath =
     path === "/" ||
     path === "/login" ||
     isClassLanding ||
+    isArcade ||
     path.startsWith("/auth/") ||
     path.startsWith("/_next/") ||
     path.startsWith("/api/") ||
-    path === "/pyodide-worker.js";
+    path === "/pyodide-worker.js" ||
+    path === "/js-worker.js" ||
+    path === "/values-match.js";
 
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone();

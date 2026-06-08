@@ -1,0 +1,12 @@
+[
+  {
+    "entry": "movePaddle",
+    "cases": [
+      { "name": "right arrow: the paddle slides 6 to the right", "args": [{ "x": 200, "y": 336, "w": 80, "h": 12 }, { "keys": { "ArrowRight": true } }, 480], "expected": { "x": 206, "y": 336, "w": 80, "h": 12 } },
+      { "name": "left arrow: the paddle slides 6 to the left", "args": [{ "x": 200, "y": 336, "w": 80, "h": 12 }, { "keys": { "ArrowLeft": true } }, 480], "expected": { "x": 194, "y": 336, "w": 80, "h": 12 } },
+      { "name": "left arrow at the left wall: stays put at x=0", "args": [{ "x": 0, "y": 336, "w": 80, "h": 12 }, { "keys": { "ArrowLeft": true } }, 480], "expected": { "x": 0, "y": 336, "w": 80, "h": 12 } },
+      { "name": "right arrow at the right wall: clamped to x=400", "args": [{ "x": 400, "y": 336, "w": 80, "h": 12 }, { "keys": { "ArrowRight": true } }, 480], "expected": { "x": 400, "y": 336, "w": 80, "h": 12 } },
+      { "name": "no keys held: the paddle stays still", "args": [{ "x": 200, "y": 336, "w": 80, "h": 12 }, { "keys": {} }, 480], "expected": { "x": 200, "y": 336, "w": 80, "h": 12 } }
+    ]
+  }
+]

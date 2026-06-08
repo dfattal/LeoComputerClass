@@ -1,6 +1,11 @@
 /* eslint-disable no-restricted-globals */
 // Pyodide Web Worker — runs Python code in a sandboxed context
 
+// valuesMatch() — the test-grading comparison — lives in one shared file so the
+// Python grader (here), the JS grader (js-worker.js), and validate-class can't
+// drift. importScripts puts `valuesMatch` on this worker's global scope.
+importScripts("/values-match.js");
+
 let pyodide = null;
 
 async function loadPyodideInstance() {
@@ -8,25 +13,6 @@ async function loadPyodideInstance() {
   importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js");
   pyodide = await loadPyodide();
   return pyodide;
-}
-
-// Compare a test result to its expected value.
-// When `tol` is a number, numeric values (and lists of numbers) match if they
-// are within `tol` of each other — needed for physics/float exercises where
-// exact equality never holds. Otherwise falls back to exact structural match.
-function valuesMatch(actual, expected, tol) {
-  if (typeof tol === "number") {
-    if (typeof actual === "number" && typeof expected === "number") {
-      return Math.abs(actual - expected) <= tol;
-    }
-    if (Array.isArray(actual) && Array.isArray(expected)) {
-      return (
-        actual.length === expected.length &&
-        actual.every((v, i) => valuesMatch(v, expected[i], tol))
-      );
-    }
-  }
-  return JSON.stringify(actual) === JSON.stringify(expected);
 }
 
 // Loads the student's code inside Python, capturing parse/runtime errors with

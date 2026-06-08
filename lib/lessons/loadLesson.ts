@@ -48,15 +48,19 @@ export function loadLessonContent(
     : [];
 
   // The working file: starter.py for Python lessons, starter.tex for latex
-  // lessons. Both land in the same `starterCode` field — the editor doesn't
-  // care, only the language/checker wiring does.
+  // lessons, starter.js for javascript lessons. All land in the same
+  // `starterCode` field — the editor doesn't care, only the language/checker
+  // wiring does.
   const starterPath = path.join(lessonDir, "starter.py");
   const starterTexPath = path.join(lessonDir, "starter.tex");
+  const starterJsPath = path.join(lessonDir, "starter.js");
   const starterCode: string | undefined = fs.existsSync(starterPath)
     ? fs.readFileSync(starterPath, "utf-8")
     : fs.existsSync(starterTexPath)
       ? fs.readFileSync(starterTexPath, "utf-8")
-      : undefined;
+      : fs.existsSync(starterJsPath)
+        ? fs.readFileSync(starterJsPath, "utf-8")
+        : undefined;
 
   const vizPath = path.join(lessonDir, "viz.json");
   const vizConfig: VizConfig | undefined = fs.existsSync(vizPath)
@@ -79,6 +83,15 @@ export function loadLessonContent(
     ? JSON.parse(fs.readFileSync(latexPath, "utf-8"))
     : undefined;
 
+  // A "javascript" lesson (Game Studio): the student writes JS instead of
+  // Python. Signalled by js.json (like latex.json signals a latex lesson). It
+  // carries the optional live game-preview config; tests.json still grades, and
+  // reference.js stays inert (only validate-class reads it), like reference.py.
+  const jsPath = path.join(lessonDir, "js.json");
+  const jsConfig: JsLessonConfig | undefined = fs.existsSync(jsPath)
+    ? JSON.parse(fs.readFileSync(jsPath, "utf-8"))
+    : undefined;
+
   return {
     slug: lessonSlug,
     lessonSource,
@@ -89,6 +102,7 @@ export function loadLessonContent(
     vizConfig,
     reflectionConfig,
     latexConfig,
+    jsConfig,
   };
 }
 
@@ -322,10 +336,52 @@ export interface ReflectionConfig {
   exemplar?: string;
 }
 
+/**
+ * Live game-preview config for a "javascript" lesson. The student's code is run
+ * on the main thread (canvas needs it) by components/GamePreview.tsx, which drives
+ * a requestAnimationFrame loop: each frame it calls the student's `update` then
+ * `render`. All fields are optional so a lesson can show a static scene (render
+ * only), a moving scene (update + render), or nothing (grading-only lesson).
+ */
+export interface JsPreviewConfig {
+  /** Canvas size in CSS pixels (defaults 480×360). */
+  width?: number;
+  height?: number;
+  /** Target frames per second (default 60). */
+  fps?: number;
+  /** Optional JS prelude appended AFTER the student's code (helpers / constants). */
+  setup?: string;
+  /** Name of a `() -> state` fn returning the initial game state. */
+  init?: string;
+  /** Args passed to the init fn. */
+  initArgs?: unknown[];
+  /** Name of an `(state, input) -> state` fn called each frame (omit → static). */
+  update?: string;
+  /** Name of a `(ctx, state) -> void` fn that draws each frame. */
+  render?: string;
+  /** Keyboard keys to expose in `input.keys` (e.g. ["ArrowLeft","ArrowRight"," "]). */
+  keys?: string[];
+  /** When true, render once and don't run the loop (a still picture). */
+  still?: boolean;
+  /** Caption shown under the canvas. */
+  caption?: string;
+}
+
+/**
+ * A "javascript" lesson. Signalled purely by a `js.json` file in the lesson dir
+ * (like `latex.json` / `reflection.json`). Grading reuses tests.json (run in the
+ * JS sandbox, public/js-worker.js); `preview` drives the live game canvas.
+ */
+export interface JsLessonConfig {
+  preview?: JsPreviewConfig;
+}
+
 export interface LessonContent extends WeekContent {
   starterCode?: string;
   vizConfig?: VizConfig;
   reflectionConfig?: ReflectionConfig;
   /** Present only for "latex" lessons — see lib/latex/check.mjs. */
   latexConfig?: LatexLessonConfig;
+  /** Present only for "javascript" lessons. */
+  jsConfig?: JsLessonConfig;
 }

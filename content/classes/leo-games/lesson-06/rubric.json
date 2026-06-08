@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "addScore adds points to score; loseLife subtracts one from lives; isGameOver is true when lives <= 0, false otherwise."
+  },
+  {
+    "criterion": "Returns a new state (no mutating)",
+    "weight": 25,
+    "description": "addScore and loseLife build a NEW state with the spread `...state` and change only one number — they never edit the state they were handed."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Short, clear one-line returns; keeps every other key (ball, paddle, the unchanged number) intact."
+  }
+]

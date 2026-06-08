@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Builds the grid",
+    "weight": 45,
+    "description": "makeBricks(rows, cols) uses a loop inside a loop to push one box per spot, with the right x and y for each row and column, and returns the whole array."
+  },
+  {
+    "criterion": "Removes hit bricks",
+    "weight": 35,
+    "description": "removeHit(bricks, box) uses .filter to return a NEW array that keeps only the bricks that do NOT overlap the box."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 20,
+    "description": "Returns new arrays instead of mutating, reuses overlaps(), clear names, and a return on every path."
+  }
+]

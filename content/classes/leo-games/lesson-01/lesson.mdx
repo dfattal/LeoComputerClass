@@ -1,0 +1,58 @@
+# The Canvas
+
+> Every game starts with one question: **where does stuff go?** Today you learn the screen's secret map — and paint your first scene with code.
+
+## Welcome to JavaScript
+
+You already speak Python. JavaScript is a new language with the *same ideas* in a
+new outfit. The big differences you'll feel today:
+
+- Lines end with a semicolon `;`
+- Blocks use curly braces `{ }` instead of indentation
+- Comments start with `//` instead of `#`
+
+```javascript
+function double(n) {
+  return n * 2;   // just like a Python def — but with { } and ;
+}
+```
+
+That's a function. Same as Python: it takes something in, gives something back.
+
+## The screen is graph paper
+
+A game screen is a grid of dots. Every spot has an address: **(x, y)**.
+
+Here's the part that surprises everyone: **(0, 0) is the TOP-LEFT corner, and y
+grows DOWNWARD.** So bigger `y` means *lower* on the screen — upside-down from
+math class!
+
+```
+(0,0) ───────────► x gets bigger
+  │
+  │     • (200, 150)
+  │
+  ▼  y gets bigger (goes DOWN)
+```
+
+## A box is just four numbers
+
+Almost everything in a game is a rectangle: the paddle, a brick, even the ball.
+We describe a box with its **top-left corner** and its **size**:
+
+```javascript
+let paddle = { x: 200, y: 330, w: 80, h: 14 };
+//             ↑ left   ↑ top  ↑ wide ↑ tall
+```
+
+The paddle's **right edge** is `x + w`. Its **bottom edge** is `y + h`. That tiny
+bit of adding is how a game knows where everything *ends* — which is how it later
+knows when the ball *hits* something.
+
+## What you'll build
+
+1. `rightEdge(box)` — find the x of a box's right side.
+2. `isOnScreen(box, width, height)` — is the box fully inside the canvas?
+3. `render(ctx)` — **paint your first scene**: a background, a paddle, and a ball.
+
+By the end you'll be looking at your very own game screen. 🎮

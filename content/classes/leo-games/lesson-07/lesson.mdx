@@ -1,0 +1,75 @@
+# The Brick Wall
+
+> Your ball bounces, your paddle steers, your score counts. Time for something to **smash**. Today you build a wall of bricks — and knock it down, one hit at a time.
+
+## A wall is just a list of boxes
+
+You already know a brick: it's a **box**, four numbers — `x`, `y`, `w`, `h`. A
+whole wall is nothing fancier than a **list of those boxes**. In JavaScript a
+list is called an **array**, written with square brackets:
+
+```javascript
+const bricks = [
+  { x: 9,  y: 30, w: 50, h: 16 },
+  { x: 65, y: 30, w: 50, h: 16 },
+];
+```
+
+That's the exact same idea as a **Python list** — `[a, b, c]` — just with curly
+brackets for each box. An array can hold 1 brick or 1,000.
+
+## Building a grid with a loop inside a loop
+
+We don't want to type out 32 bricks by hand. We let a **loop** do it. But a wall
+has two directions — rows going DOWN and columns going ACROSS — so we use one
+loop **inside** another:
+
+```javascript
+for (let r = 0; r < rows; r++) {       // each row, top to bottom
+  for (let c = 0; c < cols; c++) {     // each column, left to right
+    bricks.push({ x: someX, y: someY, w: 50, h: 16 });
+  }
+}
+```
+
+`bricks.push(...)` adds one box to the end of the array (just like Python's
+`bricks.append(...)`). The inner loop runs all the way across before the outer
+loop drops down to the next row.
+
+Where does each brick go? We space them out evenly. A brick is `50` wide and `16`
+tall, with a `6`-pixel gap between them, and the wall starts at `left = 9`,
+`top = 30`:
+
+```javascript
+brick x = left + c * (w + gapX)    // slide right one column at a time
+brick y = top  + r * (h + gapY)    // drop down one row at a time
+```
+
+So column `0` sits at `x = 9`, column `1` at `x = 9 + 56 = 65`, and so on.
+
+## Knocking bricks out with .filter
+
+When the ball smashes a brick, that brick should **disappear** from the array.
+The slick way to do that is **`.filter`** — it walks the array and builds a
+**new** array of only the items that pass a test:
+
+```javascript
+const survivors = bricks.filter(function (b) {
+  return !overlaps(b, box);   // KEEP a brick only if it did NOT get hit
+});
+```
+
+The `!` means "not". So we keep every brick that does **not** overlap the ball's
+box — which means any brick the ball *did* touch gets left out. The wall comes
+back one brick shorter. (Python has the same trick: a list comprehension like
+`[b for b in bricks if not overlaps(b, box)]`.)
+
+Notice we never *change* the old array — we hand back a brand-new one. That's the
+same pure-function habit you've used all class.
+
+## What you'll build
+
+Two functions: **`makeBricks(rows, cols)`** to build the wall, and
+**`removeHit(bricks, box)`** to drop the bricks that got hit. The game loop is
+already wired to bounce the ball off your bricks and add 10 points each. Clear
+the whole wall and you'll see **YOU WIN!** 🧱

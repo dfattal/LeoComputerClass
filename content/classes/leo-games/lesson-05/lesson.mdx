@@ -1,0 +1,66 @@
+# Crash!
+
+> Your ball flies straight through the paddle like a ghost. Today you build the **referee** that yells "TOUCH!" — and the ball finally bounces off your paddle. 💥
+
+## The big idea: do two boxes touch?
+
+Every collision in your game is really one tiny question: **do these two boxes
+overlap?** The ball is a box, the paddle is a box, every brick is a box. If you
+can answer that question, the whole game knows when things crash.
+
+Here's the trick that surprises everybody: two boxes touch **only if they overlap
+on BOTH axes** — left-to-right (the x-axis) **and** up-and-down (the y-axis). One
+axis is never enough.
+
+Picture two windows in an apartment building. They're in the **same columns**
+(they line up left-to-right) — but one is on the ground floor and one is on the
+roof. Same columns, totally different floors. They do **not** overlap. You need
+them to share columns AND share floors.
+
+## Picture it
+
+Think of a box as casting two shadows: one onto the floor (its x-shadow, from
+`x` to `x + w`) and one onto the wall (its y-shadow, from `y` to `y + h`).
+
+```
+   x-shadows OVERLAP        x-shadows OVERLAP
+   y-shadows OVERLAP        y-shadows MISS
+   ┌─────┐                  ┌─────┐
+   │  A  │                  │  A  │
+   │  ┌──┼──┐               └─────┘
+   └──┼──┘  │                  ┌─────┐
+      │  B  │                  │  B  │   ← same columns,
+      └─────┘                  └─────┘     different rows
+     = CRASH 💥               = no touch
+```
+
+Two boxes crash **only when both pairs of shadows overlap**.
+
+## Four little questions
+
+To check the x-axis, you ask two things about boxes `a` and `b`:
+
+- Is `a`'s left edge before `b`'s right edge? `a.x < b.x + b.w`
+- Is `a`'s right edge past `b`'s left edge? `a.x + a.w > b.x`
+
+If both are true, their x-shadows overlap. The y-axis works exactly the same way
+with `y` and `h`. Join all four with `&&` (which means **and**), and you have your
+referee:
+
+```javascript
+// a and b are boxes: { x, y, w, h }
+overlaps({ x: 10, y: 10, w: 40, h: 40 }, { x: 30, y: 30, w: 40, h: 40 });  // -> true
+overlaps({ x: 0,  y: 0,  w: 20, h: 20 }, { x: 200, y: 200, w: 20, h: 20 }); // -> false
+```
+
+One sneaky detail: we use **strict** `<` and `>`, not `<=`. So boxes that only
+*kiss* at an edge — where one box ends exactly where the other begins — count as a
+**miss**, not a crash. That keeps things from "sticking" together.
+
+## What you'll build
+
+You'll write **`overlaps(a, b)`** — a clean true/false function that is the
+referee for your whole game. The game loop already turns the ball into a box (with
+the `ballBox` helper you were given) and calls your `overlaps` against the paddle.
+The moment it works, your ball will **bounce off the paddle** instead of sailing
+through it — and next lesson this same referee will let you smash bricks. 🧱

@@ -129,6 +129,39 @@ create policy "Instructors can read all drafts"
     exists (select 1 from profiles where id = auth.uid() and role = 'instructor')
   );
 
+-- Shared games (the /arcade public share route — see migration-shared-games.sql).
+-- A published snapshot of a student's Game Studio game, openable by anyone.
+create table if not exists shared_games (
+  id text primary key,
+  user_id uuid not null references profiles(id) on delete cascade,
+  class_slug text not null,
+  lesson_slug text not null,
+  title text,
+  code text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(user_id, class_slug, lesson_slug)
+);
+
+alter table shared_games enable row level security;
+
+-- PUBLIC read so logged-out visitors can open a shared link.
+create policy "Anyone can read shared games"
+  on shared_games for select
+  using (true);
+
+create policy "Users can insert own shared games"
+  on shared_games for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update own shared games"
+  on shared_games for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete own shared games"
+  on shared_games for delete
+  using (auth.uid() = user_id);
+
 -- Seed initial lessons (keep in sync with content/classes/leo/syllabus.ts published weeks)
 insert into lessons (class_slug, week_number, slug, title) values
   ('leo', 1, 'week-01', 'Boolean Algebra & Truth Tables'),

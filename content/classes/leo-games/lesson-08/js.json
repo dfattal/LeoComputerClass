@@ -1,0 +1,12 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "fps": 60,
+    "init": "newGame",
+    "update": "update",
+    "render": "render",
+    "keys": ["ArrowLeft", "ArrowRight"],
+    "caption": "🎉 Your game! Share it with friends."
+  }
+}

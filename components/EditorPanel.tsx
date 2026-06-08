@@ -14,12 +14,15 @@ export default function EditorPanel({
   onRunTests,
   onSubmit,
   onReset,
+  onShare,
   loading,
   submitting,
+  sharing,
   hasCode,
   hasSubmittedBefore,
   resetKey,
   saveStatus,
+  language,
 }: {
   classSlug: string;
   lessonSlug: string;
@@ -30,12 +33,15 @@ export default function EditorPanel({
   onRunTests?: () => void;
   onSubmit?: () => void;
   onReset?: () => void;
+  onShare?: () => void;
   loading?: boolean;
   submitting?: boolean;
+  sharing?: boolean;
   hasCode?: boolean;
   hasSubmittedBefore?: boolean;
   resetKey?: number;
   saveStatus?: SaveStatus;
+  language?: "python" | "latex" | "javascript";
 }) {
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -45,8 +51,10 @@ export default function EditorPanel({
           onRunTests={onRunTests}
           onSubmit={onSubmit}
           onReset={onReset}
+          onShare={onShare}
           loading={loading ?? false}
           submitting={submitting ?? false}
+          sharing={sharing ?? false}
           hasCode={hasCode ?? false}
           hasSubmittedBefore={hasSubmittedBefore ?? false}
           saveStatus={saveStatus ?? "idle"}
@@ -60,6 +68,7 @@ export default function EditorPanel({
           fallbackCode={fallbackCode}
           starterCode={starterCode}
           resetKey={resetKey}
+          language={language}
         />
       </div>
     </div>

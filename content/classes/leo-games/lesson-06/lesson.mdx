@@ -1,0 +1,56 @@
+# Keeping Score
+
+> A pinball machine flashes your score and steals a ball every time you miss. Today your game learns to do the same — points, lives, and a big **GAME OVER**.
+
+## The whole game is one bundle of numbers
+
+Up to now your game has carried a ball and a paddle. But a real game remembers
+more: how many points you've earned, how many lives you have left. We keep ALL of
+it in one bundle called the **state**:
+
+```javascript
+let state = {
+  ball:   { x: 240, y: 180, vx: 2.4, vy: 1.8, r: 7 },
+  paddle: { x: 200, y: 336, w: 80, h: 12 },
+  score:  0,
+  lives:  3,
+};
+```
+
+That's exactly like a **Python dictionary** you already know — a label for each
+piece (`score`, `lives`) and a value next to it. The whole world, in one box.
+
+## The golden rule: RETURN a new state, never change the old one
+
+Here's the habit that keeps games (and big programs) from getting buggy: a
+function that "changes" the state doesn't really change it. It builds a **brand-new**
+state and hands it back. The old one is left untouched.
+
+JavaScript gives us a magic move for this — the **spread**, written `...state`:
+
+```javascript
+function addScore(state, points) {
+  return { ...state, score: state.score + points };
+}
+```
+
+Read `...state` out loud as: *"copy every key from state — ball, paddle, score,
+lives — then overwrite just the one I name."* Here we copy everything, then write
+a new `score` on top. The ball, the paddle, and the lives all come along for free,
+unchanged.
+
+Why bother? Because if every change makes a fresh copy, you can always trust what
+the old state was. Nothing changes behind your back. (And it's exactly why we can
+test these functions — same numbers in, same new bundle out, every time.)
+
+## What you'll build
+
+Three tiny functions that run the score and lives:
+
+- **`addScore(state, points)`** — a new state with `points` more on the score.
+- **`loseLife(state)`** — a new state with one fewer life.
+- **`isGameOver(state)`** — `true` when the lives run out.
+
+The game loop (already written for you) calls them at the right moments: **+10**
+each time the ball bounces off your paddle, **−1** and a reset whenever it slips
+past the floor, and a frozen **GAME OVER** screen when your last life is gone.

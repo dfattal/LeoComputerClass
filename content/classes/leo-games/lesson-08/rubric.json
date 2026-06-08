@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Wires the whole frame together",
+    "weight": 60,
+    "description": "update() moves + wall-bounces the ball, steers the paddle, bounces off the paddle (+10), removes hit bricks (+10 each), loses a life and resets the ball on the floor, and freezes when isGameOver — all in one frame."
+  },
+  {
+    "criterion": "Pure: returns a new state",
+    "weight": 25,
+    "description": "Builds and returns a brand-new state object (keys in order ball, paddle, bricks, score, lives) instead of mutating the state it was handed."
+  },
+  {
+    "criterion": "Uses the helpers cleanly",
+    "weight": 15,
+    "description": "Calls step, bounce, movePaddle, overlaps, ballBox, removeHit, addScore, loseLife, isGameOver instead of re-writing them; clear and readable."
+  }
+]

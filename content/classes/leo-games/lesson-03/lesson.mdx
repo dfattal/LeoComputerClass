@@ -1,0 +1,52 @@
+# Make It Move
+
+> Last lesson your ball worked — a little *too* well. It zoomed straight off the edge and never came back! Today you teach it to **bounce** off the walls. 🏓
+
+## A bounce is just flipping the sign
+
+Remember bouncing in Motion Lab? When a ball hits a wall, it doesn't stop — it
+turns around and goes back the *other* way at the same speed. In code that turn-around
+is the tiniest move in the whole game:
+
+```javascript
+vx = -vx;   // was going right (+), now going left (−)
+```
+
+That's it. The minus sign flips the direction. `2.4` becomes `-2.4`; hit the wall
+again and `-2.4` becomes `2.4`. Left, right, left, right…
+
+## Which speed do you flip?
+
+Each wall flips a *different* speed:
+
+- The **left** and **right** walls are up-and-down lines, so they bounce the
+  sideways speed → flip **`vx`**.
+- The **ceiling** (the top) is a flat line, so it bounces the up-down speed →
+  flip **`vy`**.
+
+## Wait — what about the floor?
+
+There **isn't** one. 😮 In our game the bottom is left **wide open** on purpose.
+If the ball drops past the bottom it's gone — that's exactly why, next lesson, you
+build a **paddle** to guard it. For now the game loop just pops a dropped ball back
+to the middle so you can keep watching it bounce.
+
+## How do you know it *touched* a wall?
+
+The ball's center is at `x`, but the ball pokes out by `r` in every direction. So its
+left edge is `x - r` and its right edge is `x + r`. It has hit a side wall when:
+
+```javascript
+x - r <= 0          // its left edge reached the left wall
+x + r >= width      // its right edge reached the right wall
+```
+
+The ceiling works the same way: the ball's top edge `y - r` reaches `0`.
+
+## What you'll build
+
+You'll write **`bounce(ball, width, height)`**. It flips `vx` if the ball touched a
+side wall, flips `vy` if it touched the ceiling, and returns a **new** ball with the
+corrected speed. (No floor check — the bottom is open!) The game loop already calls
+`step` *then* `bounce` every frame, so the moment it works your ball will ping-pong
+off the walls and ceiling. 🎉

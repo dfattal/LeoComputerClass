@@ -10,7 +10,7 @@ export interface ClassDef {
   heroImage: string; // Path in /public
   studentName: string; // For AI prompts
   contentDir: string; // Directory name under content/classes/
-  language: "python" | "latex";
+  language: "python" | "latex" | "javascript";
   comingSoon?: boolean;
 }
 
@@ -122,6 +122,18 @@ export const classes: ClassDef[] = [
     studentName: "Leila",
     contentDir: "leila",
     language: "python",
+  },
+  {
+    slug: "leo-games",
+    name: "Leo's Game Studio",
+    tagline: "Build Your Own Arcade Game",
+    description:
+      "Make your own arcade game — and put it online for your friends to play. Learn JavaScript, the language of the web, by building a real game from scratch: draw on the screen, make a ball bounce, steer a paddle with the keyboard, and break a wall of bricks. By the end you'll have your very own Breakout game with a link you can share.",
+    accentColor: "orange",
+    heroImage: "/hero-leo-games.webp",
+    studentName: "friend",
+    contentDir: "leo-games",
+    language: "javascript",
   },
 ];
 

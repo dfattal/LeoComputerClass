@@ -1,0 +1,42 @@
+## Your mission
+
+### Exercise — `movePaddle(paddle, input, width)`
+
+The `paddle` is a box `{ x, y, w, h }`. The `input` holds the keyboard flags in
+`input.keys`. Return a **new** paddle box, slid by a `speed` of `6` and clamped
+so it stays fully on a canvas `width` wide.
+
+- If `input.keys["ArrowLeft"]` is `true`, move `x` left by `6`.
+- If `input.keys["ArrowRight"]` is `true`, move `x` right by `6`.
+- Then clamp: `x` can't go below `0`, and `x + w` can't go past `width`.
+
+Worked examples (the paddle is `{ x: 200, y: 336, w: 80, h: 12 }`, `width` is `480`):
+
+```javascript
+// right arrow held -> x goes 200 + 6 = 206
+movePaddle({ x: 200, y: 336, w: 80, h: 12 }, { keys: { ArrowRight: true } }, 480)
+//   -> { x: 206, y: 336, w: 80, h: 12 }
+
+// left arrow held -> x goes 200 - 6 = 194
+movePaddle({ x: 200, y: 336, w: 80, h: 12 }, { keys: { ArrowLeft: true } }, 480)
+//   -> { x: 194, y: 336, w: 80, h: 12 }
+
+// left arrow, but already at the left wall -> clamped, stays at 0
+movePaddle({ x: 0, y: 336, w: 80, h: 12 }, { keys: { ArrowLeft: true } }, 480)
+//   -> { x: 0, y: 336, w: 80, h: 12 }
+
+// right arrow at the right wall -> clamped to 480 - 80 = 400
+movePaddle({ x: 400, y: 336, w: 80, h: 12 }, { keys: { ArrowRight: true } }, 480)
+//   -> { x: 400, y: 336, w: 80, h: 12 }
+
+// no keys held -> nothing moves
+movePaddle({ x: 200, y: 336, w: 80, h: 12 }, { keys: {} }, 480)
+//   -> { x: 200, y: 336, w: 80, h: 12 }
+```
+
+**Hint:** do it in order — first move `x`, THEN clamp it. Start a `let x = paddle.x;`,
+change `x` with your two `if` checks, fix it with two more `if` checks, then
+`return` a fresh `{ x, y, w, h }` (copy `y`, `w`, `h` straight from `paddle`).
+
+Press **Run**, click the Game panel so it can hear your keyboard, and steer with
+**← →**!

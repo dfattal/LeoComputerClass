@@ -6,6 +6,7 @@ import type { Monaco } from "@monaco-editor/react";
 
 const DEFAULT_STARTER = `# Write your code here\n`;
 const DEFAULT_LATEX_STARTER = `% Write your LaTeX here\n`;
+const DEFAULT_JS_STARTER = `// Write your code here\n`;
 
 /**
  * Monaco has no built-in LaTeX mode, so register a small one: enough to color
@@ -62,11 +63,15 @@ export default function CodeEditor({
   fallbackCode?: string;
   starterCode?: string;
   resetKey?: number;
-  language?: "python" | "latex";
+  language?: "python" | "latex" | "javascript";
 }) {
   const storageKey = `code-draft-${classSlug}-${lessonSlug}`;
   const defaultStarter =
-    language === "latex" ? DEFAULT_LATEX_STARTER : DEFAULT_STARTER;
+    language === "latex"
+      ? DEFAULT_LATEX_STARTER
+      : language === "javascript"
+        ? DEFAULT_JS_STARTER
+        : DEFAULT_STARTER;
   const [code, setCode] = useState<string>("");
   const [mounted, setMounted] = useState(false);
 

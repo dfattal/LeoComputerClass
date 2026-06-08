@@ -1,0 +1,23 @@
+[
+  {
+    "entry": "addScore",
+    "cases": [
+      { "name": "first paddle hit: 0 + 10 points", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 0, "lives": 3 }, 10], "expected": { "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 10, "lives": 3 } },
+      { "name": "another 10 on top of 80", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 80, "lives": 3 }, 10], "expected": { "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 90, "lives": 3 } }
+    ]
+  },
+  {
+    "entry": "loseLife",
+    "cases": [
+      { "name": "missed once: 3 lives become 2", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 3 }], "expected": { "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 2 } },
+      { "name": "last life lost: 1 becomes 0", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 1 }], "expected": { "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 0 } }
+    ]
+  },
+  {
+    "entry": "isGameOver",
+    "cases": [
+      { "name": "0 lives means game over", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 0 }], "expected": true },
+      { "name": "2 lives left: keep playing", "args": [{ "ball": { "x": 240, "y": 180, "vx": 2.4, "vy": 1.8, "r": 7 }, "paddle": { "x": 200, "y": 336, "w": 80, "h": 12 }, "score": 50, "lives": 2 }], "expected": false }
+    ]
+  }
+]

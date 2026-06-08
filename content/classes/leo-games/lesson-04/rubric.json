@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Reads the keys & moves",
+    "weight": 45,
+    "description": "Checks input.keys[\"ArrowLeft\"] / input.keys[\"ArrowRight\"] and shifts x left or right by a speed (6)."
+  },
+  {
+    "criterion": "Clamps to the canvas",
+    "weight": 40,
+    "description": "Keeps x between 0 and width - paddle.w so the paddle can never leave the screen."
+  },
+  {
+    "criterion": "Returns a new box",
+    "weight": 15,
+    "description": "Returns a NEW { x, y, w, h } (y, w, h carried over) instead of mutating the paddle argument."
+  }
+]

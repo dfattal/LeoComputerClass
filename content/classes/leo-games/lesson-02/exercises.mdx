@@ -1,0 +1,21 @@
+## Your mission
+
+### Exercise — `step(ball)`
+
+A `ball` is `{ x, y, vx, vy, r }`. Return a **new** ball moved one frame by its
+velocity: `x` becomes `x + vx`, and `y` becomes `y + vy`. Keep `vx`, `vy`, and
+`r` the same.
+
+```javascript
+step({ x: 0,   y: 0,   vx: 2,   vy: 1,   r: 7 })   // -> { x: 2,     y: 1,     vx: 2,   vy: 1,   r: 7 }
+step({ x: 240, y: 180, vx: 2.4, vy: 1.8, r: 7 })   // -> { x: 242.4, y: 181.8, vx: 2.4, vy: 1.8, r: 7 }
+```
+
+**Hint:** build and `return` a brand-new object — don't change `ball` itself:
+
+```javascript
+return { x: ball.x + ball.vx, y: ball.y + ball.vy, vx: ball.vx, vy: ball.vy, r: ball.r };
+```
+
+Press **Run** and watch your ball drift across the Game panel. (It'll fly off the
+edge — we fix that next lesson!)

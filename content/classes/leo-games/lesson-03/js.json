@@ -1,0 +1,10 @@
+{
+  "preview": {
+    "width": 480,
+    "height": 360,
+    "init": "init",
+    "update": "update",
+    "render": "render",
+    "caption": "It ricochets off the walls + ceiling — but drops through the open floor. Next: a paddle!"
+  }
+}
