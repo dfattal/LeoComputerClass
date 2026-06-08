@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correct indentation",
+    "weight": 50,
+    "description": "Every line stands on the right step: loop bodies inside loops, if bodies inside ifs, returns outside the loop unless they truly belong inside. Consistent 4-space steps throughout."
+  },
+  {
+    "criterion": "Correct output",
+    "weight": 30,
+    "description": "All five machines return the right values for every test, including empty lists."
+  },
+  {
+    "criterion": "Careful repairs",
+    "weight": 20,
+    "description": "The repair exercises (1-3) were fixed by adjusting spacing/placement of the existing lines, not by rewriting the machine's logic."
+  }
+]

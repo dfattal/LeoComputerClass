@@ -1,0 +1,140 @@
+# The Secret Staircase: How Python Knows What's Inside
+
+> Other languages wrap their code in {curly brackets}. Python threw the brackets away — and replaced them with an invisible secret. Today you learn to see it.
+
+---
+
+## A puzzle every language has to solve
+
+Last lesson you wrote `if`s and `for` loops. Quick question, {{FIRST_NAME}}: when you write an `if`, how does the computer know which lines are **inside** it and which lines come **after** it?
+
+Every programming language needs an answer. Most of them use **extra symbols**. Here's the same little program in **JavaScript**, the language that runs most websites:
+
+```javascript
+// JavaScript — the { } brackets mark what's inside the if
+if (score >= 90) {
+    console.log("A");
+    celebrate();
+}
+console.log("Done");
+```
+
+See the `{` and `}`? They're like fences: *"everything between these brackets belongs to the if."*
+
+Old languages like BASIC used special closing words instead:
+
+```basic
+IF SCORE >= 90 THEN
+    PRINT "A"
+END IF
+PRINT "Done"
+```
+
+Both ways work. But in a big program there are **hundreds** of brackets and `END IF`s. Lose just one `}` and the whole program shatters — and the computer usually complains about the wrong line, somewhere far away. Programmers spend hours hunting lost brackets. It's bracket soup. 🍜
+
+---
+
+## Python's deal
+
+The people who made Python noticed something clever: programmers **already** lined up their code with spaces just to make it readable — even in bracket languages!
+
+So Python offered a deal:
+
+> **"Throw away the brackets. Just line up your code — and I'll use the line-up to know what's inside what."**
+
+```python
+if score >= 90:
+    print("A")        # pushed right = INSIDE the if
+    celebrate()       # same depth = inside too
+print("Done")         # back left = OUTSIDE, runs no matter what
+```
+
+No brackets. No `END IF`. Clean and short — that's why Python code looks so friendly.
+
+But here's the price: **the spaces aren't decoration anymore. The indent IS the bracket.** It's invisible, but Python reads it like a hawk. Move one line left or right, and you've changed what the program *means*.
+
+---
+
+## The Staircase Rule
+
+Picture your code as a staircase:
+
+1. A line ending in **`:`** (a `def`, `if`, `else`, `for`, or `while`) opens a door — the next lines step **down one step** (4 spaces deeper).
+2. Everything standing on that deeper step is **inside**.
+3. Step back **left**, and you've walked back out. The door closes behind you.
+4. Lines on the **same step** are on the same team — they go together.
+
+When you chain things — a `for` inside a `def`, an `if` inside the `for` — you get real stairs:
+
+```python
+def count_evens(numbers):          # step 0 — flat ground
+    count = 0                      # step 1 — inside the function
+    for n in numbers:              # step 1 — and it opens another door...
+        if n % 2 == 0:             # step 2 — inside the loop
+            count = count + 1      # step 3 — inside the if, inside the loop!
+    return count                   # step 1 — stepped back out of the loop
+```
+
+Squint at the left edge: you can literally **see** the staircase. That shape isn't just pretty — it IS the program's structure.
+
+> **New trick:** `n % 2` gives the *remainder* when you divide `n` by 2. So `n % 2 == 0` means "n divides by 2 perfectly" — which means **n is even**!
+
+---
+
+## Spacing is MEANING
+
+This is the part that surprises everyone. A line on the wrong step often **still runs** — it just does the wrong thing. Two famous traps:
+
+### Trap 1: The Amnesia Bug 🧠
+
+```python
+def total_steps(steps):
+    for s in steps:
+        total = 0          # ← INSIDE the loop = wiped clean every lap!
+        total = total + s
+    return total
+```
+
+`total = 0` is standing inside the loop, so the total gets erased and restarted **every single lap**. The function forgets everything and returns just the last number. The fix? Move that line **out of the loop** — up above the `for`, back on step 1.
+
+### Trap 2: The Early Escape 🚪
+
+```python
+def total_steps(steps):
+    total = 0
+    for s in steps:
+        total = total + s
+        return total       # ← INSIDE the loop = leaves after lap ONE!
+```
+
+`return` means "we're done — leave the function NOW." Standing inside the loop, it fires on the very first lap. The loop never gets to lap 2! Slide it **one step left** and the function politely waits for the loop to finish.
+
+Same words. Different steps. Completely different programs. **That's** why indentation matters.
+
+---
+
+## Error Decoder Ring 🔍
+
+When the spacing is so broken Python can't even read the code, it stops and tells you. Here's what the messages mean:
+
+| Python says... | It means... | Fix |
+|---|---|---|
+| `IndentationError: unexpected indent` | A line is pushed right for no reason — no `:` opened a door above it | Move it back left |
+| `IndentationError: expected an indented block` | A line ended in `:` but nothing is inside it | Indent the next line (or put `pass` there for now) |
+| `IndentationError: unindent does not match` | A line stepped back left, but not onto a real step | Line it up exactly with the step it belongs to |
+
+**The golden rule: always indent with exactly 4 spaces per step.** Never mix in tabs, never use 3 or 5. (The editor helps — pressing `Tab` types 4 spaces for you.)
+
+---
+
+## What you'll build
+
+Today you're the town's **code repair-person**. 🔧
+
+1. **`cheer(name)`** — fix a machine so crumpled it won't even start
+2. **`total_steps(steps)`** — cure a machine with the Amnesia Bug
+3. **`count_evens(numbers)`** — catch a machine making an Early Escape
+4. **`keep_big(numbers, limit)`** — build your own three-step staircase from scratch
+5. **`staircase(n)`** — the grand finale: nested loops that draw an actual staircase you can SEE in the picture panel
+
+By the end, the invisible brackets won't be invisible to you anymore.

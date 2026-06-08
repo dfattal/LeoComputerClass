@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "resultFn": "__stairs",
+  "demoArgs": [],
+  "title": "The Secret Staircase — drawn by YOUR nested loops",
+  "setup": "# --- staircase helper (hidden) — paints the student's own staircase ---\n# Calls the student's staircase(8). While it's unfinished (or crashes), shows a\n# ghost staircase of ? squares so the panel is never blank. Once it returns a\n# real grid, shows EXACTLY what the student's code drew — broken stairs and all,\n# because seeing the broken picture is the lesson. Celebrates on a perfect match.\ndef __true_stairs(n):\n    rows = []\n    for r in range(n):\n        rows.append([\"green\" if c <= r else \"\" for c in range(n)])\n    return rows\n\ndef __stairs():\n    n = 8\n    try:\n        g = staircase(n)\n    except Exception:\n        g = None\n    ok = isinstance(g, list) and len(g) > 0 and all(isinstance(row, list) for row in g)\n    if not ok:\n        ghost = []\n        for r in range(n):\n            ghost.append([\"?\" if c <= r else \"\" for c in range(n)])\n        return {\n            \"grid\": ghost,\n            \"caption\": \"Finish staircase(n) to build these steps for real — every ? is a square your loops will paint.\",\n        }\n    if g == __true_stairs(n):\n        caption = \"🪜 Perfect! Your code is a staircase of indents — and now your picture is one too.\"\n    else:\n        caption = \"Hmm, these stairs look wobbly. Check WHICH step each line of your code stands on — is the if inside the inner loop? Is append in the right place?\"\n    return {\"grid\": g, \"caption\": caption}\n"
+}

@@ -1,0 +1,100 @@
+# Exercises: The Repair Shop Is Open! 🔧
+
+Machines 1, 2 and 3 are **already written — the words are all correct**. Only the *spacing* is broken. Your job is to put every line back on the right step. Then you'll build two machines of your own.
+
+---
+
+## Exercise 1: The Repair Shop
+
+A customer brought in this `cheer` machine. It went through the washing machine and came out *crumpled* — every line is on a different random step.
+
+**Copy the crumpled code below and paste it over the `cheer` function in the editor**, then press **Run**:
+
+```python
+def cheer(name):
+    message = "Go " + name + ", go!"
+        loud = message.upper()
+   return loud
+```
+
+💥 Boom — Python refuses to run your **entire file**. That's how seriously it takes spacing! Read the error message, then repair the machine: all three body lines belong on **step 1** — exactly 4 spaces, perfectly lined up. Don't change any words!
+
+**Examples:**
+```python
+cheer("Leo")     # returns "GO LEO, GO!"
+cheer("Leila")   # returns "GO LEILA, GO!"
+```
+
+> **Hint:** The body is a simple straight line of three instructions — no `if`, no loop — so nothing should be deeper than anything else. Line up `message`, `loud`, and `return` like soldiers.
+
+---
+
+## Exercise 2: The Amnesia Bug 🧠
+
+The `total_steps` machine is supposed to add up all the numbers in a list — like counting your steps on a whole walk. It runs without any error... but the answers are wrong!
+
+Press **Run** and look at the tests: `total_steps([3, 5, 2])` should be `10`, but the machine says `2`. It only remembers the **last** number!
+
+The problem: `total = 0` is standing **inside** the loop, so the memory gets wiped on every lap. Move it **out of the loop** — above the `for` line, on step 1.
+
+**Examples:**
+```python
+total_steps([3, 5, 2])         # returns 10
+total_steps([10, 10, 10, 10])  # returns 40
+total_steps([])                # returns 0  (an empty walk!)
+```
+
+> **Hint:** "Set the total to zero" should happen exactly **once**, before the walking starts — not on every step of the walk.
+
+---
+
+## Exercise 3: The Early Escape 🚪
+
+The `count_evens` machine counts how many numbers in a list are even. It runs fine too... but `count_evens([2, 4, 6])` says `1` instead of `3`. The machine quits after checking only the **first** number!
+
+Find the line making the early escape. It needs to move exactly **one step to the left** — that's the entire fix. One line, 4 spaces.
+
+**Examples:**
+```python
+count_evens([1, 2, 3, 4])  # returns 2
+count_evens([2, 4, 6])     # returns 3
+count_evens([1, 3, 5])     # returns 0
+```
+
+> **Hint:** `return` means "leave the function RIGHT NOW." Should that happen inside the loop (after lap one), or after the loop has finished all its laps?
+
+---
+
+## Exercise 4: In or Out? 🏗️
+
+Repair jobs done — now build your own machine from scratch. Write `keep_big(numbers, limit)`: it returns a **new list** containing only the numbers that are **bigger than** `limit`.
+
+This is your first full staircase: a list on step 1, a `for` opening step 2, an `if` opening step 3 — and you decide which step every line stands on.
+
+**Examples:**
+```python
+keep_big([3, 9, 1, 12, 5], 4)  # returns [9, 12, 5]
+keep_big([1, 2, 3], 10)        # returns []  (nothing makes the cut)
+keep_big([50, 2, 75], 40)      # returns [50, 75]
+```
+
+> **Hint:** Start with `keepers = []`. Loop through the numbers. **Inside the if** (step 3!), use `keepers.append(n)` to add a keeper. And `return keepers` waits all the way back on step 1 — outside the loop. (Careful not to make an Early Escape of your own!)
+
+---
+
+## Exercise 5: The Secret Staircase 🪜
+
+The grand finale — you're going to **draw an actual staircase** with nested loops, and watch it appear in the picture panel.
+
+Write `staircase(n)`: it returns a grid (a list of rows) with `n` rows and `n` squares per row. In row 0, only the first square is `"green"`. In row 1, the first two. In row `r` — every square up to column `r`. The rest are `""` (empty). The result: stairs marching down the screen, exactly like the left edge of your code!
+
+**Examples:**
+```python
+staircase(1)  # returns [["green"]]
+staircase(2)  # returns [["green", ""],
+              #          ["green", "green"]]
+```
+
+Press **Run** and look at the picture panel — if your stairs come out wobbly, some line of your code is standing on the wrong step. The picture *is* your indentation, made visible. 🤯
+
+> **Hint:** A loop **inside** a loop! For each `row` in `range(n)`, build a list of cells: for each `col` in `range(n)`, append `"green"` **if** `col <= row`, **else** append `""`. Then append the finished row to your grid. Count your steps: the `if` lives on step 3, three doors deep.
