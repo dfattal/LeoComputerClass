@@ -1,5 +1,18 @@
 [
   {
+    "entry": "get_bit",
+    "cases": [
+      { "name": "get_bit(5,0)=1", "args": [5, 0], "expected": 1 },
+      { "name": "get_bit(5,1)=0", "args": [5, 1], "expected": 0 },
+      { "name": "get_bit(5,2)=1", "args": [5, 2], "expected": 1 },
+      { "name": "get_bit(6,0)=0", "args": [6, 0], "expected": 0 },
+      { "name": "get_bit(6,1)=1", "args": [6, 1], "expected": 1 },
+      { "name": "get_bit(6,2)=1", "args": [6, 2], "expected": 1 },
+      { "name": "get_bit(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "get_bit(7,2)=1", "args": [7, 2], "expected": 1 }
+    ]
+  },
+  {
     "entry": "mux",
     "cases": [
       { "name": "mux(0,0,0)=0", "args": [0, 0, 0], "expected": 0 },
