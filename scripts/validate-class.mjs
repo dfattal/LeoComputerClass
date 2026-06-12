@@ -211,6 +211,42 @@ function isDrawGrid(result) {
   );
 }
 
+// Find the *student exercise* functions in an exercises.mdx — the `def NAME(...)`
+// stubs the kid has to fill in. A stub has a bare `pass` body and no `return`;
+// the recap/Setup defs copied from prior weeks have real `return` bodies and are
+// (correctly) ignored, as are complete worked examples like `always_one`. Used
+// to prove every student task actually has a tests.json entry (else the kid gets
+// no Run Tests feedback for it — exactly how leo/week-02's get_bit slipped through).
+function findExerciseStubs(mdxSrc) {
+  const lines = mdxSrc.split("\n");
+  const stubs = [];
+  let cur = null; // { name, body: [] }
+  const flush = () => {
+    if (cur) {
+      const body = cur.body.join("\n");
+      const isStub = /^\s*pass\s*$/m.test(body) && !/^\s*return\b/m.test(body);
+      if (isStub) stubs.push(cur.name);
+      cur = null;
+    }
+  };
+  for (const line of lines) {
+    const m = line.match(/^def\s+([A-Za-z_]\w*)\s*\(/);
+    if (m) {
+      flush();
+      cur = { name: m[1], body: [] };
+      continue;
+    }
+    if (cur) {
+      // Body continues over indented or blank lines; the first non-indented,
+      // non-blank line (next prose, a code-fence, etc.) ends the def.
+      if (line.trim() === "" || /^\s/.test(line)) cur.body.push(line);
+      else flush();
+    }
+  }
+  flush();
+  return [...new Set(stubs)];
+}
+
 function lessonDirs(classDir) {
   return readdirSync(classDir)
     .filter((d) => /^(?:lesson|week)-\d+/.test(d))
@@ -463,6 +499,25 @@ async function validateLesson(lessonDir) {
     for (const t of tests) {
       const hasStub = new RegExp(`def\\s+${t.entry}\\s*\\(`).test(starterSrc);
       add(hasStub, `starter.py defines ${t.entry}()`, hasStub ? undefined : "no stub");
+    }
+  }
+
+  // 3b. Reverse stub check: every student-exercise stub in exercises.mdx must
+  // have a tests.json entry, or the kid writes a function and gets no Run Tests
+  // feedback for it (the bug that hid leo/week-02's get_bit). Python lessons only
+  // — latex/js/reflection lessons have no tests.json so `tests` is null here.
+  if (tests) {
+    const exPath = join(lessonDir, "exercises.mdx");
+    if (existsSync(exPath)) {
+      const entries = new Set(tests.map((t) => t.entry));
+      for (const name of findExerciseStubs(readFileSync(exPath, "utf-8"))) {
+        const tested = entries.has(name);
+        add(
+          tested,
+          `exercises.mdx task ${name}() has a test`,
+          tested ? undefined : "stub has no tests.json entry — student gets no Run Tests feedback"
+        );
+      }
     }
   }
 
