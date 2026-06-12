@@ -8,6 +8,63 @@ importScripts("/values-match.js");
 
 let pyodide = null;
 
+// Blanks out Python comments and string-literal contents so the forbidTokens
+// check only looks at real code. Without this, a leftover starter comment like
+// "# Return 1 only if both a and b are 1" would trip a `" and "` constraint even
+// when the student's actual code is correct (e.g. `return a & b`). We replace
+// stripped characters with spaces so token boundaries (the leading/trailing
+// spaces in tokens like " and ") are preserved.
+function stripCommentsAndStrings(src) {
+  let out = "";
+  let i = 0;
+  const n = src.length;
+  let quote = null; // current string delimiter: ', ", ''' or """
+  while (i < n) {
+    const ch = src[i];
+    if (quote) {
+      if (ch === "\\" && quote.length === 1) {
+        // escape inside a single-char string: skip the next char
+        out += "  ";
+        i += 2;
+        continue;
+      }
+      if (src.startsWith(quote, i)) {
+        out += " ".repeat(quote.length);
+        i += quote.length;
+        quote = null;
+        continue;
+      }
+      out += ch === "\n" ? "\n" : " ";
+      i += 1;
+      continue;
+    }
+    if (ch === "#") {
+      // comment to end of line
+      while (i < n && src[i] !== "\n") {
+        out += " ";
+        i += 1;
+      }
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      const triple = src.substr(i, 3);
+      if (triple === '"""' || triple === "'''") {
+        quote = triple;
+        out += "   ";
+        i += 3;
+        continue;
+      }
+      quote = ch;
+      out += " ";
+      i += 1;
+      continue;
+    }
+    out += ch;
+    i += 1;
+  }
+  return out;
+}
+
 async function loadPyodideInstance() {
   if (pyodide) return pyodide;
   importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js");
@@ -121,11 +178,14 @@ self.onmessage = async function (e) {
       // Run tests against student code
       const results = [];
 
-      // First check constraints (forbidden tokens)
+      // First check constraints (forbidden tokens). Scan only real code —
+      // comments and string literals are blanked out so leftover starter
+      // comments (e.g. "both a and b") don't trip a `" and "` constraint.
+      const codeForConstraints = stripCommentsAndStrings(code);
       for (const testEntry of tests) {
         if (testEntry.constraints && testEntry.constraints.forbidTokens) {
           for (const token of testEntry.constraints.forbidTokens) {
-            if (code.includes(token)) {
+            if (codeForConstraints.includes(token)) {
               results.push({
                 entry: testEntry.entry,
                 passed: false,
