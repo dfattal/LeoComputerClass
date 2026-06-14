@@ -1,0 +1,80 @@
+# Lesson 4 — Exercises: Whose Memory Is This?
+
+## How This Works
+
+You'll build a **memory allocator**. Memory is a list of slots: each value is the program id that owns that slot, or `0` for **free**.
+
+**The rules:**
+
+- `allocate` uses **first-fit**: the first run of `size` free slots *in a row*.
+- A block must be **contiguous** (the free slots next to each other).
+- No room? Return memory **unchanged**.
+- Always return a **new** list — don't scribble on the one you were given.
+
+---
+
+## Exercise 1: Allocate a Block
+
+Write `allocate(memory, pid, size)` that gives `pid` the first run of `size` free slots and returns the new memory.
+
+```python
+def allocate(memory, pid, size):
+    # Walk the slots counting free (0) ones in a row. The moment the count
+    # reaches `size`, fill those slots with pid and return. If you reach the
+    # end without enough room in a row, return memory unchanged.
+    pass
+```
+
+**Examples:**
+- `allocate([0, 0, 0, 0], 1, 2)` → `[1, 1, 0, 0]`
+- `allocate([1, 1, 0, 0, 0], 2, 3)` → `[1, 1, 2, 2, 2]`
+- `allocate([1, 0, 1, 0], 1, 2)` → `[1, 0, 1, 0]` (no two free slots in a row!)
+
+**Hint:** Make a copy first: `mem = list(memory)`. Track a `run` counter and the `start` of the current run. When `run == size`, fill `mem[start:start+size]` with `pid`. Reset `run = 0` whenever you hit an owned slot.
+
+---
+
+## Exercise 2: Free a Program's Memory
+
+Write `free(memory, pid)` that sets every slot owned by `pid` back to `0` and returns the new memory.
+
+```python
+def free(memory, pid):
+    # Return a new list: 0 where the owner is pid, unchanged everywhere else.
+    pass
+```
+
+**Examples:**
+- `free([1, 1, 2, 2, 0], 1)` → `[0, 0, 2, 2, 0]`
+- `free([1, 1, 2, 2, 0], 3)` → `[1, 1, 2, 2, 0]` (program 3 owns nothing — no change)
+
+**Hint:** One line does it: `return [0 if v == pid else v for v in memory]`.
+
+---
+
+## Exercise 3: Count Free Slots
+
+Write `free_slots(memory)` that returns how many slots are free (equal to `0`).
+
+```python
+def free_slots(memory):
+    # Count the zeros.
+    pass
+```
+
+**Examples:**
+- `free_slots([1, 1, 2, 2, 0])` → `1`
+- `free_slots([0, 0, 0])` → `3`
+
+**Hint:** `sum(1 for v in memory if v == 0)`.
+
+---
+
+## Tips If You're Stuck
+
+1. **Allocator grabs slots that aren't in a row?** Reset your `run` counter to `0` every time you pass an owned slot.
+2. **Filled the wrong slots?** Remember where the run **started**, not where it ended — fill from `start`.
+3. **No-room case broken?** If you scan the whole list and never hit `size` free in a row, return the original memory.
+4. **Your tests change the input list?** Build and return a fresh list; never edit `memory` in place.
+
+Build all three and run the panel — you'll see colored blocks appear as programs allocate, and a gap open up when one frees. Next lesson: those gaps cause a sneaky problem called **fragmentation**.

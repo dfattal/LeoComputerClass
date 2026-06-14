@@ -1,0 +1,76 @@
+# Lesson 3 — Fair vs. Fast
+
+## Phase 1: Sharing the CPU
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See the weakness of round-robin: **urgent** jobs feel laggy
+- Learn **priorities** — let the important program cut the line
+- Build a scheduler that always runs the **most urgent** program with work left
+- Discover the dark side: **starvation**, when a low-priority job never gets a turn
+- Understand the boss's hardest trade-off: **fair vs. fast**
+
+---
+
+## Big Idea
+
+Round-robin is wonderfully fair — but fair isn't always what you want. Imagine the program drawing the mouse pointer is sharing turns equally with a big download. The download doesn't care about a tiny delay. But the pointer? If it has to wait its turn behind everyone else, the mouse feels **laggy** and sticky. Yuck.
+
+Some jobs are just more **urgent** than others. The boss needs a way to say "this one matters more — let it go first."
+
+That's a **priority**. We give each program a number: **higher means more urgent**. Now the scheduler's rule changes. Instead of "whose turn is next in the circle," it becomes: **"who's the most urgent program that still has work?"** The important program gets to cut the line.
+
+> **Like an emergency room.** A hospital doesn't treat patients in the order they arrived. Someone with a broken arm waits; someone who can't breathe goes first. Priority scheduling is triage for programs.
+
+---
+
+## Priorities in Action
+
+Two programs need `[2, 3]` ticks. Program 0 has priority `1` (boring), program 1 has priority `5` (urgent). The scheduler always picks the most urgent one with work left:
+
+```text
+tick:     0  1  2  3  4
+program:  1  1  1  0  0
+```
+
+Program 1 (priority 5) runs all 3 of its ticks first — it cut the line. Only when it's completely done does program 0 get the CPU. The urgent job didn't wait at all.
+
+What if there's a **tie**? Two programs with the same priority? We keep it simple and predictable: **the lower program id goes first.** No randomness — the boss must be deterministic so it behaves the same way every time.
+
+---
+
+## The Dark Side: Starvation
+
+Priorities are powerful, but they come with a trap. Look again: program 0 had to wait until tick 3 before it ran *at all*. Now imagine urgent programs keep arriving, one after another. The boring program would wait… and wait… and **never** get a single tick. That's called **starvation** — a low-priority job left to starve forever while VIPs keep cutting in front.
+
+A real operating system has clever fixes (like slowly boosting the priority of a job that's been waiting too long). For now, your job is simpler but just as important: **detect** starvation. If a program waited longer than some limit before its first turn — or never ran at all — something's wrong.
+
+> **The boss's eternal trade-off.** Round-robin is *fair* but slow for urgent work. Strict priority is *fast* for urgent work but can be unfair. Every real scheduler is a careful blend of the two. There's no perfect answer — only good trade-offs.
+
+---
+
+## What You'll Build
+
+1. `pick_next(remaining, priorities)` — the heart of the scheduler: return the most urgent unfinished program (or `-1` if all done).
+2. `priority_run(programs, priorities)` — run `pick_next`'s choice one tick at a time until everything's done.
+3. `starves(timeline, pid, limit)` — did a program wait too long (or never run)?
+
+The panel draws the Gantt chart again — watch the urgent program's bar jump to the very front.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| Priority | a number; higher = more urgent |
+| Priority scheduling | always run the most urgent job with work left |
+| Tie-break | lower program id goes first (deterministic) |
+| Starvation | a low-priority job that never gets a turn |
+| Fair vs. fast | the trade-off every scheduler must balance |
+
+You've now built both ends of scheduling — fair (round-robin) and fast (priority). That's how a real CPU juggles dozens of programs. Next phase: where do all those programs **live**? Time to hand out memory, {{FIRST_NAME}}.

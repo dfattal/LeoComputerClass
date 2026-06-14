@@ -1,0 +1,84 @@
+# Lesson 3 — Exercises: Fair vs. Fast
+
+## How This Works
+
+You'll build a **priority scheduler**. Each program has work left (`remaining[i]`) and a priority (`priorities[i]`). **Higher priority = more urgent.**
+
+**The rules:**
+
+- Only consider programs that still have work (`remaining[i] > 0`).
+- Always pick the **most urgent** of those (biggest priority number).
+- On a tie, pick the **lower** program id (so it's predictable — never random).
+
+---
+
+## Exercise 1: Pick the Next Program
+
+Write `pick_next(remaining, priorities)` that returns the id of the most urgent program with work left, or `-1` if everyone is finished.
+
+```python
+def pick_next(remaining, priorities):
+    # Track the best id you've seen. Switch to a new program only if it still
+    # has work AND its priority is strictly higher than your current best.
+    pass
+```
+
+**Examples:**
+- `pick_next([2, 3], [1, 5])` → `1` (program 1 is more urgent)
+- `pick_next([0, 3], [5, 1])` → `1` (program 0 is finished, so skip it)
+- `pick_next([2, 2, 2], [3, 3, 1])` → `0` (tie between 0 and 1 — lower id wins)
+- `pick_next([0, 0], [5, 1])` → `-1` (nobody left)
+
+**Hint:** Start `best = -1`. Loop over each id; skip if `remaining[pid] <= 0`; otherwise take it if `best == -1 or priorities[pid] > priorities[best]`.
+
+---
+
+## Exercise 2: Run by Priority
+
+Write `priority_run(programs, priorities)` that runs the most urgent program one tick at a time until all work is gone, returning the timeline.
+
+```python
+def priority_run(programs, priorities):
+    # Copy programs into `remaining`. Each tick: pid = pick_next(...), append
+    # pid to the timeline, subtract 1 from remaining[pid]. Stop when all done.
+    pass
+```
+
+**Examples:**
+- `priority_run([2, 3], [1, 5])` → `[1, 1, 1, 0, 0]`
+- `priority_run([1, 1, 1], [1, 2, 3])` → `[2, 1, 0]`
+- `priority_run([2, 2], [5, 5])` → `[0, 0, 1, 1]` (a tie, so ids in order)
+
+**Hint:** Reuse `pick_next` from Exercise 1 — that's the whole point of building it first.
+
+---
+
+## Exercise 3: Detect Starvation
+
+Write `starves(timeline, pid, limit)` — `True` if program `pid` waited **more than** `limit` ticks before its first turn, or never ran at all.
+
+```python
+def starves(timeline, pid, limit):
+    # Find the first tick where pid runs. If that tick is > limit, it starved.
+    # If pid never appears in the timeline, it starved too.
+    pass
+```
+
+**Examples:**
+- `starves([1, 1, 1, 0, 0], 0, 2)` → `True` (program 0 first ran at tick 3 — too long)
+- `starves([1, 1, 1, 0, 0], 0, 3)` → `False` (tick 3 is within the limit of 3)
+- `starves([1, 1, 1, 0, 0], 1, 2)` → `False` (program 1 ran right away)
+- `starves([1, 1], 0, 3)` → `True` (program 0 never ran at all)
+
+**Hint:** Loop with `for t, who in enumerate(timeline):`; the first time `who == pid`, return `t > limit`. If the loop ends without finding it, return `True`.
+
+---
+
+## Tips If You're Stuck
+
+1. **`pick_next` returns a finished program?** Make sure you skip any id where `remaining[pid] <= 0`.
+2. **Ties picking the wrong one?** Use a strict `>` (not `>=`) so the first/lower id keeps the lead.
+3. **`priority_run` loops forever?** You must subtract 1 from `remaining[pid]` every tick.
+4. **`starves` wrong on "never ran"?** Handle that case **after** the loop — returning `True`.
+
+Build all three, run `[4, 3, 2]` with priorities `[1, 5, 3]`, and watch the urgent program leap to the front. Next up: **memory** — where do these programs actually live?

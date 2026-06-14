@@ -1,0 +1,91 @@
+# Lesson 6 — Exercises: Saving for Keeps
+
+## How This Works
+
+You'll build a tiny **file system**. The disk is a list of blocks: each block holds the **name** of the file that owns it, or `""` (empty string) if it's **free**.
+
+**The rules:**
+
+- `save` uses **first-fit**: the first run of `size` free blocks *in a row*.
+- A file's blocks must be **contiguous** (next to each other).
+- No room? Return the disk **unchanged**.
+- Always return a **new** list.
+
+---
+
+## Exercise 1: Save a File
+
+Write `save(disk, name, size)` that writes `name` into the first run of `size` free (`""`) blocks and returns the new disk.
+
+```python
+def save(disk, name, size):
+    # Just like allocate(): scan for `size` free blocks in a row, write `name`
+    # into them, and return. The free marker here is "" and you write a name.
+    pass
+```
+
+**Examples:**
+- `save(["", "", "", ""], "cat", 2)` → `["cat", "cat", "", ""]`
+- `save(["cat", "cat", "", ""], "dog", 2)` → `["cat", "cat", "dog", "dog"]`
+- `save(["cat", "", "cat", ""], "dog", 2)` → `["cat", "", "cat", ""]` (no 2 free blocks in a row)
+
+**Hint:** Copy first with `d = list(disk)`. Track a `run` of free blocks and where it `start`ed; when `run == size`, fill `d[start:start+size]` with `name`. Reset `run = 0` on any owned block.
+
+---
+
+## Exercise 2: Find a File's Blocks
+
+Write `blocks_of(disk, name)` that returns the list of block numbers holding `name`, in order.
+
+```python
+def blocks_of(disk, name):
+    # Return the indices where the block equals `name`.
+    pass
+```
+
+**Examples:**
+- `blocks_of(["cat", "cat", "", "dog"], "cat")` → `[0, 1]`
+- `blocks_of(["cat", "cat", "", "dog"], "fish")` → `[]` (not on disk)
+
+**Hint:** `return [i for i, b in enumerate(disk) if b == name]`.
+
+---
+
+## Exercise 3: Delete a File
+
+Write `delete_file(disk, name)` that frees every block belonging to `name` (sets it back to `""`) and returns the new disk.
+
+```python
+def delete_file(disk, name):
+    # Return a new list: "" where the block is name, unchanged otherwise.
+    pass
+```
+
+**Examples:**
+- `delete_file(["cat", "cat", "dog"], "cat")` → `["", "", "dog"]`
+
+**Hint:** `return ["" if b == name else b for b in disk]`.
+
+---
+
+## The Round-Trip Test
+
+The real proof your file system works: **save a file, then look it up.**
+
+```python
+disk = save(["", "", "", ""], "cat", 2)   # ["cat", "cat", "", ""]
+blocks_of(disk, "cat")                      # → [0, 1]  ✅ found exactly where we saved it
+```
+
+If save-then-find returns the blocks you just wrote, your file system is honest.
+
+---
+
+## Tips If You're Stuck
+
+1. **`save` finds blocks that aren't in a row?** Reset your `run` to `0` whenever you pass an owned block.
+2. **Comparing to the wrong "empty"?** A free block is the empty string `""`, not `0` and not `None`.
+3. **`blocks_of` returns blocks in the wrong order?** `enumerate` gives them low-to-high already — don't sort or reverse.
+4. **Delete wiping the wrong file?** Only blank blocks where `b == name`; leave every other name alone.
+
+Build all three, save `cat`, `dog`, and `bird`, then delete `dog` and save `fish` into the freed space. Final lesson: reading disk is slow — let's make it **fast**.

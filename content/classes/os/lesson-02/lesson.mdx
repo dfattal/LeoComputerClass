@@ -1,0 +1,89 @@
+# Lesson 2 — Taking Turns
+
+## Phase 1: Sharing the CPU
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand the **scheduler** — the part of the boss that decides whose turn is next
+- Learn **round-robin**: give every program a small turn, then rotate
+- See why round-robin means **no program can freeze the others**
+- Discover that short jobs **finish sooner** when everyone shares
+- Build a real scheduler in Python
+
+---
+
+## Big Idea
+
+Last lesson you saw the disaster: run one program all the way through, and a hog freezes everything else. The boss needs a better plan.
+
+Here's the trick the real operating system uses. Don't let any program run until it's done. Instead, give each one a **small turn** — a few ticks — then **stop it** and move to the next. Go around and around the table, like dealing cards.
+
+This is called **round-robin**, and it's beautifully fair. Picture friends passing a controller: everyone gets a short turn, then hands it on. Nobody can hog it, because the boss always takes it back after a few ticks.
+
+> **The time slice (quantum).** The size of each turn has a name: the **quantum**. A quantum of 1 means "run each program for 1 tick, then rotate." A bigger quantum means longer turns. The boss sets a timer; when it rings, the running program is paused and the next one goes.
+
+---
+
+## Round-Robin in Action
+
+Say two programs need `[3, 2]` ticks, with a quantum of 1. Watch the turn go around the table:
+
+```text
+tick:     0  1  2  3  4
+program:  0  1  0  1  0
+```
+
+- Tick 0: program 0 runs 1 tick (2 left).
+- Tick 1: program 1 runs 1 tick (1 left).
+- Tick 2: program 0 again (1 left).
+- Tick 3: program 1 again (0 left — done!).
+- Tick 4: program 0 finishes its last tick.
+
+Compare that to last lesson's `[0, 0, 0, 1, 1]`. Same total work, but now the two programs are **interleaved**. If program 0 were a hog, program 1 would *still* get every other tick — it could never be frozen out. That's the whole win.
+
+---
+
+## The Quantum Can Be Bigger
+
+A turn doesn't have to be one tick. With programs `[5, 1]` and a quantum of **2**, each turn is up to 2 ticks:
+
+```text
+tick:     0  1  2  3  4  5
+program:  0  0  1  0  0  0
+```
+
+Program 0 takes 2 ticks, program 1 takes its 1 tick (done), then program 0 takes the rest. Notice a program never runs *more* than it needs — its last turn is just `min(quantum, work left)`.
+
+---
+
+## A Surprise Bonus: Short Jobs Finish First
+
+Remember the tiny job stuck behind the giant one? Round-robin fixes that too. With `[3, 2]` and quantum 1, program **1** (the smaller one) finishes at tick 3, while program 0 doesn't finish until tick 4. The short job got out the door first — without anyone planning it. Sharing the CPU made the snappy little programs feel snappy.
+
+---
+
+## What You'll Build
+
+1. `round_robin(programs, quantum)` — rotate turns until all work is done; return the timeline.
+2. `turns_each(timeline, n)` — count how many ticks each program got (a fairness check).
+3. `finish_order(programs, quantum)` — the order programs finish in (watch the short ones win).
+
+The panel draws your schedule as a **Gantt chart** — one row per program, lit up where it ran. You'll see the turns march across, perfectly interleaved.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| Scheduler | the part of the boss that picks who runs next |
+| Round-robin | give each program a turn, then rotate |
+| Quantum | how many ticks one turn is worth |
+| Last turn | only `min(quantum, work left)` ticks |
+| Fairness | every program keeps getting turns — no freezing |
+
+You just learned how every phone and laptop shares one CPU between dozens of apps. Head to the exercises and build the scheduler, {{FIRST_NAME}}.

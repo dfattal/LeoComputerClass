@@ -1,0 +1,81 @@
+# Lesson 7 — Exercises: The Need for Speed
+
+## How This Works
+
+You'll build an **LRU cache**. The cache is a list, **most-recently-used item first**. The item at the back is the one used longest ago — the first to go when the cache is full.
+
+**The rules:**
+
+- Using an item moves it to the **front** (it's the most recent now).
+- If the cache grows past `capacity`, drop the item at the **back** (least recently used).
+- An item appears in the cache **at most once**.
+
+---
+
+## Exercise 1: Access an Item
+
+Write `access(cache, item, capacity)` that uses `item` — moving it to the front — and evicts the LRU item if the cache overflows. Return the new cache.
+
+```python
+def access(cache, item, capacity):
+    # Remove item if it's already there, put it at the front, then trim the
+    # list to `capacity` items (dropping the back).
+    pass
+```
+
+**Examples:**
+- `access([], "A", 2)` → `["A"]`
+- `access(["A"], "B", 2)` → `["B", "A"]`
+- `access(["B", "A"], "C", 2)` → `["C", "B"]` (full → A, the oldest, is evicted)
+- `access(["B", "A"], "A", 2)` → `["A", "B"]` (a hit moves A to the front)
+
+**Hint:** `new = [x for x in cache if x != item]` removes any old copy. Then `new.insert(0, item)`. Then if `len(new) > capacity`, keep only `new[:capacity]`.
+
+---
+
+## Exercise 2: Hit or Miss?
+
+Write `is_hit(cache, item)` that returns `True` if `item` is already in the cache.
+
+```python
+def is_hit(cache, item):
+    # Is the item in the cache?
+    pass
+```
+
+**Examples:**
+- `is_hit(["A", "B"], "A")` → `True`
+- `is_hit(["A", "B"], "C")` → `False`
+
+**Hint:** `return item in cache`.
+
+---
+
+## Exercise 3: Total Time Cost
+
+Write `total_cost(requests, capacity, hit_cost, miss_cost)` that plays the whole list of reads through an **empty** cache and adds up the time: `hit_cost` when the item is already cached, `miss_cost` when it isn't.
+
+```python
+def total_cost(requests, capacity, hit_cost, miss_cost):
+    # Start with cache = []. For each item: add hit_cost if it's already in the
+    # cache, else miss_cost; then call access() to update the cache.
+    pass
+```
+
+**Examples:**
+- `total_cost(["A", "B", "A"], 2, 1, 5)` → `11` (miss + miss + hit = 5 + 5 + 1)
+- `total_cost(["A", "A", "A"], 2, 1, 5)` → `7` (miss + hit + hit = 5 + 1 + 1)
+- `total_cost(["A", "B", "C", "A"], 2, 1, 5)` → `20` (cache too small — all misses!)
+
+**Hint:** Check `is_hit` (or `item in cache`) **before** you call `access`, because `access` is about to add the item.
+
+---
+
+## Tips If You're Stuck
+
+1. **An item appears twice in the cache?** Remove the old copy *before* inserting it at the front.
+2. **Evicting the wrong item?** The back of the list is the LRU. Keep `new[:capacity]` (the front items), which drops the back.
+3. **`total_cost` always counts a hit?** You must check the cache **before** calling `access` — otherwise the item you just added looks like a hit.
+4. **Last example surprised you?** With capacity 2 and reads A, B, C, A — by the time A comes back, it was evicted to make room for C. That's **thrashing**: the cache is too small, so everything's a miss.
+
+Build all three and run the panel — each row shows the cache after one read, the oldest item sliding off the back. That's the final piece of your operating system! Next lesson: look back at the whole **boss** you built.

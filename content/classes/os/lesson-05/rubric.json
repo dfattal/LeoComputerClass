@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "largest_free_block finds the biggest gap, best_fit picks the smallest gap that fits, compact slides blocks to the front in order." },
+  { "criterion": "Edge cases", "weight": 25, "description": "No gap fits (-1), all-free and all-full memory, and keeping block order during compaction." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

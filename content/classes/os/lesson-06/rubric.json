@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "save uses first-fit on free blocks, blocks_of returns the right block numbers, delete_file frees a file's blocks." },
+  { "criterion": "Edge cases", "weight": 25, "description": "No room to save, a file that isn't on disk (empty list), and deleting one file without touching another." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

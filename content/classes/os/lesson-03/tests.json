@@ -1,0 +1,28 @@
+[
+  {
+    "entry": "pick_next",
+    "cases": [
+      { "name": "most urgent runs", "args": [[2, 3], [1, 5]], "expected": 1 },
+      { "name": "skip the finished program", "args": [[0, 3], [5, 1]], "expected": 1 },
+      { "name": "everyone done", "args": [[0, 0], [5, 1]], "expected": -1 },
+      { "name": "tie goes to lower id", "args": [[2, 2, 2], [3, 3, 1]], "expected": 0 }
+    ]
+  },
+  {
+    "entry": "priority_run",
+    "cases": [
+      { "name": "urgent job cuts the line", "args": [[2, 3], [1, 5]], "expected": [1, 1, 1, 0, 0] },
+      { "name": "same priority -> id order", "args": [[2, 2], [5, 5]], "expected": [0, 0, 1, 1] },
+      { "name": "highest priority first", "args": [[1, 1, 1], [1, 2, 3]], "expected": [2, 1, 0] }
+    ]
+  },
+  {
+    "entry": "starves",
+    "cases": [
+      { "name": "low-priority job waited too long", "args": [[1, 1, 1, 0, 0], 0, 2], "expected": true },
+      { "name": "just inside the limit", "args": [[1, 1, 1, 0, 0], 0, 3], "expected": false },
+      { "name": "urgent job ran right away", "args": [[1, 1, 1, 0, 0], 1, 2], "expected": false },
+      { "name": "never ran at all -> starved", "args": [[1, 1], 0, 3], "expected": true }
+    ]
+  }
+]

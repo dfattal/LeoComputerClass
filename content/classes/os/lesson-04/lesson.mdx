@@ -1,0 +1,100 @@
+# Lesson 4 — Whose Memory Is This?
+
+## Phase 2: Handing Out Memory
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Remember that **memory is a row of numbered slots** (you built it from logic gates!)
+- See the disaster when two programs use the **same** slots
+- Learn the **allocator** — the boss hands each program its own block of memory
+- Use **first-fit**: give out the first free space big enough
+- Write `allocate` and `free`, the two halves of every memory manager
+
+---
+
+## Big Idea
+
+You've taught the boss to share **time** on the CPU. Now there's a second thing every program needs, and only one of: **memory**.
+
+From your Computer Class, you know exactly what memory is — a long row of **numbered slots**, each holding a number. Slot 0, slot 1, slot 2, and so on. Programs store their stuff in those slots.
+
+But here's the problem. If the music player and the game both decide to use slot 5… they **scribble over each other**. The game saves your score in slot 5; the music player overwrites it with a volume level; now your score is garbage and the music is broken. Chaos.
+
+So the boss takes charge of memory, exactly like it took charge of the CPU. No program is allowed to just grab slots. Instead it **asks** the boss: "I need 4 slots." The boss finds 4 free ones, hands them over, and writes down *who owns them*. That part of the operating system is the **allocator**.
+
+> **Memory as a coat check.** You don't pick your own hook at a coat check — you hand over your coat and get a ticket. The attendant tracks which hook is yours so nobody grabs your coat. The allocator is the attendant for RAM.
+
+---
+
+## Modeling Memory
+
+We'll model memory as a simple Python list. The **index** is the slot number; the **value** is which program owns that slot — or `0` if the slot is **free**.
+
+```python
+memory = [0, 0, 0, 0, 0, 0]   # six free slots
+```
+
+If program 1 owns the first two slots and program 2 owns the next three, memory looks like:
+
+```python
+[1, 1, 2, 2, 2, 0]   # slot 5 is still free
+```
+
+You can read the whole story at a glance: who owns what, and where the gaps are.
+
+---
+
+## First-Fit: The Simplest Allocator
+
+When a program asks for `size` slots, how does the boss choose where? The easiest rule is **first-fit**: scan from the start and grab the **first** run of free slots big enough. Done.
+
+Say memory is `[1, 1, 0, 0, 0]` and program 2 asks for 3 slots. The boss scans, finds three `0`s in a row starting at slot 2, and marks them:
+
+```python
+[1, 1, 2, 2, 2]
+```
+
+Two rules keep it honest:
+
+1. The free slots must be **in a row** — a program's block is one solid piece. `[1, 0, 1, 0]` has two free slots, but not *next to each other*, so it can't fit a block of 2.
+2. If there's **no** room, the allocator changes nothing and hands memory back as-is. The program will have to wait or ask for less.
+
+---
+
+## Giving It Back: free
+
+When a program quits, it must **return** its memory so others can use it. That's `free`: find every slot that program owns and set it back to `0`.
+
+```python
+free([1, 1, 2, 2, 0], 1)  →  [0, 0, 2, 2, 0]
+```
+
+Program 1's slots are free again; program 2's are untouched. `allocate` and `free` are the two halves of every memory manager — one hands blocks out, the other takes them back.
+
+---
+
+## What You'll Build
+
+1. `allocate(memory, pid, size)` — first-fit: give `pid` the first run of `size` free slots; return new memory.
+2. `free(memory, pid)` — set all of `pid`'s slots back to `0`.
+3. `free_slots(memory)` — count how many slots are free.
+
+The panel draws memory as a **row of colored slots** — each program a different color, free slots empty. Allocate and free, and watch the blocks appear and vanish.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| Memory slot | one numbered cell, like a slot of RAM |
+| Owner | which program owns a slot (`0` = free) |
+| Allocator | the boss that hands out memory |
+| First-fit | grab the first free block big enough |
+| free | return a program's slots to the pool |
+
+No more scribbling on each other — every program gets its own block. Next lesson: what happens after lots of allocating and freeing chops memory into little **gaps**?

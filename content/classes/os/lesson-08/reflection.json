@@ -1,0 +1,12 @@
+{
+  "question": "What is an operating system, really — and why does a computer need one?",
+  "guidance": "You built one over eight lessons. Explain in your own words: one CPU, many programs — what does the boss do, and why can't programs just run themselves?",
+  "lookFor": [
+    "A computer has limited shared resources — mainly ONE CPU and a fixed amount of memory — but many programs that all want them at once",
+    "Without a boss, one program could hog the CPU and freeze everything else, or programs could scribble on each other's memory",
+    "The operating system is the SOFTWARE that manages the hardware: it schedules whose turn the CPU is (round-robin / priorities), hands out memory so programs don't collide, and saves files to disk so they survive the power going off",
+    "It also makes things fast where it can (caching) and is always balancing trade-offs like fair-vs-fast or fast-vs-wasteful",
+    "The big idea: the bare machine is helpless on its own; the OS is the manager/referee that lets many programs safely share one computer"
+  ],
+  "exemplar": "A computer only has one CPU, and it can do just one thing at a time — but you want lots of programs running at once, like music and a game and chat. The operating system is the boss that makes that work. It gives each program a little turn on the CPU and then rotates, so no single program can hog it and freeze everything. It also hands out memory, giving each program its own block so they don't scribble over each other's stuff. It saves files onto the disk with names, so they're still there after you turn the computer off, since memory forgets. And it keeps recently-used things in a fast cache so the slow disk feels quick. The whole time it's making trade-offs — being fair to everyone versus letting an urgent program go first, or squishing memory together versus the time that copying costs. So really, an operating system is the manager that lets a bunch of programs safely share one machine. Without it, the computer is just powerful hardware with nobody in charge."
+}

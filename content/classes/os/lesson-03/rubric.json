@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "pick_next returns the most urgent unfinished program, priority_run schedules tick by tick, starves spots a job that waited too long." },
+  { "criterion": "Edge cases", "weight": 25, "description": "Ties go to the lower id, everyone-finished returns -1, and a job that never runs counts as starved." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "round_robin rotates fairly until all work is done, turns_each counts every tick, finish_order lists who finishes first." },
+  { "criterion": "Edge cases", "weight": 25, "description": "Quantum bigger than a program's remaining work, and a program that finishes mid-lap." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "entry": "access",
+    "cases": [
+      { "name": "first read fills the cache", "args": [[], "A", 2], "expected": ["A"] },
+      { "name": "newest goes to the front", "args": [["A"], "B", 2], "expected": ["B", "A"] },
+      { "name": "full cache evicts the oldest", "args": [["B", "A"], "C", 2], "expected": ["C", "B"] },
+      { "name": "a hit moves it back to the front", "args": [["B", "A"], "A", 2], "expected": ["A", "B"] }
+    ]
+  },
+  {
+    "entry": "is_hit",
+    "cases": [
+      { "name": "A is cached", "args": [["A", "B"], "A"], "expected": true },
+      { "name": "C is a miss", "args": [["A", "B"], "C"], "expected": false }
+    ]
+  },
+  {
+    "entry": "total_cost",
+    "cases": [
+      { "name": "one hit saves time", "args": [["A", "B", "A"], 2, 1, 5], "expected": 11 },
+      { "name": "lots of hits = cheap", "args": [["A", "A", "A"], 2, 1, 5], "expected": 7 },
+      { "name": "thrashing = all misses", "args": [["A", "B", "C", "A"], 2, 1, 5], "expected": 20 }
+    ]
+  }
+]

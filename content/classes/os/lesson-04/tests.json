@@ -1,0 +1,25 @@
+[
+  {
+    "entry": "allocate",
+    "cases": [
+      { "name": "first two slots to program 1", "args": [[0, 0, 0, 0], 1, 2], "expected": [1, 1, 0, 0] },
+      { "name": "find room after program 1", "args": [[1, 1, 0, 0, 0], 2, 3], "expected": [1, 1, 2, 2, 2] },
+      { "name": "no two free slots in a row", "args": [[1, 0, 1, 0], 1, 2], "expected": [1, 0, 1, 0] },
+      { "name": "program 3 takes the front", "args": [[0, 0, 0, 0, 0, 0], 3, 2], "expected": [3, 3, 0, 0, 0, 0] }
+    ]
+  },
+  {
+    "entry": "free",
+    "cases": [
+      { "name": "give program 1's slots back", "args": [[1, 1, 2, 2, 0], 1], "expected": [0, 0, 2, 2, 0] },
+      { "name": "freeing an absent program changes nothing", "args": [[1, 1, 2, 2, 0], 3], "expected": [1, 1, 2, 2, 0] }
+    ]
+  },
+  {
+    "entry": "free_slots",
+    "cases": [
+      { "name": "one slot free", "args": [[1, 1, 2, 2, 0]], "expected": 1 },
+      { "name": "all free", "args": [[0, 0, 0]], "expected": 3 }
+    ]
+  }
+]

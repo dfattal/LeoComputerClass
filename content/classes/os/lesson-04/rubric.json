@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "allocate uses first-fit and marks exactly the requested number of slots, free clears a program's slots, free_slots counts the zeros." },
+  { "criterion": "Edge cases", "weight": 25, "description": "No room available (return unchanged) and freeing a program that isn't there." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

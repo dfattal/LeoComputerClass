@@ -1,0 +1,78 @@
+# Lesson 5 — Exercises: Swiss-Cheese Memory
+
+## How This Works
+
+You'll write three tools that fight **fragmentation**. Memory is the same list as last lesson: `0` is a free slot, any other number is an owner id.
+
+**Key idea:** a "free block" or "gap" is a run of `0`s **in a row**. Scattered zeros don't count as one block.
+
+---
+
+## Exercise 1: The Biggest Gap
+
+Write `largest_free_block(memory)` that returns the length of the biggest run of free (`0`) slots in a row.
+
+```python
+def largest_free_block(memory):
+    # Count zeros in a row; remember the biggest run you've seen.
+    pass
+```
+
+**Examples:**
+- `largest_free_block([1, 1, 0, 2, 0, 0, 3])` → `2` (the size-2 gap)
+- `largest_free_block([0, 0, 0, 0])` → `4`
+- `largest_free_block([1, 1, 1])` → `0` (no free slots)
+
+**Hint:** Like `longest_hog` from Lesson 1! Keep a `run` and a `best`; `run += 1` on a `0`, reset to `0` otherwise, and update `best`.
+
+---
+
+## Exercise 2: Best-Fit
+
+Write `best_fit(memory, size)` that returns the **start index** of the smallest gap that still fits `size` slots, or `-1` if nothing fits.
+
+```python
+def best_fit(memory, size):
+    # Scan each free gap: note where it starts and how long it is. Among the
+    # gaps with length >= size, keep the one with the SMALLEST length.
+    # Return its start index, or -1 if none fit.
+    pass
+```
+
+**Examples:**
+- `best_fit([0, 0, 0, 1, 0, 0, 1, 0], 2)` → `4` (gaps are size 3, 2, 1; smallest that fits 2 is the size-2 gap at slot 4)
+- `best_fit([0, 0, 0, 1, 0, 0, 1, 0], 1)` → `7` (the size-1 gap is the tightest fit)
+- `best_fit([0, 0, 0, 1, 0, 0], 3)` → `0` (only the size-3 gap fits)
+- `best_fit([1, 1, 1], 2)` → `-1` (nothing fits)
+
+**Hint:** Walk the list. When you find a `0`, record `start = i`, then advance while slots stay `0` to measure the gap's `length`. If `length >= size` and it's smaller than your best so far, remember it.
+
+---
+
+## Exercise 3: Compaction
+
+Write `compact(memory)` that slides every used block to the front (keeping their order) and pushes all the free slots to the end.
+
+```python
+def compact(memory):
+    # Collect all the non-zero values in order, then pad with zeros to the
+    # original length.
+    pass
+```
+
+**Examples:**
+- `compact([1, 1, 0, 2, 0, 0, 3, 3, 0])` → `[1, 1, 2, 3, 3, 0, 0, 0, 0]`
+- `compact([0, 0, 1, 0, 2, 0])` → `[1, 2, 0, 0, 0, 0]`
+
+**Hint:** `used = [v for v in memory if v != 0]`, then `return used + [0] * (len(memory) - len(used))`.
+
+---
+
+## Tips If You're Stuck
+
+1. **`largest_free_block` counts scattered zeros as one block?** Reset your run to `0` on any non-zero slot.
+2. **`best_fit` returns the first gap instead of the smallest?** Compare lengths — only switch when a *fitting* gap is **strictly smaller** than your current best.
+3. **`best_fit` measures gaps wrong?** Make sure you advance past **all** the zeros in a gap before checking the next one (don't recount the same gap).
+4. **`compact` changes the order of programs?** A list comprehension keeps them in order — don't sort.
+
+Build all three, run the panel, and watch the fragmented top row turn into the neat compacted row below. Next lesson: saving data that survives the power going **off**.

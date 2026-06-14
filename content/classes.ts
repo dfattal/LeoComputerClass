@@ -153,6 +153,19 @@ export const classes: ClassDef[] = [
     language: "python",
     level: "advanced",
   },
+  {
+    slug: "os",
+    name: "Operating Systems",
+    tagline: "Build the Boss That Runs the Computer",
+    description:
+      "You built a CPU — now build the software that bosses it around. One chip, lots of programs all shouting \"my turn!\" Write Python that shares the CPU fairly, hands out memory without programs trampling each other, saves files to disk, and caches the slow stuff so everything feels fast. By the end you'll have built the heart of an operating system — the same ideas running inside every phone and laptop.",
+    accentColor: "slate",
+    heroImage: "/hero-os.webp",
+    studentName: "friend",
+    contentDir: "os",
+    language: "python",
+    level: "advanced",
+  },
 ];
 
 export function getClassBySlug(slug: string): ClassDef | undefined {

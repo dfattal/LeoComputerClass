@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "setup": "__C = [\"red\", \"blue\", \"green\", \"orange\", \"purple\", \"pink\", \"brown\", \"gray\"]\ndef __gantt(timeline, n):\n    rows = []\n    for pid in range(n):\n        rows.append([__C[pid % len(__C)] if t == pid else \"\" for t in timeline])\n    return rows\ndef __grid():\n    try:\n        tl = priority_run([4, 3, 2], [1, 5, 3])\n        if not isinstance(tl, list) or not tl:\n            raise ValueError\n    except Exception:\n        tl = [1, 1, 1, 2, 2, 0, 0, 0, 0]\n    return __gantt(tl, 3)\n",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "Priorities at work: the most urgent program runs first and cuts the line, before the low-priority one gets any turn."
+}

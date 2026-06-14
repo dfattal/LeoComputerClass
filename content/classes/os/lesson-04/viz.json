@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "setup": "__C = [\"red\", \"blue\", \"green\", \"orange\", \"purple\", \"pink\", \"brown\", \"gray\"]\ndef __memrow(mem):\n    return [(__C[(v - 1) % len(__C)] if v else \"\") for v in mem]\ndef __grid():\n    mem = [0] * 16\n    try:\n        mem = allocate(mem, 1, 4)\n        mem = allocate(mem, 2, 3)\n        mem = allocate(mem, 3, 5)\n        mem = free(mem, 2)\n        if not isinstance(mem, list):\n            raise ValueError\n    except Exception:\n        mem = [1, 1, 1, 1, 0, 0, 0, 3, 3, 3, 3, 3, 0, 0, 0, 0]\n    return [__memrow(mem)]\n",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "A row of memory slots. Each program gets its own colored block (the gap is where program 2 was just freed)."
+}

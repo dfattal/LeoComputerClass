@@ -1,0 +1,91 @@
+# Lesson 5 — Swiss-Cheese Memory
+
+## Phase 2: Handing Out Memory
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Understand **fragmentation**: free space scattered into little gaps
+- See the maddening bug — plenty of free memory, but no single piece big enough
+- Learn **best-fit**: pick the smallest gap that still fits, to waste less space
+- Learn **compaction**: slide all the blocks together to make one big free space
+- Build the tools that fight the Swiss-cheese problem
+
+---
+
+## Big Idea
+
+Your allocator works. Programs ask for memory, you hand out blocks, they free them when done. Run that for a while and something sneaky happens.
+
+Programs come and go in all different sizes. One frees a block of 2 here, another frees a block of 1 there, a third frees 3 over there. Soon your memory looks like **Swiss cheese** — full of little holes:
+
+```python
+[1, 1, 0, 2, 0, 0, 3, 3, 0]
+```
+
+There are **four** free slots in that memory. So when a program asks for a block of 3… it should fit, right? Look closely. The free slots are in gaps of size 1, 2, and 1 — scattered. **No single gap is big enough** for a block of 3. You have the room, just not in one piece.
+
+That's **fragmentation**, and it's one of the classic headaches an operating system has to manage. Total free space looks fine; usable space is a mess.
+
+> **Like parking a bus downtown.** There might be ten empty parking spots on the street — but if they're scattered one-here, one-there, you still can't park a bus that needs three spots in a row. Free space isn't useful unless it's together.
+
+---
+
+## Fix #1: Best-Fit (waste less)
+
+First-fit grabs the *first* gap big enough. But that can be wasteful — it might chop up a huge gap to satisfy a tiny request, leaving an awkward sliver behind.
+
+**Best-fit** is smarter: look at **all** the gaps that fit, and pick the **smallest** one. That way you use up the tight gaps first and keep the big gaps whole for when a big program needs them.
+
+Say memory has free gaps of size 3, 2, and 1, and a program asks for 2 slots. First-fit would carve into the size-3 gap. Best-fit picks the size-2 gap instead — a perfect fit, no waste, and the big gap stays available.
+
+```text
+memory:  0 0 0 1 0 0 1 0      (gaps: size 3 at slot 0, size 2 at slot 4, size 1 at slot 7)
+best_fit(memory, 2)  →  4     (the size-2 gap fits exactly)
+```
+
+Best-fit doesn't *cure* fragmentation — but it slows it down by being careful.
+
+---
+
+## Fix #2: Compaction (squish it together)
+
+Sometimes the gaps get so bad that best-fit can't help — no single gap fits, even though there's enough total room. Time for the big hammer: **compaction**.
+
+Compaction **slides every used block to the front**, keeping them in order, and pushes all the free space to the **end** — turning a dozen little gaps into one big block:
+
+```text
+before:  [1, 1, 0, 2, 0, 0, 3, 3, 0]
+after:   [1, 1, 2, 3, 3, 0, 0, 0, 0]
+```
+
+Now all four free slots are together at the end, ready for a big request. Compaction is powerful but not free — in a real computer, sliding blocks around means physically copying lots of data, which takes time. So the boss does it only when it really needs to.
+
+> **Tetris in reverse.** Imagine all your blocks sliding left to close the gaps, like Tetris rows packing tight. That's compaction — scattered free space gathered into one usable chunk.
+
+---
+
+## What You'll Build
+
+1. `largest_free_block(memory)` — the size of the biggest run of free slots (so you know the biggest block that could fit).
+2. `best_fit(memory, size)` — the start index of the smallest gap that fits `size` (or `-1`).
+3. `compact(memory)` — slide all used blocks to the front, free space to the end.
+
+The panel shows **two rows**: fragmented memory on top, and your compacted version below. Watch the holes vanish.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| Fragmentation | free space scattered into little gaps |
+| External fragmentation | enough total room, but no single gap fits |
+| Best-fit | pick the smallest gap that still fits |
+| Compaction | slide blocks together, free space to the end |
+| Trade-off | compaction works, but copying data costs time |
+
+You can now keep memory tidy even after thousands of allocations. Next phase: memory forgets everything when the power goes off. How do we **save** things for keeps? Onward, {{FIRST_NAME}}.

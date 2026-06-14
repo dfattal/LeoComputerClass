@@ -1,0 +1,25 @@
+[
+  {
+    "entry": "round_robin",
+    "cases": [
+      { "name": "3 and 2 ticks, one at a time", "args": [[3, 2], 1], "expected": [0, 1, 0, 1, 0] },
+      { "name": "bigger turns (quantum 2)", "args": [[5, 1], 2], "expected": [0, 0, 1, 0, 0, 0] },
+      { "name": "three equal programs rotate", "args": [[2, 2, 2], 1], "expected": [0, 1, 2, 0, 1, 2] }
+    ]
+  },
+  {
+    "entry": "turns_each",
+    "cases": [
+      { "name": "each program got its ticks", "args": [[0, 1, 0, 1, 0], 2], "expected": [3, 2] },
+      { "name": "count across three programs", "args": [[0, 0, 1, 2, 2], 3], "expected": [2, 1, 2] }
+    ]
+  },
+  {
+    "entry": "finish_order",
+    "cases": [
+      { "name": "the short job finishes first", "args": [[3, 2], 1], "expected": [1, 0] },
+      { "name": "tiny job no longer stuck behind giant", "args": [[5, 1], 2], "expected": [1, 0] },
+      { "name": "equal programs finish in id order", "args": [[2, 2, 2], 1], "expected": [0, 1, 2] }
+    ]
+  }
+]

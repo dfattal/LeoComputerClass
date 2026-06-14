@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "access moves the item to the front and evicts the least-recently-used on overflow, is_hit checks membership, total_cost sums hits and misses." },
+  { "criterion": "Edge cases", "weight": 25, "description": "A repeat access (hit moves to front, no growth), an empty cache, and eviction when over capacity." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

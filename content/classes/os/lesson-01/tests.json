@@ -1,0 +1,27 @@
+[
+  {
+    "entry": "run_to_completion",
+    "cases": [
+      { "name": "two programs, 3 then 2 ticks", "args": [[3, 2]], "expected": [0, 0, 0, 1, 1] },
+      { "name": "a hog (10) freezes programs 1 and 2", "args": [[10, 3, 3]], "expected": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2] },
+      { "name": "three one-tick programs", "args": [[1, 1, 1]], "expected": [0, 1, 2] }
+    ]
+  },
+  {
+    "entry": "wait_time",
+    "cases": [
+      { "name": "program 1 waits behind program 0", "args": [[3, 2], 1], "expected": 3 },
+      { "name": "program 2 waits behind a hog", "args": [[10, 3, 3], 2], "expected": 13 },
+      { "name": "program 0 never waits", "args": [[3, 2], 0], "expected": 0 }
+    ]
+  },
+  {
+    "entry": "longest_hog",
+    "cases": [
+      { "name": "a streak of 3", "args": [[0, 0, 0, 1, 1]], "expected": 3 },
+      { "name": "nobody hogs (fair)", "args": [[0, 1, 0, 1, 0]], "expected": 1 },
+      { "name": "empty timeline", "args": [[]], "expected": 0 },
+      { "name": "one program hogs the whole CPU", "args": [[2, 2, 2, 2]], "expected": 4 }
+    ]
+  }
+]

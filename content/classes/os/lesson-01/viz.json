@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "setup": "__C = [\"red\", \"blue\", \"green\", \"orange\", \"purple\", \"pink\", \"brown\", \"gray\"]\ndef __gantt(timeline, n):\n    rows = []\n    for pid in range(n):\n        rows.append([__C[pid % len(__C)] if t == pid else \"\" for t in timeline])\n    return rows\ndef __grid():\n    try:\n        tl = run_to_completion([10, 3, 3])\n        if not isinstance(tl, list) or not tl:\n            raise ValueError\n    except Exception:\n        tl = [0] * 10 + [1] * 3 + [2] * 3\n    return __gantt(tl, 3)\n",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "The CPU timeline: program 0 hogs 10 ticks while programs 1 and 2 sit frozen, waiting their turn."
+}

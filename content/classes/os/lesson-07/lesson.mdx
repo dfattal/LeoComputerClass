@@ -1,0 +1,89 @@
+# Lesson 7 — The Need for Speed
+
+## Phase 3: Remembering & Speeding Up
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- See why reading the disk over and over is painfully **slow**
+- Learn the **cache**: keep recently-used data in a small, fast spot
+- Understand a **hit** (it's in the cache — fast!) vs. a **miss** (go to disk — slow)
+- Learn **LRU eviction**: when the cache is full, throw out the **Least Recently Used** item
+- Watch a "time cost" counter **plummet** when reads turn into hits
+
+---
+
+## Big Idea
+
+Your file system works — but it has a problem you already know: the disk is **slow**. Way slower than memory. If a program reads the same file a hundred times, the boss trudges all the way out to the slow disk a hundred times. Painful.
+
+Here's the fix, and it's one of the most important ideas in all of computing: a **cache**. Keep a small, fast stash of the stuff you've used recently. Before going to the slow disk, **check the cache first.** If the data's there, you skip the slow trip entirely.
+
+- Found it in the cache? That's a **hit** — cheap and fast.
+- Not there? That's a **miss** — you pay the slow cost to fetch it from disk (and then stash it in the cache for next time).
+
+> **The snack shelf.** You don't walk to the grocery store every time you want a snack. You keep a few favorites in the kitchen. The kitchen shelf is small and fast; the store is big and slow. A cache is your computer's snack shelf — recently-used data kept close so you don't make the slow trip.
+
+---
+
+## The Catch: the Cache Is Small
+
+A cache is small on purpose — fast storage is precious. So it fills up fast. When it's full and you need to add something new, you have to **throw something out**. But what?
+
+The smartest simple answer: throw out the item you **haven't used in the longest time** — the **Least Recently Used**, or **LRU**. The thinking is gentle and powerful: if you haven't touched something in ages, you probably won't need it again soon. Keep the fresh stuff; evict the stale.
+
+We model the cache as a **list, most-recently-used first**. Every time you use an item, it jumps to the **front**. The item at the **back** is the one used longest ago — so when the cache overflows, the back is exactly what gets dropped.
+
+```text
+cache before:  ["B", "A"]        (B used most recently, A longest ago)
+access "C", capacity 2:
+  C is new → put it at the front → ["C", "B", "A"]
+  too big (3 > 2) → drop the back (A) → ["C", "B"]
+```
+
+Poor A — it sat at the back unused, so LRU evicted it. Notice that **using** an item also matters: if you access `A` while it's in the cache, it leaps to the front and is safe for a while.
+
+---
+
+## Counting the Cost
+
+The whole reason for a cache is **speed**, so let's measure it. Give a hit a small cost (say `1`) and a miss a big cost (say `5`). Play a whole sequence of reads and add up the cost. The more hits, the lower the total — that's the cache earning its keep.
+
+```text
+reads: A B A,  capacity 2,  hit costs 1,  miss costs 5
+  A → miss (5),  cache ["A"]
+  B → miss (5),  cache ["B", "A"]
+  A → HIT  (1),  cache ["A", "B"]
+total cost = 11   (without a cache, three reads would all be misses: 15)
+```
+
+Repeat reads turn into cheap hits, and the counter drops. That's the magic of caching — and it's running inside every CPU, web browser, and phone you've ever used.
+
+> **Watch out for thrashing.** If you keep asking for more *different* items than the cache can hold, every read evicts something you'll want next — all misses, no hits. A too-small cache for the job is worse than useless. You'll see this in the tests.
+
+---
+
+## What You'll Build
+
+1. `access(cache, item, capacity)` — use an item: move it to the front, and evict the LRU if the cache overflows.
+2. `is_hit(cache, item)` — is the item already cached?
+3. `total_cost(requests, capacity, hit_cost, miss_cost)` — play a sequence and add up the time cost.
+
+The panel draws the cache **over time** — each row is the cache after one read. Watch items slide to the front and the oldest get pushed off the back.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| Cache | a small, fast stash of recently-used data |
+| Hit / miss | found in cache (fast) / not found (slow) |
+| LRU | evict the Least Recently Used item |
+| Move to front | using an item makes it "most recent" |
+| Cost | hits are cheap, misses are expensive |
+
+That's the last piece. You've built a scheduler, a memory allocator, a file system, and now a cache — the heart of an operating system. Next lesson: step back and look at the **whole boss** you built, {{FIRST_NAME}}.

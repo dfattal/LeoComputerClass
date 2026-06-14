@@ -75,6 +75,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | Leila's Bio Lab | `leila` | DNA, mutations, CRISPR through code | Published (8+1), 2 planned |
 | Leo's Proof Press | `leo-latex` | Typeset your own math book in LaTeX → e^{iπ} = −1 | Published (8) ✅ new — no reflection capstone (L8 *is* the capstone) |
 | Leo's Game Studio | `leo-games` | JavaScript → build an arcade game (Breakout) → publish it online for friends | Published (8) ✅ new "javascript" lesson kind; L8 *is* the capstone (no reflection) |
+| Operating Systems | `os` | You built the CPU — now build the OS that runs it (scheduler → memory → files → cache) | Published (7+1) ✅ all 8 lessons built; software sequel to the Computer Class; `slate` accent; Gantt/memory/disk/cache rendered on the `draw` grid |
 
 ---
 

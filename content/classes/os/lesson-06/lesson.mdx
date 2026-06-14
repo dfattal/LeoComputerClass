@@ -1,0 +1,99 @@
+# Lesson 6 — Saving for Keeps
+
+## Phase 3: Remembering & Speeding Up
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Know the difference between **RAM** (forgets when off) and **disk** (remembers)
+- Learn what a **file system** does: map a **name** to the blocks that hold its data
+- Save a file by writing its name across free disk blocks (first-fit again!)
+- **Find** a file later by its name, and **delete** it to free its blocks
+- See why a round-trip — save, then read it back — proves your file system works
+
+---
+
+## Big Idea
+
+Everything you've built so far lives in **memory** — and memory has a secret weakness you learned in your Computer Class: when the power goes off, **it forgets everything.** Every slot resets. Your game save, your homework, your photos — gone.
+
+That's why computers have a second kind of storage: the **disk** (a hard drive or an SSD). The disk is slower than memory, but it has a superpower: it **remembers** even when the power is off. Turn the computer back on and your files are still there.
+
+But a disk by itself is just a giant pile of blocks. If you saved your homework somewhere on it and had no way to find it again, it'd be useless. You need something that remembers *where* each file lives and lets you find it by **name**. That something is the **file system** — and it's the boss's job, just like scheduling and memory.
+
+> **A file system is a library.** A library doesn't just pile books on the floor. Every book has a title, and a card catalog tells you exactly which shelf it's on. The file system is the card catalog for your disk: give it a name, it tells you which blocks hold the data.
+
+---
+
+## Modeling the Disk
+
+We'll model the disk as a list of **blocks**, just like memory — but instead of a program id, each block holds the **name** of the file that owns it, or `""` (empty string) if the block is **free**.
+
+```python
+disk = ["", "", "", ""]            # four free blocks
+```
+
+After saving a file called `cat` that needs 2 blocks:
+
+```python
+["cat", "cat", "", ""]            # cat lives in blocks 0 and 1
+```
+
+The block doesn't store the cat's *data* in our model — it stores **whose** data it is. That's enough to teach the big idea: the file system is a map from **names** to **blocks**.
+
+---
+
+## Saving a File
+
+To **save**, the file system finds free blocks and writes the file's name into them. Sound familiar? It's **first-fit** all over again — exactly like `allocate` from Lesson 4, except the free marker is `""` and you write a name instead of a program id.
+
+```text
+save(["cat", "cat", "", ""], "dog", 2)  →  ["cat", "cat", "dog", "dog"]
+```
+
+The same two rules apply: the blocks must be **in a row**, and if there's no room, the disk comes back unchanged.
+
+---
+
+## Finding and Deleting
+
+Saving is only half the story — the *whole point* of a file system is finding the file again. `blocks_of` answers "where does this file live?" by returning the list of block numbers that hold a given name:
+
+```text
+blocks_of(["cat", "cat", "", "dog"], "cat")  →  [0, 1]
+```
+
+And when you're done with a file, `delete_file` frees its blocks (sets them back to `""`) so the space can be reused:
+
+```text
+delete_file(["cat", "cat", "dog"], "cat")  →  ["", "", "dog"]
+```
+
+Here's the test that proves it all works — a **round-trip**: save a file, then read its blocks back. If `blocks_of` finds exactly the blocks you just saved, your file system is honest. Save then find, {{FIRST_NAME}} — that's how real file systems are checked too.
+
+---
+
+## What You'll Build
+
+1. `save(disk, name, size)` — first-fit: write `name` across the first run of `size` free blocks.
+2. `blocks_of(disk, name)` — the block numbers holding `name`, in order.
+3. `delete_file(disk, name)` — free every block belonging to `name`.
+
+The panel draws the disk, each block stamped with the first letter of the file that owns it. Save a few files, delete one, and watch the space open up for the next.
+
+---
+
+## Recap
+
+| Concept | Meaning |
+|---------|---------|
+| RAM vs. disk | memory forgets; disk remembers |
+| File system | maps a name to the blocks holding its data |
+| Block | one chunk of disk (holds a file name, or `""`) |
+| save | first-fit free blocks and write the name |
+| Round-trip | save then find proves it works |
+
+Your boss can now remember things forever. But reading the disk is **slow**. Final build of the class: make it **fast** with a cache.

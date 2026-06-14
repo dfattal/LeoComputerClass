@@ -1,0 +1,26 @@
+[
+  {
+    "entry": "largest_free_block",
+    "cases": [
+      { "name": "biggest gap is 2", "args": [[1, 1, 0, 2, 0, 0, 3]], "expected": 2 },
+      { "name": "all free", "args": [[0, 0, 0, 0]], "expected": 4 },
+      { "name": "no free slots", "args": [[1, 1, 1]], "expected": 0 }
+    ]
+  },
+  {
+    "entry": "best_fit",
+    "cases": [
+      { "name": "smallest gap that fits 2", "args": [[0, 0, 0, 1, 0, 0, 1, 0], 2], "expected": 4 },
+      { "name": "tiny gap fits a 1", "args": [[0, 0, 0, 1, 0, 0, 1, 0], 1], "expected": 7 },
+      { "name": "nothing fits", "args": [[1, 1, 1], 2], "expected": -1 },
+      { "name": "only the big gap fits 3", "args": [[0, 0, 0, 1, 0, 0], 3], "expected": 0 }
+    ]
+  },
+  {
+    "entry": "compact",
+    "cases": [
+      { "name": "slide blocks together", "args": [[1, 1, 0, 2, 0, 0, 3, 3, 0]], "expected": [1, 1, 2, 3, 3, 0, 0, 0, 0] },
+      { "name": "gaps pushed to the end", "args": [[0, 0, 1, 0, 2, 0]], "expected": [1, 2, 0, 0, 0, 0] }
+    ]
+  }
+]

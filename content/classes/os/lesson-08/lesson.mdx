@@ -1,0 +1,48 @@
+# Lesson 8 — The Big Picture
+
+## Phase 4: The Big Picture
+
+---
+
+## You Built the Boss
+
+Way back in your Computer Class, you built a **computer** — logic gates, then memory, then a CPU that can do one thing at a time. A magnificent machine. But a bare machine is helpless. One buggy program can freeze it. Two programs scribble on each other's memory. Turn it off and it forgets everything. The hardware alone is a sports car with no driver.
+
+This class, you built the **driver** — the **operating system**, the software boss that runs the machine. Let's look back at the whole thing you made.
+
+---
+
+## A Little History
+
+For the first computers in the 1940s and 50s, there *was* no operating system. A computer ran exactly **one** program at a time, fed in on punch cards, start to finish. If you wanted to run something else, you waited your turn — sometimes for hours. The machine sat idle between jobs, and these machines cost millions. Terribly wasteful.
+
+So engineers started writing a small master program whose only job was to **manage** the big machine — to load jobs, share its time, and hand out its memory. That master program grew into what we now call the operating system. A few landmarks on the way:
+
+- **The 1960s — sharing.** Systems like MIT's **CTSS** and later **Multics** introduced *time-sharing*: many people using one computer "at once," each getting little slices of the CPU. That's your **scheduler** (Lessons 1–3).
+- **1969 — Unix.** Ken Thompson and Dennis Ritchie built **Unix** at Bell Labs — small, clean, and built around a simple idea of files and processes. Its descendants run the world today.
+- **The 1970s–80s — memory and files.** Operating systems learned to give each program its own protected memory (your **allocator**, Lessons 4–5) and to organize disks into **file systems** with names and folders (your Lesson 6).
+- **Everywhere — caching.** To fight the eternal slowness of disks, every layer learned to **cache** recently-used data (your Lesson 7). It's one of the most reused ideas in all of computing.
+
+Today an operating system — Linux, Windows, macOS, the Android or iOS in your pocket — does all of this millions of times a second, and you never notice. That invisibility *is* the boss doing its job well.
+
+---
+
+## Everything You Built
+
+| You built | The boss's job | The idea |
+|-----------|----------------|----------|
+| `run_to_completion`, `longest_hog` | stop one program freezing the rest | hogging |
+| `round_robin` | share the CPU fairly | the scheduler |
+| `priority_run`, `starves` | let urgent jobs go first (without starving the rest) | priorities |
+| `allocate`, `free` | give each program its own memory | the allocator |
+| `best_fit`, `compact` | keep memory from turning to Swiss cheese | fragmentation |
+| `save`, `blocks_of` | remember files after the power's off | the file system |
+| `access`, `total_cost` | make the slow disk feel fast | the cache |
+
+Look at that list. Every single thing on it is running **right now**, inside the device you're reading this on. You didn't learn *about* an operating system — you built the heart of one.
+
+---
+
+## One Last Question
+
+There's no code this time. Just one big idea to put in your own words. Head to the exercises and tell me: **what is an operating system, really?** You've earned the answer.

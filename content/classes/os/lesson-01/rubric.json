@@ -1,0 +1,5 @@
+[
+  { "criterion": "Correctness", "weight": 60, "description": "run_to_completion builds the right timeline, wait_time sums the work ahead, and longest_hog finds the biggest streak." },
+  { "criterion": "Edge cases", "weight": 25, "description": "Handles an empty timeline (0), a fair timeline (streak 1), and a single hog." },
+  { "criterion": "Clean code", "weight": 15, "description": "Clear names, reuses helpers, returns a NEW list instead of mutating, and has a return on every path." }
+]

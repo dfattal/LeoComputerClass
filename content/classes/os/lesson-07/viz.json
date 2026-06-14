@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "setup": "def __grid():\n    requests = [\"A\", \"B\", \"C\", \"A\", \"D\", \"B\", \"A\"]\n    cap = 3\n    try:\n        cache = []\n        rows = []\n        for item in requests:\n            cache = access(cache, item, cap)\n            if not isinstance(cache, list):\n                raise ValueError\n            rows.append([str(x) for x in cache] + [\"\"] * (cap - len(cache)))\n    except Exception:\n        rows = [[\"A\", \"\", \"\"], [\"B\", \"A\", \"\"], [\"C\", \"B\", \"A\"], [\"A\", \"C\", \"B\"], [\"D\", \"A\", \"C\"], [\"B\", \"D\", \"A\"], [\"A\", \"B\", \"D\"]]\n    return rows\n",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "Each row is the cache after one read (newest on the left). When it's full, the oldest item on the right gets pushed out."
+}

@@ -1,0 +1,82 @@
+# Lesson 1 — The Frozen Computer
+
+## Phase 1: Sharing the CPU
+
+---
+
+## Objectives
+
+By the end of this lesson, you should:
+
+- Remember that a CPU can do **only one thing at a time** — one tick, one step
+- See a program as a pile of **ticks of work** the CPU has to chew through
+- Understand **hogging**: if one program never gives the CPU back, everything else **freezes**
+- Write code that runs programs one-at-a-time and measures how long others **wait**
+- Feel the problem the rest of this class exists to fix
+
+---
+
+## Big Idea
+
+You already built a CPU out of logic gates. You know its secret: it can only do **one thing at a time**. One tick of the clock, one tiny step. That's it.
+
+So here's a puzzle. Your computer is running a music player, a game, and a chat app — all "at the same time." But there's only **one** CPU. How can three programs run at once on a chip that can only do one step at a time?
+
+They can't. Not really. The truth is they **take turns** — so fast it *looks* like they're all running together. And somebody has to hand out those turns. That somebody is the **operating system** — the boss that runs the computer you built.
+
+This whole class is the story of building that boss.
+
+> **A program is just ticks of work.** Imagine each program as a stack of chores. The music player needs 3 ticks, the game needs 5, the chat app needs 2. The CPU does one tick per moment. The big question the boss answers is: *whose tick goes next?*
+
+---
+
+## The Simplest (Bad) Plan
+
+What if the boss just runs the **first** program until it's completely done, then the next, then the next? No turns, no sharing — one at a time, all the way through.
+
+Let's say the programs need `[3, 2]` ticks. The CPU does program 0 for 3 ticks, then program 1 for 2 ticks. We can write down exactly who ran each tick — a **timeline**:
+
+```text
+tick:     0  1  2  3  4
+program:  0  0  0  1  1
+```
+
+Program 0 ran ticks 0–2, then program 1 got ticks 3–4. Simple!
+
+---
+
+## Why That Plan Freezes
+
+Now watch what goes wrong. Suppose program 0 has a **forever-loop** — a bug where it never finishes, like `while True:`. To the boss, that looks like a program that needs a *gigantic* number of ticks.
+
+With the run-it-all-the-way plan, the boss starts program 0… and **never** moves on. Program 1 waits. And waits. Forever. The music stops, the game won't click, the screen won't move. The whole computer is **frozen** — all because one program refused to give the CPU back.
+
+That's called **hogging**, and it's the disaster the operating system has to prevent. A program that runs for a huge streak without letting go is a hog.
+
+> **You've felt this.** Ever had an app freeze the whole machine until you force-quit it? That's one program hogging the CPU while everything else starves for a turn.
+
+---
+
+## What You'll Build
+
+Three functions to *measure* the problem before we fix it next lesson:
+
+1. `run_to_completion(programs)` — run each program fully, in order, and return the timeline of who ran each tick.
+2. `wait_time(programs, pid)` — how many ticks a program waits before it first runs.
+3. `longest_hog(timeline)` — the longest streak any one program ran without giving the CPU back.
+
+The teaching panel draws your timeline as colored bars. Run a hog and you'll *see* the other programs sitting frozen, waiting their turn.
+
+---
+
+## Recap
+
+| Concept | Meaning | Picture |
+|---------|---------|---------|
+| Tick | one step the CPU does | one square in the timeline |
+| Program | a pile of ticks of work | `[3, 2]` = needs 3, needs 2 |
+| Timeline | who ran on each tick | `[0, 0, 0, 1, 1]` |
+| Wait time | ticks before you first run | everyone ahead of you in line |
+| Hogging | one program won't give the CPU back | a giant streak of one color |
+
+The boss's whole job starts here: **never let one program freeze the rest.** Head to the exercises and build the meter that proves the problem is real.

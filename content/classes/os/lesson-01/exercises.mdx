@@ -1,0 +1,81 @@
+# Lesson 1 — Exercises: The Frozen Computer
+
+## How This Works
+
+You'll write three functions that model a CPU running programs **one at a time** — and measure the damage when one program hogs it. Click **Run Tests** and the computer checks your timeline against the right answer.
+
+**The model:**
+
+- `programs` is a list of numbers. `programs[i]` = how many **ticks of work** program `i` needs.
+- A **timeline** is a list where `timeline[t]` = which program ran on tick `t`.
+- The CPU does exactly **one tick per moment**, in order.
+
+---
+
+## Exercise 1: Run Them One at a Time
+
+Write `run_to_completion(programs)` that runs each program **all the way to the end** before the next one starts, and returns the timeline.
+
+```python
+def run_to_completion(programs):
+    # For each program id, append that id to the timeline `work` times.
+    pass
+```
+
+**Examples:**
+- `run_to_completion([3, 2])` → `[0, 0, 0, 1, 1]`
+- `run_to_completion([1, 1, 1])` → `[0, 1, 2]`
+- `run_to_completion([10, 3, 3])` → ten `0`s, then three `1`s, then three `2`s
+
+**Hint:** Loop with `for pid, work in enumerate(programs):`, then an inner loop that appends `pid` to your list `work` times.
+
+---
+
+## Exercise 2: How Long Do You Wait?
+
+Write `wait_time(programs, pid)` that returns how many ticks program `pid` waits before it gets to start. That's the total work of **everyone ahead of it** in line.
+
+```python
+def wait_time(programs, pid):
+    # Add up the work of all the programs before `pid`.
+    pass
+```
+
+**Examples:**
+- `wait_time([3, 2], 1)` → `3` (program 1 waits for program 0's 3 ticks)
+- `wait_time([3, 2], 0)` → `0` (program 0 goes first — no waiting)
+- `wait_time([10, 3, 3], 2)` → `13` (waits behind 10 + 3)
+
+**Hint:** Python slicing makes this one line: `sum(programs[:pid])`.
+
+---
+
+## Exercise 3: Spot the Hog
+
+Write `longest_hog(timeline)` that returns the **longest streak** a single program ran in a row. A big number means one program is hogging the CPU.
+
+```python
+def longest_hog(timeline):
+    # Walk the timeline; count how long the same id repeats in a row;
+    # keep the biggest streak. An empty timeline has a longest hog of 0.
+    pass
+```
+
+**Examples:**
+- `longest_hog([0, 0, 0, 1, 1])` → `3` (program 0 ran 3 in a row)
+- `longest_hog([0, 1, 0, 1, 0])` → `1` (nobody ran twice in a row — fair!)
+- `longest_hog([2, 2, 2, 2])` → `4` (one program hogged everything)
+- `longest_hog([])` → `0`
+
+**Hint:** Keep a `run` counter and a `best`. Step through the timeline; if this id matches the one before, `run += 1`, else reset `run = 1`. Update `best` each step.
+
+---
+
+## Tips If You're Stuck
+
+1. **Timeline too short or too long?** Each program should appear exactly `work` times. Count them.
+2. **`wait_time` off by a little?** Use `programs[:pid]` (up to but **not** including `pid`) — a program doesn't wait for itself.
+3. **`longest_hog` returns 1 for everything?** Make sure you reset `run` to `1`, not `0`, when the id changes.
+4. **`None` showing up?** Every function needs a `return`.
+
+Build all three, run a hog like `[10, 3, 3]`, and watch programs 1 and 2 sit frozen in the panel. Next lesson: the boss steps in and makes everyone **take turns**.

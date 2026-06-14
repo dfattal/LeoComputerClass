@@ -1,0 +1,23 @@
+[
+  {
+    "entry": "save",
+    "cases": [
+      { "name": "write cat to the first 2 blocks", "args": [["", "", "", ""], "cat", 2], "expected": ["cat", "cat", "", ""] },
+      { "name": "dog goes after cat", "args": [["cat", "cat", "", ""], "dog", 2], "expected": ["cat", "cat", "dog", "dog"] },
+      { "name": "no 2 free blocks in a row", "args": [["cat", "", "cat", ""], "dog", 2], "expected": ["cat", "", "cat", ""] }
+    ]
+  },
+  {
+    "entry": "blocks_of",
+    "cases": [
+      { "name": "find cat's blocks", "args": [["cat", "cat", "", "dog"], "cat"], "expected": [0, 1] },
+      { "name": "a file that isn't there", "args": [["cat", "cat", "", "dog"], "fish"], "expected": [] }
+    ]
+  },
+  {
+    "entry": "delete_file",
+    "cases": [
+      { "name": "freeing cat leaves dog alone", "args": [["cat", "cat", "dog"], "cat"], "expected": ["", "", "dog"] }
+    ]
+  }
+]

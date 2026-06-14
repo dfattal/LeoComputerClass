@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "setup": "def __grid():\n    disk = [\"\"] * 16\n    try:\n        disk = save(disk, \"cat\", 3)\n        disk = save(disk, \"dog\", 4)\n        disk = save(disk, \"bird\", 2)\n        disk = delete_file(disk, \"dog\")\n        disk = save(disk, \"fish\", 3)\n        if not isinstance(disk, list):\n            raise ValueError\n    except Exception:\n        disk = [\"cat\", \"cat\", \"cat\", \"fish\", \"fish\", \"fish\", \"bird\", \"bird\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\"]\n    return [[(b[0] if b else \"\") for b in disk]]\n",
+  "resultFn": "__grid",
+  "demoArgs": [],
+  "title": "Disk blocks, each stamped with the first letter of the file that owns it. Deleting dog freed its blocks for fish."
+}

@@ -238,6 +238,25 @@ export const accents: Record<string, Accent> = {
     solid: "bg-orange-600",
     banner: "bg-orange-500",
   },
+  slate: {
+    bg: "bg-slate-600",
+    bgHover: "hover:bg-slate-700",
+    text: "text-slate-600 dark:text-slate-400",
+    underline: "bg-slate-600 dark:bg-slate-400",
+    ring: "focus-visible:ring-slate-500",
+    handleHover: "group-hover:bg-slate-400 dark:group-hover:bg-slate-500",
+    sidebar: "bg-slate-600 font-medium text-white shadow-sm shadow-slate-600/25",
+    feedback: {
+      border: "border-slate-200 dark:border-slate-800",
+      bg: "bg-slate-50 dark:bg-slate-950/40",
+      title: "text-slate-800 dark:text-slate-200",
+      body: "text-slate-900 dark:text-slate-100",
+    },
+    cardBorder: "hover:border-slate-400 dark:hover:border-slate-500",
+    badge: "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300",
+    solid: "bg-slate-600",
+    banner: "bg-slate-500",
+  },
 };
 
 /** The accent names this platform knows how to paint. */

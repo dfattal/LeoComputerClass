@@ -1,0 +1,82 @@
+# Lesson 2 — Exercises: Taking Turns
+
+## How This Works
+
+You'll build a **round-robin scheduler**. Same model as last lesson — `programs[i]` is the ticks of work program `i` needs, and a **timeline** records who ran each tick — but now you rotate turns instead of running each program to the end.
+
+**The rules:**
+
+- Go around the programs in order, `0, 1, 2, ...`, then back to `0`.
+- Each turn runs up to `quantum` ticks — but never more than the program has left: `min(quantum, remaining)`.
+- Skip any program that's already finished.
+- Keep going around until **everyone** is done.
+
+---
+
+## Exercise 1: The Round-Robin Scheduler
+
+Write `round_robin(programs, quantum)` that returns the timeline of who ran each tick.
+
+```python
+def round_robin(programs, quantum):
+    # Keep a `remaining` copy of programs. Loop around: for each program with
+    # work left, run it min(quantum, remaining) ticks (append its id that many
+    # times) and subtract. Repeat until all remaining are 0.
+    pass
+```
+
+**Examples:**
+- `round_robin([3, 2], 1)` → `[0, 1, 0, 1, 0]`
+- `round_robin([2, 2, 2], 1)` → `[0, 1, 2, 0, 1, 2]`
+- `round_robin([5, 1], 2)` → `[0, 0, 1, 0, 0, 0]`
+
+**Hint:** Use `remaining = list(programs)`. A `while any(r > 0 for r in remaining):` loop, with an inner `for pid in range(len(remaining)):` that skips finished programs.
+
+---
+
+## Exercise 2: Was It Fair?
+
+Write `turns_each(timeline, n)` that counts how many ticks each of the `n` programs got. A correct schedule gives each program exactly as many ticks as it had work.
+
+```python
+def turns_each(timeline, n):
+    # Start with [0] * n; add 1 for every program id in the timeline.
+    pass
+```
+
+**Examples:**
+- `turns_each([0, 1, 0, 1, 0], 2)` → `[3, 2]`
+- `turns_each([0, 0, 1, 2, 2], 3)` → `[2, 1, 2]`
+
+**Hint:** `counts = [0] * n`, then `for pid in timeline: counts[pid] += 1`.
+
+---
+
+## Exercise 3: Who Finishes First?
+
+Write `finish_order(programs, quantum)` that returns the program ids in the order they **finish** (reach 0 work left). Under round-robin, short jobs tend to finish first.
+
+```python
+def finish_order(programs, quantum):
+    # Same rotation as round_robin, but append a pid the moment its
+    # remaining work hits 0.
+    pass
+```
+
+**Examples:**
+- `finish_order([3, 2], 1)` → `[1, 0]` (the shorter job finishes first!)
+- `finish_order([5, 1], 2)` → `[1, 0]`
+- `finish_order([2, 2, 2], 1)` → `[0, 1, 2]`
+
+**Hint:** When you subtract a program's turn, check `if remaining[pid] == 0:` and append `pid` to your order list right then.
+
+---
+
+## Tips If You're Stuck
+
+1. **Infinite loop / browser hangs?** Your `while` never ends because you forgot to subtract from `remaining`. Each turn must shrink someone's work.
+2. **A program runs too long?** Use `min(quantum, remaining[pid])` so its last turn doesn't overshoot.
+3. **Timeline has the wrong total length?** It should equal the sum of all the work. Count your ticks.
+4. **`finish_order` lists a program twice?** Only append a pid the single moment it hits 0 — not every turn.
+
+Build all three, run `[6, 3, 2]` in the panel, and watch the turns rotate across the Gantt chart. Next lesson: round-robin is fair… but what about a program that's **urgent**?
