@@ -1,0 +1,42 @@
+[
+  {
+    "entry": "and4",
+    "cases": [
+      { "name": "and4(15,9)=9", "args": [15, 9], "expected": 9 },
+      { "name": "and4(15,0)=0", "args": [15, 0], "expected": 0 },
+      { "name": "and4(12,10)=8", "args": [12, 10], "expected": 8 },
+      { "name": "and4(0,15)=0", "args": [0, 15], "expected": 0 },
+      { "name": "and4(6,6)=6", "args": [6, 6], "expected": 6 },
+      { "name": "and4(7,8)=0", "args": [7, 8], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "or4",
+    "cases": [
+      { "name": "or4(8,1)=9", "args": [8, 1], "expected": 9 },
+      { "name": "or4(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "or4(12,10)=14", "args": [12, 10], "expected": 14 },
+      { "name": "or4(15,0)=15", "args": [15, 0], "expected": 15 },
+      { "name": "or4(5,2)=7", "args": [5, 2], "expected": 7 },
+      { "name": "or4(9,6)=15", "args": [9, 6], "expected": 15 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "alu",
+    "cases": [
+      { "name": "ADD: alu(5,3,0)=8", "args": [5, 3, 0], "expected": 8 },
+      { "name": "SUB: alu(5,3,1)=2", "args": [5, 3, 1], "expected": 2 },
+      { "name": "AND: alu(12,10,2)=8", "args": [12, 10, 2], "expected": 8 },
+      { "name": "OR: alu(12,10,3)=14", "args": [12, 10, 3], "expected": 14 },
+      { "name": "SUB to zero: alu(7,7,1)=0", "args": [7, 7, 1], "expected": 0 },
+      { "name": "ADD: alu(9,6,0)=15", "args": [9, 6, 0], "expected": 15 },
+      { "name": "ADD wraps: alu(15,1,0)=0", "args": [15, 1, 0], "expected": 0 },
+      { "name": "AND: alu(6,3,2)=2", "args": [6, 3, 2], "expected": 2 },
+      { "name": "OR: alu(6,3,3)=7", "args": [6, 3, 3], "expected": 7 },
+      { "name": "ADD: alu(0,0,0)=0", "args": [0, 0, 0], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  }
+]

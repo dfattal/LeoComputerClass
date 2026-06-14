@@ -1,0 +1,116 @@
+# Week 7 — ALU Operations
+
+## Phase 4: ALU
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand what an **ALU** (Arithmetic Logic Unit) is and why every CPU has one
+- Build `and4` and `or4` — bitwise logic on whole 4-bit numbers
+- Build the **ALU**: one circuit that can add, subtract, AND, or OR — and a 2-bit **opcode** chooses which
+- See how a single number (the opcode) controls what a circuit *does*
+
+---
+
+## Big Idea — One Circuit, Many Jobs
+
+So far you've built separate circuits for separate jobs: an adder that adds, a subtractor that subtracts. But a real CPU doesn't have a different chip for every operation. It has **one** super-circuit that can do *all* of them — and you tell it which job to do with a tiny code number.
+
+That super-circuit is the **ALU** — the **A**rithmetic and **L**ogic **U**nit. It's the part of the CPU that actually *does the math*.
+
+Think of the ALU like a **kitchen blender with buttons**. The blender is one machine, but it has four buttons: CHOP, MIX, WHIP, PUREE. Same blender, same food going in — but the button you press changes what comes out.
+
+The ALU's "buttons" are a 2-bit number called the **opcode** (short for "operation code"):
+
+| Opcode | Binary | Operation |
+|--------|--------|-----------|
+| 0 | 00 | ADD |
+| 1 | 01 | SUBTRACT |
+| 2 | 10 | AND |
+| 3 | 11 | OR |
+
+Two bits → four choices. (Sound familiar? That's exactly the 4-way pick you built last week!)
+
+---
+
+## First: Logic on Whole Numbers
+
+You already have `add4` and `sub4` from Week 4. To round out the ALU you need two new operations: **AND** and **OR** on whole 4-bit numbers.
+
+Your `AND` gate works on a single bit. To AND two whole numbers, you AND them **bit by bit** — exactly the pattern from `reg4` and `add4`.
+
+```python
+def and4(a, b):
+    out = 0
+    for i in range(4):
+        out = out | (AND(get_bit(a, i), get_bit(b, i)) << i)
+    return out
+```
+
+### Trace: `and4(12, 10)`
+
+- 12 is `1100`, 10 is `1010`
+- AND each column: `1·1=1`, `1·0=0`, `0·1=0`, `0·0=0` → `1000`
+- `1000` = **8** ✓
+
+`or4` is the same loop with `OR` instead of `AND`.
+
+---
+
+## Building the ALU
+
+Here's the clever part. You **don't** build a circuit that decides what to compute and then computes only that. Instead, the ALU computes **all four answers at once**, and then a multiplexer throws away the three you didn't ask for.
+
+That sounds wasteful — but in hardware it's actually how it works! All the circuits run in parallel; the opcode just picks which result reaches the output wire.
+
+```python
+def alu(a, b, op):
+    add_result = add4(a, b) & 0xF     # mask to 4 bits (drop the carry for now)
+    sub_result = sub4(a, b)
+    and_result = and4(a, b)
+    or_result  = or4(a, b)
+
+    s0 = get_bit(op, 0)
+    s1 = get_bit(op, 1)
+    return mux4(add_result, sub_result, and_result, or_result, s1, s0)
+```
+
+Look at that `mux4` call — it's the **exact same circuit** you used to read a register file last week! Back then it picked one of four *registers* by address. Now it picks one of four *answers* by opcode. Same part, new job. That's how real engineering works — you reuse the pieces you already trust.
+
+### Why `& 0xF`?
+
+`add4(15, 1)` returns `16` — that's a 5th bit (the carry) sneaking out. But the ALU's output bus is only 4 bits wide, so we **mask** it back down with `& 0xF` (which keeps only the lowest 4 bits). The carry isn't lost forever — next week you'll catch it in a special **flag**. For now, the ALU output is always 0–15.
+
+### Trace: `alu(5, 3, 1)`
+
+- op = 1 = `01`, so s1 = 0, s0 = 1 → picks the **second** input
+- The second input is `sub_result` = `sub4(5, 3)` = `2`
+- Output: **2** ✓ (the ALU subtracted, because we pressed button 1)
+
+---
+
+## Think About It
+
+1. **Why compute all four operations when you only want one?** (Hint: in real hardware all the circuits exist anyway and run at the same time. What's faster — building a chooser, or building a decider that re-wires itself?)
+
+2. **The opcode is just a number.** Where do you think that number comes from when a real program runs? (You'll find out in Week 9!)
+
+3. **You reused `mux4` from the register file.** Can you think of another place a "pick one of four" circuit would be handy?
+
+4. **With a 2-bit opcode you get 4 operations. How many would a 3-bit opcode give you?** Real CPUs have dozens of operations — how many opcode bits might they need?
+
+---
+
+## What You Just Built
+
+You built the **ALU** — the calculating heart of the CPU. Give it two numbers and an opcode, and it adds, subtracts, ANDs, or ORs them, all from one circuit.
+
+- **and4 / or4** — logic on whole numbers, bit by bit
+- **alu** — four operations in one circuit, selected by a 2-bit opcode
+
+This is huge. The ALU is where *every* calculation a computer ever does actually happens — every game score, every pixel, every text message starts as an ALU operation.
+
+But there's a problem: when the ALU adds `15 + 1` and the answer wraps to `0`, how does the computer *know* something overflowed? Next week you'll build the **flags** — the little status lights that tell the CPU what just happened.

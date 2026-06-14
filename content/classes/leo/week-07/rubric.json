@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "and4, or4, and alu return correct outputs for every test case, including the wrap-around case where ADD overflows past 15"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 20,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'"
+  },
+  {
+    "criterion": "Composition from earlier weeks",
+    "weight": 25,
+    "description": "and4/or4 apply AND/OR per bit; alu computes all four results then selects with mux4 by opcode (reusing add4, sub4, mux4)"
+  },
+  {
+    "criterion": "Bit manipulation",
+    "weight": 15,
+    "description": "Correct use of get_bit to extract bits and shift/OR to reassemble 4-bit results"
+  }
+]

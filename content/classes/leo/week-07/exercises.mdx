@@ -1,0 +1,164 @@
+# Week 7 — Exercises: ALU Operations
+
+## Setup
+
+You need your gates from Week 1, `mux` and `get_bit` from Week 2, the adders from
+Week 4, and `mux4` from Week 6. Start your file with all of these:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+
+def half_adder(a, b):
+    return (XOR(a, b), AND(a, b))
+
+def full_adder(a, b, c_in):
+    s1, c1 = half_adder(a, b)
+    s, c2 = half_adder(s1, c_in)
+    return (s, OR(c1, c2))
+
+def add4(a, b):
+    a0, a1, a2, a3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    b0, b1, b2, b3 = get_bit(b, 0), get_bit(b, 1), get_bit(b, 2), get_bit(b, 3)
+    s0, c0 = full_adder(a0, b0, 0)
+    s1, c1 = full_adder(a1, b1, c0)
+    s2, c2 = full_adder(a2, b2, c1)
+    s3, c3 = full_adder(a3, b3, c2)
+    return (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+
+def negate4(a):
+    b0, b1, b2, b3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    flipped = (NOT(b3) << 3) | (NOT(b2) << 2) | (NOT(b1) << 1) | NOT(b0)
+    return add4(flipped, 1) & 0xF
+
+def sub4(a, b):
+    return add4(a, negate4(b)) & 0xF
+
+def mux4(a, b, c, d, s1, s0):
+    out = 0
+    for i in range(6):
+        top = mux(get_bit(a, i), get_bit(b, i), s0)
+        bottom = mux(get_bit(c, i), get_bit(d, i), s0)
+        out = out | (mux(top, bottom, s1) << i)
+    return out
+```
+
+---
+
+## Task 1: `and4(a, b)`
+
+AND two 4-bit numbers together, **one bit at a time**. This is the same
+extract → process → reassemble loop you used for `reg4`.
+
+```python
+def and4(a, b):
+    # Loop over the 4 bit positions. For each one:
+    #   AND bit i of a with bit i of b, then place it at position i.
+    #
+    #   out = out | (AND(get_bit(a, i), get_bit(b, i)) << i)
+    #
+    # Example: and4(12, 10) -> 8   (1100 AND 1010 = 1000)
+    pass
+```
+
+Test it:
+```python
+print(and4(15, 9))   # should print 9  (everything that's 1 in both)
+print(and4(12, 10))  # should print 8
+print(and4(7, 8))    # should print 0  (no bit is 1 in both)
+```
+
+---
+
+## Task 2: `or4(a, b)`
+
+Same loop as `and4`, but use `OR` instead of `AND`.
+
+```python
+def or4(a, b):
+    # Loop over the 4 bit positions. For each one:
+    #   OR bit i of a with bit i of b, then place it at position i.
+    #
+    # Example: or4(12, 10) -> 14   (1100 OR 1010 = 1110)
+    pass
+```
+
+Test it:
+```python
+print(or4(8, 1))    # should print 9
+print(or4(12, 10))  # should print 14
+print(or4(9, 6))    # should print 15  (1001 OR 0110 = 1111)
+```
+
+---
+
+## Task 3: `alu(a, b, op)`
+
+Build the ALU! Compute **all four** operations, then use `mux4` to pick the one
+the opcode asks for.
+
+Opcode map: `0 = ADD`, `1 = SUB`, `2 = AND`, `3 = OR`.
+
+```python
+def alu(a, b, op):
+    # Step 1: compute all four results.
+    #   add_result = add4(a, b) & 0xF   # mask off the carry bit -> 4 bits
+    #   sub_result = sub4(a, b)
+    #   and_result = and4(a, b)
+    #   or_result  = or4(a, b)
+    #
+    # Step 2: split the opcode into two selector bits.
+    #   s0 = get_bit(op, 0)
+    #   s1 = get_bit(op, 1)
+    #
+    # Step 3: let mux4 pick the winner (same order as the opcode map!).
+    #   return mux4(add_result, sub_result, and_result, or_result, s1, s0)
+    #
+    # Example: alu(5, 3, 1) -> 2   (opcode 1 = subtract: 5 - 3)
+    pass
+```
+
+Test it:
+```python
+print(alu(5, 3, 0))    # should print 8   (ADD)
+print(alu(5, 3, 1))    # should print 2   (SUB)
+print(alu(12, 10, 2))  # should print 8   (AND)
+print(alu(12, 10, 3))  # should print 14  (OR)
+print(alu(15, 1, 0))   # should print 0   (ADD wraps: 16 masked to 4 bits)
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Use only your gate functions (`AND`, `OR`, `NOT`, `XOR`), `mux`, `mux4`,
+  `get_bit`, `add4`, `sub4`, and the bitwise operators `&`, `|`, `<<`, `>>`
+- The `& 0xF` mask is allowed (it just keeps the lowest 4 bits)
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `and4`, `or4`, and `alu` functions
+2. All tests passing
+
+Watch the panel on the right: it feeds `a=12, b=10` into your `alu` for all four
+opcodes at once. As you finish `alu`, the four bars show the four different
+answers your one circuit produces.

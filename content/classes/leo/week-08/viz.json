@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [3],
+  "title": "Adding a + 3 for a = 0..15 — watch each flag light up (high = ON)",
+  "xLabel": "a  (we add 3 to it each step)",
+  "yLabel": "Carry · Overflow · Negative · Zero",
+  "setup": "# --- plot helper (hidden) — four flag lamps driven by the student's flags ---\n# Sweeps a = 0..15 (b fixed) and draws four stacked square waves, one per flag.\n# A lamp is HIGH when its flag = 1. Each flag falls back to a plain-Python value\n# so the panel never blanks before the student finishes.\ndef __steps(vals, base, scale):\n    pts = []\n    for x, v in enumerate(vals):\n        pts.append([x, base + v * scale])\n        pts.append([x + 1, base + v * scale])\n    return pts\n\ndef __call(name, fallback, *a):\n    f = globals().get(name)\n    if f is not None:\n        try:\n            v = f(*a)\n            if v in (0, 1):\n                return v\n        except Exception:\n            pass\n    return fallback\n\ndef __plot(b):\n    carry, over, neg, zero = [], [], [], []\n    for a in range(16):\n        total = a + b\n        result = total & 0xF\n        carry.append(__call(\"carry_flag\", 1 if total > 15 else 0, a, b))\n        over.append(__call(\"overflow_flag\", 0, a, b))\n        neg.append(__call(\"negative_flag\", (result >> 3) & 1, result))\n        zero.append(__call(\"zero_flag\", 1 if result == 0 else 0, result))\n    return [\n        {\"name\": \"Carry\", \"points\": __steps(carry, 9, 2), \"highlight\": True},\n        {\"name\": \"Overflow\", \"points\": __steps(over, 6, 2), \"highlight\": True},\n        {\"name\": \"Negative\", \"points\": __steps(neg, 3, 2), \"highlight\": True},\n        {\"name\": \"Zero\", \"points\": __steps(zero, 0, 2), \"highlight\": True},\n    ]\n"
+}

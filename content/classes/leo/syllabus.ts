@@ -80,7 +80,7 @@ export const weeks: Week[] = [
     title: "ALU Operations",
     summary: "One circuit to rule them all — add, AND, OR by opcode",
     phase: 4,
-    status: "planned",
+    status: "published",
   },
   {
     week: 8,
@@ -88,7 +88,7 @@ export const weeks: Week[] = [
     title: "ALU Flags",
     summary: "Zero, carry, overflow — how the CPU knows what happened",
     phase: 4,
-    status: "planned",
+    status: "published",
   },
   {
     week: 9,
@@ -96,7 +96,7 @@ export const weeks: Week[] = [
     title: "Fetch-Decode-Execute",
     summary: "The heartbeat of every computer",
     phase: 5,
-    status: "planned",
+    status: "published",
   },
   {
     week: 10,
@@ -104,7 +104,7 @@ export const weeks: Week[] = [
     title: "Tiny CPU Capstone",
     summary: "Wire it all together into a working computer",
     phase: 5,
-    status: "planned",
+    status: "published",
   },
   {
     week: 11,

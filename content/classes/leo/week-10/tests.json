@@ -1,0 +1,33 @@
+[
+  {
+    "entry": "run",
+    "cases": [
+      { "name": "hero program: [6,114,211] on [0,6,4,0]", "args": [[6, 114, 211], [0, 6, 4, 0]], "expected": [10, 14, 4, 6] },
+      { "name": "one ADD: [6] on [0,5,3,0]", "args": [[6], [0, 5, 3, 0]], "expected": [8, 5, 3, 0] },
+      { "name": "two steps: [6,3] on [0,5,3,2]", "args": [[6, 3], [0, 5, 3, 2]], "expected": [10, 5, 3, 2] },
+      { "name": "empty program leaves regs unchanged", "args": [[], [1, 2, 3, 4]], "expected": [1, 2, 3, 4] }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "run_trace",
+    "cases": [
+      {
+        "name": "hero program trace (start + 3 steps)",
+        "args": [[6, 114, 211], [0, 6, 4, 0]],
+        "expected": [[0, 6, 4, 0], [10, 6, 4, 0], [10, 6, 4, 6], [10, 14, 4, 6]]
+      },
+      {
+        "name": "one ADD trace",
+        "args": [[6], [0, 5, 3, 0]],
+        "expected": [[0, 5, 3, 0], [8, 5, 3, 0]]
+      },
+      {
+        "name": "empty program: just the starting snapshot",
+        "args": [[], [1, 2, 3, 4]],
+        "expected": [[1, 2, 3, 4]]
+      }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  }
+]

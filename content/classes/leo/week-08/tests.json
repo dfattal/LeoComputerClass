@@ -1,0 +1,51 @@
+[
+  {
+    "entry": "zero_flag",
+    "cases": [
+      { "name": "zero_flag(0)=1", "args": [0], "expected": 1 },
+      { "name": "zero_flag(1)=0", "args": [1], "expected": 0 },
+      { "name": "zero_flag(8)=0", "args": [8], "expected": 0 },
+      { "name": "zero_flag(15)=0", "args": [15], "expected": 0 },
+      { "name": "zero_flag(5)=0", "args": [5], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "carry_flag",
+    "cases": [
+      { "name": "carry_flag(15,1)=1", "args": [15, 1], "expected": 1 },
+      { "name": "carry_flag(8,8)=1", "args": [8, 8], "expected": 1 },
+      { "name": "carry_flag(5,3)=0", "args": [5, 3], "expected": 0 },
+      { "name": "carry_flag(15,15)=1", "args": [15, 15], "expected": 1 },
+      { "name": "carry_flag(7,8)=0", "args": [7, 8], "expected": 0 },
+      { "name": "carry_flag(0,0)=0", "args": [0, 0], "expected": 0 },
+      { "name": "carry_flag(9,7)=1", "args": [9, 7], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "negative_flag",
+    "cases": [
+      { "name": "negative_flag(0)=0", "args": [0], "expected": 0 },
+      { "name": "negative_flag(7)=0", "args": [7], "expected": 0 },
+      { "name": "negative_flag(8)=1", "args": [8], "expected": 1 },
+      { "name": "negative_flag(15)=1", "args": [15], "expected": 1 },
+      { "name": "negative_flag(4)=0", "args": [4], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "overflow_flag",
+    "cases": [
+      { "name": "overflow_flag(7,1)=1", "args": [7, 1], "expected": 1 },
+      { "name": "overflow_flag(5,3)=1", "args": [5, 3], "expected": 1 },
+      { "name": "overflow_flag(8,8)=1", "args": [8, 8], "expected": 1 },
+      { "name": "overflow_flag(15,1)=0", "args": [15, 1], "expected": 0 },
+      { "name": "overflow_flag(2,3)=0", "args": [2, 3], "expected": 0 },
+      { "name": "overflow_flag(4,4)=1", "args": [4, 4], "expected": 1 },
+      { "name": "overflow_flag(15,15)=0", "args": [15, 15], "expected": 0 },
+      { "name": "overflow_flag(8,1)=0", "args": [8, 1], "expected": 0 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  }
+]

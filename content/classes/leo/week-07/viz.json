@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [12, 10],
+  "title": "Same two inputs (a=12, b=10) — four answers. The opcode picks which one.",
+  "xLabel": "opcode  (0=ADD  1=SUB  2=AND  3=OR)",
+  "yLabel": "ALU output",
+  "setup": "# --- plot helper (hidden) — one bar per opcode, drawn from the student's alu ---\n# Calls alu(a, b, op) for op = 0..3 and draws a bar for each. If alu isn't\n# ready, each bar falls back to a plain-Python answer so the panel never blanks.\ndef __bar(op, height):\n    left = op + 0.15\n    right = op + 0.85\n    return [[left, 0], [left, height], [right, height], [right, 0]]\n\ndef __plot(a, b):\n    names = [\"ADD\", \"SUB\", \"AND\", \"OR\"]\n    fallback = [(a + b) & 0xF, (a - b) & 0xF, a & b, a | b]\n    alu = globals().get(\"alu\")\n    series = []\n    for op in range(4):\n        h = fallback[op]\n        if alu is not None:\n            try:\n                v = alu(a, b, op)\n                if isinstance(v, int):\n                    h = v\n            except Exception:\n                pass\n        series.append({\"name\": names[op], \"points\": __bar(op, h), \"highlight\": True})\n    return series\n"
+}

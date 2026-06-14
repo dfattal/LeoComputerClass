@@ -1,0 +1,9 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [219],
+  "title": "Decoding instruction 219 (11 01 10 11) into its four 2-bit fields",
+  "xLabel": "field  (opcode · dest · srcA · srcB)",
+  "yLabel": "field value (0-3)",
+  "setup": "# --- plot helper (hidden) — the decode ruler, driven by the student's getters --\n# Splits one instruction word into its four fields using the student's decode\n# functions and draws a bar per field. Each falls back to a plain shift so the\n# panel never blanks.\ndef __bar(x, height):\n    left = x + 0.15\n    right = x + 0.85\n    return [[left, 0], [left, height], [right, height], [right, 0]]\n\ndef __field(name, fallback, instr):\n    f = globals().get(name)\n    if f is not None:\n        try:\n            v = f(instr)\n            if isinstance(v, int):\n                return v\n        except Exception:\n            pass\n    return fallback\n\ndef __plot(instr):\n    op = __field(\"get_opcode\", (instr >> 6) & 3, instr)\n    dest = __field(\"get_dest\", (instr >> 4) & 3, instr)\n    srcA = __field(\"get_srcA\", (instr >> 2) & 3, instr)\n    srcB = __field(\"get_srcB\", instr & 3, instr)\n    return [\n        {\"name\": \"opcode\", \"points\": __bar(0, op), \"highlight\": True},\n        {\"name\": \"dest\", \"points\": __bar(1, dest), \"highlight\": True},\n        {\"name\": \"srcA\", \"points\": __bar(2, srcA), \"highlight\": True},\n        {\"name\": \"srcB\", \"points\": __bar(3, srcB), \"highlight\": True},\n    ]\n"
+}

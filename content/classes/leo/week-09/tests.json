@@ -1,0 +1,53 @@
+[
+  {
+    "entry": "get_opcode",
+    "cases": [
+      { "name": "get_opcode(6)=0", "args": [6], "expected": 0 },
+      { "name": "get_opcode(113)=1", "args": [113], "expected": 1 },
+      { "name": "get_opcode(163)=2", "args": [163], "expected": 2 },
+      { "name": "get_opcode(219)=3", "args": [219], "expected": 3 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "get_dest",
+    "cases": [
+      { "name": "get_dest(6)=0", "args": [6], "expected": 0 },
+      { "name": "get_dest(113)=3", "args": [113], "expected": 3 },
+      { "name": "get_dest(163)=2", "args": [163], "expected": 2 },
+      { "name": "get_dest(219)=1", "args": [219], "expected": 1 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "get_srcA",
+    "cases": [
+      { "name": "get_srcA(6)=1", "args": [6], "expected": 1 },
+      { "name": "get_srcA(113)=0", "args": [113], "expected": 0 },
+      { "name": "get_srcA(163)=0", "args": [163], "expected": 0 },
+      { "name": "get_srcA(219)=2", "args": [219], "expected": 2 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "get_srcB",
+    "cases": [
+      { "name": "get_srcB(6)=2", "args": [6], "expected": 2 },
+      { "name": "get_srcB(113)=1", "args": [113], "expected": 1 },
+      { "name": "get_srcB(163)=3", "args": [163], "expected": 3 },
+      { "name": "get_srcB(219)=3", "args": [219], "expected": 3 }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  },
+  {
+    "entry": "execute",
+    "cases": [
+      { "name": "ADD r0=r1+r2: [0,5,3,0]+instr 6", "args": [[0, 5, 3, 0], 6], "expected": [8, 5, 3, 0] },
+      { "name": "SUB r3=r0-r1: [9,4,0,0]+instr 113", "args": [[9, 4, 0, 0], 113], "expected": [9, 4, 0, 5] },
+      { "name": "AND r2=r0&r3: [12,0,0,10]+instr 163", "args": [[12, 0, 0, 10], 163], "expected": [12, 0, 8, 10] },
+      { "name": "OR r1=r2|r3: [0,0,12,10]+instr 219", "args": [[0, 0, 12, 10], 219], "expected": [0, 14, 12, 10] },
+      { "name": "ADD r0=r1+r2: [1,2,3,4]+instr 6", "args": [[1, 2, 3, 4], 6], "expected": [5, 2, 3, 4] }
+    ],
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
+  }
+]

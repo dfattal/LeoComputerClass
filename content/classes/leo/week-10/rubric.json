@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 45,
+    "description": "run returns the final registers after every instruction; run_trace returns the starting snapshot plus one snapshot after each step"
+  },
+  {
+    "criterion": "The loop",
+    "weight": 25,
+    "description": "Both functions loop over the program and thread the register list forward (the output of one execute becomes the input of the next)"
+  },
+  {
+    "criterion": "Reuses execute",
+    "weight": 20,
+    "description": "Calls execute from Week 9 rather than re-decoding or re-implementing the ALU"
+  },
+  {
+    "criterion": "Snapshots are copies",
+    "weight": 10,
+    "description": "run_trace records independent snapshots (each step's list is its own copy, not the same list reused)"
+  }
+]

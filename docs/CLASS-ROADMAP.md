@@ -67,7 +67,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 |-------|------|--------------|--------|
 | Pixel Wizards | `pixels` | Absolute basics: draw pictures with code (variables → loops) | Published (7+1) |
 | Python Primer | `python-primer` | Real Python, one step up from Pixel Wizards | Published (5+1) |
-| Leo's Computer Class | `leo` | Logic gates → a working CPU | Phases 1–3 (6+1) published, ALU/CPU planned |
+| Leo's Computer Class | `leo` | Logic gates → a working CPU | Published (10+1) ✅ — ALU & CPU phases complete (weeks 7–10) |
 | Leo's Motion Lab | `leo-physics` | Calculus → simulate & engineer a Nerf blaster | Published (8+1) |
 | Leo's Space School | `leo-space` | Gravity → orbits → land a rocket → reach Mars | Published (8+1) |
 | Leo's Secret Codes | `leo-codes` | Make & break codes → XOR → one-time pad → RSA | Published (8+1) |

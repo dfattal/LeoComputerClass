@@ -1,0 +1,181 @@
+# Week 10 — Exercises: Tiny CPU Capstone
+
+## Setup
+
+This is the capstone — you're handed the **entire machine** you built over the
+term, and you write the last two functions that make it run a program. Start your
+file with everything below (gates, adders, ALU, decode, and `execute`):
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+
+def half_adder(a, b):
+    return (XOR(a, b), AND(a, b))
+
+def full_adder(a, b, c_in):
+    s1, c1 = half_adder(a, b)
+    s, c2 = half_adder(s1, c_in)
+    return (s, OR(c1, c2))
+
+def add4(a, b):
+    a0, a1, a2, a3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    b0, b1, b2, b3 = get_bit(b, 0), get_bit(b, 1), get_bit(b, 2), get_bit(b, 3)
+    s0, c0 = full_adder(a0, b0, 0)
+    s1, c1 = full_adder(a1, b1, c0)
+    s2, c2 = full_adder(a2, b2, c1)
+    s3, c3 = full_adder(a3, b3, c2)
+    return (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+
+def negate4(a):
+    b0, b1, b2, b3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    flipped = (NOT(b3) << 3) | (NOT(b2) << 2) | (NOT(b1) << 1) | NOT(b0)
+    return add4(flipped, 1) & 0xF
+
+def sub4(a, b):
+    return add4(a, negate4(b)) & 0xF
+
+def mux4(a, b, c, d, s1, s0):
+    out = 0
+    for i in range(6):
+        top = mux(get_bit(a, i), get_bit(b, i), s0)
+        bottom = mux(get_bit(c, i), get_bit(d, i), s0)
+        out = out | (mux(top, bottom, s1) << i)
+    return out
+
+def and4(a, b):
+    out = 0
+    for i in range(4):
+        out = out | (AND(get_bit(a, i), get_bit(b, i)) << i)
+    return out
+
+def or4(a, b):
+    out = 0
+    for i in range(4):
+        out = out | (OR(get_bit(a, i), get_bit(b, i)) << i)
+    return out
+
+def alu(a, b, op):
+    add_result = add4(a, b) & 0xF
+    sub_result = sub4(a, b)
+    and_result = and4(a, b)
+    or_result = or4(a, b)
+    s0 = get_bit(op, 0)
+    s1 = get_bit(op, 1)
+    return mux4(add_result, sub_result, and_result, or_result, s1, s0)
+
+def get_opcode(instr):
+    return (instr >> 6) & 3
+
+def get_dest(instr):
+    return (instr >> 4) & 3
+
+def get_srcA(instr):
+    return (instr >> 2) & 3
+
+def get_srcB(instr):
+    return instr & 3
+
+def execute(regs, instr):
+    op = get_opcode(instr)
+    dest = get_dest(instr)
+    a = get_srcA(instr)
+    b = get_srcB(instr)
+    result = alu(regs[a], regs[b], op)
+    new_regs = list(regs)
+    new_regs[dest] = result
+    return new_regs
+```
+
+---
+
+## Task 1: `run(program, regs)`
+
+Run a whole program. `program` is a list of instruction numbers; `regs` is the
+list of 4 starting register values. Run each instruction in order and return the
+**final** registers.
+
+```python
+def run(program, regs):
+    # Loop over each instruction. Each step, replace regs with the result of
+    # execute — so the output of one step feeds into the next.
+    #
+    #   for instr in program:
+    #       regs = execute(regs, instr)
+    #   return regs
+    #
+    # Example: run([6], [0, 5, 3, 0]) -> [8, 5, 3, 0]   (one ADD: r0 = 5 + 3)
+    pass
+```
+
+Test it:
+```python
+print(run([6], [0, 5, 3, 0]))            # should print [8, 5, 3, 0]
+print(run([6, 114, 211], [0, 6, 4, 0]))  # should print [10, 14, 4, 6]
+print(run([], [1, 2, 3, 4]))             # should print [1, 2, 3, 4] (no steps)
+```
+
+---
+
+## Task 2: `run_trace(program, regs)`
+
+Same loop, but keep a **history**. Start with a snapshot of the registers, then
+add a fresh snapshot after every instruction. Return the whole list of snapshots.
+
+```python
+def run_trace(program, regs):
+    # trace = [list(regs)]        # snapshot 0: the starting state (a COPY)
+    # for instr in program:
+    #     regs = execute(regs, instr)
+    #     trace.append(list(regs))   # snapshot after this step (a COPY)
+    # return trace
+    #
+    # Example: run_trace([6], [0, 5, 3, 0]) -> [[0, 5, 3, 0], [8, 5, 3, 0]]
+    pass
+```
+
+Test it:
+```python
+print(run_trace([6], [0, 5, 3, 0]))
+# should print [[0, 5, 3, 0], [8, 5, 3, 0]]
+
+print(run_trace([6, 114, 211], [0, 6, 4, 0]))
+# should print [[0, 6, 4, 0], [10, 6, 4, 0], [10, 6, 4, 6], [10, 14, 4, 6]]
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Loop with `for`, call `execute`, and copy lists with `list(regs)`
+- A trace from a program of length N has **N + 1** snapshots (the start, plus one
+  after each step)
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `run` and `run_trace` functions
+2. All tests passing
+
+The panel on the right runs the program `[6, 114, 211]` on your `run_trace` and
+draws each register as a line over time. Finish `run_trace` and watch your
+computer run a real program — R0 jumps to 10, then R3, then R1. **You built
+this.** 🎉

@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 45,
+    "description": "zero_flag, carry_flag, negative_flag, and overflow_flag return correct values for every case, including the tricky overflow examples"
+  },
+  {
+    "criterion": "Constraint compliance",
+    "weight": 20,
+    "description": "Does not use Python keywords 'and', 'or', 'not', 'if'"
+  },
+  {
+    "criterion": "Understanding carry vs overflow",
+    "weight": 20,
+    "description": "carry_flag reads bit 4 of add4; overflow_flag uses the same-sign-in / flipped-sign-out rule — they are computed differently because they mean different things"
+  },
+  {
+    "criterion": "Composition from gates",
+    "weight": 15,
+    "description": "Flags are built from get_bit, the gate functions, and add4 — no shortcuts with comparisons or if-statements"
+  }
+]

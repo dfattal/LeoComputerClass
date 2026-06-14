@@ -1,0 +1,162 @@
+# Week 8 — Exercises: ALU Flags
+
+## Setup
+
+You need your gates from Week 1 and the adders from Week 4. Start your file with:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+
+def half_adder(a, b):
+    return (XOR(a, b), AND(a, b))
+
+def full_adder(a, b, c_in):
+    s1, c1 = half_adder(a, b)
+    s, c2 = half_adder(s1, c_in)
+    return (s, OR(c1, c2))
+
+def add4(a, b):
+    a0, a1, a2, a3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    b0, b1, b2, b3 = get_bit(b, 0), get_bit(b, 1), get_bit(b, 2), get_bit(b, 3)
+    s0, c0 = full_adder(a0, b0, 0)
+    s1, c1 = full_adder(a1, b1, c0)
+    s2, c2 = full_adder(a2, b2, c1)
+    s3, c3 = full_adder(a3, b3, c2)
+    return (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+```
+
+Each flag returns a single bit: `1` (on) or `0` (off).
+
+---
+
+## Task 1: `zero_flag(result)`
+
+Return 1 only if **all four bits** of `result` are 0. OR all the bits together to
+ask "is any bit on?", then flip the answer with `NOT`.
+
+```python
+def zero_flag(result):
+    # Pull out all four bits with get_bit.
+    # any_one = OR(OR(b0, b1), OR(b2, b3))   # 1 if ANY bit is on
+    # return NOT(any_one)                    # flag is on only if NOTHING was on
+    #
+    # Example: zero_flag(0) -> 1,  zero_flag(8) -> 0
+    pass
+```
+
+Test it:
+```python
+print(zero_flag(0))   # should print 1
+print(zero_flag(1))   # should print 0
+print(zero_flag(15))  # should print 0
+```
+
+---
+
+## Task 2: `carry_flag(a, b)`
+
+When you add two 4-bit numbers, `add4` gives you a 5-bit answer. The carry is the
+**top bit** (bit 4). Just read it.
+
+```python
+def carry_flag(a, b):
+    # return get_bit(add4(a, b), 4)
+    #
+    # Example: carry_flag(15, 1) -> 1   (15 + 1 = 16, spills past 4 bits)
+    #          carry_flag(5, 3)  -> 0   (5 + 3 = 8, fits fine)
+    pass
+```
+
+Test it:
+```python
+print(carry_flag(15, 1))  # should print 1
+print(carry_flag(5, 3))   # should print 0
+print(carry_flag(8, 8))   # should print 1
+```
+
+---
+
+## Task 3: `negative_flag(result)`
+
+In two's complement, the top bit (bit 3) **is** the sign. Read bit 3.
+
+```python
+def negative_flag(result):
+    # return get_bit(result, 3)
+    #
+    # Example: negative_flag(8) -> 1   (1000 is negative)
+    #          negative_flag(7) -> 0   (0111 is positive)
+    pass
+```
+
+Test it:
+```python
+print(negative_flag(0))   # should print 0
+print(negative_flag(8))   # should print 1
+print(negative_flag(15))  # should print 1
+```
+
+---
+
+## Task 4: `overflow_flag(a, b)`
+
+Overflow = both inputs the **same sign**, but the result has a **different sign**.
+Compare three sign bits: a's, b's, and the result's.
+
+```python
+def overflow_flag(a, b):
+    # result = add4(a, b) & 0xF
+    # sa = get_bit(a, 3)        # sign of a
+    # sb = get_bit(b, 3)        # sign of b
+    # sr = get_bit(result, 3)   # sign of the result
+    #
+    # same_sign = NOT(XOR(sa, sb))    # 1 when a and b match in sign
+    # result_flipped = XOR(sa, sr)    # 1 when the result's sign changed
+    # return AND(same_sign, result_flipped)
+    #
+    # Example: overflow_flag(7, 1) -> 1   (+7 + +1 should be +8, came out -8!)
+    #          overflow_flag(15, 1) -> 0  (-1 + +1 = 0, perfectly fine)
+    pass
+```
+
+Test it:
+```python
+print(overflow_flag(7, 1))   # should print 1
+print(overflow_flag(5, 3))   # should print 1
+print(overflow_flag(2, 3))   # should print 0
+print(overflow_flag(15, 1))  # should print 0
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Use only your gate functions (`AND`, `OR`, `NOT`, `XOR`), `get_bit`, `add4`,
+  and the bitwise operators `&`, `|`, `<<`, `>>`
+- The `& 0xF` mask is allowed
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `zero_flag`, `carry_flag`, `negative_flag`, `overflow_flag` functions
+2. All tests passing
+
+The panel on the right adds `a + 3` for every `a` from 0 to 15 and lights up your
+four flags as it goes. Finish the flags and watch them flick on and off — Carry
+near the high end, Overflow right when a positive sum sneaks past +7.

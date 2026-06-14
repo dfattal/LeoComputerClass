@@ -1,0 +1,139 @@
+# Week 9 — Fetch-Decode-Execute
+
+## Phase 5: CPU
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand that a **program is just a list of numbers**
+- Learn how one number can pack together an opcode and three register addresses
+- Build `get_opcode`, `get_dest`, `get_srcA`, `get_srcB` — the **decoder**
+- Build `execute` — read the operands, run the ALU, store the answer
+- See the **fetch → decode → execute** cycle that powers every computer
+
+---
+
+## Big Idea — Instructions Are Just Numbers
+
+You have an ALU that does math. You have registers that hold numbers. But how does the CPU know *what to do*? Who tells it "add register 1 and register 2"?
+
+The answer is the most beautiful idea in all of computing: **an instruction is just a number.**
+
+A program is a list of these numbers. The CPU reads them one at a time and does what each one says. Reading the next number is called **fetch**. Figuring out what it means is **decode**. Doing it is **execute**. Over and over, billions of times a second. That loop is the heartbeat of every computer ever built.
+
+---
+
+## Packing an Instruction Into One Number
+
+Our little CPU uses an **8-bit instruction**. We split those 8 bits into four 2-bit fields:
+
+```
+   bits:  7 6   5 4   3 2   1 0
+         [ OP ][DEST][SRCA][SRCB]
+```
+
+| Field | Bits | Meaning |
+|-------|------|---------|
+| **OP** | 7-6 | which operation (0=ADD, 1=SUB, 2=AND, 3=OR) |
+| **DEST** | 5-4 | which register to store the answer in |
+| **SRCA** | 3-2 | first input register |
+| **SRCB** | 1-0 | second input register |
+
+Each field is 2 bits, so each can name one of 4 things — 4 operations, 4 registers. Neat and tidy.
+
+### Example: "ADD register 1 and register 2, store in register 0"
+
+- OP = 0 (ADD), DEST = 0, SRCA = 1, SRCB = 2
+- In bits: `00 00 01 10`
+- As one number: `00000110` = **6**
+
+So the single number **6** means "r0 = r1 + r2". The whole instruction, packed into one byte!
+
+---
+
+## Decoding — Unpacking the Fields
+
+To run an instruction, the CPU first **decodes** it — pulls each field back out. This is exactly the shift-and-mask trick from Week 2's `get_bit`, just grabbing 2 bits at a time instead of 1.
+
+To grab a 2-bit field: **shift it down** to the bottom, then **mask with `& 3`** (because `3` is `11` in binary — it keeps the lowest 2 bits).
+
+```python
+def get_opcode(instr):
+    return (instr >> 6) & 3    # bits 7-6 -> shift down 6
+
+def get_dest(instr):
+    return (instr >> 4) & 3    # bits 5-4 -> shift down 4
+
+def get_srcA(instr):
+    return (instr >> 2) & 3    # bits 3-2 -> shift down 2
+
+def get_srcB(instr):
+    return instr & 3           # bits 1-0 -> already at the bottom
+```
+
+### Trace: decoding `6`
+
+- `6` is `00000110`
+- `get_opcode(6)` = `(6 >> 6) & 3` = `0`
+- `get_dest(6)` = `(6 >> 4) & 3` = `0`
+- `get_srcA(6)` = `(6 >> 2) & 3` = `1`
+- `get_srcB(6)` = `6 & 3` = `2`
+
+Decoded: OP=0 (ADD), DEST=0, SRCA=1, SRCB=2 → "r0 = r1 + r2". 
+
+---
+
+## Executing — Doing What It Says
+
+Now the payoff. `execute` takes the current registers (a list of 4 numbers) and one instruction. It decodes the instruction, reads the two source registers, runs the ALU, and stores the answer in the destination register.
+
+```python
+def execute(regs, instr):
+    op   = get_opcode(instr)
+    dest = get_dest(instr)
+    a    = get_srcA(instr)
+    b    = get_srcB(instr)
+
+    result = alu(regs[a], regs[b], op)   # your ALU from Week 7!
+
+    new_regs = list(regs)    # make a copy so we don't disturb the original
+    new_regs[dest] = result  # change just the destination slot
+    return new_regs
+```
+
+Notice we **copy** the register list and change only one slot, then return the new list. The CPU's registers march forward one step at a time — each instruction produces a fresh snapshot.
+
+### Trace: `execute([0, 5, 3, 0], 6)`
+
+- Decode `6`: OP=ADD, DEST=0, SRCA=1, SRCB=2
+- Read sources: `regs[1]` = 5, `regs[2]` = 3
+- ALU: `alu(5, 3, 0)` = 8
+- Store in r0: registers become `[8, 5, 3, 0]` ✓
+
+The CPU just ran an instruction!
+
+---
+
+## Think About It
+
+1. **Why pack an instruction into a single number** instead of using four separate numbers? (Hint: memory stores numbers. How many memory slots does one instruction take this way?)
+
+2. **The opcode is part of the instruction.** Remember last week's question — "where does the opcode come from?" Now you know! Trace where the `op` in `execute` ends up going.
+
+3. **`execute` reads registers, computes, and writes a register.** That's the whole job of a CPU step. What would happen if you ran `execute` again with the *new* register list and a *new* instruction?
+
+4. **Fetch-decode-execute repeats forever** while a computer is on. Right now you do one step. What would you need to do all the steps of a whole program? (That's next week!)
+
+---
+
+## What You Just Built
+
+You built the **control unit** — the part of the CPU that reads instructions and makes the ALU and registers dance:
+
+- **get_opcode / get_dest / get_srcA / get_srcB** — the decoder that unpacks an instruction
+- **execute** — fetch the operands, run the ALU, store the result
+
+This is the moment your circuits stopped being a calculator and became a **computer that follows instructions**. One instruction down. Next week, you'll loop `execute` over a whole list of instructions — and watch your computer run an actual program.

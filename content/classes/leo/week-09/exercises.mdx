@@ -1,0 +1,179 @@
+# Week 9 — Exercises: Fetch-Decode-Execute
+
+## Setup
+
+You need your full ALU from Weeks 7 & 8 (which needs the gates and adders too).
+Start your file with all of it — gates, `mux`, `get_bit`, the adders, `mux4`,
+`and4`, `or4`, and `alu`:
+
+```python
+def AND(a, b):
+    return a & b
+
+def OR(a, b):
+    return a | b
+
+def NOT(a):
+    return 1 - a
+
+def XOR(a, b):
+    return OR(AND(a, NOT(b)), AND(NOT(a), b))
+
+def mux(a, b, s):
+    return OR(AND(NOT(s), a), AND(s, b))
+
+def get_bit(x, i):
+    return (x >> i) & 1
+
+def half_adder(a, b):
+    return (XOR(a, b), AND(a, b))
+
+def full_adder(a, b, c_in):
+    s1, c1 = half_adder(a, b)
+    s, c2 = half_adder(s1, c_in)
+    return (s, OR(c1, c2))
+
+def add4(a, b):
+    a0, a1, a2, a3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    b0, b1, b2, b3 = get_bit(b, 0), get_bit(b, 1), get_bit(b, 2), get_bit(b, 3)
+    s0, c0 = full_adder(a0, b0, 0)
+    s1, c1 = full_adder(a1, b1, c0)
+    s2, c2 = full_adder(a2, b2, c1)
+    s3, c3 = full_adder(a3, b3, c2)
+    return (c3 << 4) | (s3 << 3) | (s2 << 2) | (s1 << 1) | s0
+
+def negate4(a):
+    b0, b1, b2, b3 = get_bit(a, 0), get_bit(a, 1), get_bit(a, 2), get_bit(a, 3)
+    flipped = (NOT(b3) << 3) | (NOT(b2) << 2) | (NOT(b1) << 1) | NOT(b0)
+    return add4(flipped, 1) & 0xF
+
+def sub4(a, b):
+    return add4(a, negate4(b)) & 0xF
+
+def mux4(a, b, c, d, s1, s0):
+    out = 0
+    for i in range(6):
+        top = mux(get_bit(a, i), get_bit(b, i), s0)
+        bottom = mux(get_bit(c, i), get_bit(d, i), s0)
+        out = out | (mux(top, bottom, s1) << i)
+    return out
+
+def and4(a, b):
+    out = 0
+    for i in range(4):
+        out = out | (AND(get_bit(a, i), get_bit(b, i)) << i)
+    return out
+
+def or4(a, b):
+    out = 0
+    for i in range(4):
+        out = out | (OR(get_bit(a, i), get_bit(b, i)) << i)
+    return out
+
+def alu(a, b, op):
+    add_result = add4(a, b) & 0xF
+    sub_result = sub4(a, b)
+    and_result = and4(a, b)
+    or_result = or4(a, b)
+    s0 = get_bit(op, 0)
+    s1 = get_bit(op, 1)
+    return mux4(add_result, sub_result, and_result, or_result, s1, s0)
+```
+
+### The instruction format (8 bits)
+
+```
+   bits:  7 6   5 4   3 2   1 0
+         [ OP ][DEST][SRCA][SRCB]
+```
+
+Each field is 2 bits. Grab a field by shifting it down and masking with `& 3`.
+
+---
+
+## Task 1: the four decoders
+
+Each one pulls a different 2-bit field out of the instruction.
+
+```python
+def get_opcode(instr):
+    # bits 7-6: shift down 6, keep the lowest 2 bits
+    # return (instr >> 6) & 3
+    pass
+
+def get_dest(instr):
+    # bits 5-4: shift down 4
+    pass
+
+def get_srcA(instr):
+    # bits 3-2: shift down 2
+    pass
+
+def get_srcB(instr):
+    # bits 1-0: already at the bottom, just mask with & 3
+    pass
+```
+
+Test them with instruction `6` (= "r0 = r1 + r2"):
+```python
+print(get_opcode(6))  # should print 0  (ADD)
+print(get_dest(6))    # should print 0  (store in r0)
+print(get_srcA(6))    # should print 1  (read r1)
+print(get_srcB(6))    # should print 2  (read r2)
+```
+
+---
+
+## Task 2: `execute(regs, instr)`
+
+Run one instruction. `regs` is a list of 4 register values; `instr` is one
+instruction number. Decode it, run the ALU on the two source registers, and
+return a **new** register list with the destination updated.
+
+```python
+def execute(regs, instr):
+    # Decode the four fields:
+    #   op   = get_opcode(instr)
+    #   dest = get_dest(instr)
+    #   a    = get_srcA(instr)
+    #   b    = get_srcB(instr)
+    #
+    # Run the ALU on the two source registers:
+    #   result = alu(regs[a], regs[b], op)
+    #
+    # Copy the list, change ONE slot, return it:
+    #   new_regs = list(regs)
+    #   new_regs[dest] = result
+    #   return new_regs
+    #
+    # Example: execute([0, 5, 3, 0], 6) -> [8, 5, 3, 0]   (r0 = 5 + 3)
+    pass
+```
+
+Test it:
+```python
+print(execute([0, 5, 3, 0], 6))      # should print [8, 5, 3, 0]   (ADD)
+print(execute([9, 4, 0, 0], 113))    # should print [9, 4, 0, 5]   (SUB into r3)
+print(execute([0, 0, 12, 10], 219))  # should print [0, 14, 12, 10] (OR into r1)
+```
+
+---
+
+## Constraints
+
+- You may NOT use Python's `and`, `or`, `not`, or `if` keywords
+- Use shift `>>`, mask `& 3`, your `alu`, and list copying (`list(regs)`)
+- Build the new register list by copying and assigning one slot — don't mutate the
+  original `regs`
+
+---
+
+## Deliverables
+
+Submit:
+1. Working `get_opcode`, `get_dest`, `get_srcA`, `get_srcB`, and `execute`
+2. All tests passing
+
+The panel on the right decodes instruction `219` and shows its four fields as
+bars. Finish the decoders and watch the instruction split apart into opcode,
+dest, srcA, and srcB.

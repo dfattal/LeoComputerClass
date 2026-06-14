@@ -1,0 +1,140 @@
+# Week 8 — ALU Flags
+
+## Phase 4: ALU
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand what **flags** are and why the CPU needs them
+- Build `zero_flag` — was the answer exactly 0?
+- Build `carry_flag` — did the add spill past 4 bits?
+- Build `negative_flag` — is the answer negative (in two's complement)?
+- Build `overflow_flag` — did a signed add go wrong?
+- Learn the difference between **carry** and **overflow** (they are NOT the same!)
+
+---
+
+## Big Idea — The Dashboard Lights
+
+Last week your ALU computed answers. But an answer alone doesn't tell the whole story. When you computed `alu(15, 1, 0)`, the answer came out `0` — but `15 + 1` isn't `0`! The real answer was `16`, and it didn't fit in 4 bits, so it wrapped around.
+
+The ALU needs a way to *warn* the CPU when something like that happens. That's what **flags** are.
+
+A flag is just a single bit — a tiny light that turns on (1) or off (0) to describe what just happened. Think of the **dashboard lights in a car**: the engine still runs, but a light tells you "low fuel!" or "check engine!". The ALU has its own dashboard:
+
+| Flag | Turns on when… |
+|------|----------------|
+| **Zero** | the answer is exactly 0 |
+| **Carry** | an add spilled past the 4th bit |
+| **Negative** | the top bit is 1 (a negative number) |
+| **Overflow** | a *signed* add gave a wrong-sign answer |
+
+The CPU reads these lights to make decisions: "if the answer was zero, jump to the end of the loop", "if it overflowed, sound an alarm". Flags are how a computer *reacts* to its own math.
+
+---
+
+## Flag 1 — Zero
+
+The Zero flag is 1 only when **every bit** of the result is 0. That's a NOR: OR all the bits together (giving "is *any* bit on?"), then flip it with NOT.
+
+```python
+def zero_flag(result):
+    b0 = get_bit(result, 0)
+    b1 = get_bit(result, 1)
+    b2 = get_bit(result, 2)
+    b3 = get_bit(result, 3)
+    any_one = OR(OR(b0, b1), OR(b2, b3))
+    return NOT(any_one)
+```
+
+If any bit is 1, `any_one` is 1, and the flag is 0. Only when *all* bits are 0 does the flag light up.
+
+---
+
+## Flag 2 — Carry
+
+Remember `add4` actually returns **5 bits** — the 4-bit sum plus a carry bit on top? When you add two big numbers like `15 + 1 = 16`, that 16 needs a 5th bit. The Carry flag is simply **that 5th bit**:
+
+```python
+def carry_flag(a, b):
+    return get_bit(add4(a, b), 4)
+```
+
+Carry means: "treating these as plain counting numbers (0–15), the answer was too big to fit."
+
+---
+
+## Flag 3 — Negative
+
+Back in Week 4 you used **two's complement** to do subtraction, where the top bit means "negative". The Negative flag just reads that top bit (bit 3):
+
+```python
+def negative_flag(result):
+    return get_bit(result, 3)
+```
+
+If bit 3 is 1, the number is negative when we read it as a signed value.
+
+---
+
+## Flag 4 — Overflow (the tricky one!)
+
+Here's a puzzle. In signed 4-bit numbers, the range is **-8 to +7**. So what is `+7 + +1`?
+
+The math says `+8`. But +8 doesn't fit! The bits of `7 + 1` are `0111 + 0001 = 1000`, and `1000` in two's complement is… **-8**. We added two *positive* numbers and got a *negative* answer. That's **overflow** — the signed answer is wrong.
+
+The rule is beautifully simple: **overflow happens when both inputs have the same sign, but the result's sign is different.**
+
+```python
+def overflow_flag(a, b):
+    result = add4(a, b) & 0xF
+    sa = get_bit(a, 3)         # sign of a
+    sb = get_bit(b, 3)         # sign of b
+    sr = get_bit(result, 3)    # sign of the result
+    same_sign = NOT(XOR(sa, sb))     # 1 when a and b have the same sign
+    result_flipped = XOR(sa, sr)     # 1 when result's sign differs from a's
+    return AND(same_sign, result_flipped)
+```
+
+### Carry vs Overflow — NOT the same thing!
+
+This trips up real engineers, so let's be clear:
+
+- **Carry** is for **unsigned** numbers (0–15): "the answer was too big to fit."
+- **Overflow** is for **signed** numbers (-8 to +7): "the answer came out the wrong sign."
+
+Example: `7 + 1`. The bits are `0111 + 0001 = 1000` = 8.
+- Carry? No — 8 fits in 4 bits, nothing spilled past bit 3.
+- Overflow? **Yes** — as signed numbers, +7 + +1 should be +8 but came out as -8.
+
+Same addition, different flags! That's why the ALU reports both.
+
+---
+
+## Think About It
+
+1. **Why does the CPU need a Zero flag?** (Think about a loop that should stop when a counter reaches 0. How would the CPU *know* it hit 0?)
+
+2. **`15 + 1` sets the Carry flag but `7 + 1` sets the Overflow flag.** Both are "8" in binary (`1000`)... wait, no — `15 + 1` is `10000`. Trace the bits of each and see why they trip different flags.
+
+3. **A flag is just one bit.** You've now built circuits whose *whole job* is to produce a single, meaningful bit. How is that different from the adder, which produces a number?
+
+4. **The CPU uses flags to make decisions** — "if zero, do this; if negative, do that." That sounds like an `if` statement! Where do you think the `if` in your Python programs *really* comes from?
+
+---
+
+## What You Just Built
+
+You gave the ALU a **dashboard**. Now it doesn't just compute — it *reports*:
+
+- **zero_flag** — the answer was 0
+- **carry_flag** — an unsigned add overflowed
+- **negative_flag** — the answer is negative
+- **overflow_flag** — a signed add went wrong
+
+The complete ALU is done: it does math (Week 7) and it describes its results (Week 8). This is the full calculating brain of the CPU.
+
+Next week, the big leap: where do the *opcodes* come from? You'll build the **fetch-decode-execute** loop — the part that reads instructions and tells the ALU what to do. That's where your circuits start running real *programs*.

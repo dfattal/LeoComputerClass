@@ -1,0 +1,22 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 40,
+    "description": "The four decode functions pull the right 2-bit field, and execute reads srcA/srcB, runs the ALU, and stores into dest"
+  },
+  {
+    "criterion": "Decoding with shift + mask",
+    "weight": 25,
+    "description": "Each field is extracted with the right shift amount and a & 3 mask (opcode>>6, dest>>4, srcA>>2, srcB no shift)"
+  },
+  {
+    "criterion": "execute returns a new list",
+    "weight": 20,
+    "description": "execute copies the register list and updates only the dest slot — it does not mutate the input or rebuild it wrong"
+  },
+  {
+    "criterion": "Reuses the ALU",
+    "weight": 15,
+    "description": "execute calls alu rather than re-implementing arithmetic"
+  }
+]

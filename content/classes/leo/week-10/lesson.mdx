@@ -1,0 +1,144 @@
+# Week 10 — Tiny CPU Capstone
+
+## Phase 5: CPU
+
+---
+
+## Objectives
+
+By the end of this week, you should:
+
+- Understand that a **program** is just a list of instructions
+- Build `run` — loop fetch-decode-execute over a whole program
+- Build `run_trace` — record the registers after every step, to watch the CPU think
+- Run a real program on the computer **you built from logic gates**
+- See how everything from Week 1 to now fits together
+
+---
+
+## Big Idea — A Program Is a List of Instructions
+
+Last week you ran **one** instruction with `execute`. But a real program isn't one instruction — it's a whole list of them. Your CPU runs them one after another, like following a recipe step by step.
+
+That's the final piece. The CPU does the same thing forever:
+
+1. **Fetch** the next instruction from the list
+2. **Decode** it into fields
+3. **Execute** it (update a register)
+4. Go back to step 1
+
+This is the **fetch-decode-execute loop**, and it is *literally* how every computer on Earth works — your phone, this laptop, the biggest supercomputer. They just do it billions of times per second.
+
+And you're about to build it. In a few lines.
+
+---
+
+## Building `run`
+
+`run` takes a **program** (a list of instruction numbers) and the **starting registers**. It runs each instruction in order, feeding the new registers from one step into the next, and returns the final registers.
+
+```python
+def run(program, regs):
+    for instr in program:
+        regs = execute(regs, instr)
+    return regs
+```
+
+That's it. That tiny loop is a working CPU. Each time through, `execute` does one fetch-decode-execute step, and `regs` carries the machine's memory forward to the next instruction.
+
+---
+
+## A Real Program
+
+Let's run an actual program. We'll start with these registers:
+
+```
+R0 = 0    R1 = 6    R2 = 4    R3 = 0
+```
+
+And here's our program (three instructions):
+
+| Step | Instruction | Number | Meaning |
+|------|-------------|--------|---------|
+| 1 | ADD r0 = r1 + r2 | `6` | 6 + 4 = 10 |
+| 2 | SUB r3 = r0 - r2 | `114` | 10 - 4 = 6 |
+| 3 | OR  r1 = r0 \| r3 | `211` | 10 OR 6 = 14 |
+
+Watch the registers change:
+
+```
+start:   [0,  6, 4, 0]
+step 1:  [10, 6, 4, 0]   <- r0 became 10
+step 2:  [10, 6, 4, 6]   <- r3 became 6
+step 3:  [10, 14, 4, 6]  <- r1 became 14
+```
+
+`run([6, 114, 211], [0, 6, 4, 0])` returns `[10, 14, 4, 6]`. **Your computer just ran a program!** It fetched each instruction, decoded it, did the math on the ALU, and stored the answers — all from circuits you built out of AND, OR, and NOT.
+
+---
+
+## Building `run_trace` — Watch It Think
+
+`run` only gives you the final answer. But it's way more fun to watch the registers change at *every* step. `run_trace` does exactly that: it records a snapshot of all the registers after each instruction (and the starting state first).
+
+```python
+def run_trace(program, regs):
+    trace = [list(regs)]            # snapshot 0: the starting state
+    for instr in program:
+        regs = execute(regs, instr)
+        trace.append(list(regs))    # snapshot after this step
+    return trace
+```
+
+For our program, `run_trace` returns the full history:
+
+```python
+[[0, 6, 4, 0],     # start
+ [10, 6, 4, 0],    # after step 1
+ [10, 6, 4, 6],    # after step 2
+ [10, 14, 4, 6]]   # after step 3
+```
+
+Each row is one moment in the life of your CPU. The panel on the right draws this as a timeline — one line per register — so you can literally watch your computer compute.
+
+> **Why `list(regs)`?** We snapshot a *copy* each time. If we stored the same list over and over, every snapshot would end up showing the final values. Copying freezes each moment in time.
+
+---
+
+## Look How Far You've Come
+
+Stop and take this in. Ten weeks ago, you started with a single idea: a switch that's either ON or OFF — a `1` or a `0`. From that one idea, you built:
+
+- **Gates** (Week 1–2): AND, OR, NOT, XOR, MUX — decisions from switches
+- **Arithmetic** (Week 3–4): adders that add and subtract real numbers
+- **Memory** (Week 5–6): flip-flops and registers that *remember*
+- **The ALU** (Week 7–8): one circuit that computes and reports flags
+- **Control** (Week 9): decode an instruction, run one step
+- **The CPU** (Week 10): loop over a program — a working computer
+
+Every single piece is made of the pieces before it, all the way down to that first switch. There is no magic anywhere in here. **A computer is just a giant, beautifully organized pile of logic gates** — and now you know exactly how it works, because you built one.
+
+---
+
+## Think About It
+
+1. **`run` is just a loop around `execute`.** The whole "magic" of a computer is repeating one simple step very fast. Does that change how you think about what computers *are*?
+
+2. **Where do programs come from?** You hand-wrote instruction numbers like `6` and `211`. Real programmers write code that gets *translated* into numbers like these. What might do that translating?
+
+3. **Our CPU has no way to repeat or skip instructions** — it runs straight through. Real CPUs can jump backward (loops!) and skip ahead (if-statements!) using the flags from Week 8. How might a flag decide *which instruction to fetch next*?
+
+4. **You built this from switches.** If you had millions of gates instead of a handful, what do you think you could build? (Spoiler: exactly what you're reading this on.)
+
+---
+
+## What You Just Built
+
+A **computer.** A real one — fetch, decode, execute, looping over a program, computing answers with circuits you designed yourself.
+
+- **run** — the fetch-decode-execute loop: a working CPU
+- **run_trace** — the same loop, recording history so you can watch it think
+
+That's the whole journey: from a light switch to a working processor. You didn't learn *about* computers this term — you **built** one, from the ground up, with nothing but logic.
+
+🎉 Congratulations. You understand, all the way down, how a computer works.
