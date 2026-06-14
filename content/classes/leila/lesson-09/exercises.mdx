@@ -1,0 +1,27 @@
+## Your mission
+
+### Exercise 1 — `count_differences(dna_a, dna_b)`
+
+Both strands are the **same length**. Walk through them together and count every position where the two letters are **different**. Return that count as a whole number.
+
+```python
+count_differences("GGGCCCAAA", "GGGCCCGGG")   # -> 3
+count_differences("AAAAAAAAA", "AAAAAAAAA")   # -> 0   (identical!)
+count_differences("ATCG", "TAGC")             # -> 4   (nothing matches)
+```
+
+**Hint:** `for a, b in zip(dna_a, dna_b):` gives you one pair of letters at a time. Start a counter at `0` and add `1` every time `a != b`.
+
+### Exercise 2 — `percent_match(dna_a, dna_b)`
+
+Now turn that into a percentage. First find how many letters **do** match (the total length minus the differences). Then divide by the total length and multiply by 100. Round to **1 decimal place**.
+
+```python
+percent_match("AAAAAAAAA", "AAAAAAAAA")   # -> 100.0
+percent_match("AAAAAAAAA", "AAAGGGAAA")   # -> 66.7
+percent_match("ATCG", "TAGC")             # -> 0.0
+```
+
+**Hint:** you can call your own `count_differences` here — no need to count again! Use `round(value, 1)` to round.
+
+When both work, press **Run** and watch the graph: as more letters get changed, your match percentage slides downhill. 📉

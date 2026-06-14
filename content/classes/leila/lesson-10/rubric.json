@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Distance is correct",
+    "weight": 40,
+    "description": "species_distance counts the letter differences between two equal-length genomes."
+  },
+  {
+    "criterion": "Finds the closest",
+    "weight": 40,
+    "description": "closest_relative checks every creature in the dictionary and returns the name with the smallest distance."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 20,
+    "description": "Reuses species_distance inside closest_relative, clear names, a return on every path."
+  }
+]

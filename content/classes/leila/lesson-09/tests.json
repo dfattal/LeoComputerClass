@@ -1,0 +1,21 @@
+[
+  {
+    "entry": "count_differences",
+    "cases": [
+      {"name": "identical twins", "args": ["AAAAAAAAA", "AAAAAAAAA"], "expected": 0},
+      {"name": "three genes changed", "args": ["AAAAAAAAA", "AAAGGGAAA"], "expected": 3},
+      {"name": "every letter differs", "args": ["ATCG", "TAGC"], "expected": 4},
+      {"name": "creature tails differ", "args": ["GGGCCCAAA", "GGGCCCGGG"], "expected": 3}
+    ]
+  },
+  {
+    "entry": "percent_match",
+    "tol": 0.05,
+    "cases": [
+      {"name": "perfect match", "args": ["AAAAAAAAA", "AAAAAAAAA"], "expected": 100.0},
+      {"name": "two out of three genes match", "args": ["AAAAAAAAA", "AAAGGGAAA"], "expected": 66.7},
+      {"name": "nothing matches", "args": ["ATCG", "TAGC"], "expected": 0.0},
+      {"name": "one tiny difference", "args": ["ATCGATCG", "ATCGATCC"], "expected": 87.5}
+    ]
+  }
+]

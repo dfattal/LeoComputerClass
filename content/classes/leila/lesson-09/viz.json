@@ -1,0 +1,17 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [12],
+  "title": "The more letters that differ, the lower the match drops",
+  "xLabel": "number of changed letters",
+  "yLabel": "percent match (%)",
+  "setup": "# --- plot helper (hidden) — your percent_match draws the curve ---\n# Start from a creature whose genome is all A's. Then keep flipping one more\n# letter to G and ask YOUR percent_match how alike the two strands still are.\n# More changes -> a lower match, so the curve should slide downhill.\ndef __plot(n):\n    base = \"A\" * n\n    yours = []\n    for k in range(n + 1):\n        variant = \"G\" * k + \"A\" * (n - k)\n        try:\n            m = percent_match(base, variant)          # <- the STUDENT's function\n            if not isinstance(m, (int, float)):\n                raise ValueError\n        except Exception:\n            m = round((n - k) / n * 100, 1)            # fallback so it's never blank\n        yours.append([k, m])\n    return [\n        {\"name\": \"how alike the two creatures are (your code)\", \"points\": yours, \"highlight\": True},\n    ]\n",
+  "caption": {
+    "todo": "Finish percent_match to plot how alike two creatures stay as their DNA changes.",
+    "tuning": "Your match curve is drawing — keep tuning percent_match so it slides downhill.",
+    "match": "✅ Every flipped letter drops the match — your comparison works!",
+    "checks": [
+      {"fn": "percent_match", "args": ["ATCGATCG", "ATCGATCC"], "expected": 87.5, "tol": 0.05}
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "plot",
+  "resultFn": "__plot",
+  "demoArgs": [0],
+  "title": "The shortest bar is your creature's closest relative",
+  "xLabel": "creature in the zoo",
+  "yLabel": "DNA distance (lower = more related)",
+  "setup": "# --- plot helper (hidden) — your species_distance draws every bar ---\n# Your creature's genome vs five animals in the zoo. Each bar is how far apart\n# their DNA is. The SHORTEST bar (highlighted) is the closest relative.\ndef __plot(_):\n    target = \"ATCATCATC\"\n    zoo = [\n        (\"wolf\", \"GTCATCATC\"),\n        (\"fox\", \"GGCATCATC\"),\n        (\"bear\", \"GGGATCATC\"),\n        (\"frog\", \"GGGGGCATC\"),\n        (\"snake\", \"GGGGGGGGC\"),\n    ]\n    dists = []\n    for name, genome in zoo:\n        try:\n            d = species_distance(target, genome)          # <- the STUDENT's function\n            if not isinstance(d, (int, float)):\n                raise ValueError\n        except Exception:\n            d = sum(1 for a, b in zip(target, genome) if a != b)\n        dists.append(d)\n    shortest = min(dists)\n    series = []\n    for i, ((name, _genome), d) in enumerate(zip(zoo, dists)):\n        x = i + 1\n        series.append({\n            \"name\": name + (\" (closest!)\" if d == shortest else \"\"),\n            \"points\": [[x, 0], [x, d]],                     # a vertical bar\n            \"highlight\": d == shortest,\n        })\n    return series\n",
+  "caption": {
+    "todo": "Finish species_distance to measure every creature and find the closest cousin.",
+    "tuning": "Your bars are growing — keep tuning species_distance so each one counts the real differences.",
+    "match": "✅ The shortest bar wins — that's your creature's closest relative!",
+    "checks": [
+      {"fn": "species_distance", "args": ["GGGCCCAAA", "GGGCCCGGG"], "expected": 3}
+    ]
+  }
+}

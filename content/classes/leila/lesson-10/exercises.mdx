@@ -1,0 +1,29 @@
+## Your mission
+
+### Exercise 1 — `species_distance(dna_a, dna_b)`
+
+Count how many letters differ between the two genomes (they're the same length). Return that count — it's the **distance** between the two species. Smaller means more closely related.
+
+```python
+species_distance("AAAAAAAAA", "AAAAAAAAA")   # -> 0   (the same creature)
+species_distance("ATCGATCG", "ATCGTTCG")     # -> 1   (one letter off)
+species_distance("TTTAAACCC", "GGGCCCAAA")   # -> 9   (nothing in common)
+```
+
+**Hint:** this is the same counting you did last lesson — walk both strands with `zip` and add `1` for every spot where the letters don't match.
+
+### Exercise 2 — `closest_relative(target, others)`
+
+`others` is a dictionary of `name → genome`. Measure the distance from `target` to **every** creature, and return the **name** of the one with the **smallest** distance.
+
+```python
+zoo = {"wolf": "GGGCCCAAA", "fox": "GGGCCCAAG", "lizard": "TTTAAACCC"}
+
+closest_relative("GGGCCCAAA", zoo)   # -> "wolf"   (an exact match!)
+closest_relative("GGGCCCAAG", zoo)   # -> "fox"
+closest_relative("TTTAAACCG", zoo)   # -> "lizard"
+```
+
+**Hint:** loop with `for name, genome in others.items():`. Keep track of the best name and its distance so far, and replace them whenever you find a smaller distance. Call your own `species_distance` to do the measuring.
+
+When both work, press **Run** — the graph turns the whole zoo into bars and lights up the closest cousin. 🐾

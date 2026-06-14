@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Counts differences correctly",
+    "weight": 45,
+    "description": "count_differences compares the strands position by position and returns the number of mismatches."
+  },
+  {
+    "criterion": "Percentage math",
+    "weight": 35,
+    "description": "percent_match turns matches into a percentage and rounds to 1 decimal place."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 20,
+    "description": "Reuses count_differences inside percent_match, clear names, a return on every path."
+  }
+]

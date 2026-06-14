@@ -1,0 +1,38 @@
+# Species Distance
+
+> If two creatures share almost all their DNA, they're cousins. Let's prove it with code.
+
+## The big idea
+
+Last lesson you counted how many letters two genomes disagree on. That count has a special name: the **distance** between two species.
+
+The rule is simple:
+
+- **Small distance** → the creatures are **closely related**.
+- **Big distance** → the creatures are **distant relatives**.
+
+Scientists use exactly this trick on real DNA to figure out the **tree of life** — which animals are cousins, and which split apart long ago. A wolf and a dog share almost all their DNA (tiny distance). A wolf and a goldfish do not (huge distance).
+
+```python
+species_distance("GGGCCCAAA", "GGGCCCGGG")   # -> 3  (close cousins)
+species_distance("TTTAAACCC", "GGGCCCAAA")   # -> 9  (totally different!)
+```
+
+## Finding the closest cousin
+
+Now imagine a whole **zoo** of creatures, each with its own genome, stored in a dictionary:
+
+```python
+zoo = {"wolf": "GGGCCCAAA", "fox": "GGGCCCAAG", "lizard": "TTTAAACCC"}
+```
+
+To find a mystery creature's closest relative, you measure the distance to **every** animal in the zoo and keep the one with the **smallest** distance.
+
+It's like finding which friend lives nearest your house — you check the distance to each one and pick the shortest.
+
+## What you'll build
+
+1. **`species_distance`** — counts the letter differences between two genomes (the same counting idea as before, now named "distance").
+2. **`closest_relative`** — searches a whole zoo and returns the name of the nearest cousin.
+
+When both work, the graph draws a bar for every creature. The **shortest bar** is the closest relative — that's the heart of how a real family tree gets built. 🌳

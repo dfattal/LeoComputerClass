@@ -1,0 +1,40 @@
+# Compare Two Sequences
+
+> Two creatures, two strands of DNA. How can code tell us how alike they are?
+
+## The big idea
+
+Every living thing carries its instructions as a long string of `A`, `T`, `C`, and `G`. If two creatures are closely related, their DNA strands look **almost the same**. If they're very different, their strands have **lots of mismatched letters**.
+
+So to compare two creatures, we can line their genomes up side by side and count the spots where the letters disagree.
+
+Imagine two friends spelling the same word:
+
+```
+Creature A:  G G G C C C A A A
+Creature B:  G G G C C C G G G
+             ✓ ✓ ✓ ✓ ✓ ✓ ✗ ✗ ✗
+```
+
+The first six letters match perfectly. The last three are different. So these two creatures differ in **3** spots out of 9.
+
+## Lining strands up with `zip`
+
+Python has a neat tool called `zip` that grabs one letter from each strand at the same time:
+
+```python
+for a, b in zip("GGG", "GCG"):
+    print(a, b)
+# G G
+# G C
+# G G
+```
+
+Now you can check `a != b` (`!=` means "not equal") and count every mismatch.
+
+## What you'll build
+
+1. **`count_differences`** — counts how many positions don't match. This number is called the **distance** between two genomes.
+2. **`percent_match`** — turns that count into a friendly percentage, so `66.7%` means "these two creatures share two thirds of their DNA."
+
+These two tools are exactly how real scientists measure how related two species are — and in the next lesson you'll use them to build a creature family tree.

@@ -1,0 +1,19 @@
+[
+  {
+    "entry": "species_distance",
+    "cases": [
+      {"name": "same creature", "args": ["AAAAAAAAA", "AAAAAAAAA"], "expected": 0},
+      {"name": "one gene apart", "args": ["ATCGATCG", "ATCGTTCG"], "expected": 1},
+      {"name": "tails differ", "args": ["GGGCCCAAA", "GGGCCCGGG"], "expected": 3},
+      {"name": "totally different", "args": ["TTTAAACCC", "GGGCCCAAA"], "expected": 9}
+    ]
+  },
+  {
+    "entry": "closest_relative",
+    "cases": [
+      {"name": "exact twin in the zoo", "args": ["GGGCCCAAA", {"wolf": "GGGCCCAAA", "fox": "GGGCCCAAG", "lizard": "TTTAAACCC"}], "expected": "wolf"},
+      {"name": "fox is nearest", "args": ["GGGCCCAAG", {"wolf": "GGGCCCAAA", "fox": "GGGCCCAAG", "lizard": "TTTAAACCC"}], "expected": "fox"},
+      {"name": "lizard is nearest", "args": ["TTTAAACCG", {"wolf": "GGGCCCAAA", "fox": "GGGCCCAAG", "lizard": "TTTAAACCC"}], "expected": "lizard"}
+    ]
+  }
+]

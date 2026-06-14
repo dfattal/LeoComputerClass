@@ -94,7 +94,7 @@ export const weeks: Week[] = [
     title: "Compare Two Sequences",
     summary: "How similar are two DNA strands? Count the differences",
     phase: 4,
-    status: "planned",
+    status: "published",
   },
   {
     week: 10,
@@ -102,7 +102,7 @@ export const weeks: Week[] = [
     title: "Species Distance",
     summary: "Use DNA differences to figure out which creatures are related",
     phase: 4,
-    status: "planned",
+    status: "published",
   },
   {
     week: 11,
