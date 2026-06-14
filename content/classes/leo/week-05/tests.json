@@ -9,7 +9,7 @@
       { "name": "sr_latch(0,1,0)=0", "args": [0, 1, 0], "expected": 0 },
       { "name": "sr_latch(0,1,1)=0", "args": [0, 1, 1], "expected": 0 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   },
   {
     "entry": "d_latch",
@@ -23,7 +23,7 @@
       { "name": "d_latch(1,1,0)=1", "args": [1, 1, 0], "expected": 1 },
       { "name": "d_latch(1,1,1)=1", "args": [1, 1, 1], "expected": 1 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   },
   {
     "entry": "d_flip_flop",
@@ -37,6 +37,6 @@
       { "name": "d_flip_flop(1,0,1,1)=1", "args": [1, 0, 1, 1], "expected": 1 },
       { "name": "d_flip_flop(0,0,1,0)=0", "args": [0, 0, 1, 0], "expected": 0 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   }
 ]

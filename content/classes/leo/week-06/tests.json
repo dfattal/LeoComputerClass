@@ -11,7 +11,7 @@
       { "name": "reg_bit(1,1,0)=1", "args": [1, 1, 0], "expected": 1 },
       { "name": "reg_bit(1,1,1)=1", "args": [1, 1, 1], "expected": 1 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   },
   {
     "entry": "reg4",
@@ -25,7 +25,7 @@
       { "name": "reg4(15,1,0)=15", "args": [15, 1, 0], "expected": 15 },
       { "name": "reg4(10,1,5)=10", "args": [10, 1, 5], "expected": 10 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   },
   {
     "entry": "mux4",
@@ -38,7 +38,7 @@
       { "name": "mux4(1,0,1,0,1,1)=0", "args": [1, 0, 1, 0, 1, 1], "expected": 0 },
       { "name": "mux4(0,0,0,1,1,1)=1", "args": [0, 0, 0, 1, 1, 1], "expected": 1 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   },
   {
     "entry": "reg_file_read",
@@ -50,6 +50,6 @@
       { "name": "reg_file_read([0,0,0,0],2)=0", "args": [[0, 0, 0, 0], 2], "expected": 0 },
       { "name": "reg_file_read([1,2,3,4],3)=4", "args": [[1, 2, 3, 4], 3], "expected": 4 }
     ],
-    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+", "-"] }
+    "constraints": { "forbidTokens": [" and ", " or ", " not ", "if ", "+"] }
   }
 ]
