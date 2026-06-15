@@ -1,0 +1,103 @@
+[
+  {
+    "entry": "cabbage_color",
+    "cases": [
+      {
+        "name": "pH 0 (battery acid) is red",
+        "args": [
+          0
+        ],
+        "expected": "red"
+      },
+      {
+        "name": "pH 2 (lemon) is red",
+        "args": [
+          2
+        ],
+        "expected": "red"
+      },
+      {
+        "name": "pH 5 (coffee) is purple",
+        "args": [
+          5
+        ],
+        "expected": "purple"
+      },
+      {
+        "name": "pH 7 (pure water) is blue",
+        "args": [
+          7
+        ],
+        "expected": "blue"
+      },
+      {
+        "name": "pH 9 (baking soda) is green",
+        "args": [
+          9
+        ],
+        "expected": "green"
+      },
+      {
+        "name": "pH 11 (ammonia) is green",
+        "args": [
+          11
+        ],
+        "expected": "green"
+      },
+      {
+        "name": "pH 13 (bleach) is yellow",
+        "args": [
+          13
+        ],
+        "expected": "yellow"
+      },
+      {
+        "name": "pH 14 (drain cleaner) is yellow",
+        "args": [
+          14
+        ],
+        "expected": "yellow"
+      }
+    ]
+  },
+  {
+    "entry": "is_acid",
+    "cases": [
+      {
+        "name": "pH 2 is an acid",
+        "args": [
+          2
+        ],
+        "expected": true
+      },
+      {
+        "name": "pH 6 is an acid",
+        "args": [
+          6
+        ],
+        "expected": true
+      },
+      {
+        "name": "pH 7 is NOT an acid",
+        "args": [
+          7
+        ],
+        "expected": false
+      },
+      {
+        "name": "pH 10 is NOT an acid",
+        "args": [
+          10
+        ],
+        "expected": false
+      },
+      {
+        "name": "pH 0 is an acid",
+        "args": [
+          0
+        ],
+        "expected": true
+      }
+    ]
+  }
+]

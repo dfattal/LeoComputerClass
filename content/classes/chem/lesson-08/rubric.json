@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "lattice_side returns 2 * layers + 1; crystal_size returns the side squared."
+  },
+  {
+    "criterion": "Building on lattice_side",
+    "weight": 25,
+    "description": "crystal_size reuses lattice_side rather than re-deriving the formula, showing the side-squared relationship."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, a helper variable for the side, and a return on every path."
+  }
+]

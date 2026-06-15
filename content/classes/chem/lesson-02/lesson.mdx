@@ -1,0 +1,48 @@
+# The Element Family
+
+> Great work building atoms, {{FIRST_NAME}}! 🔬 Now here's a mystery scientists puzzled over for ages: there are over a hundred different elements, but lots of them act *almost exactly the same* as each other. Why? Today you'll crack it — and discover the secret hiding in the outer shell.
+
+## Phase 1: What Everything Is Made Of
+
+---
+
+## Only the outside matters
+
+Remember how electrons stack in shells — **2** in the first, then **8**, then **8**? It turns out an atom mostly cares about just **one** of those shells: the **outermost** one. The electrons way out on the edge are the ones that bump into other atoms, so they decide how the atom behaves.
+
+We call that count the atom's **family number** (scientists call it the *valence*).
+
+```python
+shells(11)            # -> [2, 8, 1]   sodium
+outer_electrons(11)   # -> 1           just 1 lonely electron on the outside
+```
+
+Sodium has 11 electrons, but only **1** is in the outer shell. That single outer electron is its whole personality.
+
+## Same outside = same family
+
+Here's the cool part. **Lithium** has 3 electrons → `[2, 1]` → **1** outer. **Sodium** has 11 → `[2, 8, 1]` → also **1** outer. Different atoms, but the *same* number of outer electrons — so they act like cousins. They're in the same **family**.
+
+```python
+same_family(3, 11)   # -> True   lithium & sodium: both 1 outer
+same_family(6, 8)    # -> False  carbon (4 outer) & oxygen (6 outer)
+```
+
+## Why the table has columns
+
+If you line up all the elements in order and start a new row every time a shell fills up, something magical happens: the families stack into **columns**. Every element in a column has the same number of outer electrons.
+
+That grid is the famous **periodic table** — and you're about to draw it yourself, colored by family. 🌈
+
+## See it
+
+When you press **Run**, the panel shows two steps:
+
+🟡 **Outer shell** — your atom with its outer electrons glowing yellow · 🌈 **The Table** — the first 18 elements, each colored by family number. Watch the columns light up in matching colors!
+
+## What you'll build
+
+- **`outer_electrons(electrons)`** — return how many electrons are in the outer shell.
+- **`same_family(a, b)`** — return `True` if two atoms have the same number of outer electrons.
+
+Two tiny functions, and suddenly the whole periodic table makes sense. Let's go! 🧪

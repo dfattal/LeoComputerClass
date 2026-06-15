@@ -1,0 +1,35 @@
+## Your mission
+
+### Exercise 1 — `spacing(temp)`
+
+Turn a temperature (0–100) into a gap between particles.
+
+```python
+spacing(0)     # -> 0    freezing: packed
+spacing(20)    # -> 0    still packed
+spacing(50)    # -> 1    warm: loosening up
+spacing(90)    # -> 2    hot: spread out
+```
+
+The rule:
+- temp **under 34** → `0`
+- temp **34 to 66** → `1`
+- temp **67 and up** → `2`
+
+**Hint:** use `if`, `elif`, and `else`. For example: `if temp < 34: return 0`.
+
+---
+
+### Exercise 2 — `state_name(temp)`
+
+Give the state of matter as a word.
+
+```python
+state_name(10)   # -> "solid"
+state_name(50)   # -> "liquid"
+state_name(90)   # -> "gas"
+```
+
+**Hint:** call `spacing(temp)` first. A spacing of `0` means `"solid"`, `1` means `"liquid"`, `2` means `"gas"`.
+
+When both work, press **Run** and flip between **❄️ Cold**, **💧 Warm**, and **🔥 Hot**. Notice the block always has the same nine particles — they just spread out as it heats up. ☁️

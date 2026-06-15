@@ -1,0 +1,91 @@
+{
+  "type": "draw",
+  "title": "Atoms line up into a perfect repeating pattern \u2014 watch a crystal grow ring by ring",
+  "todo": "Finish lattice_side(layers) to set the crystal's width and grow it out layer by layer.",
+  "setup": "# The two atoms that take turns in a salt crystal.\nION_A = \"purple\"   # sodium\nION_B = \"green\"    # chlorine\n\n\ndef __show_crystal(layers):\n    # Build the square lattice, side = lattice_side(layers). Atoms alternate\n    # like a checkerboard, so the pattern is perfectly symmetric.\n    side = lattice_side(layers)\n    grid = []\n    for r in range(side):\n        row = []\n        for c in range(side):\n            row.append(ION_A if (r + c) % 2 == 0 else ION_B)\n        grid.append(row)\n    return grid\n",
+  "stages": [
+    {
+      "fn": "__show_crystal",
+      "args": [
+        0
+      ],
+      "label": "Seed",
+      "expected": [
+        [
+          "purple"
+        ]
+      ],
+      "caption": "\ud83d\udd38 It all starts with a single seed atom."
+    },
+    {
+      "fn": "__show_crystal",
+      "args": [
+        1
+      ],
+      "label": "Growing",
+      "expected": [
+        [
+          "purple",
+          "green",
+          "purple"
+        ],
+        [
+          "green",
+          "purple",
+          "green"
+        ],
+        [
+          "purple",
+          "green",
+          "purple"
+        ]
+      ],
+      "caption": "\u2728 One layer added \u2014 a 3\u00d73 patch, atoms taking turns like a checkerboard."
+    },
+    {
+      "fn": "__show_crystal",
+      "args": [
+        2
+      ],
+      "label": "Full crystal",
+      "expected": [
+        [
+          "purple",
+          "green",
+          "purple",
+          "green",
+          "purple"
+        ],
+        [
+          "green",
+          "purple",
+          "green",
+          "purple",
+          "green"
+        ],
+        [
+          "purple",
+          "green",
+          "purple",
+          "green",
+          "purple"
+        ],
+        [
+          "green",
+          "purple",
+          "green",
+          "purple",
+          "green"
+        ],
+        [
+          "purple",
+          "green",
+          "purple",
+          "green",
+          "purple"
+        ]
+      ],
+      "caption": "\ud83d\udc8e A finished 5\u00d75 crystal \u2014 perfectly symmetric, just like real salt. You did it!"
+    }
+  ]
+}

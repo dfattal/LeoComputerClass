@@ -1,0 +1,206 @@
+{
+  "type": "draw",
+  "title": "Pigments race up the paper at different speeds, so one marker splits into separate color bands",
+  "todo": "Finish travel(speed, time) to climb each pigment up the paper and watch them separate.",
+  "setup": "PAPER_H = 8   # rows 0 (top) .. 7 (bottom start line)\nWIDTH = 5\n\n# Three hidden pigments in a \"black\" marker, each with its own climbing speed.\nPIGMENTS = [(\"yellow\", 3), (\"red\", 2), (\"blue\", 1)]\n\n\ndef __show_strip(time):\n    # Draw the paper after `time` steps. Each pigment sits in its own column,\n    # climbed up by travel(speed, time). They start mixed at the bottom and\n    # spread into separate bands as time goes on.\n    grid = [[\"\" for _ in range(WIDTH)] for _ in range(PAPER_H)]\n    for i, (color, speed) in enumerate(PIGMENTS):\n        dist = travel(speed, time)\n        row = (PAPER_H - 1) - dist\n        col = i + 1\n        grid[row][col] = color\n    return grid\n",
+  "stages": [
+    {
+      "fn": "__show_strip",
+      "args": [
+        0
+      ],
+      "label": "Start",
+      "expected": [
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "yellow",
+          "red",
+          "blue",
+          ""
+        ]
+      ],
+      "caption": "\u26ab Start: all three pigments are dabbed together at the bottom \u2014 looks like one color."
+    },
+    {
+      "fn": "__show_strip",
+      "args": [
+        1
+      ],
+      "label": "Climbing",
+      "expected": [
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "yellow",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "red",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "blue",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "caption": "\u2b06\ufe0f The water creeps up and carries the pigments along \u2014 they're starting to pull apart."
+    },
+    {
+      "fn": "__show_strip",
+      "args": [
+        2
+      ],
+      "label": "Separated",
+      "expected": [
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "yellow",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "red",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "blue",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "caption": "\ud83c\udf08 Separated! Fast yellow climbed highest, slow blue stayed low \u2014 one marker, three hidden colors."
+    }
+  ]
+}

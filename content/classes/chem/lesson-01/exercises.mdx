@@ -1,0 +1,29 @@
+## Your mission
+
+### Exercise 1 — `electron_count(protons)`
+
+A neutral atom has one electron for every proton. Give back the matching number of electrons.
+
+```python
+electron_count(1)    # -> 1    (hydrogen)
+electron_count(6)    # -> 6    (carbon)
+electron_count(10)   # -> 10   (neon)
+```
+
+**Hint:** the answer *is* the number you were handed — just `return protons`.
+
+---
+
+### Exercise 2 — `shells(electrons)`
+
+Stack the electrons into shells and give back a list. The first shell holds up to **2**, the next up to **8**, the next up to **8**. Fill the inner ones first.
+
+```python
+shells(2)    # -> [2]        helium fills shell 1
+shells(6)    # -> [2, 4]     carbon: 2 inside, 4 in the next
+shells(10)   # -> [2, 8]     neon fills both shells
+```
+
+**Hint:** keep a `remaining` counter starting at `electrons`. Loop over the caps `[2, 8, 8]`. Each time, add `min(cap, remaining)` to your list and subtract that from `remaining`. Stop as soon as `remaining` hits 0.
+
+When both work, press **Run** and watch the panel build your atom — the nucleus in the middle, then the electrons snapping into their shells. ⚛️ Try flipping to the **Atom** step to see the whole thing!

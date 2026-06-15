@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "outer_electrons returns the last number in shells(electrons); same_family returns True exactly when two atoms have the same outer-electron count."
+  },
+  {
+    "criterion": "Reusing shells()",
+    "weight": 25,
+    "description": "Uses the given shells() helper and indexing ([-1]) rather than hard-coding answers per element."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, returns a real bool from same_family, and a return on every path."
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "question": "A salt crystal is big and sparkly, but it's really just tiny atoms doing simple things. Tell the story of how you get from a single atom all the way up to a whole crystal.",
+  "guidance": "You built every step. Walk it up: atom → outer shell → bonds → molecules → atoms lining up into a repeating crystal pattern.",
+  "lookFor": [
+    "An atom is a nucleus with electrons in shells, and its outer electrons decide how it behaves",
+    "Atoms join together by sharing outer electrons (bonds), making molecules or pairs of atoms",
+    "A crystal is atoms lining up into a neat, repeating pattern (a lattice), like a checkerboard of two kinds of atom",
+    "The big idea: everything is made of the same tiny atoms — what changes is how they're arranged",
+    "Something big like a crystal is just a simple pattern of atoms copied over and over"
+  ],
+  "exemplar": "It starts with one atom — a nucleus in the middle with electrons spinning around it in shells. The electrons on the outside are the important ones, because they decide how the atom acts. Atoms want their outer shell full, so they share electrons with each other. That sharing is a bond, and it sticks atoms together into molecules or pairs. In salt, two kinds of atom grab onto each other and then line up in a neat, repeating checkerboard pattern. When that pattern copies itself over and over and over, it grows into a whole crystal you can actually see and hold. So a sparkly crystal isn't really one big fancy thing — it's just simple atoms, following simple rules, arranged in a pattern a zillion times. That's the big idea of the whole class: everything is made of the same tiny atoms, and all that changes is how they're arranged."
+}

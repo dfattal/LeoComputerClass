@@ -113,6 +113,19 @@ export const classes: ClassDef[] = [
     language: "javascript",
     level: "intermediate",
   },
+  {
+    slug: "chem",
+    name: "Kitchen Chemistry",
+    tagline: "Build Atoms, Brew Reactions",
+    description:
+      "Become the boss of your own lab! Start with the tiniest LEGO bricks everything is made of — atoms — and draw them right on the screen. Snap them into molecules, heat them until they melt and boil, then make reactions you can actually see: color-changing cabbage juice, rainbow markers split apart, and a sparkling crystal you grow yourself. Write simple Python and watch real chemistry light up the canvas.",
+    accentColor: "cyan",
+    heroImage: "/hero-chem.webp",
+    studentName: "friend",
+    contentDir: "chem",
+    language: "python",
+    level: "intermediate",
+  },
   // ── Advanced — sequels & heavy math ──
   {
     slug: "leo-space",

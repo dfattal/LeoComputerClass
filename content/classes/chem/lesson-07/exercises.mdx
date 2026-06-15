@@ -1,0 +1,30 @@
+## Your mission
+
+### Exercise 1 — `travel(speed, time)`
+
+How far up the paper has a pigment climbed? Speed times time — but it can't go past the top of the paper (7 squares).
+
+```python
+travel(3, 2)   # -> 6
+travel(1, 5)   # -> 5
+travel(2, 0)   # -> 0    no time, no climbing
+travel(3, 5)   # -> 7    would be 15, but the paper caps at 7
+```
+
+**Hint:** Python's `min` keeps the smaller of two numbers — `return min(speed * time, MAX)`.
+
+---
+
+### Exercise 2 — `highest(speeds, time)`
+
+Given a list of pigment speeds, return how far the **highest** one has climbed.
+
+```python
+highest([1, 2, 3], 2)   # -> 6    the speed-3 pigment
+highest([1, 2, 3], 1)   # -> 3
+highest([2, 2], 3)      # -> 6
+```
+
+**Hint:** `max(...)` finds the biggest. You can write `max(travel(s, time) for s in speeds)`.
+
+When both work, press **Run** and flip **Start → Climbing → Separated** to watch one dot split into three colored bands. 🌈

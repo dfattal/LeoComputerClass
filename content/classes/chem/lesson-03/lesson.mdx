@@ -1,0 +1,49 @@
+# Sticking Atoms Together
+
+> You can build atoms and sort them into families, {{FIRST_NAME}} — now let's make them *hold hands.* 🤝 Almost nothing in your kitchen is a lone atom. Water, air, sugar, soda fizz — they're all atoms snapped together into **molecules**. Today you'll build a few, right on the canvas.
+
+## Phase 1: What Everything Is Made Of
+
+---
+
+## Atoms want a full outer shell
+
+Remember the outer shell from last lesson? Here's the thing: atoms *really* want that outer shell to be **full**. Most atoms feel full with **8** electrons out there. Tiny hydrogen is the exception — it's happy with just **2**.
+
+An atom that isn't full will grab onto another atom and **share** electrons to top itself up. A shared pair of electrons is called a **bond** — picture it as a little stick connecting two atoms. 🔗
+
+## How many bonds?
+
+The number of bonds an atom makes is simply **how many more electrons it needs**:
+
+```python
+bonds_needed(1, 2)   # -> 1   hydrogen: has 1 outer, wants 2
+bonds_needed(6, 8)   # -> 2   oxygen: has 6, wants 8 -> shares 2 (a double bond!)
+bonds_needed(4, 8)   # -> 4   carbon: has 4, wants 8 -> makes 4 bonds
+```
+
+When two atoms share **two** pairs, that's a **double bond** — a stronger, two-stick connection.
+
+## Counting a molecule
+
+A molecule is just a group of atoms. **Water** is 2 hydrogens + 1 oxygen, which we write as `H₂O`. To count all its atoms, add them up:
+
+```python
+molecule_atoms([2, 1])   # -> 3   water: 2 H + 1 O
+molecule_atoms([1, 2])   # -> 3   carbon dioxide: 1 C + 2 O
+```
+
+## See your molecules
+
+Press **Run** and flip between three molecules the panel builds for you:
+
+💧 **Water** (`H–O–H`) · 🌬️ **Oxygen** (`O=O`, the air you breathe) · 🫧 **Carbon dioxide** (`O=C=O`, soda fizz)
+
+Each atom is a colored ball — 🔴 oxygen, ⚪ hydrogen, ⚫ carbon — and each gray stick is a bond. Watch the double bonds show up as **two** sticks!
+
+## What you'll build
+
+- **`bonds_needed(outer, wants)`** — how many bonds an atom makes to fill up.
+- **`molecule_atoms(counts)`** — total atoms in a molecule.
+
+Get `bonds_needed` right and your molecules snap together with exactly the right sticks. Let's build! 🧪

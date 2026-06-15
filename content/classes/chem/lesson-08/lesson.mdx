@@ -1,0 +1,53 @@
+# Grow a Crystal
+
+> Last stop in the lab, {{FIRST_NAME}}, and it's the prettiest one. 💎 You've gone from a single atom all the way to reactions. Now let's watch atoms do something amazing on their own: line up into a **crystal** — a perfect, sparkly, repeating pattern. Every snowflake, every grain of salt, every gemstone is built this way.
+
+## Phase 2: Reactions You Can See
+
+---
+
+## What makes a crystal
+
+When atoms settle down slowly, they don't pile up randomly. They snap into a **lattice** — a tidy grid where the same pattern repeats over and over. Table salt is the classic example: **sodium** and **chlorine** atoms taking turns, like a 3D checkerboard. 🧂
+
+That's *why* crystals have flat faces and sharp corners — the neat inside pattern shows up on the outside.
+
+## Growing ring by ring
+
+A crystal grows outward from a single **seed** atom, adding square **rings** (we'll call them layers). Each new layer wraps all the way around, adding one atom on every side:
+
+- **0 layers** → just the seed → **1** across
+- **1 layer** → **3** across
+- **2 layers** → **5** across
+
+See the pattern? Each layer adds **2** to the width (one on the left, one on the right):
+
+```python
+lattice_side(0)   # -> 1    just the seed
+lattice_side(1)   # -> 3
+lattice_side(2)   # -> 5
+```
+
+## How many atoms total?
+
+A crystal is a **square**, so the total number of atoms is the side times itself:
+
+```python
+crystal_size(1)   # -> 9     a 3×3 patch
+crystal_size(2)   # -> 25    a 5×5 crystal
+```
+
+## Watch it grow
+
+Press **Run** and step through the chips:
+
+🔸 **Seed** → one atom · ✨ **Growing** → a 3×3 patch · 💎 **Full crystal** → a perfect 5×5 lattice
+
+The 🟣 purple and 🟢 green squares are the two atoms taking turns — a real salt-crystal checkerboard, grown by you.
+
+## What you'll build
+
+- **`lattice_side(layers)`** — atoms across one side.
+- **`crystal_size(layers)`** — total atoms in the square.
+
+This is your grand finale. From one atom to a whole crystal — let's grow it! 🧪✨

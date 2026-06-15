@@ -1,0 +1,91 @@
+[
+  {
+    "entry": "bonds_needed",
+    "cases": [
+      {
+        "name": "hydrogen wants 2, has 1 -> 1 bond",
+        "args": [
+          1,
+          2
+        ],
+        "expected": 1
+      },
+      {
+        "name": "oxygen wants 8, has 6 -> 2 bonds",
+        "args": [
+          6,
+          8
+        ],
+        "expected": 2
+      },
+      {
+        "name": "carbon wants 8, has 4 -> 4 bonds",
+        "args": [
+          4,
+          8
+        ],
+        "expected": 4
+      },
+      {
+        "name": "nitrogen wants 8, has 5 -> 3 bonds",
+        "args": [
+          5,
+          8
+        ],
+        "expected": 3
+      },
+      {
+        "name": "chlorine wants 8, has 7 -> 1 bond",
+        "args": [
+          7,
+          8
+        ],
+        "expected": 1
+      }
+    ]
+  },
+  {
+    "entry": "molecule_atoms",
+    "cases": [
+      {
+        "name": "water H2O has 3 atoms",
+        "args": [
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": 3
+      },
+      {
+        "name": "oxygen O2 has 2 atoms",
+        "args": [
+          [
+            2
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "name": "carbon dioxide CO2 has 3 atoms",
+        "args": [
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": 3
+      },
+      {
+        "name": "methane CH4 has 5 atoms",
+        "args": [
+          [
+            1,
+            4
+          ]
+        ],
+        "expected": 5
+      }
+    ]
+  }
+]

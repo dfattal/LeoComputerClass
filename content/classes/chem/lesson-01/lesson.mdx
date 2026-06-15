@@ -1,0 +1,57 @@
+# Atom Builder
+
+> Welcome to your lab, {{FIRST_NAME}}! 🔬 Everything around you — your chair, the air, even *you* — is built out of tiny pieces called **atoms**. They're way too small to see... so today you'll build one with code and watch it appear right on the screen. ⚛️
+
+## Phase 1: What Everything Is Made Of
+
+---
+
+## The big idea: what's inside an atom?
+
+An atom has two parts:
+
+- A **nucleus** in the very middle — a tight little clump of **protons**. The number of protons is the atom's secret name tag: 1 proton makes **hydrogen**, 6 makes **carbon**, 8 makes **oxygen**. Change the protons and you change what kind of stuff it is!
+- A swarm of **electrons** zooming around the nucleus, way out in rings called **shells**.
+
+Picture the nucleus as the Sun, and the electrons as tiny planets looping around it. 🌞🪐
+
+## Rule 1: a neutral atom is balanced
+
+Protons have a tiny **+** charge and electrons have a tiny **−** charge. In a normal, calm atom they balance out perfectly — so the number of electrons is **exactly the same** as the number of protons.
+
+```python
+# An atom with 6 protons (carbon) has...
+electron_count(6)   # -> 6 electrons
+```
+
+Easy: however many protons, that many electrons.
+
+## Rule 2: electrons stack in shells
+
+The electrons don't all pile into one ring. They fill up **shells**, one at a time, from the inside out:
+
+- The **first shell** holds up to **2** electrons.
+- The **next shell** holds up to **8**.
+
+So you fill the inner shell first, and only when it's full do electrons spill into the next one. Carbon has 6 electrons, so it goes **2 in the first shell, 4 in the next**:
+
+```python
+shells(6)   # -> [2, 4]
+```
+
+The list `[2, 4]` means "2 electrons in shell 1, 4 in shell 2." Neon has 10 electrons, so both shells fill right up: `[2, 8]`.
+
+## See your atom
+
+When you press **Run**, the panel draws your atom for you:
+
+🔴 the **red** square in the middle is the nucleus · 🔵 each **blue** dot is one electron in its shell
+
+There are two steps you can flip between: first the electrons you **counted**, then the finished **atom** with them ringed into shells. Watch carbon come to life! ⚛️
+
+## What you'll build
+
+- **`electron_count(protons)`** — give back how many electrons a neutral atom has.
+- **`shells(electrons)`** — stack the electrons into shells and return a list like `[2, 4]`.
+
+These two little functions are your first lab tools. By the end of this class you'll snap atoms into molecules, melt them, and even grow a crystal — but it all starts here, with one atom. Ready? 🧪

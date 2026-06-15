@@ -1,0 +1,97 @@
+[
+  {
+    "entry": "travel",
+    "cases": [
+      {
+        "name": "speed 3 for 2 steps -> 6",
+        "args": [
+          3,
+          2
+        ],
+        "expected": 6
+      },
+      {
+        "name": "speed 1 for 5 steps -> 5",
+        "args": [
+          1,
+          5
+        ],
+        "expected": 5
+      },
+      {
+        "name": "no time, no climbing -> 0",
+        "args": [
+          2,
+          0
+        ],
+        "expected": 0
+      },
+      {
+        "name": "can't climb past the top -> 7",
+        "args": [
+          3,
+          5
+        ],
+        "expected": 7
+      },
+      {
+        "name": "speed 2 for 3 steps -> 6",
+        "args": [
+          2,
+          3
+        ],
+        "expected": 6
+      }
+    ]
+  },
+  {
+    "entry": "highest",
+    "cases": [
+      {
+        "name": "fastest of 1,2,3 after 2 steps",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          2
+        ],
+        "expected": 6
+      },
+      {
+        "name": "fastest of 1,2,3 after 1 step",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          1
+        ],
+        "expected": 3
+      },
+      {
+        "name": "two equal pigments after 3 steps",
+        "args": [
+          [
+            2,
+            2
+          ],
+          3
+        ],
+        "expected": 6
+      },
+      {
+        "name": "one lonely pigment after 5 steps",
+        "args": [
+          [
+            1
+          ],
+          5
+        ],
+        "expected": 5
+      }
+    ]
+  }
+]

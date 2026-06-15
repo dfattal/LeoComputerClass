@@ -1,0 +1,227 @@
+{
+  "type": "draw",
+  "title": "Heat it up: the same particles go from packed (solid) to loose (liquid) to flying (gas)",
+  "todo": "Finish spacing(temp) to set the gap between particles \u2014 watch the block melt and boil.",
+  "setup": "PARTICLE = \"blue\"\nGRID = 7\n\n\ndef __blank(n=GRID):\n    return [[\"\" for _ in range(n)] for _ in range(n)]\n\n\ndef __show_state(temp):\n    # Always the SAME 9 particles (3 rows of 3) \u2014 matter is never created or\n    # destroyed. The only thing that changes is the gap between them, which is\n    # spacing(temp). Cold packs them tight; hot spreads them out.\n    grid = __blank()\n    gap = spacing(temp)\n    step = gap + 1\n    span = 2 * step\n    start = (GRID - 1 - span) // 2\n    for i in range(3):\n        for j in range(3):\n            r = start + i * step\n            c = start + j * step\n            grid[r][c] = PARTICLE\n    return grid\n",
+  "stages": [
+    {
+      "fn": "__show_state",
+      "args": [
+        10
+      ],
+      "label": "\u2744\ufe0f Cold",
+      "expected": [
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "blue",
+          "blue",
+          "blue",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "blue",
+          "blue",
+          "blue",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "blue",
+          "blue",
+          "blue",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "caption": "\u2744\ufe0f Cold! The 9 particles are packed into a tight block \u2014 that's a SOLID, like ice."
+    },
+    {
+      "fn": "__show_state",
+      "args": [
+        50
+      ],
+      "label": "\ud83d\udca7 Warm",
+      "expected": [
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "blue",
+          "",
+          "blue",
+          "",
+          "blue",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "blue",
+          "",
+          "blue",
+          "",
+          "blue",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "blue",
+          "",
+          "blue",
+          "",
+          "blue",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "caption": "\ud83d\udca7 Warmer! The same 9 particles loosen up and slide around \u2014 that's a LIQUID, like water."
+    },
+    {
+      "fn": "__show_state",
+      "args": [
+        90
+      ],
+      "label": "\ud83d\udd25 Hot",
+      "expected": [
+        [
+          "blue",
+          "",
+          "",
+          "blue",
+          "",
+          "",
+          "blue"
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "blue",
+          "",
+          "",
+          "blue",
+          "",
+          "",
+          "blue"
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "blue",
+          "",
+          "",
+          "blue",
+          "",
+          "",
+          "blue"
+        ]
+      ],
+      "caption": "\ud83d\udd25 Hot! The same 9 particles fly apart with big gaps \u2014 that's a GAS, like steam."
+    }
+  ]
+}

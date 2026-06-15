@@ -1,0 +1,30 @@
+## Your mission
+
+### Exercise 1 — `lattice_side(layers)`
+
+How many atoms run along one side of the square crystal? Start with the seed (1), and add 2 for every layer.
+
+```python
+lattice_side(0)   # -> 1    just the seed
+lattice_side(1)   # -> 3
+lattice_side(2)   # -> 5
+lattice_side(3)   # -> 7
+```
+
+**Hint:** the formula is `return 2 * layers + 1`.
+
+---
+
+### Exercise 2 — `crystal_size(layers)`
+
+The crystal is a square, so the total number of atoms is the side times itself.
+
+```python
+crystal_size(0)   # -> 1     a single atom
+crystal_size(1)   # -> 9     3 × 3
+crystal_size(2)   # -> 25    5 × 5
+```
+
+**Hint:** call `lattice_side(layers)` first, store it in a variable like `side`, then `return side * side`.
+
+When both work, press **Run** and flip **Seed → Growing → Full crystal** to watch your gem grow into a perfect checkerboard lattice. 💎✨

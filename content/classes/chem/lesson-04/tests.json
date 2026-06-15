@@ -1,0 +1,82 @@
+[
+  {
+    "entry": "spacing",
+    "cases": [
+      {
+        "name": "freezing (0) is packed",
+        "args": [
+          0
+        ],
+        "expected": 0
+      },
+      {
+        "name": "cold (20) is packed",
+        "args": [
+          20
+        ],
+        "expected": 0
+      },
+      {
+        "name": "warm (50) loosens up",
+        "args": [
+          50
+        ],
+        "expected": 1
+      },
+      {
+        "name": "hot (90) spreads out",
+        "args": [
+          90
+        ],
+        "expected": 2
+      },
+      {
+        "name": "boiling (100) spreads out",
+        "args": [
+          100
+        ],
+        "expected": 2
+      }
+    ]
+  },
+  {
+    "entry": "state_name",
+    "cases": [
+      {
+        "name": "10 degrees is solid",
+        "args": [
+          10
+        ],
+        "expected": "solid"
+      },
+      {
+        "name": "50 degrees is liquid",
+        "args": [
+          50
+        ],
+        "expected": "liquid"
+      },
+      {
+        "name": "90 degrees is gas",
+        "args": [
+          90
+        ],
+        "expected": "gas"
+      },
+      {
+        "name": "freezing is solid",
+        "args": [
+          0
+        ],
+        "expected": "solid"
+      },
+      {
+        "name": "boiling is gas",
+        "args": [
+          100
+        ],
+        "expected": "gas"
+      }
+    ]
+  }
+]

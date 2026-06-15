@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "atoms_of returns num * each; is_balanced returns True exactly when left == right."
+  },
+  {
+    "criterion": "Conservation idea",
+    "weight": 25,
+    "description": "Shows understanding that a balanced reaction has equal atom counts before and after — nothing created or destroyed."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, returns a real bool from is_balanced, and a return on every path."
+  }
+]

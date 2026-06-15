@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "cabbage_color returns the right color for every pH band; is_acid returns True exactly when pH < 7."
+  },
+  {
+    "criterion": "Handling the bands",
+    "weight": 25,
+    "description": "Uses ordered if/elif comparisons to split the 0–14 range cleanly, including the single neutral value 7."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, returns real strings/bools, and a return on every path."
+  }
+]

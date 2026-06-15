@@ -1,0 +1,38 @@
+## Your mission
+
+### Exercise 1 — `cabbage_color(pH)`
+
+Return the color red-cabbage juice turns at a given pH.
+
+```python
+cabbage_color(0)    # -> "red"
+cabbage_color(5)    # -> "purple"
+cabbage_color(7)    # -> "blue"
+cabbage_color(9)    # -> "green"
+cabbage_color(14)   # -> "yellow"
+```
+
+The rule:
+- pH **0–3** → `"red"`
+- pH **4–6** → `"purple"`
+- pH **7** → `"blue"`
+- pH **8–11** → `"green"`
+- pH **12–14** → `"yellow"`
+
+**Hint:** check from low to high with `if` / `elif`. Once you've ruled out 0–3, `elif pH <= 6` neatly catches 4, 5, and 6.
+
+---
+
+### Exercise 2 — `is_acid(pH)`
+
+Return `True` if the liquid is an acid (below 7).
+
+```python
+is_acid(2)    # -> True
+is_acid(7)    # -> False
+is_acid(10)   # -> False
+```
+
+**Hint:** one comparison — `return pH < 7`.
+
+When both work, press **Run** and flip to **The whole scale** to see the full pH rainbow you painted. 🌈

@@ -1,0 +1,30 @@
+## Your mission
+
+### Exercise 1 — `outer_electrons(electrons)`
+
+Give back how many electrons are in the **outermost** shell. You're handed `shells()` already — use it, then grab the last number.
+
+```python
+outer_electrons(1)    # -> 1    hydrogen
+outer_electrons(8)    # -> 6    oxygen
+outer_electrons(11)   # -> 1    sodium (just one on the outside!)
+outer_electrons(10)   # -> 8    neon (its outer shell is packed full)
+```
+
+**Hint:** the last item of a list is `mylist[-1]`. So `return shells(electrons)[-1]`.
+
+---
+
+### Exercise 2 — `same_family(a, b)`
+
+Two atoms belong to the same family when they have the **same** number of outer electrons. Return `True` or `False`.
+
+```python
+same_family(3, 11)   # -> True    lithium & sodium, both 1 outer
+same_family(8, 16)   # -> True    oxygen & sulfur, both 6 outer
+same_family(6, 8)    # -> False   carbon & oxygen
+```
+
+**Hint:** call `outer_electrons` on both numbers and check if they're equal with `==`.
+
+When both work, press **Run**. First you'll see sodium's single outer electron glow yellow — then flip to **The Table** and watch the families line up into colored columns. That's the periodic table, built by you! 🌈

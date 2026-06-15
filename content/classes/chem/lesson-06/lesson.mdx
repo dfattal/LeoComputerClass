@@ -1,0 +1,54 @@
+# Acids, Bases & the Color Spy
+
+> Time for some kitchen magic, {{FIRST_NAME}}! 🪄 Lemon juice, soap, soda, baking soda — some are **acids** and some are **bases**, but they all look like clear liquid. So how do scientists tell them apart? They use a **color spy**: a juice that changes color depending on what you drop it into. And you can make it from purple cabbage!
+
+## Phase 2: Reactions You Can See
+
+---
+
+## The pH scale
+
+Every liquid gets a number called its **pH**, from **0 to 14**:
+
+- **0 to 6** → **acid** (sour stuff: lemon 🍋, vinegar, soda)
+- **7** → **neutral** (pure water 💧 — right in the middle)
+- **8 to 14** → **base** (slippery stuff: soap 🧼, baking soda, bleach)
+
+The further from 7, the *stronger* it is. Lemon (pH 2) is a strong acid; bleach (pH 13) is a strong base.
+
+## Cabbage juice: the color spy
+
+Here's the cool trick: **red-cabbage juice** turns a different color at each pH. Drop it in and watch:
+
+| pH | What it is | Color |
+|----|-----------|-------|
+| 0–3 | strong acid | 🔴 red |
+| 4–6 | mild acid | 🟣 purple |
+| 7 | neutral | 🔵 blue |
+| 8–11 | mild base | 🟢 green |
+| 12–14 | strong base | 🟡 yellow |
+
+So a flash of red means "strong acid!" and yellow means "strong base!" One drop tells you everything.
+
+```python
+cabbage_color(2)   # -> "red"     lemon juice
+cabbage_color(7)   # -> "blue"    pure water
+cabbage_color(13)  # -> "yellow"  bleach
+is_acid(2)         # -> True
+is_acid(10)        # -> False     that's a base
+```
+
+## See the rainbow
+
+Press **Run** and flip between two views:
+
+🔴 **One test** — a tube of cabbage juice at pH 2 (watch it go red!) · 🌈 **The whole scale** — every pH from 0 to 14, painted with its cabbage color.
+
+When the whole scale lights up, you'll see acids on the left, neutral blue in the middle, and bases on the right.
+
+## What you'll build
+
+- **`cabbage_color(pH)`** — return the color for a pH.
+- **`is_acid(pH)`** — `True` if it's an acid.
+
+Let's catch some acids red-handed. 🧪

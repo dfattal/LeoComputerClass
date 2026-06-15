@@ -1,0 +1,81 @@
+[
+  {
+    "entry": "electron_count",
+    "cases": [
+      {
+        "name": "hydrogen has 1 proton",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "carbon has 6 protons",
+        "args": [
+          6
+        ],
+        "expected": 6
+      },
+      {
+        "name": "neon has 10 protons",
+        "args": [
+          10
+        ],
+        "expected": 10
+      }
+    ]
+  },
+  {
+    "entry": "shells",
+    "cases": [
+      {
+        "name": "hydrogen: 1 electron",
+        "args": [
+          1
+        ],
+        "expected": [
+          1
+        ]
+      },
+      {
+        "name": "helium fills shell 1",
+        "args": [
+          2
+        ],
+        "expected": [
+          2
+        ]
+      },
+      {
+        "name": "carbon: 2 then 4",
+        "args": [
+          6
+        ],
+        "expected": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "oxygen: 2 then 6",
+        "args": [
+          8
+        ],
+        "expected": [
+          2,
+          6
+        ]
+      },
+      {
+        "name": "neon fills both shells",
+        "args": [
+          10
+        ],
+        "expected": [
+          2,
+          8
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "travel returns speed * time capped at MAX (7); highest returns the largest travel distance among the speeds."
+  },
+  {
+    "criterion": "Using the cap",
+    "weight": 25,
+    "description": "Uses min() so a pigment never climbs past the top, and reuses travel() inside highest rather than recomputing."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, uses min()/max() rather than long if-chains, and a return on every path."
+  }
+]

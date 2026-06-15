@@ -76,6 +76,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | Leo's Proof Press | `leo-latex` | Typeset your own math book in LaTeX → e^{iπ} = −1 | Published (8) ✅ new — no reflection capstone (L8 *is* the capstone) |
 | Leo's Game Studio | `leo-games` | JavaScript → build an arcade game (Breakout) → publish it online for friends | Published (8) ✅ new "javascript" lesson kind; L8 *is* the capstone (no reflection) |
 | Operating Systems | `os` | You built the CPU — now build the OS that runs it (scheduler → memory → files → cache) | Published (7+1) ✅ all 8 lessons built; software sequel to the Computer Class; `slate` accent; Gantt/memory/disk/cache rendered on the `draw` grid |
+| Kitchen Chemistry | `chem` | Run your own lab: build atoms → molecules → states, then reactions you can see (balancing, pH, chromatography, crystals) | Published (8+1) ✅ — Leila's intro-chemistry class; canvas-heavy `draw` viz; `cyan` accent; signature = Bohr-atom drawer; every lesson paints on the grid |
 
 ---
 
@@ -214,6 +215,58 @@ math book ending at $e^{i\pi} = -1$. Accent `teal`, hero `/hero-latex.webp`.
   the AI editor persona carry the craftsmanship judgment instead.
 - No reflection capstone: lesson 8 already *is* the looking-back chapter, and
   the finished typeset book is the artifact.
+
+### Kitchen Chemistry — ✅ built as `chem`, 8 lessons + reflection published
+**Through-line:** "Run your own lab." Leila builds chemistry from the atom up,
+and **every single lesson paints its result on the `draw` grid** — this is the
+most canvas-heavy class yet, chosen to fit how Leila likes to learn. Level:
+intermediate. Accent: `cyan`. Signature widget: the **Bohr-atom drawer** from
+lesson 1.
+
+**As-built lesson arc** (Phase 1 *What Everything Is Made Of* → Phase 2
+*Reactions You Can See* → Phase 3 *The Big Picture*):
+1. **Atom Builder** — `electron_count` + `shells` (fill 2,8,8); the signature
+   Bohr atom (nucleus + electron rings).
+2. **The Element Family** — `outer_electrons` + `same_family`; highlights the
+   outer shell, then paints the first 18 elements into the periodic table
+   colored by family so the **columns light up** (period = row, valence = column).
+3. **Sticking Atoms Together** — `bonds_needed(outer, wants)` + `molecule_atoms`;
+   ball-and-stick **H₂O / O₂ / CO₂** (gray sticks = shared electrons, double
+   bonds = two sticks), bond count driven by `bonds_needed`.
+4. **Solid, Liquid, Gas** — `spacing(temp)` + `state_name`; the **same 9
+   particles** spread from a packed block to a scattered gas across three
+   temperature chips (conservation made visible).
+5. **Reactions = Rearranging** — `atoms_of` + `is_balanced`; Before/After of
+   `2 H₂ + O₂ → 2 H₂O`, count the colored balls and they match (conservation
+   of mass).
+6. **Acids, Bases & the Color Spy** — `cabbage_color(pH)` + `is_acid`; a single
+   test tube, then the **full pH rainbow** strip 0–14 painted by the indicator
+   function.
+7. **Mixing Colors & Chromatography** — `travel(speed, time)` (capped) +
+   `highest`; pigments climb a paper strip at different speeds and **separate
+   into bands** across three time chips.
+8. **Grow a Crystal** — `lattice_side` + `crystal_size`; a symmetric salt
+   **checkerboard lattice** grows seed → 3×3 → 5×5 (the pretty finale).
+9. **The Big Picture: From Atoms to Everything** — reflection capstone
+   (`reflection.json`, no Python): the kid re-explains how one atom scales up to
+   a whole crystal; the one idea is *everything is the same atoms, rearranged*
+   (Dalton → Mendeleev history).
+
+**Reusable tech / notes:**
+- No new lesson kind needed — the whole class rides the existing **`draw` viz**
+  (PixelCanvas) + **pin-to-play `stages`** (`leo-space`/`pixels` patterns).
+- Leaned hard on the **"hidden painter in viz setup"** technique from L1: the
+  student returns plain `int`/`list`/`bool`/`str` testable values, and a hidden
+  `__show_*` painter (duplicated in `reference.py` for `validate-class` and in
+  `viz.json`'s `setup` for the browser) turns those into a grid. Every painter
+  is **student-driven** — it calls the lesson's own function, so a wrong answer
+  changes the picture.
+- Authoring was fully **generated, never hand-authored**: a single
+  reference-driven generator read each `reference.py` (functions + painters +
+  an inert `TESTS_SPEC`/`STAGES_SPEC`/`VIZ_META` block, extracting the painter
+  source between `# === PAINTER START/END ===` markers) and emitted exact
+  `tests.json` + `viz.json`, so grids and expected values can't drift from the
+  answer key. `validate-class chem` = **175/175**, `npm run build` clean.
 
 ---
 

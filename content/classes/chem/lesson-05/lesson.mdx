@@ -1,0 +1,54 @@
+# Reactions = Rearranging
+
+> Welcome to Phase 2, {{FIRST_NAME}}! 🎉 You can build atoms, families, molecules, and states. Now for the part everyone calls "chemistry": **reactions** — when stuff changes into *new* stuff. The big secret? A reaction never really makes or destroys anything. It just **rearranges** the atoms you already had.
+
+## Phase 2: Reactions You Can See
+
+---
+
+## Hydrogen + oxygen → water
+
+Here's a real reaction. Take hydrogen gas and oxygen gas, add a spark, and you get **water**:
+
+```text
+2 H₂  +  O₂   →   2 H₂O
+```
+
+Read it like a recipe: **2** hydrogen molecules plus **1** oxygen molecule make **2** water molecules. The little arrow means "turns into."
+
+## Count the atoms — nothing escapes
+
+Now the magic. Let's count every atom on each side.
+
+**Before** the arrow:
+- Hydrogen: 2 molecules × 2 atoms = **4 H**
+- Oxygen: 1 molecule × 2 atoms = **2 O**
+
+**After** the arrow:
+- Water: 2 molecules × 2 hydrogens = **4 H**, and 2 molecules × 1 oxygen = **2 O**
+
+**4 H and 2 O on both sides!** The atoms didn't vanish or multiply — they just snapped together in a new way. This always-true rule is called **conservation of mass**. ⚖️
+
+## Counting with code
+
+```python
+atoms_of(2, 2)   # -> 4    2 molecules of H₂, 2 atoms each
+atoms_of(1, 2)   # -> 2    1 molecule of O₂, 2 atoms
+is_balanced(4, 4)  # -> True   same before and after = balanced!
+is_balanced(4, 2)  # -> False  uh oh, atoms went missing
+```
+
+## See it rearrange
+
+Press **Run** and flip between the two steps:
+
+⚗️ **Before** → 2 hydrogen molecules + 1 oxygen molecule · 💧 **After** → 2 water molecules
+
+Count the colored balls in each (ignore the gray bond sticks). 🔴 oxygen, ⚪ hydrogen. Same totals every time — proof that atoms only ever get rearranged!
+
+## What you'll build
+
+- **`atoms_of(num, each)`** — total atoms from a number of molecules.
+- **`is_balanced(left, right)`** — `True` when before and after match.
+
+Let's prove nothing ever disappears. 🧪

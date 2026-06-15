@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "bonds_needed returns wants - outer; molecule_atoms returns the sum of the counts list."
+  },
+  {
+    "criterion": "Understanding bonds",
+    "weight": 25,
+    "description": "Recognizes that a bond fills the outer shell and that needing 2 means a double bond (two sticks)."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, uses sum() rather than a manual loop, and a return on every path."
+  }
+]

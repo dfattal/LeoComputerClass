@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "spacing returns 0/1/2 at the right temperature thresholds; state_name maps those to solid/liquid/gas."
+  },
+  {
+    "criterion": "Using ranges",
+    "weight": 25,
+    "description": "Uses if/elif/else to split the temperature range cleanly, and builds state_name on top of spacing rather than repeating the thresholds."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, returns real strings, and a return on every path."
+  }
+]

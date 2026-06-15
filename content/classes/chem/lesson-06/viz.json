@@ -1,0 +1,102 @@
+{
+  "type": "draw",
+  "title": "Red-cabbage juice is a color spy \u2014 it turns acids and bases into different colors",
+  "todo": "Finish cabbage_color(pH) to paint the test tube and light up the whole pH rainbow.",
+  "setup": "def __show_tube(pH):\n    # A little test tube of cabbage juice at one pH. The top row is the empty\n    # rim; the rest is filled with whatever color this pH turns.\n    color = cabbage_color(pH)\n    grid = [[\"\", \"\", \"\"]]\n    for _ in range(4):\n        grid.append([color, color, color])\n    return grid\n\n\ndef __show_scale():\n    # The whole pH scale, 0 on the left to 14 on the right, each column painted\n    # the color cabbage juice turns there. A rainbow from acid to base!\n    return [[cabbage_color(pH) for pH in range(15)] for _ in range(3)]\n",
+  "stages": [
+    {
+      "fn": "__show_tube",
+      "args": [
+        2
+      ],
+      "label": "One test",
+      "expected": [
+        [
+          "",
+          "",
+          ""
+        ],
+        [
+          "red",
+          "red",
+          "red"
+        ],
+        [
+          "red",
+          "red",
+          "red"
+        ],
+        [
+          "red",
+          "red",
+          "red"
+        ],
+        [
+          "red",
+          "red",
+          "red"
+        ]
+      ],
+      "caption": "\ud83d\udd34 pH 2 is a strong acid (like lemon juice) \u2014 the cabbage juice flashes red!"
+    },
+    {
+      "fn": "__show_scale",
+      "args": [],
+      "label": "The whole scale",
+      "expected": [
+        [
+          "red",
+          "red",
+          "red",
+          "red",
+          "purple",
+          "purple",
+          "purple",
+          "blue",
+          "green",
+          "green",
+          "green",
+          "green",
+          "yellow",
+          "yellow",
+          "yellow"
+        ],
+        [
+          "red",
+          "red",
+          "red",
+          "red",
+          "purple",
+          "purple",
+          "purple",
+          "blue",
+          "green",
+          "green",
+          "green",
+          "green",
+          "yellow",
+          "yellow",
+          "yellow"
+        ],
+        [
+          "red",
+          "red",
+          "red",
+          "red",
+          "purple",
+          "purple",
+          "purple",
+          "blue",
+          "green",
+          "green",
+          "green",
+          "green",
+          "yellow",
+          "yellow",
+          "yellow"
+        ]
+      ],
+      "caption": "\ud83c\udf08 The full pH scale: red & purple acids on the left, blue water in the middle, green & yellow bases on the right."
+    }
+  ]
+}

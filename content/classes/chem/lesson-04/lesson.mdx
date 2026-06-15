@@ -1,0 +1,51 @@
+# Solid, Liquid, Gas
+
+> Here's something wild, {{FIRST_NAME}}: ice, water, and steam are all *exactly the same stuff.* 🧊💧☁️ Same molecules, every time. The only difference is how much **energy** they have. Today you'll heat a block of particles and watch it melt and boil — without ever changing what it's made of.
+
+## Phase 1: What Everything Is Made Of
+
+---
+
+## Energy = how much the particles jiggle
+
+Every particle is always jiggling a little. **Heat** is just extra jiggle. The more energy you add, the more they bounce — and the further apart they push:
+
+- **Cold** → barely jiggling, packed into a tight, neat block. That's a **solid** (like ice). 🧊
+- **Warm** → jiggling more, loose enough to slide past each other. That's a **liquid** (like water). 💧
+- **Hot** → jiggling like crazy, flying apart with big gaps. That's a **gas** (like steam). ☁️
+
+## Nothing is created or destroyed
+
+Here's the part scientists love: when ice melts into water, **not a single particle disappears.** It's the *same* nine particles whether they're frozen, melted, or boiled — they just spread out. Watch for that in the panel: the block always has the same number of dots.
+
+## From temperature to spacing
+
+We'll measure heat as a **temperature** from 0 (freezing) to 100 (boiling). Your job is to turn that into a **gap** between particles:
+
+```python
+spacing(20)    # -> 0    cold: packed tight
+spacing(50)    # -> 1    warm: a little room
+spacing(90)    # -> 2    hot: lots of space
+```
+
+And then name the state:
+
+```python
+state_name(20)   # -> "solid"
+state_name(90)   # -> "gas"
+```
+
+## See it melt
+
+Press **Run**, then flip between the temperature chips:
+
+❄️ **Cold** → packed solid · 💧 **Warm** → loose liquid · 🔥 **Hot** → spread-out gas
+
+Same nine particles every time — just more and more space between them. 🔥
+
+## What you'll build
+
+- **`spacing(temp)`** — return the gap (0, 1, or 2) for a temperature.
+- **`state_name(temp)`** — return `"solid"`, `"liquid"`, or `"gas"`.
+
+Time to heat things up! 🧪

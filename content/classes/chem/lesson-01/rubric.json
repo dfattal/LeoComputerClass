@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "electron_count returns the same number as protons; shells stacks electrons 2-then-8-then-8 and returns a list like [2, 4]."
+  },
+  {
+    "criterion": "Filling shells in order",
+    "weight": 25,
+    "description": "Inner shell fills before the next; partly-filled last shell is correct (carbon -> [2, 4], not [2, 8] or [6])."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, a loop rather than hard-coded cases, and a return on every path."
+  }
+]

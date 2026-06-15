@@ -1,0 +1,101 @@
+[
+  {
+    "entry": "outer_electrons",
+    "cases": [
+      {
+        "name": "hydrogen (1) has 1 outer",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "lithium (3) has 1 outer",
+        "args": [
+          3
+        ],
+        "expected": 1
+      },
+      {
+        "name": "carbon (6) has 4 outer",
+        "args": [
+          6
+        ],
+        "expected": 4
+      },
+      {
+        "name": "oxygen (8) has 6 outer",
+        "args": [
+          8
+        ],
+        "expected": 6
+      },
+      {
+        "name": "neon (10) fills its outer shell",
+        "args": [
+          10
+        ],
+        "expected": 8
+      },
+      {
+        "name": "sodium (11) has 1 outer",
+        "args": [
+          11
+        ],
+        "expected": 1
+      },
+      {
+        "name": "argon (18) fills its outer shell",
+        "args": [
+          18
+        ],
+        "expected": 8
+      }
+    ]
+  },
+  {
+    "entry": "same_family",
+    "cases": [
+      {
+        "name": "lithium & sodium are family",
+        "args": [
+          3,
+          11
+        ],
+        "expected": true
+      },
+      {
+        "name": "oxygen & sulfur are family",
+        "args": [
+          8,
+          16
+        ],
+        "expected": true
+      },
+      {
+        "name": "neon & argon are family",
+        "args": [
+          10,
+          18
+        ],
+        "expected": true
+      },
+      {
+        "name": "carbon & oxygen are not",
+        "args": [
+          6,
+          8
+        ],
+        "expected": false
+      },
+      {
+        "name": "hydrogen & helium are not",
+        "args": [
+          1,
+          2
+        ],
+        "expected": false
+      }
+    ]
+  }
+]

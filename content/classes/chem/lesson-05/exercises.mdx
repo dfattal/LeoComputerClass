@@ -1,0 +1,30 @@
+## Your mission
+
+### Exercise 1 — `atoms_of(num, each)`
+
+Count the atoms: how many molecules, times how many atoms in each.
+
+```python
+atoms_of(2, 2)   # -> 4    2 molecules of H₂
+atoms_of(1, 2)   # -> 2    1 molecule of O₂
+atoms_of(2, 1)   # -> 2    2 waters, 1 oxygen each
+atoms_of(3, 2)   # -> 6
+```
+
+**Hint:** it's a multiplication — `return num * each`.
+
+---
+
+### Exercise 2 — `is_balanced(left, right)`
+
+A reaction is balanced when the atom count **before** equals the atom count **after**. Return `True` or `False`.
+
+```python
+is_balanced(4, 4)   # -> True
+is_balanced(2, 2)   # -> True
+is_balanced(4, 2)   # -> False   atoms went missing!
+```
+
+**Hint:** compare the two numbers with `==` and return the result.
+
+When both work, press **Run** and flip between **Before** and **After**. Count the red and white balls on each side — they match, because atoms are only ever rearranged. ⚖️
