@@ -2,7 +2,7 @@
   "type": "draw",
   "title": "Your atom \u2014 a nucleus of protons with electrons ringed around it in shells",
   "todo": "Finish electron_count(protons) to count the electrons for a carbon atom (6 protons).",
-  "setup": "NUCLEUS = \"red\"\nELECTRON = \"blue\"\nSHELL_SLOTS = [\n    [(3, 5), (7, 5)],\n    [(1, 5), (9, 5), (5, 1), (5, 9), (2, 2), (2, 8), (8, 2), (8, 8)],\n]\n\ndef __blank():\n    return [[\"\" for _ in range(11)] for _ in range(11)]\n\ndef __show_count(protons=6):\n    grid = __blank()\n    grid[5][5] = NUCLEUS\n    n = electron_count(protons)\n    for j in range(n):\n        if j < 11:\n            grid[10][j] = ELECTRON\n    return grid\n\ndef __show_atom(protons=6):\n    grid = __blank()\n    grid[5][5] = NUCLEUS\n    layout = shells(electron_count(protons))\n    for i, count in enumerate(layout):\n        if i >= len(SHELL_SLOTS):\n            break\n        slots = SHELL_SLOTS[i]\n        for j in range(count):\n            if j < len(slots):\n                r, c = slots[j]\n                grid[r][c] = ELECTRON\n    return grid\n",
+  "setup": "# The hidden painter that turns numbers into a real atom. The student never\n# sees or writes these; they also live in viz.json's \"setup\" so the live canvas\n# can draw them, and are duplicated here so validate-class can run them.\nNUCLEUS = \"red\"      # the protons in the middle\nINNER = \"blue\"       # an electron tucked in an inner shell\nOUTER = \"yellow\"     # an electron in the OUTER shell \u2014 the ones that do chemistry\n\n# Where electron dots sit on an 11x11 grid (center is row 5, col 5).\n# Inner shell: a close pair directly above & below the nucleus.\n# Outer shell: a ring of up to 8, starting at the four diagonal corners so a\n# small atom like carbon shows a clean square ring (no overlap with the inner\n# pair), then the four edge midpoints once the shell is fuller.\nSHELL_SLOTS = [\n    [(3, 5), (7, 5)],\n    [(2, 2), (2, 8), (8, 2), (8, 8), (5, 1), (5, 9), (1, 5), (9, 5)],\n]\n\n\ndef __blank():\n    return [[\"\" for _ in range(11)] for _ in range(11)]\n\n\ndef __show_count(protons=6):\n    # Stage 1: the nucleus, plus a row of the electrons you counted (not yet\n    # tucked into shells) lined up along the bottom.\n    grid = __blank()\n    grid[5][5] = NUCLEUS\n    n = electron_count(protons)\n    for j in range(n):\n        if j < 11:\n            grid[10][j] = INNER\n    return grid\n\n\ndef __show_atom(protons=6):\n    # Stage 2: the whole atom \u2014 nucleus in the middle, electrons arranged into\n    # their shells as rings of dots. The OUTER shell glows yellow, because those\n    # outer electrons are the ones that decide how the atom behaves.\n    grid = __blank()\n    grid[5][5] = NUCLEUS\n    layout = shells(electron_count(protons))\n    last = len(layout) - 1\n    for i, count in enumerate(layout):\n        if i >= len(SHELL_SLOTS):\n            break\n        slots = SHELL_SLOTS[i]\n        for j in range(count):\n            if j < len(slots):\n                r, c = slots[j]\n                grid[r][c] = OUTER if i == last else INNER\n    return grid\n",
   "stages": [
     {
       "fn": "__show_count",
@@ -183,6 +183,32 @@
           "",
           "",
           "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "yellow",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "yellow",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
           "blue",
           "",
           "",
@@ -206,32 +232,6 @@
         [
           "",
           "",
-          "",
-          "",
-          "",
-          "blue",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        [
-          "",
-          "blue",
           "",
           "",
           "",
@@ -239,32 +239,6 @@
           "",
           "",
           "",
-          "blue",
-          ""
-        ],
-        [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
-        ],
-        [
-          "",
-          "",
-          "",
-          "",
-          "",
-          "blue",
-          "",
-          "",
-          "",
           "",
           ""
         ],
@@ -288,6 +262,32 @@
           "",
           "",
           "blue",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "yellow",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "yellow",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
           "",
           "",
           "",
@@ -308,7 +308,7 @@
           ""
         ]
       ],
-      "caption": "\u269b\ufe0f A carbon atom! 2 electrons in the inner shell, 4 in the next."
+      "caption": "\u269b\ufe0f A carbon atom! 2 blue electrons in the inner shell, and 4 yellow ones in the outer shell \u2014 the outer ones do all the chemistry."
     }
   ]
 }
