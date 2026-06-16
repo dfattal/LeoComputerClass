@@ -22,8 +22,10 @@ def is_balanced(left, right):
 
 
 # === PAINTER START ===
-H = "white"
-O = "red"
+# Atom colors chosen to stay visible on both the light and dark canvas (no pure
+# white, which vanishes on the white background).
+H = "green"   # hydrogen
+O = "red"     # oxygen
 STICK = "gray"
 WIDTH = 9
 
@@ -66,7 +68,7 @@ def __show_before():
 
 def __show_after():
     # The same atoms, rearranged into 2 water molecules (H2O). Count them:
-    # still 4 white H and 2 red O — nothing was lost.
+    # still 4 green H and 2 red O — nothing was lost.
     nO = atoms_of(1, 2)   # one water per oxygen atom -> 2 waters
     rows = [__blank_row()]
     for _ in range(nO):
@@ -95,9 +97,9 @@ TESTS_SPEC = [
 
 STAGES_SPEC = [
     {"fn": "__show_before", "args": [], "label": "Before",
-     "caption": "⚗️ Before: 2 hydrogen molecules + 1 oxygen molecule. Count them — 4 white H and 2 red O."},
+     "caption": "⚗️ Before: 2 hydrogen molecules + 1 oxygen molecule. Count them — 4 green H and 2 red O."},
     {"fn": "__show_after", "args": [], "label": "After",
-     "caption": "💧 After: 2 water molecules. Still 4 white H and 2 red O — nothing vanished, it just rearranged!"},
+     "caption": "💧 After: 2 water molecules. Still 4 green H and 2 red O — nothing vanished, it just rearranged!"},
 ]
 
 VIZ_META = {

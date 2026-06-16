@@ -23,10 +23,12 @@ def molecule_atoms(counts):
 
 
 # === PAINTER START ===
-# Atom colors. Bonds (shared electrons) are drawn as gray "sticks".
-H = "white"
-O = "red"
-C = "black"
+# Atom colors. Bonds (shared electrons) are drawn as gray "sticks". Colors are
+# chosen to stay visible on BOTH the light and dark canvas, so we avoid pure
+# white (vanishes on white) and pure black (vanishes on dark).
+H = "green"   # hydrogen
+O = "red"     # oxygen
+C = "brown"   # carbon
 STICK = "gray"
 WIDTH = 9
 
@@ -88,11 +90,11 @@ TESTS_SPEC = [
 
 STAGES_SPEC = [
     {"fn": "__show_water", "args": [], "label": "Water",
-     "caption": "💧 Water! One oxygen (red) sharing a single bond with each hydrogen (white)."},
+     "caption": "💧 Water! One oxygen (red) sharing a single bond with each hydrogen (green)."},
     {"fn": "__show_o2", "args": [], "label": "Oxygen",
      "caption": "🌬️ The oxygen you breathe — two O's holding on with a strong DOUBLE bond."},
     {"fn": "__show_co2", "args": [], "label": "Carbon dioxide",
-     "caption": "🫧 Carbon dioxide — the fizz in soda! Carbon (black) double-bonded to two oxygens."},
+     "caption": "🫧 Carbon dioxide — the fizz in soda! Carbon (brown) double-bonded to two oxygens."},
 ]
 
 VIZ_META = {

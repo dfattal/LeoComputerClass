@@ -66,7 +66,7 @@ TESTS_SPEC = [
 
 STAGES_SPEC = [
     {"fn": "__show_strip", "args": [0], "label": "Start",
-     "caption": "⚫ Start: all three pigments are dabbed together at the bottom — looks like one color."},
+     "caption": "⚫ Start: the pigments all begin at the bottom line of the paper, ready to climb."},
     {"fn": "__show_strip", "args": [1], "label": "Climbing",
      "caption": "⬆️ The water creeps up and carries the pigments along — they're starting to pull apart."},
     {"fn": "__show_strip", "args": [2], "label": "Separated",

@@ -2,7 +2,7 @@
   "type": "draw",
   "title": "Snap atoms into molecules \u2014 every gray stick is a shared pair of electrons (a bond)",
   "todo": "Finish bonds_needed(outer, wants) to connect the atoms with the right number of sticks.",
-  "setup": "# Atom colors. Bonds (shared electrons) are drawn as gray \"sticks\".\nH = \"white\"\nO = \"red\"\nC = \"black\"\nSTICK = \"gray\"\nWIDTH = 9\n\n\ndef __row(atoms, bonds):\n    # Lay a molecule out in a line: atom, stick(s), atom, stick(s), atom...\n    # The number of sticks between two atoms is how many bonds they share.\n    cells = []\n    for i, color in enumerate(atoms):\n        cells.append(color)\n        if i < len(bonds):\n            for _ in range(bonds[i]):\n                cells.append(STICK)\n    pad = WIDTH - len(cells)\n    left = pad // 2\n    return [\"\"] * left + cells + [\"\"] * (WIDTH - left - len(cells))\n\n\ndef __mol(atoms, bonds):\n    blank = [\"\"] * WIDTH\n    return [blank[:], __row(atoms, bonds), blank[:]]\n\n\ndef __show_water():\n    # H \u2014 O \u2014 H. Each hydrogen makes 1 bond (it only wants 2 electrons).\n    b = bonds_needed(1, 2)\n    return __mol([H, O, H], [b, b])\n\n\ndef __show_o2():\n    # O = O. Each oxygen wants 8 but has 6, so they share a DOUBLE bond.\n    b = bonds_needed(6, 8)\n    return __mol([O, O], [b])\n\n\ndef __show_co2():\n    # O = C = O. Carbon links to two oxygens, a double bond on each side.\n    b = bonds_needed(6, 8)\n    return __mol([O, C, O], [b, b])\n",
+  "setup": "# Atom colors. Bonds (shared electrons) are drawn as gray \"sticks\". Colors are\n# chosen to stay visible on BOTH the light and dark canvas, so we avoid pure\n# white (vanishes on white) and pure black (vanishes on dark).\nH = \"green\"   # hydrogen\nO = \"red\"     # oxygen\nC = \"brown\"   # carbon\nSTICK = \"gray\"\nWIDTH = 9\n\n\ndef __row(atoms, bonds):\n    # Lay a molecule out in a line: atom, stick(s), atom, stick(s), atom...\n    # The number of sticks between two atoms is how many bonds they share.\n    cells = []\n    for i, color in enumerate(atoms):\n        cells.append(color)\n        if i < len(bonds):\n            for _ in range(bonds[i]):\n                cells.append(STICK)\n    pad = WIDTH - len(cells)\n    left = pad // 2\n    return [\"\"] * left + cells + [\"\"] * (WIDTH - left - len(cells))\n\n\ndef __mol(atoms, bonds):\n    blank = [\"\"] * WIDTH\n    return [blank[:], __row(atoms, bonds), blank[:]]\n\n\ndef __show_water():\n    # H \u2014 O \u2014 H. Each hydrogen makes 1 bond (it only wants 2 electrons).\n    b = bonds_needed(1, 2)\n    return __mol([H, O, H], [b, b])\n\n\ndef __show_o2():\n    # O = O. Each oxygen wants 8 but has 6, so they share a DOUBLE bond.\n    b = bonds_needed(6, 8)\n    return __mol([O, O], [b])\n\n\ndef __show_co2():\n    # O = C = O. Carbon links to two oxygens, a double bond on each side.\n    b = bonds_needed(6, 8)\n    return __mol([O, C, O], [b, b])\n",
   "stages": [
     {
       "fn": "__show_water",
@@ -23,11 +23,11 @@
         [
           "",
           "",
-          "white",
+          "green",
           "gray",
           "red",
           "gray",
-          "white",
+          "green",
           "",
           ""
         ],
@@ -43,7 +43,7 @@
           ""
         ]
       ],
-      "caption": "\ud83d\udca7 Water! One oxygen (red) sharing a single bond with each hydrogen (white)."
+      "caption": "\ud83d\udca7 Water! One oxygen (red) sharing a single bond with each hydrogen (green)."
     },
     {
       "fn": "__show_o2",
@@ -107,7 +107,7 @@
           "red",
           "gray",
           "gray",
-          "black",
+          "brown",
           "gray",
           "gray",
           "red",
@@ -125,7 +125,7 @@
           ""
         ]
       ],
-      "caption": "\ud83e\udee7 Carbon dioxide \u2014 the fizz in soda! Carbon (black) double-bonded to two oxygens."
+      "caption": "\ud83e\udee7 Carbon dioxide \u2014 the fizz in soda! Carbon (brown) double-bonded to two oxygens."
     }
   ]
 }
