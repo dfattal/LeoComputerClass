@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "simple_hash uses h=7 then h=(h*31+ord(ch))%1000000007 per char; dictionary_attack returns the matching word or \"\"; salted_hash hashes salt+password."
+  },
+  {
+    "criterion": "Understanding the idea",
+    "weight": 25,
+    "description": "dictionary_attack reuses simple_hash to test each word, and salted_hash prepends the salt so identical passwords get different hashes."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, reuses simple_hash instead of rewriting the loop, a return on every path."
+  }
+]

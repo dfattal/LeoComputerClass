@@ -1,0 +1,28 @@
+## Your mission
+
+You've watched the keypad and cracked its secret: **the door opens only when every digit is even.** Now turn that understanding into code that predicts Fort Knocks perfectly.
+
+### Exercise 1 — `all_even(code)`
+
+`code` is a string of digits like `"2468"`. Return `True` if **every** digit is even, and `False` if even one digit is odd.
+
+```python
+all_even("2468")   # -> True
+all_even("8642")   # -> True
+all_even("1234")   # -> False   (1 and 3 are odd)
+all_even("0000")   # -> True    (0 is even!)
+```
+
+**Hint:** Loop over each character `ch` in `code`. Turn it into a number with `int(ch)`. If `int(ch) % 2 != 0`, you found an odd digit — you can `return False` right away. If you get all the way through without finding one, `return True`.
+
+### Exercise 2 — `responds(code)`
+
+This is what the keypad actually *does*. If the code is all even, the lock clicks open; otherwise it just beeps. Return the **string** `"CLICK"` or `"BEEP"`.
+
+```python
+responds("2468")   # -> "CLICK"
+responds("1357")   # -> "BEEP"
+responds("0000")   # -> "CLICK"
+```
+
+**Hint:** You already wrote the hard part! Call your own `all_even(code)` and use its answer to decide which word to return. Reusing a function you already built is exactly what a good hacker (and a good coder) does. ♻️

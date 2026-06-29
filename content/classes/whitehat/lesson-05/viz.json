@@ -1,0 +1,13 @@
+{
+  "type": "draw",
+  "title": "Login attempts: LEFT = old vulnerable system, RIGHT = fixed system. Green = got in, red = blocked",
+  "setup": "# Hidden painter: one row per login attempt. LEFT cell = the OLD vulnerable\n# system (login_ok), RIGHT cell = the FIXED system (safe_login). Green = door\n# opened, red = door stayed shut. The injection row shows the whole point: green\n# on the left (it got in!), red on the right (blocked). Driven by the student's\n# functions.\nGRANTED = \"green\"\nDENIED = \"red\"\nREAL = \"leo\"\n\n\ndef __cell(ok):\n    return GRANTED if ok else DENIED\n\n\ndef __row(username):\n    try:\n        vuln = login_ok(username, REAL)\n    except Exception:\n        vuln = False\n    try:\n        safe = safe_login(username, REAL)\n    except Exception:\n        safe = False\n    return [__cell(vuln), \"\", __cell(safe)]\n\n\ndef __show_logins(attempts=None):\n    if attempts is None:\n        attempts = [\"leo\", \"mallory\", \"' OR '1'='1\"]\n    return [__row(u) for u in attempts]",
+  "resultFn": "__show_logins",
+  "demoArgs": [
+    [
+      "leo",
+      "mallory",
+      "' OR '1'='1"
+    ]
+  ]
+}

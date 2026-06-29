@@ -1,0 +1,59 @@
+# Lock It All Down
+
+> Time to flip your hat, {{FIRST_NAME}}. 🔵 You broke into Fort Knocks six different ways — now you put on the **blue team** jersey and patch every single hole you found. By the end, the same fortress you cracked wide open will score a perfect 100. 🔒
+
+## Phase 3: Blue Team — Lock It Down
+
+---
+
+## Security is many small fixes, stacked
+
+Here's the most important idea in all of security: there is **no single magic wall**. A real defense is lots of small, boring fixes layered on top of each other, so that even if an attacker beats one, the next one stops them. The pros call it **defense in depth**.
+
+You already know every fix — because you know exactly how each attack works. Let's line them up against the six ways you broke in:
+
+| Defense | Beats the attack from... |
+| --- | --- |
+| 🔢 A strong (long) PIN | Brute force (Lesson 2) |
+| 🧂 Salting the hashes | Dictionary attacks (Lesson 3) |
+| 📏 A buffer length check | The overflow (Lesson 4) |
+| 🧼 Cleaning the input | Injection (Lesson 5) |
+| 🔐 Encrypting the wire | Sniffing (Lesson 6) |
+
+Turn on all five and Fort Knocks is a real fortress.
+
+## Score the fortress 🏰
+
+You'll write the checks that decide whether each defense is in place, then add them up — 20 points each, 100 for a perfect lockdown:
+
+```python
+pin_strong("12345678")        # -> True   (8+ digits beats brute force)
+buffer_ok("leo", 4)           # -> True   (fits — no overflow)
+input_clean("' OR '1'='1")    # -> False  (sneaky quote — reject it!)
+```
+
+```python
+# pin, text, size, salted, encrypted
+security_score("12345678", "leo", 4, True, True)   # -> 100  (fortress!)
+security_score("1234",     "leo", 4, True, True)   # ->  80  (weak PIN left a gap)
+security_score("12", "kitten", 4, False, False)    # ->  20  (wide open!)
+```
+
+That last one is the Fort Knocks you started with — a short PIN, an overflowing buffer, unsalted hashes, no encryption. A score of 20. Watch it climb to 100 as you switch each defense on. 📈
+
+## Read the dashboard 🟩
+
+Press **Run**. The panel is your security dashboard:
+
+🛡️ **top row** — five shields, one per defense: 🟩 green when it holds, 🟥 red when it's still open · 📊 **bottom row** — the score bar, one green block for every 20 points
+
+When all five shields glow green and the bar fills up, you've done it — every door you ever picked is now locked. Fort Knocks is yours to defend. 🎉
+
+## What you'll build
+
+- **`pin_strong(pin)`** — is the PIN long enough to survive brute force?
+- **`buffer_ok(text, size)`** — does the input fit, with no overflow?
+- **`input_clean(text)`** — is the input free of injection tricks?
+- **`security_score(pin, text, size, salted, encrypted)`** — add up all five defenses into one score.
+
+You've gone from breaking in to locking down — the full white-hat journey. One lesson left: looking back at what it all *means*. 🎩

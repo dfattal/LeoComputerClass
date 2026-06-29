@@ -1,0 +1,49 @@
+## Your mission
+
+Patch every hole you found this term, then score how safe Fort Knocks is. Each defense is worth 20 points; a perfect lockdown is 100.
+
+### Exercise 1 — `pin_strong(pin)`
+
+A PIN is strong only if it's long. Return `True` when it has **8 or more** digits.
+
+```python
+pin_strong("1234")       # -> False
+pin_strong("12345678")   # -> True
+pin_strong("1234567")    # -> False
+```
+
+**Hint:** One line — `return len(pin) >= 8`.
+
+### Exercise 2 — `buffer_ok(text, size)`
+
+The overflow fix: the input must fit in the buffer. Return `True` when `text` is no longer than `size`.
+
+```python
+buffer_ok("leo", 4)      # -> True
+buffer_ok("kitten", 4)   # -> False
+```
+
+**Hint:** `return len(text) <= size`.
+
+### Exercise 3 — `input_clean(text)`
+
+The injection fix: reject input containing a quote `'`.
+
+```python
+input_clean("leo")          # -> True
+input_clean("' OR '1'='1")  # -> False
+```
+
+**Hint:** `return "'" not in text`.
+
+### Exercise 4 — `security_score(pin, text, size, salted, encrypted)`
+
+Add 20 points for each defense in place: a strong PIN, a fitting buffer, clean input, plus the `salted` and `encrypted` flags (already `True`/`False`). Return the total.
+
+```python
+security_score("12345678", "leo", 4, True, True)   # -> 100
+security_score("1234", "leo", 4, True, True)       # ->  80
+security_score("12", "kitten", 4, False, False)    # ->  20
+```
+
+**Hint:** Start `score = 0`. Add `20` for each check that passes — reuse `pin_strong`, `buffer_ok`, and `input_clean`, and add `20` when `salted` is true and again when `encrypted` is true. Return `score`.

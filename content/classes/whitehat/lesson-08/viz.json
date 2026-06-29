@@ -1,0 +1,13 @@
+{
+  "type": "draw",
+  "title": "Fort Knocks security dashboard: 5 defense shields (green = locked down) + your score bar",
+  "setup": "# Hidden painter: a security dashboard. Top row = five shields, one per defense,\n# GREEN when that defense holds and RED when it's still open. Bottom row = the\n# score bar, one green block per 20 points. Driven by the student's checks.\nON = \"green\"\nOFF = \"red\"\nBAR = \"green\"\nEMPTY = \"gray\"\n\n\ndef __show_dashboard(pin=\"12345678\", text=\"leo\", size=4, salted=True, encrypted=True):\n    try:\n        shields = [\n            ON if pin_strong(pin) else OFF,\n            ON if salted else OFF,\n            ON if buffer_ok(text, size) else OFF,\n            ON if input_clean(text) else OFF,\n            ON if encrypted else OFF,\n        ]\n        score = security_score(pin, text, size, salted, encrypted)\n    except Exception:\n        shields = [OFF] * 5\n        score = 0\n    filled = score // 20\n    bar = [BAR if i < filled else EMPTY for i in range(5)]\n    return [shields, bar]",
+  "resultFn": "__show_dashboard",
+  "demoArgs": [
+    "12345678",
+    "leo",
+    4,
+    true,
+    true
+  ]
+}

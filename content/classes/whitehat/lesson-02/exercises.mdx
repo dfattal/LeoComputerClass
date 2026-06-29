@@ -1,0 +1,28 @@
+## Your mission
+
+Fort Knocks swapped its clever keypad for a plain secret PIN. No rule to figure out — so crack it by trying every code, and then prove with numbers why a longer PIN would have stopped you.
+
+### Exercise 1 — `crack_pin(secret)`
+
+`secret` is a string of digits like `"0042"`. Try every code in order (`"0000"`, `"0001"`, `"0002"`, ...) until you hit the one that matches, and return it.
+
+```python
+crack_pin("0000")   # -> "0000"   (found on the very first try)
+crack_pin("0042")   # -> "0042"   (found on try number 43)
+crack_pin("9999")   # -> "9999"   (the very last code)
+crack_pin("37")     # -> "37"     (works for any length!)
+```
+
+**Hint:** Let `n = len(secret)`. Loop `for i in range(10 ** n)`, build each guess with `guess = str(i).zfill(n)`, and `return guess` the moment it equals `secret`.
+
+### Exercise 2 — `combos(num_digits)`
+
+Return how many different PINs are possible with that many digits. Each slot has 10 choices, and the choices multiply.
+
+```python
+combos(2)   # -> 100
+combos(4)   # -> 10000
+combos(8)   # -> 100000000
+```
+
+**Hint:** That's just `10` multiplied by itself `num_digits` times — in Python, `10 ** num_digits`. One line!

@@ -1,0 +1,10 @@
+{
+  "type": "draw",
+  "title": "The password on the wire: top = plain text (red, a snoop reads it), bottom = encrypted (green, safe)",
+  "setup": "# Hidden painter: shows the password as it sits on the wire. Top row = plaintext\n# (every character RED — fully readable by a snoop). Bottom row = after\n# encryption (every character GREEN — safe gibberish). Same length, totally\n# different safety. Driven by the student's password_from / encrypt / safe_packet.\nEXPOSED = \"red\"\nPROTECTED = \"green\"\n\n\ndef __show_wire(packet=\"user=leo;pass=hunter2\", shift=3):\n    try:\n        plain = password_from(packet)\n        safe = password_from(safe_packet(packet, shift))\n    except Exception:\n        plain, safe = \"?????\", \"?????\"\n    top = [EXPOSED for _ in plain]\n    bottom = [PROTECTED for _ in safe]\n    return [top, bottom]",
+  "resultFn": "__show_wire",
+  "demoArgs": [
+    "user=leo;pass=hunter2",
+    3
+  ]
+}

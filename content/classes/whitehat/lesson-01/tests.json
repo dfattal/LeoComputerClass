@@ -1,0 +1,89 @@
+[
+  {
+    "entry": "all_even",
+    "cases": [
+      {
+        "name": "2468 — all even",
+        "args": [
+          "2468"
+        ],
+        "expected": true
+      },
+      {
+        "name": "1234 — has odd digits",
+        "args": [
+          "1234"
+        ],
+        "expected": false
+      },
+      {
+        "name": "2222 — all even",
+        "args": [
+          "2222"
+        ],
+        "expected": true
+      },
+      {
+        "name": "1357 — all odd",
+        "args": [
+          "1357"
+        ],
+        "expected": false
+      },
+      {
+        "name": "0000 — zero counts as even",
+        "args": [
+          "0000"
+        ],
+        "expected": true
+      },
+      {
+        "name": "8642 — all even",
+        "args": [
+          "8642"
+        ],
+        "expected": true
+      }
+    ]
+  },
+  {
+    "entry": "responds",
+    "cases": [
+      {
+        "name": "2468 opens the door",
+        "args": [
+          "2468"
+        ],
+        "expected": "CLICK"
+      },
+      {
+        "name": "1234 stays locked",
+        "args": [
+          "1234"
+        ],
+        "expected": "BEEP"
+      },
+      {
+        "name": "4444 opens the door",
+        "args": [
+          "4444"
+        ],
+        "expected": "CLICK"
+      },
+      {
+        "name": "1111 stays locked",
+        "args": [
+          "1111"
+        ],
+        "expected": "BEEP"
+      },
+      {
+        "name": "0000 opens (zero is even)",
+        "args": [
+          "0000"
+        ],
+        "expected": "CLICK"
+      }
+    ]
+  }
+]

@@ -179,6 +179,19 @@ export const classes: ClassDef[] = [
     language: "python",
     level: "advanced",
   },
+  {
+    slug: "whitehat",
+    name: "White Hat",
+    tagline: "Break In to Lock It Down",
+    description:
+      "You built the computer and the operating system — now learn how people break into them, and how to stop them. You've been hired to test the security of Fort Knocks, and your job is to find every weakness before the bad guys do. Write Python that cracks passwords, smashes a memory buffer, sneaks past a login, and reads secret messages off the wire — all in a safe practice sandbox — then switch to the blue team and make Fort Knocks unbreakable. Real hacking is just understanding a machine so well it does what YOU say. This is the white-hat way: break in only when you're invited, and always to make things safer.",
+    accentColor: "red",
+    heroImage: "/hero-whitehat.webp",
+    studentName: "friend",
+    contentDir: "whitehat",
+    language: "python",
+    level: "advanced",
+  },
 ];
 
 export function getClassBySlug(slug: string): ClassDef | undefined {

@@ -77,6 +77,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | Leo's Game Studio | `leo-games` | JavaScript → build an arcade game (Breakout) → publish it online for friends | Published (8) ✅ new "javascript" lesson kind; L8 *is* the capstone (no reflection) |
 | Operating Systems | `os` | You built the CPU — now build the OS that runs it (scheduler → memory → files → cache) | Published (7+1) ✅ all 8 lessons built; software sequel to the Computer Class; `slate` accent; Gantt/memory/disk/cache rendered on the `draw` grid |
 | Kitchen Chemistry | `chem` | Run your own lab: build atoms → molecules → states, then reactions you can see (balancing, pH, chromatography, crystals) | Published (8+1) ✅ — Leila's intro-chemistry class; canvas-heavy `draw` viz; `cyan` accent; signature = Bohr-atom drawer; every lesson paints on the grid |
+| White Hat | `whitehat` | Hired to test "Fort Knocks": break in to find every weakness (red team) → make it unbreakable (blue team) | Published (8+1) ✅ new — advanced ethical-hacking class; sequel to Computer Class + Operating Systems; new `red` accent; all attacks are safe simulated Python sandboxes; permission-first ethics frame; signature = the simulated buffer-overflow lesson |
 
 ---
 
@@ -268,6 +269,68 @@ lesson 1.
   `tests.json` + `viz.json`, so grids and expected values can't drift from the
   answer key. `validate-class chem` = **175/175**, `npm run build` clean.
 
+### White Hat — ✅ built as `whitehat`, 8 lessons + reflection published
+**Through-line:** "You've been hired to test the security of Fort Knocks — break
+in to find every weakness (red team), then make it unbreakable (blue team)."
+Leo's own request (he's into "hacking"). Built as the advanced sequel to
+Computer Class + Operating Systems: real exploits live at the seams of the
+architecture he already built, so security is architecture-understanding with
+the stakes turned up. Accent `red` (new), every attack a safe *simulated* Python
+sandbox — no real systems. Permission-first ethics is baked into the premise
+(you're *hired*), reinforced in every AI-coach reply and the capstone.
+
+**As-built lesson arc** (Phase 1 *The Hacker Mindset* → Phase 2 *Red Team: Break
+In* → Phase 3 *Blue Team: Lock It Down* → Phase 4 *The Big Picture*):
+1. **Think Like a Hacker** — `all_even` + `responds`; crack a keypad's secret
+   rule by probing it; the three hats + the permission rule.
+2. **Guess the Password** — `crack_pin` (brute force) + `combos`; a 10×10 board
+   of every 2-digit code floods red as the attack sweeps; why each extra digit
+   ×10s the work.
+3. **The Locked-Up Password** — `simple_hash` + `dictionary_attack` +
+   `salted_hash`; passwords drawn as colored "fingerprints," find the common
+   word whose fingerprint matches the stolen target; salt defeats it.
+4. **Smash the Stack** ⭐ — `store` + `return_address` + `is_safe`; a simulated
+   5-cell memory (4 buffer + return address) overflowed so input overwrites the
+   return slot (green→red = hijacked). The architecture payoff for the CPU/stack
+   he built.
+5. **Sneak Past the Login** — `build_query` + `login_ok` + `safe_login`;
+   `' OR '1'='1` injection beats the vulnerable door (green) but not the fixed
+   one (red), side by side.
+6. **Listening on the Wire** — `password_from` + `encrypt` + `safe_packet`; sniff
+   a plaintext password off the wire (red row) vs encrypted gibberish (green
+   row); what the browser 🔒 really means (Caesar cipher reused from Secret Codes).
+7. **The Trick Email** — `domain_of` + `is_fake_link` + `is_phishing`; a phishing
+   detector that catches look-alike domains AND panic-word scams; the inbox
+   dashboard's middle row (real link, scary message) is the teaching case.
+8. **Lock It All Down** — `pin_strong` + `buffer_ok` + `input_clean` +
+   `security_score`; blue-team capstone scoring all five defenses (one per attack
+   from the term) into a 0–100 security dashboard; defense in depth.
+9. **The Big Picture: Cat and Mouse** — reflection capstone (`reflection.json`,
+   no Python): the history (1960s MIT hackers → the 1988 worm, a real buffer
+   overflow → the modern defenses), then re-explain why security is forever
+   cat-and-mouse and why *permission* is the whole line between a white hat and a
+   crook.
+
+**Reusable tech / notes:**
+- No new lesson kind — rides the existing **`draw` viz** (PixelCanvas) with the
+  **"hidden painter in viz setup"** technique: students return plain
+  `int`/`str`/`bool`/`list` testable values, and a hidden `__show_*` painter
+  (duplicated in `reference.py` for `validate-class` and in `viz.json`'s `setup`
+  for the browser) turns them into a grid. Every painter is **student-driven** —
+  it calls the lesson's own function, so a wrong answer changes the picture.
+- Authoring was fully **reference-driven**: a reusable scratchpad generator
+  (`gen_lesson.py`) reads each `reference.py`'s inert `TESTS_SPEC` / `VIZ_SPEC`
+  blocks + the painter source between `# === PAINTER START/END ===` markers and
+  emits exact `tests.json` + `viz.json`, so grids and expected values can't drift
+  from the answer key. `validate-class whitehat` = **179/179**, `npm run build`
+  clean.
+- New accent `red` added to `lib/accents.ts` (red team / alert), distinct from
+  the existing `rose`.
+- Hero `/hero-whitehat.webp` is real `/ask-gemini` art (white-cap kid + laptop +
+  red castle-vault with padlocks + helper bots), 1376×768, OG card generated.
+  (Gemini image gen reads `GEMINI_API_KEY` from `~/.gemini/.env`, separate from
+  CLI account auth — a capped key there 429s even after changing the account.)
+
 ---
 
 ## Candidate classes (ranked by fit)
@@ -398,6 +461,54 @@ well-tested stages; resist adding language features.
 
 ---
 
+### 4. Networks & the Internet — *how a webpage actually arrives*
+**Through-line:** "Type a web address, hit enter — now trace every hop your
+request makes until the page comes back."
+**Why it fits:** Deeply fundamental and a perfect *prerequisite* to White Hat —
+you can't really understand sniffing, man-in-the-middle, or injection until you
+know what a packet, an IP address, a port, and a request/response actually are.
+Every layer is a clean, testable transform: chop a message into numbered
+packets, route a packet hop-by-hop by longest-prefix match, resolve a name
+through a DNS table, parse/build an HTTP request line. Pairs with the `draw` viz
+(a little network map; packets lighting up the path they take).
+**Prereqs:** Python Primer (Leo is far past this). A natural lead-in to White Hat.
+**8-lesson sketch:**
+1. Packets — chop a long message into numbered chunks, reassemble in order
+2. Addresses — IP addresses as numbers; is two machines on the same network?
+3. Routing — hand a packet hop-to-hop toward its destination (a tiny routing table)
+4. Ports & sockets — many conversations on one machine, sorted by port number
+5. DNS — turn `fortknocks.com` into an address via a lookup table (cache it!)
+6. HTTP — build and parse a request line + headers; status codes
+7. Reliability — lost packets, acknowledgements, resend (a baby TCP)
+8. Capstone — assemble the stack: a name → a route → a request → a page comes back
+**Viz/assets:** a network map on the `draw` grid; the path a packet takes lights
+up. Hero: globe + glowing connection lines.
+**Risks:** keep each layer a pure function; resist real sockets.
+
+### 5. Data Structures & Algorithms — *the "real CS" toolbox*
+**Through-line:** "Pick the right tool for the job — and prove with code why it's
+faster." The classic next step that deepens programming fundamentals directly.
+**Why it fits:** Everything is a testable pure function, and Big-O becomes
+*visible* by plotting step-counts as input grows (the line `plot` viz is made for
+this). Reinforces the stacks/queues from Operating Systems and the search ideas
+from Game Bot. A strong, evergreen follow-on once Leo wants depth over a new toy.
+**Prereqs:** Python Primer + comfort with loops/lists (Leo is well past this).
+**8-lesson sketch:**
+1. How fast is fast? — count the steps; linear vs. constant (intro to Big-O)
+2. Arrays & linear search — and why it gets slow
+3. Binary search — halving the haystack; why the list must be sorted
+4. Stacks & queues — LIFO/FIFO (callbacks to the OS class)
+5. Sorting I — bubble/insertion: simple but slow (count the swaps)
+6. Sorting II — merge sort: divide and conquer, and *measure* the speedup
+7. Hash tables — the magic of O(1) lookup (callback to hashing in White Hat)
+8. Capstone — trees: store and search data in a binary search tree
+**Viz/assets:** step-count-vs-N curves in the `plot` viz (Big-O you can *see*);
+array/tree state on the `draw` grid. Hero: sorting bars / branching tree.
+**Risks:** keep recursion (merge sort, BST) heavily scaffolded; do Game Bot first
+if recursion is brand new.
+
+---
+
 ## Honorable mentions (good, but second-tier)
 
 - **Pictures from Math** — pixel grids, color functions, fractals (Mandelbrot),
@@ -426,11 +537,16 @@ the natural next order is:
 1. ~~**Secret Codes**~~ — ✅ built (`leo-codes`).
 2. ~~**Proof Press**~~ — ✅ built (`leo-latex`); pairs naturally with the paper
    math curriculum he just finished — publish what you proved.
-3. **Game Studio** — JavaScript + a real online game (Leo's own request); ships
-   the new "javascript" lesson kind.
-4. **Game Bot** — the sequel: recursion/search gives his game an unbeatable
-   opponent.
-5. **Build a Programming Language** — the grand finale that closes the
+3. ~~**Game Studio**~~ — ✅ built (`leo-games`); JavaScript + a real online game
+   (Leo's own request); shipped the "javascript" lesson kind.
+4. ~~**Operating Systems**~~ — ✅ built (`os`); the software sequel to Computer
+   Class (scheduler → memory → files → cache).
+5. ~~**White Hat**~~ — ✅ built (`whitehat`); Leo's "hacking" request, built as the
+   security sequel to Computer Class + Operating Systems. A natural place for
+   **Networks & the Internet** (candidate #4) to slot in *before* a re-read, since
+   sniffing/injection/MITM all assume packets, IPs, ports, and DNS.
+6. **Game Bot** — recursion/search gives his game an unbeatable opponent.
+7. **Build a Programming Language** — the grand finale that closes the
    hardware→software loop from the Computer Class.
 
 For an **absolute beginner** (a younger kid, or Leila starting out), the ladder

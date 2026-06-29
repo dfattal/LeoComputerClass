@@ -1,0 +1,125 @@
+[
+  {
+    "entry": "pin_strong",
+    "cases": [
+      {
+        "name": "short 4-digit PIN is weak",
+        "args": [
+          "1234"
+        ],
+        "expected": false
+      },
+      {
+        "name": "8 digits is strong",
+        "args": [
+          "12345678"
+        ],
+        "expected": true
+      },
+      {
+        "name": "7 is still too short",
+        "args": [
+          "1234567"
+        ],
+        "expected": false
+      }
+    ]
+  },
+  {
+    "entry": "buffer_ok",
+    "cases": [
+      {
+        "name": "fits the buffer",
+        "args": [
+          "leo",
+          4
+        ],
+        "expected": true
+      },
+      {
+        "name": "exactly fills it",
+        "args": [
+          "abcd",
+          4
+        ],
+        "expected": true
+      },
+      {
+        "name": "too long — would overflow",
+        "args": [
+          "kitten",
+          4
+        ],
+        "expected": false
+      }
+    ]
+  },
+  {
+    "entry": "input_clean",
+    "cases": [
+      {
+        "name": "a normal name is clean",
+        "args": [
+          "leo"
+        ],
+        "expected": true
+      },
+      {
+        "name": "an injection payload is dirty",
+        "args": [
+          "' OR '1'='1"
+        ],
+        "expected": false
+      }
+    ]
+  },
+  {
+    "entry": "security_score",
+    "cases": [
+      {
+        "name": "all five defenses on = 100",
+        "args": [
+          "12345678",
+          "leo",
+          4,
+          true,
+          true
+        ],
+        "expected": 100
+      },
+      {
+        "name": "weak PIN drops it to 80",
+        "args": [
+          "1234",
+          "leo",
+          4,
+          true,
+          true
+        ],
+        "expected": 80
+      },
+      {
+        "name": "injection + overflow = 60",
+        "args": [
+          "12345678",
+          "' OR '1'='1",
+          4,
+          true,
+          true
+        ],
+        "expected": 60
+      },
+      {
+        "name": "wide-open Fort Knocks = 20",
+        "args": [
+          "12",
+          "kitten",
+          4,
+          false,
+          false
+        ],
+        "expected": 20
+      }
+    ]
+  }
+]

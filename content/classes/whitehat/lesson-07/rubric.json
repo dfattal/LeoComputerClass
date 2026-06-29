@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "domain_of strips the scheme and takes up to the first /; is_fake_link compares the whole domain to real; is_phishing returns True on a fake link OR >= 2 alarm words."
+  },
+  {
+    "criterion": "Catching both clues",
+    "weight": 25,
+    "description": "Flags the fake-link case AND the real-link-but-scary-message case, while leaving a calm legit email safe; counts alarm words case-insensitively."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "is_fake_link reuses domain_of and is_phishing reuses is_fake_link; clear names; a return on every path."
+  }
+]

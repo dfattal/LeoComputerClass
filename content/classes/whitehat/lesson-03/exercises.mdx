@@ -1,0 +1,37 @@
+## Your mission
+
+Build the three tools of password security: the hash that locks a password up, the dictionary attack that cracks weak ones, and the salt that defends them.
+
+### Exercise 1 — `simple_hash(password)`
+
+Scramble a password string into a one-way number. Start your running number `h` at `7`, then for each character mix it in.
+
+```python
+simple_hash("leo")      # -> 315567
+simple_hash("dragon")   # -> 183714459
+simple_hash("")         # -> 7        (no letters to mix in)
+```
+
+**Hint:** Set `h = 7`. Loop `for ch in password:` and update `h = (h * 31 + ord(ch)) % 1000000007`. Return `h` at the end.
+
+### Exercise 2 — `dictionary_attack(target_hash, wordlist)`
+
+The attacker has a stolen hash and a list of common passwords. Hash each word; if one matches `target_hash`, return that word. If none match, return `""`.
+
+```python
+dictionary_attack(183714459, ["password", "dragon", "qwerty"])   # -> "dragon"
+dictionary_attack(simple_hash("xQ9!vzt"), ["password", "dragon"])  # -> ""
+```
+
+**Hint:** Loop over the words. For each, compare `simple_hash(word)` to `target_hash` and `return word` on a match. After the loop, `return ""`.
+
+### Exercise 3 — `salted_hash(password, salt)`
+
+Mix the salt onto the front of the password *before* hashing, so the same password gets a different hash for a different salt.
+
+```python
+salted_hash("dragon", "a1")   # -> 419639183
+salted_hash("dragon", "z9")   # -> 335016541
+```
+
+**Hint:** One line — glue them with `salt + password` and feed that to your own `simple_hash`.

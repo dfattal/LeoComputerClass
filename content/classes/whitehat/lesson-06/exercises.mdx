@@ -1,0 +1,39 @@
+## Your mission
+
+Packets on the wire look like `user=leo;pass=hunter2`. Build the sniffer that reads passwords off the wire, then the encryption that makes those passwords useless to a snoop.
+
+### Exercise 1 — `password_from(packet)`
+
+Find `pass=` in the packet and return everything after it, up to the next `;` (or the end if there's no `;`). If there's no `pass=` at all, return `""`.
+
+```python
+password_from("user=leo;pass=hunter2")    # -> "hunter2"
+password_from("pass=secret")              # -> "secret"
+password_from("user=bob;pass=abc;ip=10")  # -> "abc"
+password_from("just a hello")             # -> ""
+```
+
+**Hint:** Use `packet.find("pass=")`. If it's `-1`, return `""`. Otherwise slice off everything after `pass=`, then cut it at the first `";"` with another `find`.
+
+### Exercise 2 — `encrypt(text, shift)`
+
+Shift every lowercase letter forward by `shift`, wrapping past `z`. Leave digits and symbols unchanged.
+
+```python
+encrypt("hunter2", 3)   # -> "kxqwhu2"
+encrypt("xyz", 3)       # -> "abc"       (wraps around)
+encrypt("leo", 0)       # -> "leo"       (no shift)
+```
+
+**Hint:** This is the Caesar cipher from Secret Codes! For a letter: `chr((ord(ch) - ord("a") + shift) % 26 + ord("a"))`. Otherwise keep `ch` as-is.
+
+### Exercise 3 — `safe_packet(packet, shift)`
+
+Return the packet with its password encrypted, so a sniffer captures gibberish.
+
+```python
+safe_packet("user=leo;pass=hunter2", 3)   # -> "user=leo;pass=kxqwhu2"
+safe_packet("pass=abc", 1)                # -> "pass=bcd"
+```
+
+**Hint:** Get the password with your `password_from`, encrypt it, then `replace("pass=" + pw, "pass=" + encrypted)`.

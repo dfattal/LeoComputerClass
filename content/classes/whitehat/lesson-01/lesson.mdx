@@ -1,0 +1,73 @@
+# Think Like a Hacker
+
+> Welcome to the team, {{FIRST_NAME}}! 🕵️ You already built a computer from logic gates, and an operating system to run it. Now you'll learn the other side: how people **break into** computers — and how to stop them. This is the white-hat way. 🎩
+
+## Phase 1: The Hacker Mindset
+
+---
+
+## What is hacking, really?
+
+Forget the movies. A hacker is not someone with a magic glowing keyboard. A hacker is just someone who **understands a machine so well it does what *they* say** — not what the person who built it expected.
+
+That's it. Hacking is deep curiosity plus careful poking. You already think this way: when you built your CPU, you had to understand *exactly* how each part behaved. Same skill — pointed at someone else's system.
+
+## The one rule that matters: permission 🎩
+
+There are three kinds of hacker, and only one thing tells them apart:
+
+| Hat | What they do |
+| --- | --- |
+| ⚪ **White hat** | Breaks in **with permission**, to help fix the holes |
+| ⚫ **Black hat** | Breaks in to steal or wreck — a crook |
+| 🔘 **Grey hat** | Pokes around without asking — still not okay |
+
+You are a **white hat**. You've been **hired** to test a system called **Fort Knocks**. Everything you do this whole class happens in a safe practice sandbox — never a real website, never someone else's computer. The single rule that separates a security hero from a crook is **permission**. Never forget it.
+
+## Your first job: crack the keypad 🔢
+
+Fort Knocks' front door has a secret keypad. You don't know the rule that opens it. So you do what a real hacker does — you **probe** it. You try codes and watch what happens:
+
+```text
+2468  ->  CLICK   (it opened!)
+1234  ->  BEEP    (stayed locked)
+2222  ->  CLICK
+1357  ->  BEEP
+4444  ->  CLICK
+1111  ->  BEEP
+```
+
+Don't read ahead — stare at it first. Which codes opened the door? `2468`, `2222`, `4444`. Which ones didn't? `1234`, `1357`, `1111`.
+
+See it yet? Every code that opened is made of **only even digits** (0, 2, 4, 6, 8). The moment one odd digit sneaks in, the door just beeps.
+
+You didn't guess. You **understood the system** by watching how it answered. That's thinking like a hacker. 🧠
+
+## Now teach it to your code
+
+Once you understand a rule, you can write code that predicts the system perfectly:
+
+```python
+all_even("2468")   # -> True   (all even)
+all_even("1234")   # -> False  (the 1 and 3 are odd)
+
+responds("2468")   # -> "CLICK"
+responds("1357")   # -> "BEEP"
+```
+
+A digit is even when dividing it by 2 leaves no remainder — in Python, `int(ch) % 2 == 0`. Remember `%` (the remainder) from your computer class? It's about to do a lot of work this term.
+
+## See your crack work 🔓
+
+Press **Run** and the panel draws the keypad probes for you:
+
+🟩 a **green** square is an even digit · 🟥 a **red** square is an odd digit · 🔓 the lock pops **open** when *your* `responds` says `"CLICK"` · 🔒 it stays **shut** otherwise
+
+Every row with four green squares should show an open lock. When your code matches the system on every probe, you've officially cracked your first lock. 🎉
+
+## What you'll build
+
+- **`all_even(code)`** — return `True` only if every digit in the code is even.
+- **`responds(code)`** — return `"CLICK"` if the code is all even, otherwise `"BEEP"`.
+
+Two tiny functions, but they're the whole mindset: poke the system, find the rule, predict it. Next lesson, the door won't give up its secret so easily — you'll have to try *every* code. 🔨

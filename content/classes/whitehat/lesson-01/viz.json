@@ -1,0 +1,16 @@
+{
+  "type": "draw",
+  "title": "Fort Knocks keypad: each probe's digits (green=even, red=odd) and whether your code opens the lock",
+  "setup": "# Hidden painter: turns probe codes into a picture of the keypad panel. The\n# student never writes this; it lives in viz.json's \"setup\" so the live canvas\n# can draw it, and is duplicated here so validate-class can run it. It calls the\n# student's responds(), so a wrong answer changes the locks you see.\nEVEN = \"green\"   # an even digit\nODD = \"red\"      # an odd digit\nOPEN = \"\\U0001F513\"    # 🔓 the door clicked open\nSHUT = \"\\U0001F512\"    # 🔒 the door stayed locked\n\nPROBES = [\"2468\", \"1234\", \"2222\", \"1357\", \"4444\", \"1111\"]\n\n\ndef __show_panel(codes=None):\n    # One row per probe code: the four digits colored green (even) or red (odd),\n    # a gap, then a lock that's OPEN if your responds() says \"CLICK\".\n    if codes is None:\n        codes = PROBES\n    grid = []\n    for code in codes:\n        row = []\n        for ch in code:\n            row.append(EVEN if int(ch) % 2 == 0 else ODD)\n        row.append(\"\")  # gap column\n        # Student-driven, with a safe fallback so the panel never crashes.\n        try:\n            opened = responds(code) == \"CLICK\"\n        except Exception:\n            opened = all_even(code)\n        row.append(OPEN if opened else SHUT)\n        grid.append(row)\n    return grid",
+  "resultFn": "__show_panel",
+  "demoArgs": [
+    [
+      "2468",
+      "1234",
+      "2222",
+      "1357",
+      "4444",
+      "1111"
+    ]
+  ]
+}

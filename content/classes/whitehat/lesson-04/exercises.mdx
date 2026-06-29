@@ -1,0 +1,39 @@
+## Your mission
+
+Memory is 5 cells: four buffer slots (start as `"_"`) and a return-address slot that starts as `"H"` (HOME). Build the buggy copy, read the damage, then write the one check that stops it.
+
+### Exercise 1 — `store(text)`
+
+Copy `text` into memory one character at a time, starting at slot 0, with **no length check**. Return the 5-cell memory list. Characters past slot 3 spill into the return address (slot 4) — that's the bug.
+
+```python
+store("cat")     # -> ['c', 'a', 't', '_', 'H']   (fits — return still H)
+store("abcd")    # -> ['a', 'b', 'c', 'd', 'H']   (fills the buffer exactly)
+store("kitten")  # -> ['k', 'i', 't', 't', 'e']   (overflowed! H is gone)
+store("")        # -> ['_', '_', '_', '_', 'H']   (nothing written)
+```
+
+**Hint:** Start with `mem = ["_", "_", "_", "_", "H"]`. Loop `for i, ch in enumerate(text):` and, if `i < len(mem)`, set `mem[i] = ch`. Return `mem`.
+
+### Exercise 2 — `return_address(text)`
+
+After storing the text, return what's in the return-address slot (the last cell). `"H"` means safe; anything else means hijacked.
+
+```python
+return_address("cat")     # -> "H"   (safe, returns home)
+return_address("evilX")   # -> "X"   (HIJACKED to X!)
+```
+
+**Hint:** Reuse `store(text)` and grab the last cell with `[4]` or `[-1]`.
+
+### Exercise 3 — `is_safe(text)`
+
+The defense. Return `True` only if the text fits in the 4-slot buffer without spilling.
+
+```python
+is_safe("cat")     # -> True
+is_safe("abcd")    # -> True    (exactly 4 fits)
+is_safe("kitten")  # -> False   (6 would overflow)
+```
+
+**Hint:** One line — is the length 4 or less? `return len(text) <= 4`.

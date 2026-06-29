@@ -1,0 +1,78 @@
+# Smash the Stack
+
+> This is the big one, {{FIRST_NAME}}. 💥 Every weakness so far was about *guessing* a secret. This one is different — you'll make a program **forget what it was doing** and jump to wherever *you* tell it. And you can only understand it because you already built a CPU and a stack. Time to cash that in.
+
+## Phase 2: Red Team — Break In
+
+---
+
+## Remember the return address?
+
+When your CPU ran a function, it kept a little note in memory: **the return address** — "when this is done, jump back *here*." That note is what lets a program pick up where it left off.
+
+Here's the thing nobody tells you: that note sits in memory **right next to the box that holds your typed-in input.** That box is called the **buffer**.
+
+Picture 5 memory cells in a row:
+
+```text
+[ _ ][ _ ][ _ ][ _ ][ H ]
+  buffer (4 slots)    return
+                      address
+```
+
+The four `_` slots are the buffer (empty for now). The last slot holds `H` — that's the return address, meaning "go back **H**OME when you're done."
+
+## The bug: no length check 🐛
+
+Now the program copies your input into the buffer, **one character at a time, without ever checking how long it is.** Watch what happens with a short word:
+
+```python
+store("cat")    # -> ['c', 'a', 't', '_', 'H']
+```
+
+`c`, `a`, `t` land in the buffer. The return address is still `H`. All good — the program will return home.
+
+But what if your input is **too long for the buffer?** The copying doesn't stop at the edge. It just keeps going — straight over the return address:
+
+```python
+store("kitten")  # -> ['k', 'i', 't', 't', 'e']
+```
+
+See it? `k i t t` filled the buffer, and then `e` **spilled into the return-address slot** and wiped out the `H`. The program will now try to "return" to `e` — somewhere random. It crashes. That's an accidental **buffer overflow.**
+
+## The hijack: choosing where it jumps 🎯
+
+A crook doesn't overflow by accident. They craft the input *exactly* so the spilled-over part is an address they choose. Want the program to jump to your evil code at address `X`? Make the 5th character `X`:
+
+```python
+return_address("evilX")   # -> "X"   (you control the jump!)
+```
+
+Four junk characters to fill the buffer, then `X` to overwrite the return address. The program no longer does what its author wanted — it does what **you** wrote. *That* is smashing the stack.
+
+## The fix: check the length ✅
+
+The whole disaster comes from one missing check. Defend it by refusing input that doesn't fit:
+
+```python
+is_safe("cat")     # -> True   (3 fits in 4 slots)
+is_safe("kitten")  # -> False  (6 would overflow — reject it!)
+```
+
+A real program that checks the length before copying simply can't be overflowed. One `if`. That's the entire defense — and forgetting it has caused some of the most famous hacks in history.
+
+## Watch the smash 💥
+
+Press **Run**. The panel draws memory for three inputs: `cat`, `kitten`, and `evilX`. Each row is the 4 buffer slots (🟦 blue = holds a character) then the return address:
+
+🟩 **green** return address = still `H`, the program returns home safely · 🟥 **red** return address = overwritten, **hijacked!**
+
+`cat` stays green. `kitten` and `evilX` go red — you smashed the stack. 🎉
+
+## What you'll build
+
+- **`store(text)`** — copy input into memory with no bounds check (the bug itself).
+- **`return_address(text)`** — read the return-address slot to see if it got hijacked.
+- **`is_safe(text)`** — the one length check that makes the overflow impossible.
+
+You just pulled off the most legendary attack in computer security — and you only got it because you understand how the machine *really* works. Next: a sneakier way in, where you don't smash anything — you just talk your way past the guard. 🗝️

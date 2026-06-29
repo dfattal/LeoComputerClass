@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "build_query glues the name in quotes; login_ok opens for anyone when the query contains OR '1'='1; safe_login rejects any username containing a quote."
+  },
+  {
+    "criterion": "Understanding injection",
+    "weight": 25,
+    "description": "Sees that the injection payload makes login_ok return True but safe_login return False, and that the quote check is what closes the hole."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "login_ok reuses build_query; clear names; a return on every path."
+  }
+]

@@ -1,0 +1,65 @@
+# Sneak Past the Login
+
+> Last lesson you smashed your way in, {{FIRST_NAME}}. 💥 This time you won't break anything — you'll just *talk your way past the guard* by saying something it doesn't expect. It's sneaky, it's clever, and it has broken into more websites than anything else on Earth. 🗝️
+
+## Phase 2: Red Team — Break In
+
+---
+
+## The computer can't tell data from commands
+
+When you log in, Fort Knocks checks your name by building a little command — and it builds that command by **gluing your typed-in name right into it**:
+
+```python
+build_query("leo")    # -> "find user where name = 'leo'"
+```
+
+See those quotes around `leo`? They're a fence. They're supposed to say "everything inside here is just *data* — a name, nothing more." The command is `find user where name = '...'`; your name goes in the middle.
+
+But here's the problem: to the computer, the whole thing is **one big string**. It can't really tell where your *data* ends and its *command* begins. And if you can climb over that fence, you can rewrite the command.
+
+## The attack: break out of the fence 🧗
+
+What if your "name" itself contains a quote? Watch the fence break:
+
+```python
+build_query("' OR '1'='1")
+# -> "find user where name = '' OR '1'='1'"
+```
+
+Read that command carefully. It now says: *find a user where the name is empty `''`, **OR** where `'1'='1'`.* And `1` always equals `1`! So the rule is **always true** — the door opens for *everyone*, no real name needed.
+
+```python
+login_ok("leo", "leo")          # -> True   (the real user, fine)
+login_ok("mallory", "leo")      # -> False  (wrong name, denied)
+login_ok("' OR '1'='1", "leo")  # -> True   (INJECTION — got in as anyone!)
+```
+
+That's an **injection** attack: you *inject* your own command into what was supposed to be plain data. No password. No brute force. Just a quote in the right place.
+
+## The fix: never trust glued-in input ✅
+
+The whole trick depends on sneaking a quote `'` into the input. So the defense is simple — **check the input before you trust it.** If it contains the characters an attacker uses to break out, refuse it:
+
+```python
+safe_login("leo", "leo")          # -> True   (clean name, allowed)
+safe_login("' OR '1'='1", "leo")  # -> False  (sneaky quote — BLOCKED)
+```
+
+Real systems do this with "input cleaning" and by keeping data and commands in *separate boxes* so they can never blur together. But the idea is exactly what you'll write: treat every bit of input as suspicious until you've checked it.
+
+## Watch both doors 🟢🔴
+
+Press **Run**. Each row is one login attempt. The **left** cell is the old, vulnerable system; the **right** cell is your fixed one:
+
+🟩 **green** = the door opened · 🟥 **red** = the door stayed shut
+
+`leo` opens both (he's allowed). `mallory` is denied by both. But the injection row? **Green on the left — it broke into the old system — and red on the right, where your fix slammed the door.** That's the whole lesson in one picture. 🎉
+
+## What you'll build
+
+- **`build_query(username)`** — glue the name into the command (and see the danger).
+- **`login_ok(username, real_user)`** — the vulnerable check the injection defeats.
+- **`safe_login(username, real_user)`** — reject sneaky input so only real names get in.
+
+You've now broken in by guessing, by smashing, and by sneaking. Next you'll stop *touching* the computer at all — and just listen to its secrets fly through the air. 📡

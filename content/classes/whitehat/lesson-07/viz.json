@@ -1,0 +1,22 @@
+{
+  "type": "draw",
+  "title": "Your inbox: LEFT = is the link real? RIGHT = is it phishing? Green = safe, red = danger",
+  "setup": "# Hidden painter: one row per email in your inbox. LEFT cell = the link check\n# (green = real domain, red = fake look-alike). RIGHT cell = the overall verdict\n# (green = safe, red = PHISHING). The tricky middle case has a real link but a\n# scary message — left green, right red. Driven by the student's functions.\nSAFE = \"green\"\nBAD = \"red\"\nREAL = \"fortknocks.com\"\n\n\ndef __row(email):\n    url, message = email[0], email[1]\n    try:\n        link_bad = is_fake_link(url, REAL)\n    except Exception:\n        link_bad = False\n    try:\n        phish = is_phishing(url, message, REAL)\n    except Exception:\n        phish = False\n    return [BAD if link_bad else SAFE, \"\", BAD if phish else SAFE]\n\n\ndef __show_inbox(emails=None):\n    if emails is None:\n        emails = _EMAILS\n    return [__row(e) for e in emails]",
+  "resultFn": "__show_inbox",
+  "demoArgs": [
+    [
+      [
+        "https://fortknocks.com/login",
+        "Hi Leo, here is your monthly summary."
+      ],
+      [
+        "https://fortknocks.com.evil.ru/login",
+        "Welcome back to your account."
+      ],
+      [
+        "https://fortknocks.com/help",
+        "URGENT: verify your password now or be suspended!"
+      ]
+    ]
+  ]
+}

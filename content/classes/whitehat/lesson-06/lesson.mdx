@@ -1,0 +1,65 @@
+# Listening on the Wire
+
+> Here's the spooky part, {{FIRST_NAME}}: when you send a message across the internet, it doesn't zoom *straight* to its destination. 📡 It hops from computer to computer — and **any one of them can listen in**. Today you become that listener... and then you stop them.
+
+## Phase 2: Red Team — Break In
+
+---
+
+## A network is a crowded hallway
+
+Imagine passing a note across a packed room. It goes hand to hand to hand before it reaches your friend. Any hand along the way could *read* it. That's exactly how a network works — your message travels through lots of computers, and a sneaky one can quietly copy everything that passes. Copying traffic like this is called **sniffing**.
+
+Messages on the wire look like little labeled packets:
+
+```text
+user=leo;pass=hunter2
+```
+
+If a snoop grabs that packet, your password is just... *sitting there.* You don't even need to crack anything — you can read it straight off the wire:
+
+```python
+password_from("user=leo;pass=hunter2")   # -> "hunter2"
+```
+
+Your sniffer finds `pass=` and reads everything after it. Scary how easy that is, right? 😬
+
+## The fix: scramble it before it leaves 🔐
+
+You already know the cure from Secret Codes — **encryption**. If you scramble the password *before* it goes on the wire, the snoop captures gibberish instead of the real thing.
+
+Shift each letter along the alphabet (wrapping past `z`):
+
+```python
+encrypt("hunter2", 3)   # -> "kxqwhu2"
+encrypt("xyz", 3)       # -> "abc"        (wraps around!)
+```
+
+Now build a *safe* packet, where the password is already scrambled:
+
+```python
+safe_packet("user=leo;pass=hunter2", 3)
+# -> "user=leo;pass=kxqwhu2"
+```
+
+The snoop still captures the packet — but `password_from` now gives them `"kxqwhu2"`, which is useless. They heard the conversation, but it was in a code only the two ends can undo. 🎉
+
+## This is what the lock 🔒 means
+
+Ever notice the little padlock next to a web address? That's the real version of exactly what you just did: the website and your computer agree on a secret scramble, so every password and message between you is gibberish to anyone listening on the wire. No lock = your traffic is that note passed hand to hand. That's why you never type a password on a site without it.
+
+## Watch the wire 🔴🟢
+
+Press **Run**. The panel shows the password as it travels:
+
+🟥 **top row** — every character is red: the *plain text* password, fully readable by a snoop · 🟩 **bottom row** — every character is green: the *encrypted* password, safe gibberish
+
+Same length, same letters underneath — but one is a gift to the snoop and the other is worthless to them. That's the whole power of encryption. 🔐
+
+## What you'll build
+
+- **`password_from(packet)`** — the sniffer that reads a password off the wire.
+- **`encrypt(text, shift)`** — scramble letters so the snoop gets gibberish.
+- **`safe_packet(packet, shift)`** — send the password already encrypted.
+
+You've now broken in five different ways. Time to meet the one target no firewall can protect: the *human*. 🎣

@@ -1,0 +1,16 @@
+{
+  "type": "draw",
+  "title": "Password fingerprints: top row is the stolen hash — find the common word whose fingerprint matches it",
+  "setup": "# Hidden painter: draws each password as a colorful \"fingerprint\" — the digits\n# of its hash turned into a row of colored squares. The top row is the stolen\n# target; each row below is a common word the attacker tries. The cracked\n# password is the row whose fingerprint exactly matches the target. Driven by\n# the student's simple_hash, so wrong hashing makes the fingerprints not line up.\nPAL = [\"red\", \"orange\", \"yellow\", \"green\", \"blue\",\n       \"purple\", \"pink\", \"brown\", \"gray\", \"black\"]\n\n\ndef __fingerprint(h):\n    # Turn a hash number into 7 colored squares, one per digit.\n    s = str(h).zfill(7)[-7:]\n    return [PAL[int(d)] for d in s]\n\n\ndef __show_attack(secret_word=\"dragon\", wordlist=None):\n    if wordlist is None:\n        wordlist = [\"password\", \"123456\", \"dragon\", \"qwerty\", \"leo\"]\n    try:\n        rows = [__fingerprint(simple_hash(secret_word))]   # the stolen target\n        rows.append([\"\" for _ in range(7)])                # gap row\n        for word in wordlist:\n            rows.append(__fingerprint(simple_hash(word)))\n    except Exception:\n        rows = [[\"gray\" for _ in range(7)]]\n    return rows",
+  "resultFn": "__show_attack",
+  "demoArgs": [
+    "dragon",
+    [
+      "password",
+      "123456",
+      "dragon",
+      "qwerty",
+      "leo"
+    ]
+  ]
+}

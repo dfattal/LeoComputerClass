@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "password_from slices the value after pass= up to a ; (or end), \"\" if absent; encrypt is a wrapping Caesar shift leaving non-letters alone; safe_packet replaces the password with its encrypted form."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "password_from handles no-password and password-at-end; encrypt wraps z->a and a shift of 0 is unchanged; digits in the password pass through."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "safe_packet reuses password_from and encrypt; clear names; a return on every path."
+  }
+]

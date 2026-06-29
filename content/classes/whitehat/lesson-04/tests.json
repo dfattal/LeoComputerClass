@@ -1,0 +1,138 @@
+[
+  {
+    "entry": "store",
+    "cases": [
+      {
+        "name": "'cat' fits in the buffer",
+        "args": [
+          "cat"
+        ],
+        "expected": [
+          "c",
+          "a",
+          "t",
+          "_",
+          "H"
+        ]
+      },
+      {
+        "name": "'abcd' exactly fills the buffer",
+        "args": [
+          "abcd"
+        ],
+        "expected": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "H"
+        ]
+      },
+      {
+        "name": "'kitten' overflows (return clobbered)",
+        "args": [
+          "kitten"
+        ],
+        "expected": [
+          "k",
+          "i",
+          "t",
+          "t",
+          "e"
+        ]
+      },
+      {
+        "name": "'evilX' lands X on the return slot",
+        "args": [
+          "evilX"
+        ],
+        "expected": [
+          "e",
+          "v",
+          "i",
+          "l",
+          "X"
+        ]
+      },
+      {
+        "name": "empty input leaves memory untouched",
+        "args": [
+          ""
+        ],
+        "expected": [
+          "_",
+          "_",
+          "_",
+          "_",
+          "H"
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "return_address",
+    "cases": [
+      {
+        "name": "'cat' returns HOME safely",
+        "args": [
+          "cat"
+        ],
+        "expected": "H"
+      },
+      {
+        "name": "'abcd' still safe (just fills buffer)",
+        "args": [
+          "abcd"
+        ],
+        "expected": "H"
+      },
+      {
+        "name": "'kitten' corrupts the return",
+        "args": [
+          "kitten"
+        ],
+        "expected": "e"
+      },
+      {
+        "name": "'evilX' hijacks to X",
+        "args": [
+          "evilX"
+        ],
+        "expected": "X"
+      }
+    ]
+  },
+  {
+    "entry": "is_safe",
+    "cases": [
+      {
+        "name": "'cat' is safe",
+        "args": [
+          "cat"
+        ],
+        "expected": true
+      },
+      {
+        "name": "'abcd' is right at the limit",
+        "args": [
+          "abcd"
+        ],
+        "expected": true
+      },
+      {
+        "name": "'kitten' is too long",
+        "args": [
+          "kitten"
+        ],
+        "expected": false
+      },
+      {
+        "name": "empty input is safe",
+        "args": [
+          ""
+        ],
+        "expected": true
+      }
+    ]
+  }
+]

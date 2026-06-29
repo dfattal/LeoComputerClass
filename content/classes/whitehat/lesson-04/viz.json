@@ -1,0 +1,13 @@
+{
+  "type": "draw",
+  "title": "Memory: 4 blue buffer slots + the return address. Green = returns HOME, red = HIJACKED by overflow",
+  "setup": "# Hidden painter: draws memory as a row of cells for each attack input. The four\n# buffer slots are blue when they hold a character, gray when empty. The\n# return-address slot (last) is GREEN while it still says \"H\" (safe) and RED once\n# it's been overwritten (hijacked!). Driven by the student's store().\nEMPTY = \"gray\"\nDATA = \"blue\"\nSAFE = \"green\"\nHIJACK = \"red\"\n\n\ndef __row(text):\n    try:\n        mem = store(text)\n    except Exception:\n        mem = [\"_\", \"_\", \"_\", \"_\", \"H\"]\n    row = []\n    for i in range(4):                       # buffer slots\n        row.append(DATA if mem[i] != \"_\" else EMPTY)\n    row.append(\"\")                           # gap before the return address\n    row.append(SAFE if mem[4] == \"H\" else HIJACK)   # the return address\n    return row\n\n\ndef __show_attacks(texts=None):\n    if texts is None:\n        texts = [\"cat\", \"kitten\", \"evilX\"]\n    return [__row(t) for t in texts]",
+  "resultFn": "__show_attacks",
+  "demoArgs": [
+    [
+      "cat",
+      "kitten",
+      "evilX"
+    ]
+  ]
+}

@@ -1,0 +1,72 @@
+# The Trick Email
+
+> Here's the secret the pros know, {{FIRST_NAME}}: the easiest computer to hack isn't a computer at all — it's the **human** sitting in front of it. 🎣 Why pick a lock when you can just *trick* someone into opening the door for you?
+
+## Phase 2: Red Team — Break In
+
+---
+
+## Hacking the human: social engineering
+
+You can have the strongest password and the best encryption in the world — and it all falls apart if someone tricks *you* into typing your password into the wrong place. Fooling a person instead of a machine is called **social engineering**, and its most common form is **phishing**: a fake email with a fake link, dressed up to look exactly like the real thing.
+
+A phishing email wants you to panic and click before you think. Your job as a white hat is to build the calm, careful checker that *doesn't* panic. Two giveaways you can teach to code:
+
+## Giveaway #1: the look-alike link 🔗
+
+The real site is `fortknocks.com`. A phisher registers something that *looks* almost identical:
+
+```text
+https://fortknocks.com.evil.ru/login     <- the real domain is evil.ru!
+https://fortkn0cks.com/login             <- that's a ZERO, not an "o"
+```
+
+The trick is to read the **whole** domain, not just check that "fortknocks" appears somewhere. The domain is the part right after `https://`, up to the first `/`:
+
+```python
+domain_of("https://fortknocks.com.evil.ru/login")   # -> "fortknocks.com.evil.ru"
+is_fake_link("https://fortknocks.com.evil.ru/login", "fortknocks.com")  # -> True
+```
+
+If that domain isn't *exactly* `fortknocks.com`, it's a fake. 🚩
+
+## Giveaway #2: scary, urgent words 😱
+
+Real companies don't scream at you. Phishers do — because panic makes you stop thinking:
+
+> **URGENT!** Your account will be **SUSPENDED**! **VERIFY** your **PASSWORD NOW** or lose access — **CLICK** here!
+
+Count the alarm words. One or two might be innocent, but a message *stuffed* with `urgent`, `verify`, `password`, `suspended`, `now`, `click` is waving a giant red flag.
+
+## Put it together 🕵️
+
+It's phishing if **either** giveaway shows up — a fake link, **or** a message packed with at least two alarm words:
+
+```python
+is_phishing("https://fortknocks.com.evil.ru/x", "Welcome back.", "fortknocks.com")
+# -> True   (the link is fake)
+
+is_phishing("https://fortknocks.com/help", "URGENT: verify your password now!", "fortknocks.com")
+# -> True   (real link, but the message is a scam)
+
+is_phishing("https://fortknocks.com/login", "Here is your monthly summary.", "fortknocks.com")
+# -> False  (real link, calm message — safe!)
+```
+
+That middle one is the sneaky case: the link is *real*, but the words give it away. A good detector catches both. 🎯
+
+## Check your inbox 🟢🔴
+
+Press **Run**. Each row is an email. The **left** cell is the link check, the **right** cell is the final verdict:
+
+🟩 **green** = safe · 🟥 **red** = danger
+
+Watch the middle email: **green link, red verdict** — the address looked fine, but the panic-words gave the scammer away. *That's* the catch your detector just made. 🎉
+
+## What you'll build
+
+- **`domain_of(url)`** — pull the real domain out of a link.
+- **`is_fake_link(url, real)`** — spot a look-alike address.
+- **`is_phishing(url, message, real)`** — combine both clues into one verdict.
+
+You've now broken in every way an attacker can. Time to flip your hat to the **blue team** and lock Fort Knocks down for good. 🔵🔒

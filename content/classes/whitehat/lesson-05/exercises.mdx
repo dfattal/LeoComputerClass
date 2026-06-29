@@ -1,0 +1,41 @@
+## Your mission
+
+Fort Knocks glues your typed-in name straight into its login command. Build that command, show how a sneaky name breaks in, then write the check that stops it. The real user's name is `"leo"`.
+
+### Exercise 1 — `build_query(username)`
+
+Return the command the server runs, with the username glued inside single quotes.
+
+```python
+build_query("leo")
+# -> "find user where name = 'leo'"
+
+build_query("' OR '1'='1")
+# -> "find user where name = '' OR '1'='1'"
+```
+
+**Hint:** Just join the pieces: `"find user where name = '" + username + "'"`.
+
+### Exercise 2 — `login_ok(username, real_user)`
+
+The vulnerable check. Build the query; if it contains the always-true trick `OR '1'='1`, the door opens for anyone. Otherwise, it only opens for the real user.
+
+```python
+login_ok("leo", "leo")          # -> True
+login_ok("mallory", "leo")      # -> False
+login_ok("' OR '1'='1", "leo")  # -> True    (injection works!)
+```
+
+**Hint:** `query = build_query(username)`. If `"OR '1'='1" in query:` return `True`. Otherwise return `username == real_user`.
+
+### Exercise 3 — `safe_login(username, real_user)`
+
+The defense. If the username contains a quote `'`, it's an attack — return `False`. Otherwise, only the real user gets in.
+
+```python
+safe_login("leo", "leo")          # -> True
+safe_login("' OR '1'='1", "leo")  # -> False   (blocked!)
+safe_login("leo's", "leo")        # -> False   (any quote is refused)
+```
+
+**Hint:** First line: `if "'" in username: return False`. Then `return username == real_user`.

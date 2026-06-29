@@ -1,0 +1,57 @@
+# Guess the Password
+
+> Nice work cracking the keypad, {{FIRST_NAME}}! 🔓 But that door had a *rule* you could figure out. Fort Knocks' next door is meaner: it's a plain PIN with no pattern at all. So we use the bluntest hack there is — try **every** code. 🔨
+
+## Phase 2: Red Team — Break In
+
+---
+
+## Brute force: try everything
+
+When there's no clever trick, a hacker just guesses — but *systematically*. Start at `0000`, then `0001`, then `0002`... all the way up until the lock clicks. That's **brute force**.
+
+It sounds slow, but you're not typing by hand — your computer is. A computer can try **thousands of guesses every second**. A 4-digit PIN only has 10,000 possible codes, so a computer chews through all of them in the blink of an eye.
+
+```python
+crack_pin("0042")   # tries 0000, 0001, ... and stops at -> "0042"
+```
+
+Your cracker tries codes in order and returns the one that matches. The trick is to make each guess the **same length** as the secret, with leading zeros: guess number 42 should be `"0042"`, not `"42"`. Python's `zfill` does exactly that:
+
+```python
+str(42).zfill(4)    # -> "0042"
+```
+
+## Why longer is stronger 📏
+
+Here's the secret every password expert knows. Each extra digit doesn't *add* to the work — it **multiplies** it by 10:
+
+| Digits | Possible codes |
+| --- | --- |
+| 1 | 10 |
+| 2 | 100 |
+| 4 | 10,000 |
+| 6 | 1,000,000 |
+| 8 | 100,000,000 |
+
+A 4-digit PIN: cracked instantly. An 8-digit one: now your computer has a *hundred million* codes to grind through. That jump is why "make your password longer" is the best advice in security. It's not about being clever — it's about giving the attacker too many doors to try.
+
+```python
+combos(4)   # -> 10000
+combos(8)   # -> 100000000
+```
+
+## Watch the attack sweep 🔴🟢
+
+Press **Run** and the panel shows a smaller 2-digit lock as a 10×10 board — every code from `00` (top-left) to `99` (bottom-right):
+
+🟥 **red** squares are codes your cracker already tried · 🟩 the **green** square is the moment it found the secret · ⬜ **gray** squares it never had to reach
+
+Watch the red flood across the board and stop dead on the answer. That's brute force in action — and you can see why a *bigger* board (a longer PIN) would take so much longer to fill. 🔨
+
+## What you'll build
+
+- **`crack_pin(secret)`** — brute force every code in order; return the one that matches.
+- **`combos(num_digits)`** — how many codes a PIN of that length has, so you can prove why length wins.
+
+Brute force always works *eventually*. Next lesson you'll meet the defense that makes "eventually" mean *longer than the age of the universe*. 🔐

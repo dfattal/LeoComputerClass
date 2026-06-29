@@ -1,0 +1,94 @@
+[
+  {
+    "entry": "build_query",
+    "cases": [
+      {
+        "name": "normal name 'leo'",
+        "args": [
+          "leo"
+        ],
+        "expected": "find user where name = 'leo'"
+      },
+      {
+        "name": "another name 'mallory'",
+        "args": [
+          "mallory"
+        ],
+        "expected": "find user where name = 'mallory'"
+      },
+      {
+        "name": "the injection payload",
+        "args": [
+          "' OR '1'='1"
+        ],
+        "expected": "find user where name = '' OR '1'='1'"
+      }
+    ]
+  },
+  {
+    "entry": "login_ok",
+    "cases": [
+      {
+        "name": "real user gets in",
+        "args": [
+          "leo",
+          "leo"
+        ],
+        "expected": true
+      },
+      {
+        "name": "wrong user is denied",
+        "args": [
+          "mallory",
+          "leo"
+        ],
+        "expected": false
+      },
+      {
+        "name": "INJECTION breaks in as anyone",
+        "args": [
+          "' OR '1'='1",
+          "leo"
+        ],
+        "expected": true
+      }
+    ]
+  },
+  {
+    "entry": "safe_login",
+    "cases": [
+      {
+        "name": "real user still gets in",
+        "args": [
+          "leo",
+          "leo"
+        ],
+        "expected": true
+      },
+      {
+        "name": "wrong user denied",
+        "args": [
+          "mallory",
+          "leo"
+        ],
+        "expected": false
+      },
+      {
+        "name": "injection is BLOCKED",
+        "args": [
+          "' OR '1'='1",
+          "leo"
+        ],
+        "expected": false
+      },
+      {
+        "name": "any quote is rejected",
+        "args": [
+          "leo's",
+          "leo"
+        ],
+        "expected": false
+      }
+    ]
+  }
+]

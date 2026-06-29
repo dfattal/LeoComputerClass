@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "crack_pin returns the matching code for any length secret; combos returns 10 ** num_digits."
+  },
+  {
+    "criterion": "Brute-force loop",
+    "weight": 25,
+    "description": "crack_pin actually loops through guesses and zero-pads each to len(secret) with zfill, rather than just handing back the secret."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear names, a return inside the loop on the match, and a one-line combos using exponentiation."
+  }
+]

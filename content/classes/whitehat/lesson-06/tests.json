@@ -1,0 +1,93 @@
+[
+  {
+    "entry": "password_from",
+    "cases": [
+      {
+        "name": "pulls pass from a full packet",
+        "args": [
+          "user=leo;pass=hunter2"
+        ],
+        "expected": "hunter2"
+      },
+      {
+        "name": "password at the start",
+        "args": [
+          "pass=secret"
+        ],
+        "expected": "secret"
+      },
+      {
+        "name": "password with stuff after it",
+        "args": [
+          "user=bob;pass=abc;ip=10"
+        ],
+        "expected": "abc"
+      },
+      {
+        "name": "no password in the packet",
+        "args": [
+          "just a hello message"
+        ],
+        "expected": ""
+      }
+    ]
+  },
+  {
+    "entry": "encrypt",
+    "cases": [
+      {
+        "name": "scrambles hunter2 (shift 3)",
+        "args": [
+          "hunter2",
+          3
+        ],
+        "expected": "kxqwhu2"
+      },
+      {
+        "name": "abc shifts to bcd (shift 1)",
+        "args": [
+          "abc",
+          1
+        ],
+        "expected": "bcd"
+      },
+      {
+        "name": "xyz wraps to abc (shift 3)",
+        "args": [
+          "xyz",
+          3
+        ],
+        "expected": "abc"
+      },
+      {
+        "name": "shift 0 changes nothing",
+        "args": [
+          "leo",
+          0
+        ],
+        "expected": "leo"
+      }
+    ]
+  },
+  {
+    "entry": "safe_packet",
+    "cases": [
+      {
+        "name": "encrypts the password in place",
+        "args": [
+          "user=leo;pass=hunter2",
+          3
+        ],
+        "expected": "user=leo;pass=kxqwhu2"
+      },
+      {
+        "name": "short packet",
+        "args": [
+          "pass=abc",
+          1
+        ],
+        "expected": "pass=bcd"
+      }
+    ]
+  }
+]

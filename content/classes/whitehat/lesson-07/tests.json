@@ -1,0 +1,105 @@
+[
+  {
+    "entry": "domain_of",
+    "cases": [
+      {
+        "name": "the real login link",
+        "args": [
+          "https://fortknocks.com/login"
+        ],
+        "expected": "fortknocks.com"
+      },
+      {
+        "name": "a sneaky look-alike",
+        "args": [
+          "https://fortknocks.com.evil.ru/login"
+        ],
+        "expected": "fortknocks.com.evil.ru"
+      },
+      {
+        "name": "zero instead of o",
+        "args": [
+          "http://fortkn0cks.com/login"
+        ],
+        "expected": "fortkn0cks.com"
+      },
+      {
+        "name": "no https:// in front",
+        "args": [
+          "fortknocks.com/page"
+        ],
+        "expected": "fortknocks.com"
+      }
+    ]
+  },
+  {
+    "entry": "is_fake_link",
+    "cases": [
+      {
+        "name": "the real site is fine",
+        "args": [
+          "https://fortknocks.com/login",
+          "fortknocks.com"
+        ],
+        "expected": false
+      },
+      {
+        "name": "extra domain on the end is fake",
+        "args": [
+          "https://fortknocks.com.evil.ru/x",
+          "fortknocks.com"
+        ],
+        "expected": true
+      },
+      {
+        "name": "fortkn0cks is fake",
+        "args": [
+          "http://fortkn0cks.com",
+          "fortknocks.com"
+        ],
+        "expected": true
+      }
+    ]
+  },
+  {
+    "entry": "is_phishing",
+    "cases": [
+      {
+        "name": "real link + calm message = safe",
+        "args": [
+          "https://fortknocks.com/login",
+          "Here is your monthly summary.",
+          "fortknocks.com"
+        ],
+        "expected": false
+      },
+      {
+        "name": "fake link = phishing",
+        "args": [
+          "https://fortknocks.com.evil.ru/login",
+          "Welcome back.",
+          "fortknocks.com"
+        ],
+        "expected": true
+      },
+      {
+        "name": "real link but scary message = phishing",
+        "args": [
+          "https://fortknocks.com/help",
+          "URGENT: verify your password now!",
+          "fortknocks.com"
+        ],
+        "expected": true
+      },
+      {
+        "name": "one scary word alone is not enough",
+        "args": [
+          "https://fortknocks.com/help",
+          "Click to read your summary.",
+          "fortknocks.com"
+        ],
+        "expected": false
+      }
+    ]
+  }
+]

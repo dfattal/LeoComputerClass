@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "all_even returns True only when every digit is even; responds returns \"CLICK\" for an all-even code and \"BEEP\" otherwise."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "Zero is treated as even (\"0000\" -> True/\"CLICK\"); a single odd digit anywhere makes the whole code fail."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Loops over the digits instead of hard-coding cases, and responds reuses all_even rather than repeating the logic."
+  }
+]

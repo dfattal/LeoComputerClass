@@ -1,0 +1,39 @@
+## Your mission
+
+Build a phishing detector that catches both kinds of trick email: the fake look-alike link, and the panic-words scam. The real site is `"fortknocks.com"`. The alarm words are `urgent`, `verify`, `password`, `suspended`, `now`, `click`.
+
+### Exercise 1 — `domain_of(url)`
+
+Return the domain of a link: drop the `https://` (or `http://`) part, then take everything up to the first `/`.
+
+```python
+domain_of("https://fortknocks.com/login")          # -> "fortknocks.com"
+domain_of("https://fortknocks.com.evil.ru/login")  # -> "fortknocks.com.evil.ru"
+domain_of("fortknocks.com/page")                   # -> "fortknocks.com"
+```
+
+**Hint:** If `"://" in url`, take the part after it with `url.split("://", 1)[1]`. Then return `that.split("/", 1)[0]`.
+
+### Exercise 2 — `is_fake_link(url, real)`
+
+Return `True` if the link's domain isn't *exactly* the real site.
+
+```python
+is_fake_link("https://fortknocks.com/login", "fortknocks.com")     # -> False
+is_fake_link("https://fortknocks.com.evil.ru/x", "fortknocks.com") # -> True
+is_fake_link("http://fortkn0cks.com", "fortknocks.com")            # -> True
+```
+
+**Hint:** One line — `return domain_of(url) != real`.
+
+### Exercise 3 — `is_phishing(url, message, real)`
+
+Return `True` if the link is fake, **or** the message contains **at least two** alarm words.
+
+```python
+is_phishing("https://fortknocks.com/login", "Here is your monthly summary.", "fortknocks.com")  # -> False
+is_phishing("https://fortknocks.com.evil.ru/x", "Welcome back.", "fortknocks.com")              # -> True
+is_phishing("https://fortknocks.com/help", "URGENT: verify your password now!", "fortknocks.com")  # -> True
+```
+
+**Hint:** First, `if is_fake_link(url, real): return True`. Then lowercase the message, loop the alarm words counting how many are `in` it, and `return count >= 2`.

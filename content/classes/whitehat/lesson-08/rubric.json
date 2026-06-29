@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "pin_strong is len(pin) >= 8; buffer_ok is len(text) <= size; input_clean is no quote; security_score adds 20 per passing defense (max 100)."
+  },
+  {
+    "criterion": "Defense in depth",
+    "weight": 25,
+    "description": "security_score combines all five checks correctly, so weak configs score lower (e.g. 80 / 60 / 20) and a full lockdown scores 100."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "security_score reuses pin_strong, buffer_ok, and input_clean instead of repeating the logic; clear names; a return on every path."
+  }
+]

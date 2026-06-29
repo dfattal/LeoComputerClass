@@ -1,0 +1,9 @@
+{
+  "type": "draw",
+  "title": "Brute force sweeping every 2-digit code (00 top-left → 99 bottom-right): red = tried, green = cracked",
+  "setup": "# Hidden painter: draws the brute-force attack as a 10x10 board of every 2-digit\n# code (00 in the top-left, 99 in the bottom-right). Codes already tried glow\n# red; the cracked one turns green; the rest stay gray. Driven by the student's\n# crack_pin, so the green square lands wherever their cracker stops.\nTRIED = \"red\"\nFOUND = \"green\"\nUNTRIED = \"gray\"\n\n\ndef __show_search(secret=\"37\"):\n    grid = [[UNTRIED for _ in range(10)] for _ in range(10)]\n    try:\n        target = int(crack_pin(secret))\n    except Exception:\n        target = int(secret)\n    for i in range(target + 1):\n        r, c = i // 10, i % 10\n        grid[r][c] = FOUND if i == target else TRIED\n    return grid",
+  "resultFn": "__show_search",
+  "demoArgs": [
+    "37"
+  ]
+}

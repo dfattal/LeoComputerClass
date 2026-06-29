@@ -1,0 +1,71 @@
+# The Locked-Up Password
+
+> Here's a scary thought, {{FIRST_NAME}}: big websites get their databases stolen all the time. So why isn't it a total disaster every time? Because smart sites never store your real password in the first place. 🔐
+
+## Phase 2: Red Team — Break In
+
+---
+
+## Don't store the password — store its fingerprint
+
+When you make a password, a good website doesn't save the password itself. It runs the password through a **hash** — a scrambler that turns text into a number you can compute *forwards* but practically never run *backwards*.
+
+Think of it like a fingerprint. Your fingerprint comes from *you*, but nobody can rebuild *you* from a fingerprint. Same idea:
+
+```python
+simple_hash("dragon")   # -> 183714459
+simple_hash("leo")      # -> 315567
+```
+
+The site stores only that number. When you log in, it hashes what you typed and checks if the numbers match. So even if a thief steals the whole database, they get a pile of fingerprints — not passwords. 🎉
+
+Here's a tiny real hash you'll build. It rolls through the letters, mixing each one into a running number:
+
+```python
+h = 7
+for ch in password:
+    h = (h * 31 + ord(ch)) % 1000000007
+```
+
+`ord(ch)` is the letter's number (you met it in Secret Codes), and `% 1000000007` keeps the number from growing forever.
+
+## The crack: a dictionary attack 📖
+
+There's a weakness. A hash is **the same every time** — `"dragon"` always makes `183714459`. So an attacker who steals the hashes can fight back: take a list of the most common passwords, hash every one, and look for a match.
+
+```python
+dictionary_attack(183714459, ["password", "123456", "dragon", "qwerty"])
+# -> "dragon"   (cracked! it was a common word)
+```
+
+If your password is a common word, hashing doesn't save you — the attacker just hashes the whole dictionary. But a weird password like `xQ9!vzt` isn't in any list, so the attack comes up empty:
+
+```python
+dictionary_attack(simple_hash("xQ9!vzt"), ["password", "123456", "dragon"])
+# -> ""   (not found — strong passwords win again)
+```
+
+## The defense: add salt 🧂
+
+How do we protect the *common* passwords too? **Salt.** Before hashing, mix in a few extra letters that are different for every user:
+
+```python
+salted_hash("dragon", "a1")   # -> 419639183
+salted_hash("dragon", "z9")   # -> 335016541   (same password, different hash!)
+```
+
+Now two people who both picked `"dragon"` get *different* hashes, and the attacker's giant pre-hashed dictionary is useless — they'd have to redo the whole thing for every single salt. That's why every real site salts its passwords.
+
+## See the fingerprints 🎨
+
+Press **Run**. The panel draws each password as a row of colored squares made from its hash digits — a fingerprint:
+
+The **top row** is the stolen target hash. Each row below is a common word the attacker tries. The cracked password is the row whose colors **exactly match the top row**. Spot the twin! 👀
+
+## What you'll build
+
+- **`simple_hash(password)`** — scramble text into a one-way number.
+- **`dictionary_attack(target_hash, wordlist)`** — hash common words to crack a weak password.
+- **`salted_hash(password, salt)`** — mix in salt so identical passwords hash differently.
+
+You've now seen both sides: why hashing protects passwords, and exactly when it doesn't. Next up — the most famous hack of all time, where you make a program *forget what it was doing*. 💥

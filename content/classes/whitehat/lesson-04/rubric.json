@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "store copies char-by-char into the 5-cell memory with no bounds check; return_address reads the last slot; is_safe returns len(text) <= 4."
+  },
+  {
+    "criterion": "Understanding the overflow",
+    "weight": 25,
+    "description": "Sees that input longer than 4 overwrites the return address (kitten/evilX corrupt slot 4), and that is_safe is the check that prevents it."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "return_address reuses store rather than re-copying; clear names; a return on every path."
+  }
+]

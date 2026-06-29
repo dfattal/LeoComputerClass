@@ -1,0 +1,12 @@
+{
+  "question": "Why is computer security a never-ending game of 'cat and mouse' — and what is the one thing that makes someone a white-hat hacker instead of a crook?",
+  "guidance": "You played both sides this term — attacker and defender. Explain in your own words why the game never ends, and what the line is between a white hat and a black hat.",
+  "lookFor": [
+    "Every time defenders close a hole, attackers go looking for a new one — and every time attackers find a trick, defenders invent a patch, so it loops forever",
+    "You can never 'finish' securing a system because new attacks (and new mistakes) keep appearing; the goal is to keep making attacks harder, not to win once",
+    "The skills and even the exact code (like the buffer overflow) are the same for an attacker and a defender",
+    "The thing that makes someone a white hat is PERMISSION / consent — only breaking into systems you're allowed to test, in order to make them safer",
+    "Optionally: a hacker is really just someone who understands a system deeply; that understanding can be used to help or to harm"
+  ],
+  "exemplar": "Security is cat and mouse because it never stands still. When the defenders fix something — like salting passwords or checking the buffer size — the attackers just go hunting for a different hole. And when attackers come up with a new trick, the defenders build a patch for it. So it loops forever; you can't fix a system once and be done, because new bugs and new attacks keep showing up. The goal isn't to win once, it's to keep making it too much work to break in. And the thing that makes you a white hat isn't the skills — the buffer overflow I wrote is the exact same code whether it's a crime or a job. The difference is permission. A white hat only breaks into systems they're allowed to test, and they do it to make those systems safer. Same knowledge, opposite choice."
+}

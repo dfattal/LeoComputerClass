@@ -1,0 +1,111 @@
+[
+  {
+    "entry": "simple_hash",
+    "cases": [
+      {
+        "name": "hashes 'leo'",
+        "args": [
+          "leo"
+        ],
+        "expected": 315567
+      },
+      {
+        "name": "hashes 'dragon'",
+        "args": [
+          "dragon"
+        ],
+        "expected": 183714459
+      },
+      {
+        "name": "hashes 'password'",
+        "args": [
+          "password"
+        ],
+        "expected": 140048303
+      },
+      {
+        "name": "empty password still hashes",
+        "args": [
+          ""
+        ],
+        "expected": 7
+      }
+    ]
+  },
+  {
+    "entry": "dictionary_attack",
+    "cases": [
+      {
+        "name": "cracks the common word 'dragon'",
+        "args": [
+          183714459,
+          [
+            "password",
+            "123456",
+            "dragon",
+            "qwerty",
+            "leo"
+          ]
+        ],
+        "expected": "dragon"
+      },
+      {
+        "name": "strong password isn't in the list",
+        "args": [
+          461440717,
+          [
+            "password",
+            "123456",
+            "dragon",
+            "qwerty",
+            "leo"
+          ]
+        ],
+        "expected": ""
+      },
+      {
+        "name": "cracks 'password'",
+        "args": [
+          140048303,
+          [
+            "password",
+            "123456",
+            "dragon",
+            "qwerty",
+            "leo"
+          ]
+        ],
+        "expected": "password"
+      }
+    ]
+  },
+  {
+    "entry": "salted_hash",
+    "cases": [
+      {
+        "name": "salt 'a1' + dragon",
+        "args": [
+          "dragon",
+          "a1"
+        ],
+        "expected": 419639183
+      },
+      {
+        "name": "different salt 'z9' + same password",
+        "args": [
+          "dragon",
+          "z9"
+        ],
+        "expected": 335016541
+      },
+      {
+        "name": "salt the word 'leo'",
+        "args": [
+          "leo",
+          "k3"
+        ],
+        "expected": 300847175
+      }
+    ]
+  }
+]
