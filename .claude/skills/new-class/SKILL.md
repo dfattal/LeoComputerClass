@@ -109,16 +109,21 @@ this file, so that's the only edit needed.
 ### 5. Generate the hero image (don't ship a placeholder)
 
 Every class needs its own hero at `public/hero-<slug>.webp` — the class card and
-landing banner use it. **Generate real art for it with the `/ask-gemini` skill;
-do not leave a copied/placeholder image.** First open one or two existing heroes
-(`public/hero-pixels.webp`, `public/hero-bio.webp`) to match the house style:
-bright, playful, kid-friendly illustration; a little arcade/UI text is fine.
+landing banner use it. **Generate real art for it with the `/ask-gpt` skill (OpenAI
+`gpt-image-2`); do not leave a copied/placeholder image.** First open one or two
+existing heroes (`public/hero-pixels.webp`, `public/hero-bio.webp`) to match the
+house style: bright, playful, kid-friendly illustration; a little arcade/UI text is
+fine.
 
-Then call `/ask-gemini` in image mode with a prompt for: the **through-line**
+Then call `/ask-gpt` in image mode with a prompt for: the **through-line**
 subject, the **accent color** as the dominant palette, and a concrete scene (a
 character + the thing the class builds toward). For a drawing class, ask for a
-**pixel-art** style (`--styles="pixel-art"`); plot classes can use a richer
-illustration. Ask for a **16:9 landscape** image.
+**pixel-art** style; plot classes can use a richer illustration. Ask for a
+**wide 16:9 landscape** image.
+
+(`/ask-gpt` is the OpenAI twin of `/ask-gemini` and is preferred here — Gemini's
+free image tier frequently 429s/503s. `/ask-gemini` remains a fallback if you'd
+rather use it; the convert/OG steps below are the same either way.)
 
 **Do NOT bake the class name or any title/headline text into the image.** The
 class landing page renders its own title + tagline as real HTML over/under the
@@ -129,14 +134,18 @@ Prompt for the scene/subject/mood/palette only, and add an explicit negative lik
 image."* Tiny in-scene UI is fine (a small SCORE readout, short code snippets, a
 game's own marquee) — just not the class's name or a banner headline.
 
-`/ask-gemini` writes to the gitignored `nanobanana-output/` as a `.jpeg`. Convert
-it to webp at the standard hero size (1376×768, matching the other heroes) and put
-it in place:
+`/ask-gpt` returns base64 image data; it decodes to a PNG in the scratchpad, which
+you convert to webp at the standard hero size (1376×768, matching the other heroes)
+and put in place:
 
 ```bash
-cwebp -q 88 nanobanana-output/<generated>.jpeg -o public/hero-<slug>.webp
-# (falls back to: sips -s format webp <src> --out public/hero-<slug>.webp)
+# (gpt-image-2 returns 1536x1024 for a landscape request; crop+resize to 1376x768)
+magick <scratchpad>/img.png -resize 1376x768^ -gravity center -extent 1376x768 -quality 90 public/hero-<slug>.webp
+# (alternatives: cwebp -q 88 src.png -o public/hero-<slug>.webp  /  sips -s format webp …)
 ```
+
+(If you used the `/ask-gemini` fallback instead, it writes a `.jpeg` into the
+gitignored `nanobanana-output/` — convert that file the same way.)
 
 Eyeball the result in the running app (home page card + class landing). If it's
 off, regenerate with a tweaked prompt — it's cheap.
@@ -205,7 +214,7 @@ last lesson ships.)
 2. `scaffold-class.mjs` (move the entry up if it should lead the home page) →
 3. add accent to `lib/accents.ts` if new → 4. fill SHORT enticing `description`
 (card) + optional `longDescription` (class page) + ai-prompt + syllabus (weeks
-`planned`) → 5. generate the hero with `/ask-gemini` (real art,
+`planned`) → 5. generate the hero with `/ask-gpt` (OpenAI gpt-image-2; real art,
 not a placeholder) + convert to `public/hero-<slug>.webp` + `node
 scripts/generate-og-images.mjs` (social-share card) → 6. `/new-lesson` per
 lesson (`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`
