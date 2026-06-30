@@ -1,0 +1,6 @@
+[
+  {"criterion": "Stack works (LIFO)", "weight": 35, "description": "push adds to the back; pop removes the last item and is safe on an empty stack."},
+  {"criterion": "Queue works (FIFO)", "weight": 35, "description": "enqueue adds to the back; dequeue removes the FRONT item and is safe on an empty queue."},
+  {"criterion": "Returns a new list", "weight": 15, "description": "Each function returns the resulting list (a list, never None) for any input."},
+  {"criterion": "Clean code", "weight": 15, "description": "Uses simple slicing/concatenation, clear names, a return on every path."}
+]

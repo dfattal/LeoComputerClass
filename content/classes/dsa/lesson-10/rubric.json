@@ -1,0 +1,6 @@
+[
+  {"criterion": "neighbors looks up correctly", "weight": 25, "description": "neighbors returns the node's neighbor list, and [] for a node not in the graph."},
+  {"criterion": "BFS finds a shortest path", "weight": 40, "description": "bfs returns a fewest-hops path using a FIFO queue, exploring nearer nodes first."},
+  {"criterion": "Handles the tricky cases", "weight": 20, "description": "Returns [start] when start == goal, [] when no route exists, and never gets stuck in a loop (uses visited)."},
+  {"criterion": "Clean code", "weight": 15, "description": "Reuses neighbors inside bfs, clear queue handling (pop(0)/append), a return on every path."}
+]

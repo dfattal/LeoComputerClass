@@ -1,0 +1,50 @@
+{
+  "type": "plot",
+  "title": "Binary vs linear — halving the haystack barely grows with N",
+  "xLabel": "N — how many boxes in the row",
+  "yLabel": "boxes you open (worst case)",
+  "resultFn": "__plot",
+  "demoArgs": [
+    64
+  ],
+  "caption": {
+    "todo": "Finish binary_steps to draw the binary-search curve.",
+    "tuning": "Your curve is showing — keep tuning binary_steps to match the answer.",
+    "match": "✅ A nearly-flat curve way under the straight line — that's O(log n)!",
+    "checks": [
+      {
+        "fn": "binary_steps",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          1
+        ],
+        "expected": 3
+      },
+      {
+        "fn": "binary_steps",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          8
+        ],
+        "expected": 3
+      }
+    ]
+  },
+  "setup": "# Hidden producer: the WORST-case step-count for lists of size 1..n_max. The\n# straight \"linear\" line (n) is a fixed comparison; the \"binary\" line comes from\n# the student's OWN binary_steps and should stay nearly flat (O(log n)).\ndef __binary_curve(n_max):\n    pts = []\n    for n in range(1, n_max + 1):\n        arr = list(range(n))\n        s = binary_steps(arr, -1)  # -1 is never present -> worst case\n        if not isinstance(s, int) or isinstance(s, bool):\n            return None\n        pts.append([n, s])\n    return pts\n\n\ndef __plot(n_max):\n    linear = [[n, n] for n in range(1, n_max + 1)]\n    binary = None\n    try:\n        binary = __binary_curve(n_max)\n    except Exception:\n        binary = None\n    series = [{\"name\": \"linear search — check every box (O(n))\", \"points\": linear, \"highlight\": False}]\n    if binary:\n        series.append({\"name\": \"binary search — halve each guess (O(log n))\", \"points\": binary, \"highlight\": True})\n    return series\n"
+}

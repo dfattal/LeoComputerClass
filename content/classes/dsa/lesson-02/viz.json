@@ -1,0 +1,44 @@
+{
+  "type": "plot",
+  "title": "Linear search — the longer the row, the more boxes you open",
+  "xLabel": "N — how many boxes in the row",
+  "yLabel": "boxes you open (worst case)",
+  "resultFn": "__plot",
+  "demoArgs": [
+    16
+  ],
+  "caption": {
+    "todo": "Finish search_steps to draw the worst-case line.",
+    "tuning": "Your line is showing — keep tuning search_steps to match the answer.",
+    "match": "✅ A straight climbing line — that's O(n): twice the row, twice the work.",
+    "checks": [
+      {
+        "fn": "search_steps",
+        "args": [
+          [
+            10,
+            20,
+            30,
+            40
+          ],
+          30
+        ],
+        "expected": 3
+      },
+      {
+        "fn": "search_steps",
+        "args": [
+          [
+            10,
+            20,
+            30,
+            40
+          ],
+          99
+        ],
+        "expected": 4
+      }
+    ]
+  },
+  "setup": "# Hidden producer: plots the WORST case (target not in the list) for lists of\n# size 1..n_max, using the student's OWN search_steps. The line climbs straight\n# up with N — that's O(n). Falls back to a plain n-line so it's never blank.\ndef __linear_curve(n_max):\n    pts = []\n    for n in range(1, n_max + 1):\n        arr = list(range(n))\n        s = search_steps(arr, -1)  # -1 is never in [0..n-1] -> worst case\n        if not isinstance(s, int) or isinstance(s, bool):\n            return None\n        pts.append([n, s])\n    return pts\n\n\ndef __plot(n_max):\n    curve = None\n    try:\n        curve = __linear_curve(n_max)\n    except Exception:\n        curve = None\n    if not curve:\n        curve = [[n, n] for n in range(1, n_max + 1)]\n    return [{\"name\": \"linear search — steps in the worst case\", \"points\": curve, \"highlight\": True}]\n"
+}

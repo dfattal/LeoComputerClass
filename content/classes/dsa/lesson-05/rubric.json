@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct base cases", "weight": 30, "description": "Each function stops at the right base case: countdown(0)=[], factorial(0)=1, sum_to(0)=0."},
+  {"criterion": "Correct recursive step", "weight": 40, "description": "Each function calls itself on n-1 and combines the result correctly ([n]+…, n*…, n+…)."},
+  {"criterion": "Reaches the base case", "weight": 20, "description": "The recursive call always shrinks toward the base case, so it never loops forever."},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear base-case check first, one recursive call, a return on every path."}
+]

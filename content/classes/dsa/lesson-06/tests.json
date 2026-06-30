@@ -1,0 +1,128 @@
+[
+  {
+    "entry": "bubble_sort",
+    "cases": [
+      {
+        "name": "bubble_sort([3, 1, 2])",
+        "args": [
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "bubble_sort([5, 4, 3, 2, 1]) — reversed",
+        "args": [
+          [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "name": "bubble_sort([1, 2, 3]) — already sorted",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "bubble_sort([2, 2, 1]) — duplicates",
+        "args": [
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          2
+        ]
+      },
+      {
+        "name": "bubble_sort([]) — empty",
+        "args": [
+          []
+        ],
+        "expected": []
+      }
+    ]
+  },
+  {
+    "entry": "bubble_steps",
+    "cases": [
+      {
+        "name": "bubble_steps([1, 2, 3]) — already sorted, 0 swaps",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": 0
+      },
+      {
+        "name": "bubble_steps([2, 1, 3]) — one swap",
+        "args": [
+          [
+            2,
+            1,
+            3
+          ]
+        ],
+        "expected": 1
+      },
+      {
+        "name": "bubble_steps([3, 2, 1]) — reversed",
+        "args": [
+          [
+            3,
+            2,
+            1
+          ]
+        ],
+        "expected": 3
+      },
+      {
+        "name": "bubble_steps([4, 3, 2, 1]) — reversed",
+        "args": [
+          [
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        "expected": 6
+      }
+    ]
+  }
+]

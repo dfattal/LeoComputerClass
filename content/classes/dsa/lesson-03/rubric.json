@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct halving search", "weight": 35, "description": "binary_search uses lo/hi/mid, moving the right marker to keep the half that could contain target."},
+  {"criterion": "Finds and rejects correctly", "weight": 20, "description": "Returns the right index for present values and -1 for missing ones (and empty list)."},
+  {"criterion": "Counts guesses correctly", "weight": 30, "description": "binary_steps returns the number of middle-checks — 1 when the target is the middle, growing only slowly."},
+  {"criterion": "Clean code", "weight": 15, "description": "No infinite loop, correct lo/hi updates (mid+1, mid-1), a return on every path."}
+]

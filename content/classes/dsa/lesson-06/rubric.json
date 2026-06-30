@@ -1,0 +1,6 @@
+[
+  {"criterion": "Sorts correctly", "weight": 35, "description": "bubble_sort returns the items in order, handling reversed lists, duplicates, and empty lists."},
+  {"criterion": "Doesn't wreck the original", "weight": 15, "description": "Copies the input (a = list(arr)) instead of mutating the caller's list."},
+  {"criterion": "Counts swaps correctly", "weight": 35, "description": "bubble_steps returns the number of swaps — 0 for a sorted list, n(n-1)/2 for a reversed one."},
+  {"criterion": "Clean code", "weight": 15, "description": "Clear nested loops, correct swap, a return on every path."}
+]

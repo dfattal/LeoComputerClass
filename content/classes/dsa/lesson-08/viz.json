@@ -1,0 +1,70 @@
+{
+  "type": "draw",
+  "title": "Keys hashing into buckets — same bucket means a collision (chained in orange)",
+  "todo": "Finish hash_key to see where keys land, then put to fill the buckets.",
+  "stages": [
+    {
+      "fn": "__show_hash",
+      "args": [],
+      "label": "Where keys land",
+      "expected": [
+        [
+          "purple",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "purple",
+          ""
+        ],
+        [
+          "purple",
+          "",
+          "",
+          ""
+        ],
+        [
+          "",
+          "",
+          "purple",
+          ""
+        ],
+        [
+          "",
+          "purple",
+          "",
+          ""
+        ]
+      ],
+      "caption": "🎯 Each key's letters add up to a bucket number. See how 'cat' and 'act' land in the SAME column? That's a collision — different keys, same bucket."
+    },
+    {
+      "fn": "__show_table",
+      "args": [],
+      "label": "Buckets & chaining",
+      "expected": [
+        [
+          "purple",
+          "orange"
+        ],
+        [
+          "purple",
+          ""
+        ],
+        [
+          "purple",
+          "orange"
+        ],
+        [
+          "",
+          ""
+        ]
+      ],
+      "caption": "🪣 Now each row is a bucket. When two keys collide, we just keep a little list in that bucket — the orange one is chained on. Lookups still jump straight to the right bucket: O(1)!"
+    }
+  ],
+  "setup": "# Hidden painter. Stage 1 \"where keys land\": one row per key, a purple cell in the\n# COLUMN it hashes to — same column = collision. Stage 2 \"buckets & chaining\": one\n# row per BUCKET, the first key purple and any collided (chained) key orange. Both\n# are driven by the student's OWN hash_key / put.\nSLOT = \"purple\"    # the first key in a bucket\nCHAIN = \"orange\"   # a key that COLLIDED and got chained on after another\nNB = 4\nDEMO_KEYS = [[\"cat\", 1], [\"dog\", 2], [\"act\", 3], [\"fish\", 4], [\"bird\", 5]]\n\n\ndef __show_hash():\n    grid = []\n    for k, _v in DEMO_KEYS:\n        idx = hash_key(k, NB)\n        row = [\"\" for _ in range(NB)]\n        if isinstance(idx, int) and not isinstance(idx, bool) and 0 <= idx < NB:\n            row[idx] = SLOT\n        grid.append(row)\n    return grid\n\n\ndef __show_table():\n    table = [[] for _ in range(NB)]\n    for k, v in DEMO_KEYS:\n        table = put(table, k, v)\n    width = 1\n    for bucket in table:\n        width = max(width, len(bucket))\n    grid = []\n    for bucket in table:\n        row = []\n        for j in range(width):\n            if j < len(bucket):\n                row.append(SLOT if j == 0 else CHAIN)\n            else:\n                row.append(\"\")\n        grid.append(row)\n    return grid\n"
+}

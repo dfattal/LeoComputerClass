@@ -1,0 +1,40 @@
+# Hash Tables
+
+> Searching took real work — even clever binary search needed a few steps. What if you could find anything **instantly**, with basically *zero* searching? That's the magic trick of the hash table.
+
+## The big idea
+
+A hash table is a row of **buckets**. To store something, you turn its **key** into a bucket *number* using a little bit of math — that math is called a **hash**. Then you just drop the item into that bucket.
+
+To find it again? Hash the key the same way, go straight to that bucket, and look. You never scan the whole list — you **jump** right to the answer. That's **O(1)**: constant time, no matter how much data you have.
+
+```python
+def hash_key(key, buckets):
+    total = 0
+    for ch in key:
+        total += ord(ch)     # add up the letter codes
+    return total % buckets   # wrap into the bucket range
+```
+
+So `"cat"` always lands in the same bucket, every time. Storing and finding both become a single hop.
+
+## Collisions (and the fix)
+
+Here's the catch: two *different* keys can hash to the **same** bucket. `"cat"` and `"act"` have the same letters, so they add up to the same number — they **collide**.
+
+The fix is simple: each bucket keeps a tiny **list**. If two keys land in the same bucket, we just keep both there (this is called **chaining**). To find one, we hash to the bucket and check its short list. As long as buckets don't get too crowded, lookup stays lightning fast.
+
+## You've seen hashing before
+
+In **White Hat**, you turned passwords into "fingerprints" with a hash function — same idea! A hash takes something big and messy and boils it down to a number. Here we use that number as an address.
+
+## See it on the canvas
+
+- **"Where keys land"** — one row per key, with a cell in the column it hashes to. Watch `"cat"` and `"act"` land in the *same* column: a collision.
+- **"Buckets & chaining"** — one row per bucket. The first key is purple; a collided key chained on after it glows orange. Bucket 3 stays empty — nobody hashed there.
+
+## What you'll build
+
+- `hash_key(key, buckets)` — turn a key into a bucket number.
+- `put(table, key, val)` — store a key/value pair in its bucket.
+- `get(table, key)` — jump to the bucket and return the value (or `None` if it's not there).

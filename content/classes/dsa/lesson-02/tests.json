@@ -1,0 +1,119 @@
+[
+  {
+    "entry": "linear_search",
+    "cases": [
+      {
+        "name": "linear_search([5, 8, 2, 9], 2) — middle",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          2
+        ],
+        "expected": 2
+      },
+      {
+        "name": "linear_search([5, 8, 2, 9], 5) — first",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          5
+        ],
+        "expected": 0
+      },
+      {
+        "name": "linear_search([5, 8, 2, 9], 9) — last",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          9
+        ],
+        "expected": 3
+      },
+      {
+        "name": "linear_search([5, 8, 2, 9], 7) — missing",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          7
+        ],
+        "expected": -1
+      },
+      {
+        "name": "linear_search([], 7) — empty list",
+        "args": [
+          [],
+          7
+        ],
+        "expected": -1
+      }
+    ]
+  },
+  {
+    "entry": "search_steps",
+    "cases": [
+      {
+        "name": "search_steps([5, 8, 2, 9], 5) — found first try",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          5
+        ],
+        "expected": 1
+      },
+      {
+        "name": "search_steps([5, 8, 2, 9], 9) — found last",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          9
+        ],
+        "expected": 4
+      },
+      {
+        "name": "search_steps([5, 8, 2, 9], 7) — checks all 4",
+        "args": [
+          [
+            5,
+            8,
+            2,
+            9
+          ],
+          7
+        ],
+        "expected": 4
+      },
+      {
+        "name": "search_steps([], 7) — nothing to check",
+        "args": [
+          [],
+          7
+        ],
+        "expected": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {"criterion": "Finds the right index", "weight": 35, "description": "linear_search returns the index of the first match, scanning from the front."},
+  {"criterion": "Handles 'not found'", "weight": 20, "description": "Returns -1 when the target isn't in the list (and for an empty list)."},
+  {"criterion": "Counts steps correctly", "weight": 30, "description": "search_steps returns the number of comparisons, stopping early on a match and counting all items when missing."},
+  {"criterion": "Clean code", "weight": 15, "description": "Clear loop, a return on every path, no off-by-one in the count."}
+]

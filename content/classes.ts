@@ -210,6 +210,21 @@ export const classes: ClassDef[] = [
     language: "python",
     level: "advanced",
   },
+  {
+    slug: "dsa",
+    name: "Data Structures & Algorithms",
+    tagline: "Pick the Right Tool — and Prove It's Faster",
+    description:
+      "Two programs do the same job — one takes a blink, the other takes an age. Why? Count the steps, watch the speed curve bend, and prove with code which tool wins.",
+    longDescription:
+      "Why does searching a phone book feel instant while scrolling for one name takes forever? In this class you make SPEED visible. Every lesson you write a tiny step-counter that returns a real number — and that number gets plotted as a curve you can watch bend as the job gets bigger. You'll feel the pain of the slow way, discover the fast idea as relief, then MEASURE the win: linear search climbing in a straight line while binary search stays almost flat; bubble sort's steep N² hill diving under merge sort's gentle curve. Along the way you'll build the real toolbox of computer science — stacks and queues, recursion and the call stack, hash tables, binary search trees, and a graph search that finds the shortest path. It ties together everything: the hashing from White Hat, the stacks from Operating Systems, the routing from Networks. By the end you won't just know which tool is faster — you'll be able to prove it.",
+    accentColor: "purple",
+    heroImage: "/hero-dsa.webp",
+    studentName: "friend",
+    contentDir: "dsa",
+    language: "python",
+    level: "advanced",
+  },
 ];
 
 export function getClassBySlug(slug: string): ClassDef | undefined {

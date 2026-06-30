@@ -1,0 +1,42 @@
+# How Fast Is Fast?
+
+> Two programs can do the *exact same job* — and one finishes in a blink while the other takes all day. Why? Let's learn to **see** speed.
+
+## The big idea
+
+Imagine you have a row of lockers, and a friend hides a sticker in one of them.
+
+- **Job A:** "Is there a sticker in locker #1?" You open one locker. Done. **One step.**
+- **Job B:** "Find the sticker somewhere in the row." You might have to open *every* locker. If there are 10 lockers, that's up to 10 steps. If there are a million lockers… that's up to a million steps.
+
+Here's the key: Job A takes **one step no matter how big the row is**. Job B takes **more steps as the row grows**. That difference is the whole secret of this class.
+
+Instead of guessing which is faster, we're going to **count the steps** — and turn that count into a line on a graph.
+
+```python
+def constant_steps(n):
+    # Grabbing the first locker is always 1 step, even if n is a million.
+    steps = 0
+    steps += 1
+    return steps
+
+def linear_steps(n):
+    # Opening every locker is one step each — n lockers, n steps.
+    steps = 0
+    for _ in range(n):
+        steps += 1
+    return steps
+```
+
+## See it on the graph
+
+When you finish both functions, the graph plots them side by side as `n` (the size of the job) grows:
+
+- `constant_steps` draws a **flat line** — it never goes up. Computer scientists call this **O(1)**: "oh of one," meaning *constant* time.
+- `linear_steps` draws a **straight climbing line** — double the job, double the steps. This is **O(n)**: "oh of n," meaning the cost grows *with* the pile.
+
+A flat line is a dream. A climbing line is fine for small piles but scary for huge ones. Your whole job in this class is to know which line your code draws — and pick the flatter one.
+
+## What you'll build
+
+Two tiny step-counters: `constant_steps(n)` and `linear_steps(n)`. They don't *do* a real job — they just **count how many steps the job would take**. That number is the thing we test *and* the thing we plot. Welcome to Big-O, {{FIRST_NAME}}!

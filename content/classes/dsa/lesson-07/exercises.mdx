@@ -1,0 +1,39 @@
+## Your mission
+
+### Exercise 1 — `merge(a, b)`
+
+Both `a` and `b` are **already sorted**. Walk through both at once, always copying the smaller front item, until one runs out — then tack on the rest.
+
+```python
+merge([1, 4], [2, 3])         # -> [1, 2, 3, 4]
+merge([], [1, 2])             # -> [1, 2]
+merge([1, 4, 7], [2, 3, 8])   # -> [1, 2, 3, 4, 7, 8]
+```
+
+**Hint:** Use two markers `i` and `j` starting at `0`. While both are in range, compare `a[i]` and `b[j]`, append the smaller, and move that marker. After the loop, add `a[i:]` and `b[j:]` (the leftovers).
+
+### Exercise 2 — `merge_sort(arr)`
+
+Split, sort each half with `merge_sort` itself, then `merge` them. The base case is a list of 0 or 1 items.
+
+```python
+merge_sort([3, 1, 2])         # -> [1, 2, 3]
+merge_sort([5, 4, 3, 2, 1])   # -> [1, 2, 3, 4, 5]
+merge_sort([1])               # -> [1]
+```
+
+**Hint:** `mid = len(arr) // 2`, then `left = merge_sort(arr[:mid])` and `right = merge_sort(arr[mid:])`, then `return merge(left, right)`. Don't forget `if len(arr) <= 1: return list(arr)`.
+
+### Exercise 3 — `merge_steps(arr)`
+
+Count the work. The work to sort a list is the work to sort each half **plus** the cost of merging them (which touches every item, so `len(arr)`). A list of 1 is free.
+
+```python
+merge_steps([1])             # -> 0
+merge_steps([1, 2])          # -> 2
+merge_steps([1, 2, 3, 4])    # -> 8    (that's 4 × log₂4)
+```
+
+**Hint:** Same recursion shape as merge_sort: `return merge_steps(arr[:mid]) + merge_steps(arr[mid:]) + len(arr)`, with base case `0` when `len(arr) <= 1`.
+
+When `merge_steps` works, the graph draws your curve next to bubble sort's hill. Watch it **dive** below — that's O(n log n) beating O(n²), and you proved it.

@@ -1,0 +1,7 @@
+{
+  "type": "draw",
+  "title": "A map of towns — BFS lights the fewest-hops route from A to F (orange)",
+  "resultFn": "__show_map",
+  "demoArgs": [],
+  "setup": "# Hidden painter: draws the little map at fixed spots and lights the shortest path\n# the student's OWN bfs finds (orange); other towns stay purple. Wrong bfs lights\n# the wrong towns.\nON = \"orange\"    # a town on the shortest path\nOFF = \"purple\"   # a town not on the path\nGRAPH = [\n    [\"A\", [\"B\", \"C\"]],\n    [\"B\", [\"A\", \"D\"]],\n    [\"C\", [\"A\", \"D\", \"E\"]],\n    [\"D\", [\"B\", \"C\", \"F\"]],\n    [\"E\", [\"C\", \"F\"]],\n    [\"F\", [\"D\", \"E\"]],\n    [\"Z\", []],\n]\nPOS = {\"A\": (1, 0), \"B\": (0, 1), \"C\": (2, 1), \"D\": (1, 2), \"E\": (2, 3), \"F\": (1, 4)}\nSTART = \"A\"\nGOAL = \"F\"\n\n\ndef __show_map():\n    try:\n        path = set(bfs(GRAPH, START, GOAL))\n    except Exception:\n        path = set()\n    rows = max(r for r, _c in POS.values()) + 1\n    cols = max(c for _r, c in POS.values()) + 1\n    grid = [[\"\" for _ in range(cols)] for _ in range(rows)]\n    for node, (r, c) in POS.items():\n        grid[r][c] = ON if node in path else OFF\n    return grid\n"
+}

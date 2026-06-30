@@ -1,0 +1,53 @@
+# Binary Search Trees
+
+> Binary search was fast, but it needed a sorted list — and keeping a list sorted as you add things is a pain. What if the data arranged *itself* so search was always fast? Meet the binary search tree.
+
+## The big idea
+
+A **binary search tree** (BST) stores values in a branching shape. Every node holds a value and has up to two children, with **one golden rule**:
+
+> Everything **smaller** than a node goes in its **left** branch. Everything **bigger** goes **right**.
+
+That rule is binary search, frozen into a shape. To find a value, you start at the top and at each node ask "smaller or bigger?" — then follow *just one branch*, throwing away the entire other side. You walk **one path** from top to bottom, never touching most of the tree.
+
+We write a node as a list `[value, left, right]`, and an empty spot is `None`:
+
+```python
+def insert(tree, value):
+    if tree is None:
+        return [value, None, None]              # grow a new leaf
+    node_val, left, right = tree
+    if value < node_val:
+        return [node_val, insert(left, value), right]   # smaller -> left
+    elif value > node_val:
+        return [node_val, left, insert(right, value)]   # bigger -> right
+    else:
+        return tree                              # already here
+
+def search(tree, value):
+    if tree is None:
+        return False
+    node_val, left, right = tree
+    if value == node_val:
+        return True
+    elif value < node_val:
+        return search(left, value)               # one branch only
+    else:
+        return search(right, value)
+```
+
+Notice both functions are **recursive** (Lesson 5 again!): a tree is just a value with two smaller trees hanging off it.
+
+## See it on the canvas
+
+The panel builds a tree from the numbers `5, 3, 8, 1, 4, 7` and then searches for `4`. You'll see:
+
+- The tree **branches** out by level — the root on top, smaller values trailing down-left, bigger ones down-right.
+- The **orange path** is the *one* route `search(4)` walks: `5 → 3 → 4`. Look how it ignores the entire right side of the tree — that skipping is exactly why a BST is fast.
+
+A nicely shaped tree of `n` items is only about **log n** levels tall, so searching it is **O(log n)** — that flat, beautiful curve from binary search, now in a shape that's easy to grow.
+
+## What you'll build
+
+- `insert(tree, value)` — return a new tree with `value` added in the right spot.
+- `search(tree, value)` — return `True`/`False` by walking one path down.

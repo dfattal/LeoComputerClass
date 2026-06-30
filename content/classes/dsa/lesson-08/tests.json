@@ -1,0 +1,197 @@
+[
+  {
+    "entry": "hash_key",
+    "cases": [
+      {
+        "name": "hash_key(\"cat\", 4)",
+        "args": [
+          "cat",
+          4
+        ],
+        "expected": 0
+      },
+      {
+        "name": "hash_key(\"dog\", 4)",
+        "args": [
+          "dog",
+          4
+        ],
+        "expected": 2
+      },
+      {
+        "name": "hash_key(\"act\", 4) — collides with \"cat\"",
+        "args": [
+          "act",
+          4
+        ],
+        "expected": 0
+      },
+      {
+        "name": "hash_key(\"bird\", 4)",
+        "args": [
+          "bird",
+          4
+        ],
+        "expected": 1
+      }
+    ]
+  },
+  {
+    "entry": "put",
+    "cases": [
+      {
+        "name": "put empty, \"cat\"->1",
+        "args": [
+          [
+            [],
+            [],
+            [],
+            []
+          ],
+          "cat",
+          1
+        ],
+        "expected": [
+          [
+            [
+              "cat",
+              1
+            ]
+          ],
+          [],
+          [],
+          []
+        ]
+      },
+      {
+        "name": "put again, \"act\"->3 collides into bucket 0",
+        "args": [
+          [
+            [
+              [
+                "cat",
+                1
+              ]
+            ],
+            [],
+            [],
+            []
+          ],
+          "act",
+          3
+        ],
+        "expected": [
+          [
+            [
+              "cat",
+              1
+            ],
+            [
+              "act",
+              3
+            ]
+          ],
+          [],
+          [],
+          []
+        ]
+      },
+      {
+        "name": "put updates an existing key",
+        "args": [
+          [
+            [
+              [
+                "cat",
+                1
+              ]
+            ],
+            [],
+            [],
+            []
+          ],
+          "cat",
+          9
+        ],
+        "expected": [
+          [
+            [
+              "cat",
+              9
+            ]
+          ],
+          [],
+          [],
+          []
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "get",
+    "cases": [
+      {
+        "name": "get \"cat\" from a chained bucket",
+        "args": [
+          [
+            [
+              [
+                "cat",
+                1
+              ],
+              [
+                "act",
+                3
+              ]
+            ],
+            [],
+            [],
+            []
+          ],
+          "cat"
+        ],
+        "expected": 1
+      },
+      {
+        "name": "get \"act\" (the chained one)",
+        "args": [
+          [
+            [
+              [
+                "cat",
+                1
+              ],
+              [
+                "act",
+                3
+              ]
+            ],
+            [],
+            [],
+            []
+          ],
+          "act"
+        ],
+        "expected": 3
+      },
+      {
+        "name": "get a missing key -> None",
+        "args": [
+          [
+            [
+              [
+                "cat",
+                1
+              ]
+            ],
+            [],
+            [],
+            []
+          ],
+          "dog"
+        ],
+        "expected": null
+      }
+    ]
+  }
+]

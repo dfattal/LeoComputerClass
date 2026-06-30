@@ -1,0 +1,37 @@
+# The Big Picture: Why Speed Matters
+
+> No code today, {{FIRST_NAME}}. Just one big idea to tie the whole class together — the most important idea in all of computer science.
+
+## A 200-year-old question
+
+In the 1840s, a mathematician named **Ada Lovelace** wrote the first computer program — for a machine that was never even built. She realized something profound: a computer doesn't just *do* a calculation, it does it by following **steps**, and the *number* of steps is what really matters.
+
+A hundred years later, as real computers appeared, scientists kept bumping into the same wall. A program that worked fine on ten things would **choke** on ten thousand. The machine wasn't broken — the *method* simply took too many steps. So they invented a language to talk about it: **Big-O notation**. It doesn't measure seconds. It measures **how the number of steps grows as the job gets bigger**.
+
+That single idea is the lens you've been looking through this entire class.
+
+## What you've actually learned
+
+Think back over the shapes you drew with your own code:
+
+| Shape | Name | You met it in… |
+|-------|------|----------------|
+| flat line | **O(1)** | a hash-table lookup that jumps straight to the answer |
+| barely rises | **O(log n)** | binary search; walking one path down a search tree |
+| straight climb | **O(n)** | linear search, checking every box |
+| steep hill | **O(n²)** | bubble sort, swapping over and over |
+| gentle dive | **O(n log n)** | merge sort, divide and conquer |
+
+You didn't just *read* about these — you wrote a step-counter, returned the number, and watched the curve bend. That's the whole game: **know the shape your code draws, and pick the flatter one.**
+
+## It's hiding in every class
+
+Big-O isn't only here. It's everywhere you've been:
+
+- **Networks** — DNS *caching* means the second time you visit a site, the slow lookup is skipped. That's turning an O(n) trip into an O(1) one.
+- **White Hat** — every extra digit you add to a password multiplies a hacker's work by **ten**. That explosion is exactly why long passwords are safe.
+- **Operating Systems** — the scheduler is constantly choosing *whose turn is next*, using the queues you now understand from the inside.
+
+## Your turn
+
+One last reflection. Explain, in your own words, why the same job can take a blink or an age — and how you decide which tool makes it fast. You've earned this one. →

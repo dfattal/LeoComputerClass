@@ -1,0 +1,68 @@
+[
+  {
+    "entry": "constant_steps",
+    "cases": [
+      {
+        "name": "constant_steps(1)",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "constant_steps(7)",
+        "args": [
+          7
+        ],
+        "expected": 1
+      },
+      {
+        "name": "constant_steps(100)",
+        "args": [
+          100
+        ],
+        "expected": 1
+      },
+      {
+        "name": "constant_steps(1000000) — even a million boxes",
+        "args": [
+          1000000
+        ],
+        "expected": 1
+      }
+    ]
+  },
+  {
+    "entry": "linear_steps",
+    "cases": [
+      {
+        "name": "linear_steps(1)",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "linear_steps(5)",
+        "args": [
+          5
+        ],
+        "expected": 5
+      },
+      {
+        "name": "linear_steps(100)",
+        "args": [
+          100
+        ],
+        "expected": 100
+      },
+      {
+        "name": "linear_steps(0) — nothing to do",
+        "args": [
+          0
+        ],
+        "expected": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,33 @@
+# Linear Search
+
+> You've lost your favorite trading card somewhere in a long row of boxes. How do you find it? The obvious way works — but watch how slow it gets.
+
+## The big idea
+
+The simplest way to find something in a list is to **start at the front and check every item, one by one**, until you find it. This is called **linear search** ("linear" = in a line).
+
+```python
+def linear_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i      # found it! give back where it is
+    return -1             # checked everything, not here
+```
+
+It always works. But how *fast* is it? That depends on luck:
+
+- **Best case:** the card is in the very first box. One peek. 
+- **Worst case:** the card is in the *last* box — or not there at all. Now you've opened **every single box**.
+
+If there are 8 boxes, the worst case is 8 peeks. If there are 8 *million*, the worst case is 8 million peeks. The cost grows **right along with the size of the list**.
+
+## See it on the graph
+
+To prove it, we write a second function, `search_steps`, that returns **how many boxes we opened**. The graph then asks: "for a row of size N, how many boxes in the worst case?" — and plots the answer for N = 1, 2, 3, … 
+
+You'll get a **straight line climbing at 45°**. That's the signature of **O(n)**: double the list, double the work. It's not terrible for small lists, but you can already feel that for huge lists, "check everything" is going to hurt. (Next lesson: a way to *not* check everything.)
+
+## What you'll build
+
+- `linear_search(arr, target)` — returns the **index** where `target` lives, or `-1` if it's missing.
+- `search_steps(arr, target)` — returns **how many comparisons** it took. This is the number we plot to see O(n) with our own eyes.

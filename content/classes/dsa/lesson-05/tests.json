@@ -1,0 +1,101 @@
+[
+  {
+    "entry": "countdown",
+    "cases": [
+      {
+        "name": "countdown(4)",
+        "args": [
+          4
+        ],
+        "expected": [
+          4,
+          3,
+          2,
+          1
+        ]
+      },
+      {
+        "name": "countdown(1)",
+        "args": [
+          1
+        ],
+        "expected": [
+          1
+        ]
+      },
+      {
+        "name": "countdown(0) — the base case",
+        "args": [
+          0
+        ],
+        "expected": []
+      }
+    ]
+  },
+  {
+    "entry": "factorial",
+    "cases": [
+      {
+        "name": "factorial(0) — base case is 1",
+        "args": [
+          0
+        ],
+        "expected": 1
+      },
+      {
+        "name": "factorial(1)",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "factorial(4)",
+        "args": [
+          4
+        ],
+        "expected": 24
+      },
+      {
+        "name": "factorial(5)",
+        "args": [
+          5
+        ],
+        "expected": 120
+      }
+    ]
+  },
+  {
+    "entry": "sum_to",
+    "cases": [
+      {
+        "name": "sum_to(0) — base case is 0",
+        "args": [
+          0
+        ],
+        "expected": 0
+      },
+      {
+        "name": "sum_to(1)",
+        "args": [
+          1
+        ],
+        "expected": 1
+      },
+      {
+        "name": "sum_to(5)",
+        "args": [
+          5
+        ],
+        "expected": 15
+      },
+      {
+        "name": "sum_to(10)",
+        "args": [
+          10
+        ],
+        "expected": 55
+      }
+    ]
+  }
+]

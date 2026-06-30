@@ -1,0 +1,33 @@
+## Your mission
+
+The graph is a list of `[node, [neighbors]]` rows. Node names are strings like `"A"`.
+
+### Exercise 1 — `neighbors(graph, node)`
+
+Find the row for `node` and return its list of neighbors. If the node isn't in the graph, return `[]`.
+
+```python
+graph = [["A", ["B", "C"]], ["B", ["A", "D"]], ["C", ["A", "D", "E"]],
+         ["D", ["B", "C", "F"]], ["E", ["C", "F"]], ["F", ["D", "E"]], ["Z", []]]
+
+neighbors(graph, "A")   # -> ["B", "C"]
+neighbors(graph, "C")   # -> ["A", "D", "E"]
+neighbors(graph, "Z")   # -> []
+```
+
+**Hint:** Loop over the rows. When `entry[0] == node`, return `list(entry[1])`. After the loop, `return []`.
+
+### Exercise 2 — `bfs(graph, start, goal)`
+
+Return the **fewest-hops** path from `start` to `goal` as a list of nodes. If they're the same, return `[start]`. If there's no route, return `[]`.
+
+```python
+bfs(graph, "A", "F")   # -> ["A", "B", "D", "F"]
+bfs(graph, "A", "E")   # -> ["A", "C", "E"]
+bfs(graph, "A", "A")   # -> ["A"]
+bfs(graph, "A", "Z")   # -> []   (Z is cut off)
+```
+
+**Hint:** Keep a `visited` set and a `queue` of **paths**, starting with `[[start]]`. Each loop, `path = queue.pop(0)` (that's a dequeue!), look at `path[-1]`, and for each unvisited neighbor build `path + [nb]`. If that neighbor is the goal, return the new path; otherwise add it to the queue. Mark neighbors visited as you discover them so you never loop.
+
+When `bfs` works, the map lights the shortest route in orange. That's your capstone — a queue, a search, and the fewest-hops answer, all working together.

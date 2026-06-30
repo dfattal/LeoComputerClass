@@ -1,0 +1,53 @@
+{
+  "type": "plot",
+  "title": "Merge sort vs bubble sort — watch O(n log n) dive under O(n²)",
+  "xLabel": "N — how many items to sort",
+  "yLabel": "work done (worst case)",
+  "resultFn": "__plot",
+  "demoArgs": [
+    32
+  ],
+  "caption": {
+    "todo": "Finish merge_steps to draw merge sort's work curve.",
+    "tuning": "Your curve is showing — keep tuning merge_steps to match the answer.",
+    "match": "✅ Your curve dives far under the bubble hill — that's the power of O(n log n)!",
+    "checks": [
+      {
+        "fn": "merge",
+        "args": [
+          [
+            1,
+            4,
+            7
+          ],
+          [
+            2,
+            3,
+            8
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8
+        ]
+      },
+      {
+        "fn": "merge_steps",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "expected": 8
+      }
+    ]
+  },
+  "setup": "# Hidden producer: plots merge sort's work against bubble sort's. The bubble\n# curve (n(n-1)/2, the O(n²) hill) is a fixed comparison; the merge curve comes\n# from the student's OWN merge_steps and should dive far below it (O(n log n)).\ndef __merge_curve(n_max):\n    pts = []\n    for n in range(1, n_max + 1):\n        s = merge_steps(list(range(n)))\n        if not isinstance(s, int) or isinstance(s, bool):\n            return None\n        pts.append([n, s])\n    return pts\n\n\ndef __plot(n_max):\n    bubble = [[n, n * (n - 1) // 2] for n in range(1, n_max + 1)]\n    merge_c = None\n    try:\n        merge_c = __merge_curve(n_max)\n    except Exception:\n        merge_c = None\n    series = [{\"name\": \"bubble sort — O(n²)\", \"points\": bubble, \"highlight\": False}]\n    if merge_c:\n        series.append({\"name\": \"merge sort — O(n log n)\", \"points\": merge_c, \"highlight\": True})\n    return series\n"
+}

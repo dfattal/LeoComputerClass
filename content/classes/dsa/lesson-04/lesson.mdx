@@ -1,0 +1,40 @@
+# Stacks & Queues
+
+> Two ways to hold a line of stuff. They sound the same — until you ask "who's next?" That one question changes everything.
+
+## The big idea
+
+A **stack** is like a pile of plates. You add a plate to the **top**, and when you need one, you take it from the **top**. The *last* plate you put down is the *first* one you pick up. We call this **LIFO** — **L**ast **I**n, **F**irst **O**ut.
+
+A **queue** is like a line at the lunch counter. You join at the **back**, and the person at the **front** gets served first. The *first* one to arrive is the *first* to leave. We call this **FIFO** — **F**irst **I**n, **F**irst **O**ut.
+
+Here's the sneaky part: **both add new items to the back the same way.** The only difference is **which end you take from**:
+
+```python
+def push(stack, x):      # stack: add to the back
+    return stack + [x]
+
+def pop(stack):          # stack: take from the BACK (last in)
+    return stack[:-1]
+
+def enqueue(queue, x):   # queue: add to the back
+    return queue + [x]
+
+def dequeue(queue):      # queue: take from the FRONT (first in)
+    return queue[1:]
+```
+
+## Where you've seen these
+
+You already used these without knowing their names! In **Operating Systems**, the computer kept a **stack** of function calls and a **queue** of programs waiting for their turn on the CPU. Next lesson you'll meet recursion — and discover the call stack *is* one of these.
+
+## See it on the canvas
+
+The panel draws a **film strip**: each row is one moment in time. A filled cell is purple; the **active end** — the next item to leave — glows orange.
+
+- On the **Stack** strip, the orange cell rides the **top**: add three, take two, and it grows and shrinks from the *same* end.
+- On the **Queue** strip, the orange cell sits at the **front**, and the whole line **slides left** as the front keeps stepping out.
+
+## What you'll build
+
+`push` / `pop` for the stack, and `enqueue` / `dequeue` for the queue. Each returns the **new list**. Get them right and the film strip plays itself.

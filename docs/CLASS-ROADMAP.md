@@ -79,6 +79,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | Kitchen Chemistry | `chem` | Run your own lab: build atoms → molecules → states, then reactions you can see (balancing, pH, chromatography, crystals) | Published (8+1) ✅ — Leila's intro-chemistry class; canvas-heavy `draw` viz; `cyan` accent; signature = Bohr-atom drawer; every lesson paints on the grid |
 | White Hat | `whitehat` | Hired to test "Fort Knocks": break in to find every weakness (red team) → make it unbreakable (blue team) | Published (8+1) ✅ new — advanced ethical-hacking class; sequel to Computer Class + Operating Systems; new `red` accent; all attacks are safe simulated Python sandboxes; permission-first ethics frame; signature = the simulated buffer-overflow lesson |
 | Networks & the Internet | `networks` | Type a web address, hit enter — trace every hop your request makes until the page comes back | Published (8+1) ✅ new — the prerequisite to White Hat; new `blue` accent; layered `draw` viz (packets light up the path); reuses Fort Knocks as the server; signature = the whole-stack capstone (a name → a route → a request → a page in one run) |
+| Data Structures & Algorithms | `dsa` | Pick the right tool for the job — and PROVE with code why it's faster | Published (10+1) ✅ new — the deepening follow-on to White Hat & Networks; new `purple` accent; **hybrid** viz (`plot` Big-O curves you can SEE + `draw` structures on the grid); signature = the step-counter-as-return-value trick (a wrong algorithm draws a wrong curve); capstone BFS echoes Networks routing |
 
 ---
 
@@ -393,6 +394,76 @@ Phase 3 *Speak the Language* → Phase 4 *The Whole Journey*):
 - Hero `/hero-networks.webp` — globe + glowing blue connection lines + light-up
   packets, no baked title text, 1376×768, OG card generated.
 
+### Data Structures & Algorithms — ✅ built as `dsa`, 10 lessons + reflection published
+
+**Through-line:** "Pick the right tool for the job — and PROVE with code why it's
+faster." Built as the **deepening follow-on** to White Hat & Networks: instead of
+a new toy, it sharpens fundamentals and pays off callbacks those classes set up
+(hashing in White Hat, stacks/queues in Operating Systems, routing in Networks,
+binary-search thinking everywhere). Accent `purple` (new), level advanced. Every
+lesson ends by *measuring* — count the steps, watch the curve bend, or watch the
+structure fill on the canvas. The signature trick: **speed is a return value** —
+the student writes a step-counter (`search_steps`, `binary_steps`, `bubble_steps`,
+`merge_steps`) that returns an `int`, and that same int is BOTH unit-tested AND
+plotted across N, so a wrong algorithm draws a wrong curve.
+
+**As-built lesson arc** (Phase 1 *Count the Cost* → Phase 2 *Hold the Data* →
+Phase 3 *Sort It* → Phase 4 *Smart Structures* → Phase 5 *The Big Picture*):
+1. **How Fast Is Fast?** (plot) — `constant_steps` + `linear_steps`; a flat O(1)
+   line races a climbing O(n) line. Intro to Big-O.
+2. **Linear Search** (plot) — `linear_search` + `search_steps`; the worst-case
+   step-count climbs straight up with N.
+3. **Binary Search** (plot) — `binary_search` + `binary_steps`; a nearly-flat
+   O(log n) curve crushes the linear line — but only if the list is sorted.
+4. **Stacks & Queues** (draw) — `push`/`pop` (LIFO) + `enqueue`/`dequeue` (FIFO);
+   a film strip of cells filling and draining, active end glowing (OS callback).
+5. **Recursion** ⭐ (draw) — `countdown` + `factorial` + `sum_to`; base case +
+   one recursive call as fill-in-the-blanks; the call stack grows, hits the green
+   base case, and unwinds — *the call stack is a stack* (callback to L4). Heavily
+   scaffolded, since merge sort / BST / BFS all lean on it.
+6. **Sorting I — Bubble Sort** (plot) — `bubble_sort` + `bubble_steps`; the
+   swap-count climbs into a steep O(n²) hill.
+7. **Sorting II — Merge Sort** (plot) — `merge` + `merge_sort` (uses L5 recursion)
+   + `merge_steps`; plotted against bubble sort, O(n log n) dives under O(n²).
+8. **Hash Tables** (draw) — `hash_key` + `put` + `get`; two stages (where keys
+   land → buckets with chaining); a collision (cat/act) chained in orange; O(1)
+   lookup (callback to White Hat hashing).
+9. **Binary Search Trees** (draw) — `insert` + `search` (recursion); the tree
+   branches by depth/in-order, and the one search path lights orange — the shape
+   that makes lookup O(log n).
+10. **Graphs & Shortest Path** ⭐ (draw) — `neighbors` + `bfs`; a queue-driven BFS
+    lights the fewest-hops route across a little map. CAPSTONE — directly echoes
+    Networks routing (a packet finding its way), now as a general algorithm.
+11. **The Big Picture: Why Speed Matters** — reflection capstone
+    (`reflection.json`, no Python): why the same job can take a blink or an age,
+    tying Big-O back to DNS caching (Networks), password length (White Hat), and
+    the scheduler (OS), in the kid's own words.
+
+**Reusable tech / notes:**
+- First **hybrid** class: "How fast?" lessons use the **`plot`** viz (a hidden
+  producer in `viz.json` `setup` calls the student's step-counter for N = 1..n_max
+  and returns the `[[n, steps], …]` series; a `caption.checks` block keeps the
+  baked progress messages honest against `reference.py`), while structure lessons
+  use the **`draw`** grid with the **"hidden painter in viz setup"** technique from
+  White Hat / Networks. Both are **student-driven** — a wrong function changes the
+  curve or the picture. Single `resultFn` where one picture evolves (recursion,
+  BST, BFS); progressive `stages` only where functions draw genuinely separate
+  pictures (stack vs queue; "where keys land" vs "buckets & chaining").
+- Authoring was fully **reference-driven**: the scratchpad `gen_lesson.py` was
+  **extended beyond the draw-only case** to also emit `type: "plot"` vizzes
+  (resultFn + demoArgs + x/y labels + `caption.checks` expected, plus draw-stage
+  expected grids), all computed from `reference.py`'s inert `TESTS_SPEC` /
+  `VIZ_SPEC` blocks + the painter/producer between `# === PAINTER START/END ===`.
+  `validate-class dsa` = **220/220**, `npm run build` clean (172 pages).
+- New accent `purple` added to `lib/accents.ts` (copied from `violet`, swapped on
+  every line), distinct from the existing `violet` and `fuchsia`.
+- Shipped as a single **10 + reflection** class (not split into I/II) — the
+  recursion-heavy back half is scaffolded in place at L5 rather than spun off.
+- Hero `/hero-dsa.webp` — real art via OpenAI **`gpt-image-2`** (sorting bars
+  mid-sort + a glowing binary tree + a steep-vs-flat speed graph + a running kid,
+  purple palette, no baked text, 1376×768), OG card generated. (Gemini image gen
+  was unavailable — free-tier quota — so generated with the OpenAI key instead.)
+
 ---
 
 ## Candidate classes (ranked by fit)
@@ -547,27 +618,14 @@ through a DNS table, parse/build an HTTP request line. Pairs with the `draw` viz
 up. Hero: globe + glowing connection lines.
 **Risks:** keep each layer a pure function; resist real sockets.
 
-### 5. Data Structures & Algorithms — *the "real CS" toolbox*
-**Through-line:** "Pick the right tool for the job — and prove with code why it's
-faster." The classic next step that deepens programming fundamentals directly.
-**Why it fits:** Everything is a testable pure function, and Big-O becomes
-*visible* by plotting step-counts as input grows (the line `plot` viz is made for
-this). Reinforces the stacks/queues from Operating Systems and the search ideas
-from Game Bot. A strong, evergreen follow-on once Leo wants depth over a new toy.
-**Prereqs:** Python Primer + comfort with loops/lists (Leo is well past this).
-**8-lesson sketch:**
-1. How fast is fast? — count the steps; linear vs. constant (intro to Big-O)
-2. Arrays & linear search — and why it gets slow
-3. Binary search — halving the haystack; why the list must be sorted
-4. Stacks & queues — LIFO/FIFO (callbacks to the OS class)
-5. Sorting I — bubble/insertion: simple but slow (count the swaps)
-6. Sorting II — merge sort: divide and conquer, and *measure* the speedup
-7. Hash tables — the magic of O(1) lookup (callback to hashing in White Hat)
-8. Capstone — trees: store and search data in a binary search tree
-**Viz/assets:** step-count-vs-N curves in the `plot` viz (Big-O you can *see*);
-array/tree state on the `draw` grid. Hero: sorting bars / branching tree.
-**Risks:** keep recursion (merge sort, BST) heavily scaffolded; do Game Bot first
-if recursion is brand new.
+### 5. Data Structures & Algorithms — *the "real CS" toolbox* — ✅ SHIPPED
+**Built as `dsa`, 10 lessons + reflection.** See the full write-up under
+"Shipped from this list" above. Grew from the 8-lesson sketch to **10 + 1**:
+recursion got its own heavily-scaffolded lesson (L5) and the back half split into
+hash tables (L8), a binary search tree (L9), and a BFS shortest-path capstone
+(L10) that echoes Networks routing. First **hybrid** class — `plot` Big-O curves
+where speed is a step-count return value, `draw` grids for the structures. New
+`purple` accent; `gen_lesson.py` extended to emit `plot` vizzes.
 
 ---
 

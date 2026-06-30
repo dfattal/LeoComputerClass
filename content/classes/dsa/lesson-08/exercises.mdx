@@ -1,0 +1,42 @@
+## Your mission
+
+A **table** is a list of buckets. Each bucket is a list of `[key, value]` pairs, like `[[ "cat", 1 ], [ "act", 3 ]]`.
+
+### Exercise 1 — `hash_key(key, buckets)`
+
+Add up the letter codes of `key` (use `ord(ch)`), then `% buckets` to wrap it into the bucket range.
+
+```python
+hash_key("cat", 4)   # -> 0
+hash_key("dog", 4)   # -> 2
+hash_key("act", 4)   # -> 0   (same letters as "cat" — a collision!)
+```
+
+**Hint:** `total = 0`, then `for ch in key: total += ord(ch)`, then `return total % buckets`.
+
+### Exercise 2 — `put(table, key, val)`
+
+Hash the key to find its bucket, then add the pair `[key, val]` to that bucket. If the key is already there, update its value instead. Return the new table.
+
+```python
+put([[], [], [], []], "cat", 1)
+# -> [[["cat", 1]], [], [], []]
+
+put([[["cat", 1]], [], [], []], "act", 3)
+# -> [[["cat", 1], ["act", 3]], [], [], []]   (chained into bucket 0)
+```
+
+**Hint:** `idx = hash_key(key, len(table))`. Loop over `table[idx]`; if a pair's key matches, set its value and return. Otherwise `table[idx].append([key, val])`.
+
+### Exercise 3 — `get(table, key)`
+
+Hash the key, go to that one bucket, and return the matching value. Return `None` if it isn't there.
+
+```python
+get([[["cat", 1], ["act", 3]], [], [], []], "act")   # -> 3
+get([[["cat", 1]], [], [], []], "dog")               # -> None
+```
+
+**Hint:** `idx = hash_key(key, len(table))`, then loop over `table[idx]` and `return pair[1]` when `pair[0] == key`.
+
+When `hash_key` works, the "Where keys land" picture lights up. When `put` works, pin "Buckets & chaining" and watch the collisions stack up.

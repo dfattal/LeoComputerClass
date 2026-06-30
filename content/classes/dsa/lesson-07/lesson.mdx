@@ -1,0 +1,51 @@
+# Sorting II — Merge Sort
+
+> Bubble sort's hill was scary. Now meet the sort that the *real* world uses — and watch its curve dive right under the hill.
+
+## The big idea
+
+Merge sort is built on a powerful trick called **divide and conquer**:
+
+1. **Divide:** split the list into two halves.
+2. **Conquer:** sort each half — by splitting *those* in half, and so on (yes, that's **recursion**, from Lesson 5!). A list of one item is already sorted, so that's the base case.
+3. **Combine:** **merge** the two sorted halves back into one sorted list.
+
+The secret weapon is that last step. Merging two lists that are *already sorted* is easy: just keep taking the smaller of the two front items.
+
+```python
+def merge(a, b):
+    result = []
+    i = j = 0
+    while i < len(a) and j < len(b):
+        if a[i] <= b[j]:
+            result.append(a[i]); i += 1
+        else:
+            result.append(b[j]); j += 1
+    result += a[i:]      # leftovers are already sorted
+    result += b[j:]
+    return result
+```
+
+And `merge_sort` ties it together with recursion:
+
+```python
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return list(arr)             # base case
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])     # sort each half...
+    right = merge_sort(arr[mid:])
+    return merge(left, right)        # ...then merge them
+```
+
+## See it on the graph
+
+Why is this faster? You split the list in half over and over — that's only about **log n** levels deep (remember binary search?). And each level does about **n** work to merge. So the total is roughly **n × log n**: **O(n log n)**.
+
+`merge_steps` counts that work, and the graph plots it right next to bubble sort's O(n²) hill. For small lists they're close — but as N grows, the bubble hill rockets up while your merge curve stays low and gentle. That gap *is* the reason merge sort wins. You're seeing decades of computer-science wisdom in one picture.
+
+## What you'll build
+
+- `merge(a, b)` — zip two sorted lists into one sorted list.
+- `merge_sort(arr)` — split, recurse, merge. Uses your Lesson 5 recursion skills.
+- `merge_steps(arr)` — count the work, to draw the O(n log n) curve that dives under the hill.

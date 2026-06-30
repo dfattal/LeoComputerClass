@@ -1,0 +1,6 @@
+[
+  {"criterion": "insert keeps the BST rule", "weight": 40, "description": "insert puts smaller values left and bigger values right, returning a new tree (and grows a leaf from None)."},
+  {"criterion": "search walks one path", "weight": 35, "description": "search returns True/False by recursing left or right based on the node value, with a None base case."},
+  {"criterion": "Uses recursion", "weight": 15, "description": "Both functions handle the empty (None) base case and recurse on the correct sub-tree."},
+  {"criterion": "Clean code", "weight": 10, "description": "Clear unpacking of [value, left, right], a return on every path."}
+]

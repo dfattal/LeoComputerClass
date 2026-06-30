@@ -1,0 +1,41 @@
+# Recursion
+
+> What if a function could call **itself**? It sounds like a trick that never ends — but with one rule, it becomes one of the most powerful ideas in all of code.
+
+## The big idea
+
+**Recursion** is when a function solves a big problem by calling *itself* on a smaller version of the same problem. Every recursive function needs exactly two parts:
+
+1. **The base case** — the smallest, simplest problem, which you answer *directly* with no more calling. This is the brake that stops it from going forever.
+2. **The recursive step** — do a tiny bit of the work, then call yourself on something **smaller**, marching toward the base case.
+
+Here's a countdown:
+
+```python
+def countdown(n):
+    if n == 0:        # BASE CASE: nothing left to count
+        return []
+    return [n] + countdown(n - 1)   # RECURSIVE STEP: this number + the rest
+```
+
+`countdown(3)` says "3, plus countdown(2)", which says "2, plus countdown(1)"… until `countdown(0)` hits the base case and returns `[]`. Then it all comes back together: `[3, 2, 1]`.
+
+## The call stack IS a stack
+
+Remember the **stack** from last lesson? When a function calls another, the computer stacks up the unfinished call and goes to work on the new one. With recursion, `countdown(4)` stacks a call, which stacks another, which stacks another… The pile **grows** until it hits the base case. Then each call finishes and gets **popped** off — the pile **unwinds**.
+
+So the "call stack" is a real **stack** (LIFO), and recursion is what makes it grow tall. You learned the structure last lesson; now you're watching it in action.
+
+## See it on the canvas
+
+The panel plays a film strip of `countdown(4)`'s call stack:
+
+- It **grows** one orange frame at a time (each new call).
+- It hits the **green base case** at the bottom of the dive.
+- Then it **unwinds**, popping one frame at a time back to empty.
+
+That triangle — up, then down — is the shape of *every* recursion. Merge sort (Lesson 7) and binary search trees (Lesson 9) are both built from it.
+
+## What you'll build
+
+Three classic recursions: `countdown(n)`, `factorial(n)`, and `sum_to(n)`. Each is just **a base case + one call to itself**. We keep the numbers small so the stack stays short and easy to watch.

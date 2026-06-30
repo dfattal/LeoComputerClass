@@ -1,0 +1,29 @@
+## Your mission
+
+### Exercise 1 — `linear_search(arr, target)`
+
+Walk the list from the front. Return the **index** of the first spot that equals `target`. If you never find it, return `-1`.
+
+```python
+linear_search([5, 8, 2, 9], 2)   # -> 2   (it's at index 2)
+linear_search([5, 8, 2, 9], 5)   # -> 0   (first one!)
+linear_search([5, 8, 2, 9], 7)   # -> -1  (not in the list)
+linear_search([], 7)             # -> -1  (nothing to search)
+```
+
+**Hint:** Loop with `for i in range(len(arr)):` and check `if arr[i] == target: return i`. Put `return -1` *after* the loop — you only give up once you've checked everything.
+
+### Exercise 2 — `search_steps(arr, target)`
+
+Same search, but instead of *where* it is, return **how many boxes you opened**. Count `+1` every time you look at an item, and stop the moment you find the target.
+
+```python
+search_steps([5, 8, 2, 9], 5)   # -> 1   (found on the first peek)
+search_steps([5, 8, 2, 9], 9)   # -> 4   (had to open all four)
+search_steps([5, 8, 2, 9], 7)   # -> 4   (not there — opened all four)
+search_steps([], 7)             # -> 0   (no boxes, no peeks)
+```
+
+**Hint:** Start `steps = 0`. Inside the loop, do `steps += 1` *before* you check for a match. If it matches, `return steps`. After the loop, `return steps` too.
+
+When both work, look at the graph: a **straight climbing line**. That's `O(n)` — and you drew it yourself.

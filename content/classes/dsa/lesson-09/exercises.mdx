@@ -1,0 +1,31 @@
+## Your mission
+
+A node is a list `[value, left, right]`. An empty tree (or empty branch) is `None`. Both functions are **recursive**, like in Lesson 5.
+
+### Exercise 1 — `insert(tree, value)`
+
+Return a **new** tree with `value` added. If the tree is empty, the value becomes a new leaf `[value, None, None]`. Otherwise, go left if it's smaller, right if it's bigger.
+
+```python
+insert(None, 5)              # -> [5, None, None]
+insert([5, None, None], 3)   # -> [5, [3, None, None], None]   (3 < 5, goes left)
+insert([5, None, None], 8)   # -> [5, None, [8, None, None]]   (8 > 5, goes right)
+```
+
+**Hint:** Base case: `if tree is None: return [value, None, None]`. Otherwise unpack `node_val, left, right = tree`. If `value < node_val`, rebuild as `[node_val, insert(left, value), right]`. If bigger, insert into `right` instead.
+
+### Exercise 2 — `search(tree, value)`
+
+Return `True` if `value` is in the tree, else `False`. Walk **one path**: at each node, go left if your value is smaller, right if it's bigger.
+
+```python
+tree = [5, [3, [1, None, None], [4, None, None]], [8, [7, None, None], None]]
+search(tree, 4)   # -> True
+search(tree, 7)   # -> True
+search(tree, 6)   # -> False
+search(None, 3)   # -> False
+```
+
+**Hint:** Base case: `if tree is None: return False`. Then unpack the node. If `value == node_val` return `True`; if smaller, `return search(left, value)`; otherwise `return search(right, value)`.
+
+When `insert` works, the tree blossoms on the canvas and the orange search path lights up — one path down, the rest ignored.

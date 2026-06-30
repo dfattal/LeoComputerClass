@@ -1,0 +1,132 @@
+[
+  {
+    "entry": "push",
+    "cases": [
+      {
+        "name": "push([1, 2], 3) — onto a stack",
+        "args": [
+          [
+            1,
+            2
+          ],
+          3
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "push([], 5) — onto an empty stack",
+        "args": [
+          [],
+          5
+        ],
+        "expected": [
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "pop",
+    "cases": [
+      {
+        "name": "pop([1, 2, 3]) — take the top (3)",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ]
+      },
+      {
+        "name": "pop([7]) — down to empty",
+        "args": [
+          [
+            7
+          ]
+        ],
+        "expected": []
+      },
+      {
+        "name": "pop([]) — empty stays empty",
+        "args": [
+          []
+        ],
+        "expected": []
+      }
+    ]
+  },
+  {
+    "entry": "enqueue",
+    "cases": [
+      {
+        "name": "enqueue([1, 2], 3) — join the back",
+        "args": [
+          [
+            1,
+            2
+          ],
+          3
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "enqueue([], 5) — first in line",
+        "args": [
+          [],
+          5
+        ],
+        "expected": [
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "dequeue",
+    "cases": [
+      {
+        "name": "dequeue([1, 2, 3]) — front (1) leaves",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "dequeue([7]) — down to empty",
+        "args": [
+          [
+            7
+          ]
+        ],
+        "expected": []
+      },
+      {
+        "name": "dequeue([]) — empty stays empty",
+        "args": [
+          []
+        ],
+        "expected": []
+      }
+    ]
+  }
+]

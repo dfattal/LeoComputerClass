@@ -1,0 +1,33 @@
+# Sorting I — Bubble Sort
+
+> Binary search was amazing — but it only works on a **sorted** list. So how do we sort one in the first place? Let's start with the simplest way… and feel exactly why it's not the *fastest*.
+
+## The big idea
+
+**Bubble sort** is the most natural sorting idea in the world. Walk along the list looking at each pair of neighbors. If they're in the wrong order, **swap them**. Keep sweeping through until no swaps are needed — now it's sorted.
+
+Each sweep "bubbles" the biggest remaining value up to the end, like a bubble rising to the top of a fizzy drink.
+
+```python
+def bubble_sort(arr):
+    a = list(arr)
+    n = len(a)
+    for i in range(n):
+        for j in range(n - 1 - i):
+            if a[j] > a[j + 1]:
+                a[j], a[j + 1] = a[j + 1], a[j]   # swap!
+    return a
+```
+
+It's easy to understand and easy to write. But notice the **loop inside a loop**. For a list of `n` items, you make roughly `n` sweeps, and each sweep checks roughly `n` pairs. That's `n × n` work.
+
+## See it on the graph
+
+`bubble_steps` counts the **swaps** for the worst possible input (a list that's completely backwards). The graph plots that count as the list grows — and instead of a straight line, you get a **steep hill that curves upward**.
+
+That shape is **O(n²)** ("oh of n squared"). It's the danger sign: **double the list, and you do about *four times* the work.** Sorting 10 things is quick. Sorting 1,000 things this way is a million swaps. Bubble sort is fine for tiny lists and great for learning — but for big lists, we need something cleverer. (That's next lesson.)
+
+## What you'll build
+
+- `bubble_sort(arr)` — returns a **new sorted list** (smallest to biggest), without wrecking the original.
+- `bubble_steps(arr)` — returns the **number of swaps** it made. That's the count that draws the O(n²) hill.

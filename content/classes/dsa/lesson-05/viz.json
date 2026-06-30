@@ -1,0 +1,9 @@
+{
+  "type": "draw",
+  "title": "The call stack of countdown(4) — calls pile up, hit the base case, then unwind",
+  "resultFn": "__show_callstack",
+  "demoArgs": [
+    4
+  ],
+  "setup": "# Hidden painter: a film strip of the CALL STACK while countdown(n) runs. It\n# drives off the student's OWN countdown — each value it returns is one stacked\n# call. The stack GROWS as calls are made (top frame = orange), hits the base\n# case (green), then UNWINDS frame by frame. A broken countdown falls back to a\n# reference triangle so the canvas is never blank.\nWAIT = \"purple\"   # a paused call, waiting for the one above it to finish\nTOP = \"orange\"    # the call running right now (top of the stack)\nBASE = \"green\"    # the base case — the bottom, where the recursion stops\n\n\ndef __triangle(depth):\n    width = depth + 1\n    snaps = [0]                      # start: empty stack\n    for d in range(1, depth + 1):    # grow: push each call\n        snaps.append(d)\n    snaps.append(depth + 1)          # push the base-case frame\n    for d in range(depth, -1, -1):   # unwind: pop back down to empty\n        snaps.append(d)\n    grid = []\n    for height in snaps:\n        row = []\n        for j in range(width + 1):\n            if j < height:\n                if j == height - 1:\n                    # top frame: base case if it's the deepest push, else running\n                    row.append(BASE if height == depth + 1 else TOP)\n                else:\n                    row.append(WAIT)\n            else:\n                row.append(\"\")\n        grid.append(row)\n    return grid\n\n\ndef __show_callstack(n=4):\n    try:\n        vals = countdown(n)\n        if isinstance(vals, list) and len(vals) == n:\n            return __triangle(len(vals))\n    except Exception:\n        pass\n    return __triangle(n)\n"
+}

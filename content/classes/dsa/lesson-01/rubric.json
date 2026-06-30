@@ -1,0 +1,6 @@
+[
+  {"criterion": "constant_steps is constant", "weight": 35, "description": "constant_steps(n) always returns 1, no matter how big n is — it ignores n."},
+  {"criterion": "linear_steps grows with n", "weight": 40, "description": "linear_steps(n) returns n by counting one step per item, and handles n = 0 (returns 0)."},
+  {"criterion": "Returns whole numbers", "weight": 15, "description": "Both functions return an int step-count, so it can be tested and plotted."},
+  {"criterion": "Clean code", "weight": 10, "description": "A counter that starts at 0, clear loop, and a return on every path."}
+]

@@ -1,0 +1,59 @@
+## Your mission
+
+Every function below is **a base case + one recursive call**. The base case is already written for you in the starter — your job is to finish the **recursive step**, the line that calls the function on something *smaller*.
+
+### Exercise 1 — `countdown(n)`
+
+Return the list `[n, n-1, …, 1]`. Counting down from 0 gives an empty list.
+
+```python
+countdown(4)   # -> [4, 3, 2, 1]
+countdown(1)   # -> [1]
+countdown(0)   # -> []   (base case)
+```
+
+Fill in the blank:
+
+```python
+def countdown(n):
+    if n == 0:
+        return []
+    return [n] + countdown(____)   # what smaller number do you call?
+```
+
+**Hint:** To get smaller and reach the base case, call `countdown(n - 1)`.
+
+### Exercise 2 — `factorial(n)`
+
+`factorial(n)` means `n × (n-1) × … × 1`. And `factorial(0)` is defined as `1`.
+
+```python
+factorial(4)   # -> 24   (4 × 3 × 2 × 1)
+factorial(5)   # -> 120
+factorial(0)   # -> 1    (base case)
+```
+
+Fill in the blank:
+
+```python
+def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(____)
+```
+
+**Hint:** `n * factorial(n - 1)` — do a little (multiply by `n`), then ask the smaller question.
+
+### Exercise 3 — `sum_to(n)`
+
+Add up `1 + 2 + … + n`. The sum up to `0` is `0`.
+
+```python
+sum_to(5)    # -> 15   (1+2+3+4+5)
+sum_to(10)   # -> 55
+sum_to(0)    # -> 0    (base case)
+```
+
+**Hint:** Same shape: `return n + sum_to(n - 1)`.
+
+When `countdown` works, the call-stack film strip plays — watch it grow, touch the green base case, and unwind.

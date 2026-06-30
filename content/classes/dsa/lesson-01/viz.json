@@ -1,0 +1,32 @@
+{
+  "type": "plot",
+  "title": "Same job, two costs — a flat line vs a line that climbs with N",
+  "xLabel": "N — how big the job is",
+  "yLabel": "steps it takes",
+  "resultFn": "__plot",
+  "demoArgs": [
+    20
+  ],
+  "caption": {
+    "todo": "Finish constant_steps and linear_steps to draw both lines.",
+    "tuning": "Your lines are showing — keep tuning until both match the answer.",
+    "match": "✅ A flat line and a climbing line — that's O(1) vs O(n)!",
+    "checks": [
+      {
+        "fn": "constant_steps",
+        "args": [
+          10
+        ],
+        "expected": 1
+      },
+      {
+        "fn": "linear_steps",
+        "args": [
+          10
+        ],
+        "expected": 10
+      }
+    ]
+  },
+  "setup": "# Hidden producer (the student never sees this). It calls the student's OWN\n# constant_steps and linear_steps for N = 1..n_max and returns two curves: a flat\n# line (always 1) and a climbing line (n). A wrong function draws a wrong line.\n# Falls back to a plain n-line so the panel is never blank.\ndef __series(fn, n_max):\n    pts = []\n    for n in range(1, n_max + 1):\n        y = fn(n)\n        if not isinstance(y, (int, float)) or isinstance(y, bool):\n            return None\n        pts.append([n, y])\n    return pts\n\n\ndef __plot(n_max):\n    series = []\n    flat = None\n    slant = None\n    try:\n        flat = __series(constant_steps, n_max)\n    except Exception:\n        flat = None\n    try:\n        slant = __series(linear_steps, n_max)\n    except Exception:\n        slant = None\n    if flat:\n        series.append({\"name\": \"constant — always 1 step\", \"points\": flat, \"highlight\": False})\n    if slant:\n        series.append({\"name\": \"linear — n steps (climbs!)\", \"points\": slant, \"highlight\": True})\n    if not series:\n        series.append({\"name\": \"linear — n steps\", \"points\": [[n, n] for n in range(1, n_max + 1)], \"highlight\": True})\n    return series\n"
+}

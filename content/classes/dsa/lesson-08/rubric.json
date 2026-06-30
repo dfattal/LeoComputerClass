@@ -1,0 +1,6 @@
+[
+  {"criterion": "Correct hash", "weight": 30, "description": "hash_key sums the letter codes and wraps with % buckets, giving the same bucket for the same key every time."},
+  {"criterion": "put stores and chains", "weight": 35, "description": "put places the pair in the hashed bucket, chains on a collision, and updates an existing key instead of duplicating it."},
+  {"criterion": "get jumps to the bucket", "weight": 25, "description": "get hashes the key, searches only that bucket, and returns the value or None."},
+  {"criterion": "Clean code", "weight": 10, "description": "Reuses hash_key inside put/get, copies the table instead of mutating, clear names."}
+]

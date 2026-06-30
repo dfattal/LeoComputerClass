@@ -1,0 +1,222 @@
+[
+  {
+    "entry": "merge",
+    "cases": [
+      {
+        "name": "merge([1, 4], [2, 3])",
+        "args": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "name": "merge([], [1, 2]) — one side empty",
+        "args": [
+          [],
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ]
+      },
+      {
+        "name": "merge([1, 2, 3], []) — other side empty",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          []
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "merge([5], [1]) — single items",
+        "args": [
+          [
+            5
+          ],
+          [
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          5
+        ]
+      },
+      {
+        "name": "merge([1, 4, 7], [2, 3, 8])",
+        "args": [
+          [
+            1,
+            4,
+            7
+          ],
+          [
+            2,
+            3,
+            8
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "merge_sort",
+    "cases": [
+      {
+        "name": "merge_sort([3, 1, 2])",
+        "args": [
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "merge_sort([5, 4, 3, 2, 1]) — reversed",
+        "args": [
+          [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "name": "merge_sort([2, 2, 1]) — duplicates",
+        "args": [
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          1,
+          2,
+          2
+        ]
+      },
+      {
+        "name": "merge_sort([1]) — single",
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": [
+          1
+        ]
+      },
+      {
+        "name": "merge_sort([]) — empty",
+        "args": [
+          []
+        ],
+        "expected": []
+      }
+    ]
+  },
+  {
+    "entry": "merge_steps",
+    "cases": [
+      {
+        "name": "merge_steps([]) — nothing to do",
+        "args": [
+          []
+        ],
+        "expected": 0
+      },
+      {
+        "name": "merge_steps([1]) — one item is free",
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expected": 0
+      },
+      {
+        "name": "merge_steps([1, 2]) — split, merge 2",
+        "args": [
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "name": "merge_steps([1, 2, 3, 4]) — n log n = 8",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "expected": 8
+      },
+      {
+        "name": "merge_steps([5, 4, 3, 2, 1])",
+        "args": [
+          [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        ],
+        "expected": 12
+      }
+    ]
+  }
+]

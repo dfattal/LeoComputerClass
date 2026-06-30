@@ -1,0 +1,51 @@
+## Your mission
+
+Four little functions. Each one returns the **new list** after the change — it doesn't change the old one.
+
+### Exercise 1 — `push(stack, x)`
+
+Add `x` to the back (the top) of the stack.
+
+```python
+push([1, 2], 3)   # -> [1, 2, 3]
+push([], 5)       # -> [5]
+```
+
+**Hint:** `return stack + [x]` builds a new list with `x` added on the end.
+
+### Exercise 2 — `pop(stack)`
+
+Remove the **top** item (the last one). If the stack is empty, return an empty list.
+
+```python
+pop([1, 2, 3])   # -> [1, 2]   (the 3 came off)
+pop([7])         # -> []
+pop([])          # -> []
+```
+
+**Hint:** `stack[:-1]` is the list without its last item — and it's safe even when the list is empty.
+
+### Exercise 3 — `enqueue(queue, x)`
+
+Add `x` to the back of the line. (Yes — this is the same move as `push`!)
+
+```python
+enqueue([1, 2], 3)   # -> [1, 2, 3]
+enqueue([], 5)       # -> [5]
+```
+
+**Hint:** `return queue + [x]`.
+
+### Exercise 4 — `dequeue(queue)`
+
+Remove the **front** item (the first one) — that's what makes it a queue, not a stack.
+
+```python
+dequeue([1, 2, 3])   # -> [2, 3]   (the 1 left first)
+dequeue([7])         # -> []
+dequeue([])          # -> []
+```
+
+**Hint:** `queue[1:]` is the list with its **first** item dropped.
+
+When push/pop work, the **Stack** strip plays. When all four work, pin the **Queue** strip and watch the line slide. Same adds, different exits — that's the whole idea.

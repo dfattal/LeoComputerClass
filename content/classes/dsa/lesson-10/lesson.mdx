@@ -1,0 +1,57 @@
+# Graphs & Shortest Path
+
+> The big finish. A map of towns and roads — and the question every GPS, every internet router, and every maze-solver asks: *what's the fastest way from here to there?*
+
+## The big idea
+
+A **graph** is just dots connected by lines. The dots are **nodes** (towns, web servers, people); the lines are **connections** (roads, cables, friendships). We store it as a list of `[node, [its neighbors]]`:
+
+```python
+graph = [
+    ["A", ["B", "C"]],
+    ["B", ["A", "D"]],
+    ["C", ["A", "D", "E"]],
+    ...
+]
+```
+
+To find the **fewest hops** from a start to a goal, we use **breadth-first search (BFS)**. The idea: check everything **one hop away** first, then everything **two hops away**, then three… The moment you reach the goal, you must have come by a shortest route, because you always explored closer places first.
+
+How do we always explore the closest place next? With a **queue** — first in, first out — exactly the structure you built in Lesson 4!
+
+```python
+def bfs(graph, start, goal):
+    if start == goal:
+        return [start]
+    visited = {start}
+    queue = [[start]]               # a queue of paths
+    while queue:
+        path = queue.pop(0)         # dequeue the oldest (FIFO)
+        node = path[-1]
+        for nb in neighbors(graph, node):
+            if nb not in visited:
+                visited.add(nb)
+                new_path = path + [nb]
+                if nb == goal:
+                    return new_path  # first time we reach it = shortest!
+                queue.append(new_path)
+    return []                        # no route exists
+```
+
+## This is the whole class in one algorithm
+
+Look at everything you used:
+- a **queue** (Lesson 4) drives the search,
+- you avoid re-checking towns the way a smart search avoids wasted work (Lessons 2–3),
+- and finding the goal in the fewest hops is the same "don't do extra work" idea you've measured all along.
+
+It's also the **Networks** class made general: back then a packet hopped from router to router to find your webpage. BFS is the rule that finds it the shortest way.
+
+## See it on the canvas
+
+The panel draws a little map of towns A–F and asks BFS for the route from **A** (far left) to **F** (far right). The **orange towns** are the shortest path it found: `A → B → D → F`. The purple towns (C, E) are on the map but *not* on the route. Change your `bfs` and watch which towns light up.
+
+## What you'll build
+
+- `neighbors(graph, node)` — return the list of a node's neighbors.
+- `bfs(graph, start, goal)` — return the fewest-hops path as a list of nodes (or `[]` if there's no route).

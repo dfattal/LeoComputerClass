@@ -1,0 +1,6 @@
+[
+  {"criterion": "merge zips correctly", "weight": 30, "description": "merge combines two sorted lists into one sorted list, handling empty sides and leftovers."},
+  {"criterion": "merge_sort uses recursion", "weight": 30, "description": "Splits at the midpoint, recursively sorts both halves with a correct base case, and merges them."},
+  {"criterion": "merge_steps counts the work", "weight": 25, "description": "Returns the recursive work total (halves + len), giving the O(n log n) curve."},
+  {"criterion": "Clean code", "weight": 15, "description": "Clear base cases, reuses merge inside merge_sort, a return on every path."}
+]

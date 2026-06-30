@@ -1,0 +1,43 @@
+# Binary Search
+
+> Think of a number between 1 and 100. I'll guess it in **7 tries, guaranteed** — even though there are 100 choices. The trick is to never waste a guess.
+
+## The big idea
+
+Last lesson, linear search opened every box. That's fine for a short row, but painful for a long one. Binary search is the upgrade — with **one rule**: the list must be **sorted** first.
+
+Here's the magic. Look at the **middle** item:
+
+- If it's your target — done!
+- If it's **too small**, your target must be in the **right half**. Throw away the entire left half.
+- If it's **too big**, throw away the **right half**.
+
+Every single guess **deletes half of what's left**. 100 items → 50 → 25 → 13 → 7 → 4 → 2 → 1. That's at most 7 guesses for 100 items. For a *thousand* items? Only about 10 guesses!
+
+```python
+def binary_search(sorted_arr, target):
+    lo = 0
+    hi = len(sorted_arr) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if sorted_arr[mid] == target:
+            return mid
+        elif sorted_arr[mid] < target:
+            lo = mid + 1     # keep the right half
+        else:
+            hi = mid - 1     # keep the left half
+    return -1
+```
+
+## Why it MUST be sorted
+
+The whole trick is "if the middle is too small, the target is to the right." That's only true if the list is **in order**. On a jumbled list, the middle tells you nothing, and binary search breaks. Sorting is the price of admission — and later (Lessons 6 & 7) you'll learn to pay it.
+
+## See it on the graph
+
+`binary_steps` counts your guesses. The graph plots it against the straight linear line from last lesson. As N grows huge, the linear line shoots up to the top — but your binary curve stays **almost flat along the bottom**. That gentle shape is **O(log n)**: every time the list *doubles*, you only need **one more guess**. That's the most important curve in this whole class.
+
+## What you'll build
+
+- `binary_search(sorted_arr, target)` — returns the index of `target`, or `-1`. Assumes the list is sorted.
+- `binary_steps(sorted_arr, target)` — returns how many middle-checks it took. This is the curve that crushes linear search.

@@ -1,0 +1,28 @@
+## Your mission
+
+Write two step-counters. Each one takes `n` (how big the job is) and **returns the number of steps** as a whole number. Watch the graph the moment both work.
+
+### Exercise 1 — `constant_steps(n)`
+
+A job that costs the **same** no matter how big `n` is — like grabbing the very first item. It should always return `1`.
+
+```python
+constant_steps(5)        # -> 1
+constant_steps(1000000)  # -> 1   (still just one step!)
+```
+
+**Hint:** You don't even need to look at `n`. Start a counter at `0`, add `1` once, and return it.
+
+### Exercise 2 — `linear_steps(n)`
+
+A job that looks at **every** item once — so it costs `n` steps for `n` items.
+
+```python
+linear_steps(5)   # -> 5
+linear_steps(100) # -> 100
+linear_steps(0)   # -> 0   (nothing to look at, no steps)
+```
+
+**Hint:** Start a counter at `0` and add `1` inside a loop that runs `n` times (`for _ in range(n):`). Return the counter at the end.
+
+When both pass, look at the graph: one **flat** line, one **climbing** line. That's `O(1)` racing `O(n)` — and you can *see* who wins as the job gets big.

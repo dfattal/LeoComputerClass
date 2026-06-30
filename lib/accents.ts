@@ -314,6 +314,25 @@ export const accents: Record<string, Accent> = {
     solid: "bg-slate-600",
     banner: "bg-slate-500",
   },
+  purple: {
+    bg: "bg-purple-600",
+    bgHover: "hover:bg-purple-700",
+    text: "text-purple-600 dark:text-purple-400",
+    underline: "bg-purple-600 dark:bg-purple-400",
+    ring: "focus-visible:ring-purple-500",
+    handleHover: "group-hover:bg-purple-400 dark:group-hover:bg-purple-500",
+    sidebar: "bg-purple-600 font-medium text-white shadow-sm shadow-purple-600/25",
+    feedback: {
+      border: "border-purple-200 dark:border-purple-800",
+      bg: "bg-purple-50 dark:bg-purple-950/40",
+      title: "text-purple-800 dark:text-purple-200",
+      body: "text-purple-900 dark:text-purple-100",
+    },
+    cardBorder: "hover:border-purple-400 dark:hover:border-purple-500",
+    badge: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
+    solid: "bg-purple-600",
+    banner: "bg-purple-500",
+  },
 };
 
 /** The accent names this platform knows how to paint. */

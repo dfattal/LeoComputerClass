@@ -1,0 +1,29 @@
+## Your mission
+
+### Exercise 1 — `bubble_sort(arr)`
+
+Return a **new** list with the items sorted smallest-to-biggest. Don't change the original list — copy it first with `a = list(arr)`.
+
+```python
+bubble_sort([3, 1, 2])         # -> [1, 2, 3]
+bubble_sort([5, 4, 3, 2, 1])   # -> [1, 2, 3, 4, 5]
+bubble_sort([2, 2, 1])         # -> [1, 2, 2]
+bubble_sort([])                # -> []
+```
+
+**Hint:** Two loops. The outer loop repeats the sweeps. The inner loop compares `a[j]` with `a[j + 1]`, and if `a[j]` is bigger, swap them with `a[j], a[j+1] = a[j+1], a[j]`.
+
+### Exercise 2 — `bubble_steps(arr)`
+
+The same sort, but return **how many swaps** it took. Start a counter at `0` and add `1` every time you actually swap a pair.
+
+```python
+bubble_steps([1, 2, 3])      # -> 0   (already sorted — no swaps!)
+bubble_steps([2, 1, 3])      # -> 1
+bubble_steps([3, 2, 1])      # -> 3   (fully reversed)
+bubble_steps([4, 3, 2, 1])   # -> 6
+```
+
+**Hint:** Copy your `bubble_sort`, add `swaps = 0` at the top, and put `swaps += 1` right after the swap line. Return `swaps` instead of the list.
+
+When `bubble_steps` works, the graph draws the swap-count curve. Notice it's a **hill**, not a line — that's the O(n²) cost you'll beat next lesson.
