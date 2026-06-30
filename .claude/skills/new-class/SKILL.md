@@ -83,8 +83,15 @@ this file, so that's the only edit needed.
 
 ### 4. Fill in the shell
 
-- `content/classes.ts` — replace the `description` placeholder with a real
-  one-paragraph pitch for the class card and landing page.
+- `content/classes.ts` — fill in TWO description fields:
+  - **`description`** — SHORT and **enticing** (~1 sentence, ~120–180 chars). This
+    is the home-page card; it must stay tight so every card is the same height and
+    none overflow. Make it a hook, not a summary — exciting for a 10-year-old, no
+    dry "this class covers…" phrasing.
+  - **`longDescription`** (optional) — the fuller one-paragraph pitch, shown only
+    on the dedicated class landing page (and the OG/meta tag). Put the rich detail
+    here; the card never shows it. If you omit it, the page falls back to
+    `description`. Don't let the long pitch leak into `description`.
 - `content/classes/<slug>/ai-prompt.ts` — fill the `systemPrompt` blanks: who the
   student is (what they already know — don't dumb the code down), the big ideas
   with the concrete analogy each hangs on, the domain conventions (e.g. functions
@@ -196,8 +203,9 @@ last lesson ships.)
 1. concept (slug/name/tagline/through-line/accent/panel kind) **+ record it in
 `docs/CLASS-ROADMAP.md`** (Current-classes row, `In progress (0/N)`) →
 2. `scaffold-class.mjs` (move the entry up if it should lead the home page) →
-3. add accent to `lib/accents.ts` if new → 4. fill description + ai-prompt +
-syllabus (weeks `planned`) → 5. generate the hero with `/ask-gemini` (real art,
+3. add accent to `lib/accents.ts` if new → 4. fill SHORT enticing `description`
+(card) + optional `longDescription` (class page) + ai-prompt + syllabus (weeks
+`planned`) → 5. generate the hero with `/ask-gemini` (real art,
 not a placeholder) + convert to `public/hero-<slug>.webp` + `node
 scripts/generate-og-images.mjs` (social-share card) → 6. `/new-lesson` per
 lesson (`--viz draw` for a drawing class) → 7. drop `comingSoon`, `npm run build`

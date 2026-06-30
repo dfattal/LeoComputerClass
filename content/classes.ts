@@ -5,7 +5,8 @@ export interface ClassDef {
   slug: string;
   name: string;
   tagline: string;
-  description: string;
+  description: string; // SHORT (~1 sentence, ~120–180 chars) — the home-page card
+  longDescription?: string; // Optional fuller pitch for the dedicated class page; falls back to `description`
   accentColor: string; // Tailwind color name
   heroImage: string; // Path in /public
   studentName: string; // For AI prompts
@@ -184,6 +185,8 @@ export const classes: ClassDef[] = [
     name: "White Hat",
     tagline: "Break In to Lock It Down",
     description:
+      "You've been hired to break into Fort Knocks — crack passwords, smash a buffer, slip past a login — then flip to the blue team and make it unbreakable. Hacking, the good-guy way.",
+    longDescription:
       "You built the computer and the operating system — now learn how people break into them, and how to stop them. You've been hired to test the security of Fort Knocks, and your job is to find every weakness before the bad guys do. Write Python that cracks passwords, smashes a memory buffer, sneaks past a login, and reads secret messages off the wire — all in a safe practice sandbox — then switch to the blue team and make Fort Knocks unbreakable. Real hacking is just understanding a machine so well it does what YOU say. This is the white-hat way: break in only when you're invited, and always to make things safer.",
     accentColor: "red",
     heroImage: "/hero-whitehat.webp",
@@ -197,6 +200,8 @@ export const classes: ClassDef[] = [
     name: "Networks & the Internet",
     tagline: "How a Webpage Actually Arrives",
     description:
+      "Type an address, hit enter — now chase your request packet by packet across the whole planet and back, building every secret layer of the internet until the page appears.",
+    longDescription:
       "You type a web address, hit enter — and a page from a computer on the other side of the planet shows up in less than a second. How?! In this class you trace every single hop your request makes: you'll chop a message into packets, give machines addresses, route a packet across a map of the internet, knock on the right port, look up a name in the DNS phonebook, speak the HTTP language, and resend whatever gets lost — until the page comes back. You're talking to the same server the White Hat class breaks into, Fort Knocks, so by the end you'll understand the internet well enough to defend it. Real networking is just a stack of small, clever ideas stacked on top of each other. Let's build the whole stack, one layer at a time.",
     accentColor: "blue",
     heroImage: "/hero-networks.webp",

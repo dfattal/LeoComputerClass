@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!classDef) return {};
 
   const title = `${classDef.name} — ${classDef.tagline}`;
-  const description = classDef.description;
+  const description = classDef.longDescription ?? classDef.description;
   const ogImage = { url: `/og-${classSlug}.jpg`, width: 1200, height: 630, alt: classDef.name };
 
   return {
@@ -58,7 +58,7 @@ export default async function ClassHomePage({
         <h1 className="mb-4 text-3xl font-bold text-stone-900 dark:text-stone-100">
           {classDef.name}
         </h1>
-        <p className="mb-6 text-lg text-stone-500">{classDef.description}</p>
+        <p className="mb-6 text-lg text-stone-500">{classDef.longDescription ?? classDef.description}</p>
         <span className={`rounded-full px-4 py-2 text-sm font-semibold ${getAccent(classDef.accentColor).badge}`}>
           Coming Soon
         </span>
@@ -132,7 +132,7 @@ export default async function ClassHomePage({
           )}
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-stone-600 dark:text-stone-400 sm:text-lg">
-          {classDef.description}
+          {classDef.longDescription ?? classDef.description}
         </p>
         <div className="mt-8 flex justify-center gap-3">
           {firstPublished && (
