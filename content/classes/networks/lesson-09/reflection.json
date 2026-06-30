@@ -1,0 +1,14 @@
+{
+  "question": "What REALLY happens, step by step, when you type a web address and press enter — how does the page actually get to you?",
+  "guidance": "You built every single step of this yourself. Trace the whole journey in your own words, from the name you typed to the page showing up. Don't just list words — explain what each step is FOR.",
+  "lookFor": [
+    "The name (like fortknocks.com) has to become a number/address first, by looking it up in DNS — the internet's phonebook — because machines only understand addresses, not names",
+    "The message is chopped into small numbered packets so it can travel",
+    "Each packet has an address and is routed hop by hop across the internet, each router picking the next step toward the destination",
+    "On the destination machine, the port number picks which program gets the packet (80 = web)",
+    "Your browser sends an HTTP request (like GET /index.html) to ASK for the page, and the server answers with a status code (200 OK, 404 Not Found) plus the page",
+    "The page comes back in packets that get reassembled in order; any lost packet is noticed (no ACK) and resent, so nothing is missing",
+    "The big idea: it's a stack of layers, each one doing a small job and trusting the layer below it — names, packets, addresses, routes, ports, requests, reliability all working together"
+  ],
+  "exemplar": "When I type fortknocks.com and press enter, the first thing my computer does is look the name up in DNS — the internet's phonebook — because machines don't understand names, only numbers like 93.184.7.42. (If it looked that name up recently it's in the cache, so it's instant.) Once I have the address, my request gets chopped into little numbered packets so they're easy to carry. Each packet has the destination address on it, and routers pass it hop by hop across the world — at every router it just picks the next step that points closer to where it's going. When the packets reach the right machine, the port number (80 for the web) decides which program gets them. Then my browser actually asks for the page with an HTTP request like 'GET /index.html', and the server answers with a status code — 200 means OK, here's your page, 404 means it couldn't find it. The page comes back as packets too, and I snap them back together in order. If any packet got lost on the way, the other side never sent a receipt (an ACK) for it, so it gets resent until everything arrives. Then the finished page shows up on my screen. The whole thing is really a stack of layers — names, packets, addresses, routes, ports, requests, and resending — each doing one small job and trusting the one underneath it. That stack is the internet."
+}

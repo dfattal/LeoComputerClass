@@ -78,6 +78,7 @@ Every class below also ships a final **"The Big Picture" reflection capstone**
 | Operating Systems | `os` | You built the CPU — now build the OS that runs it (scheduler → memory → files → cache) | Published (7+1) ✅ all 8 lessons built; software sequel to the Computer Class; `slate` accent; Gantt/memory/disk/cache rendered on the `draw` grid |
 | Kitchen Chemistry | `chem` | Run your own lab: build atoms → molecules → states, then reactions you can see (balancing, pH, chromatography, crystals) | Published (8+1) ✅ — Leila's intro-chemistry class; canvas-heavy `draw` viz; `cyan` accent; signature = Bohr-atom drawer; every lesson paints on the grid |
 | White Hat | `whitehat` | Hired to test "Fort Knocks": break in to find every weakness (red team) → make it unbreakable (blue team) | Published (8+1) ✅ new — advanced ethical-hacking class; sequel to Computer Class + Operating Systems; new `red` accent; all attacks are safe simulated Python sandboxes; permission-first ethics frame; signature = the simulated buffer-overflow lesson |
+| Networks & the Internet | `networks` | Type a web address, hit enter — trace every hop your request makes until the page comes back | Published (8+1) ✅ new — the prerequisite to White Hat; new `blue` accent; layered `draw` viz (packets light up the path); reuses Fort Knocks as the server; signature = the whole-stack capstone (a name → a route → a request → a page in one run) |
 
 ---
 
@@ -330,6 +331,67 @@ In* → Phase 3 *Blue Team: Lock It Down* → Phase 4 *The Big Picture*):
   red castle-vault with padlocks + helper bots), 1376×768, OG card generated.
   (Gemini image gen reads `GEMINI_API_KEY` from `~/.gemini/.env`, separate from
   CLI account auth — a capped key there 429s even after changing the account.)
+
+### Networks & the Internet — ✅ built as `networks`, 8 lessons + reflection published
+
+**Through-line:** "Type a web address, hit enter — now trace every hop your
+request makes across the world until the page comes back." Built as the natural
+**prerequisite to White Hat**: you can't really understand sniffing,
+man-in-the-middle, or injection until you know what a packet, an IP address, a
+port, and a request/response actually are. The server on the far end is the same
+**Fort Knocks** the White Hat class defends, tying the two classes together.
+Accent `blue` (new), level advanced. Every layer is a clean, testable pure
+function — no real sockets.
+
+**As-built lesson arc** (Phase 1 *Send a Message* → Phase 2 *Find the Way* →
+Phase 3 *Speak the Language* → Phase 4 *The Whole Journey*):
+1. **Packets** — `chop` + `packet_count` + `reassemble`; a message splits into
+   numbered colored packets (last one short — the leftover chunk).
+2. **Addresses** — `to_octets` + `to_ip` + `same_network`; two machines compared
+   octet by octet, green network part = neighbors, one red octet = different nets.
+3. **Routing** — `matches` + `next_hop` + `default_route`; four router doors
+   light up, each destination picking its next hop by **longest-prefix match**
+   (10.0.0.5 lights R2 even though R1 also matches).
+4. **Ports & Sockets** — `well_known` + `route_to_app` + `is_open`; one machine,
+   three numbered doors; each packet lights the door it enters or glows red
+   (blocked) — the first nod to the White Hat "open port" idea.
+5. **DNS** — `resolve` + `is_cached` + `resolve_cached`; a lookup log glows green
+   on a cache hit, orange on a phonebook miss, red when a name isn't found.
+   `resolve_cached` returns a **list** `[ip, hit]` (no float-valued dicts).
+6. **HTTP** — `build_request` + `parse_request` + `status_text`; request/response
+   cards, the server's answer colored by status (200 green, 301 orange, 4xx/5xx
+   red). Reuses the build/parse "matched pair" pattern.
+7. **Reliability** ⭐ — `missing_acks` + `all_received` + `resend_count`; baby
+   TCP — each sent packet green (acked) or red (lost, resend), driven by which
+   ACKs came back.
+8. **The Whole Stack** ⭐ — `resolve` + `build_request` + `reassemble` +
+   `load_page`; the capstone conductor runs the whole journey end to end (DNS →
+   REQUEST → PAGE → DONE lights), a name becoming a page in one run; a name that
+   won't resolve turns the first light red.
+9. **The Big Picture: What Really Happens** — reflection capstone
+   (`reflection.json`, no Python): the history (ARPANET's "LO" → packet switching
+   → TCP/IP in 1983 → Tim Berners-Lee's Web in 1989), then re-explain the whole
+   step-by-step journey of pressing enter, in the kid's own words.
+
+**Reusable tech / notes:**
+- No new lesson kind — rides the existing **`draw` viz** (PixelCanvas) with the
+  **"hidden painter in viz setup"** technique copied straight from White Hat /
+  Kitchen Chemistry: students return plain `str`/`int`/`bool`/`list`, and a hidden
+  `__show_*` painter (duplicated in `reference.py` for `validate-class` and in
+  `viz.json`'s `setup` for the browser) turns it into a grid. Every painter is
+  **student-driven** — it calls the lesson's own function, so a wrong answer
+  changes the picture. Every lesson uses a **single `resultFn`** (the layers
+  compose into one map), like White Hat.
+- Authoring was fully **reference-driven**: the reusable scratchpad generator
+  (`gen_lesson.py`) reads each `reference.py`'s inert `TESTS_SPEC` / `VIZ_SPEC`
+  blocks + the painter source between `# === PAINTER START/END ===` markers and
+  emits exact `tests.json` + `viz.json`, so grids and expected values can't drift
+  from the answer key. `validate-class networks` = **177/177**, `npm run build`
+  clean (160 pages).
+- New accent `blue` added to `lib/accents.ts` (copied from `sky`, swapped on
+  every line), distinct from the existing `sky`.
+- Hero `/hero-networks.webp` — globe + glowing blue connection lines + light-up
+  packets, no baked title text, 1376×768, OG card generated.
 
 ---
 

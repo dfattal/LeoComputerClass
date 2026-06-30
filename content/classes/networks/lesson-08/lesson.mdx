@@ -1,0 +1,63 @@
+# The Whole Stack
+
+> This is the one you've been building toward, {{FIRST_NAME}}. Eight lessons of pieces — packets, addresses, routes, ports, DNS, HTTP, ACKs. Today they snap together and you watch a single web address make the **entire journey**. 🌍
+
+## Phase 4: The Whole Journey
+
+---
+
+## Press enter — here's what really happens
+
+You type `fortknocks.com` and hit enter. In less than a second, a page appears. That second is *packed* with everything you've built. Here's the real sequence:
+
+1. **DNS** — the name `fortknocks.com` becomes an address like `93.184.7.42`. (Machines need numbers.) 📖
+2. **HTTP** — your browser builds a request: `GET /index.html HTTP/1.1`. (You have to *ask* for the page.) 💬
+3. **Reassembly** — the page comes back chopped into packets, and you glue them into the finished page. 📦
+
+Behind those three steps are all the others: the request travels in **packets**, each addressed and **routed** hop by hop to the right machine and the right **port**, and any lost packet gets **resent**. But the headline journey — the part you can hold in your head — is *name → request → page.*
+
+## Write the conductor
+
+You've already built every instrument. Now you write the **conductor** — one function that runs the whole orchestra in order and reports the result:
+
+```python
+def load_page(name, path, dns_table, packets):
+    ip = resolve(name, dns_table)          # 1. DNS: name -> address
+    request = build_request("GET", path)   # 2. HTTP: ask for the page
+    page = reassemble(packets)             # 3. snap the packets together
+    return [ip, request, page]
+```
+
+```python
+load_page("fortknocks.com", "/index.html", dns_table, packets)
+# -> ["93.184.7.42", "GET /index.html HTTP/1.1", "FORT KNOCKS HOME"]
+```
+
+One call. Underneath it: the entire internet. That's not a trick — that's *actually* how the layers stack, each one trusting the one below it to do its job.
+
+## When a step fails
+
+What if the name doesn't resolve — a typo, a site that doesn't exist? Then step one returns `""`, and the whole journey is broken before it starts:
+
+```python
+load_page("ghost.com", "/index.html", dns_table, packets)
+# -> ["", "GET /index.html HTTP/1.1", "FORT KNOCKS HOME"]
+#      ^^ no address — the trip dies at DNS
+```
+
+This is why a bad address gives you an error *instantly*: the very first step fails, so nothing after it can happen.
+
+## See it on the canvas 🌍
+
+Press **Run**. The four lights are the journey, left to right: **DNS · REQUEST · PAGE · DONE**.
+
+🟩 **green** = that step worked · 🟥 **red** = it failed
+
+With a real name, all four go green — the page made it home. Change the name to one that isn't in the phonebook and watch the **first** light turn red: the trip breaks at DNS, and `DONE` never lights. That single red square is every "this site can't be reached" message you've ever seen.
+
+## What you'll build
+
+- **`resolve`**, **`build_request`**, **`reassemble`** — the three key steps, rebuilt.
+- **`load_page(name, path, dns_table, packets)`** — the conductor that runs the whole journey and returns `[ip, request, page]`.
+
+You did it. You can now explain — and *build* — what happens between pressing enter and seeing a page. One lesson left, and there's no code: just you, telling the whole story in your own words. 🎤

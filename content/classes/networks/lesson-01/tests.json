@@ -1,0 +1,132 @@
+[
+  {
+    "entry": "chop",
+    "cases": [
+      {
+        "name": "'HELLO INTERNET' in size-4 packets",
+        "args": [
+          "HELLO INTERNET",
+          4
+        ],
+        "expected": [
+          "HELL",
+          "O IN",
+          "TERN",
+          "ET"
+        ]
+      },
+      {
+        "name": "'PACKET' in size-3 packets",
+        "args": [
+          "PACKET",
+          3
+        ],
+        "expected": [
+          "PAC",
+          "KET"
+        ]
+      },
+      {
+        "name": "message shorter than one packet",
+        "args": [
+          "HI",
+          4
+        ],
+        "expected": [
+          "HI"
+        ]
+      },
+      {
+        "name": "even split, no leftover",
+        "args": [
+          "ABCDEF",
+          2
+        ],
+        "expected": [
+          "AB",
+          "CD",
+          "EF"
+        ]
+      },
+      {
+        "name": "empty message makes no packets",
+        "args": [
+          "",
+          4
+        ],
+        "expected": []
+      }
+    ]
+  },
+  {
+    "entry": "packet_count",
+    "cases": [
+      {
+        "name": "'HELLO INTERNET' needs 4 packets",
+        "args": [
+          "HELLO INTERNET",
+          4
+        ],
+        "expected": 4
+      },
+      {
+        "name": "'PACKET' needs 2 packets",
+        "args": [
+          "PACKET",
+          3
+        ],
+        "expected": 2
+      },
+      {
+        "name": "tiny message is 1 packet",
+        "args": [
+          "HI",
+          4
+        ],
+        "expected": 1
+      },
+      {
+        "name": "empty message is 0 packets",
+        "args": [
+          "",
+          4
+        ],
+        "expected": 0
+      }
+    ]
+  },
+  {
+    "entry": "reassemble",
+    "cases": [
+      {
+        "name": "the four packets become the message",
+        "args": [
+          [
+            "HELL",
+            "O IN",
+            "TERN",
+            "ET"
+          ]
+        ],
+        "expected": "HELLO INTERNET"
+      },
+      {
+        "name": "two packets become PACKET",
+        "args": [
+          [
+            "PAC",
+            "KET"
+          ]
+        ],
+        "expected": "PACKET"
+      },
+      {
+        "name": "no packets become an empty message",
+        "args": [
+          []
+        ],
+        "expected": ""
+      }
+    ]
+  }
+]

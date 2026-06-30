@@ -1,0 +1,20 @@
+{
+  "type": "draw",
+  "title": "Each packet you sent: green = acked (arrived), red = lost and needs resending",
+  "setup": "# Hidden painter: one cell per packet you sent, in order. GREEN means the other\n# side acked it (it arrived). RED means it was lost and needs resending. Driven\n# by the student's missing_acks().\ndef __show_acks(sent=None, acked=None):\n    if sent is None:\n        sent = [1, 2, 3, 4, 5]\n    if acked is None:\n        acked = [1, 2, 4]\n    try:\n        missing = missing_acks(sent, acked)\n    except Exception:\n        missing = list(sent)\n    row = [\"red\" if seq in missing else \"green\" for seq in sorted(sent)]\n    return [row]",
+  "resultFn": "__show_acks",
+  "demoArgs": [
+    [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    [
+      1,
+      2,
+      4
+    ]
+  ]
+}

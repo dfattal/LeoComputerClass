@@ -1,0 +1,103 @@
+[
+  {
+    "entry": "build_request",
+    "cases": [
+      {
+        "name": "GET the home page",
+        "args": [
+          "GET",
+          "/index.html"
+        ],
+        "expected": "GET /index.html HTTP/1.1"
+      },
+      {
+        "name": "GET a deeper page",
+        "args": [
+          "GET",
+          "/pages/about"
+        ],
+        "expected": "GET /pages/about HTTP/1.1"
+      },
+      {
+        "name": "POST to log in",
+        "args": [
+          "POST",
+          "/login"
+        ],
+        "expected": "POST /login HTTP/1.1"
+      }
+    ]
+  },
+  {
+    "entry": "parse_request",
+    "cases": [
+      {
+        "name": "read a GET request",
+        "args": [
+          "GET /index.html HTTP/1.1"
+        ],
+        "expected": [
+          "GET",
+          "/index.html"
+        ]
+      },
+      {
+        "name": "read a POST request",
+        "args": [
+          "POST /login HTTP/1.1"
+        ],
+        "expected": [
+          "POST",
+          "/login"
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "status_text",
+    "cases": [
+      {
+        "name": "200 is OK",
+        "args": [
+          200
+        ],
+        "expected": "OK"
+      },
+      {
+        "name": "301 moved permanently",
+        "args": [
+          301
+        ],
+        "expected": "Moved Permanently"
+      },
+      {
+        "name": "403 forbidden",
+        "args": [
+          403
+        ],
+        "expected": "Forbidden"
+      },
+      {
+        "name": "404 not found",
+        "args": [
+          404
+        ],
+        "expected": "Not Found"
+      },
+      {
+        "name": "500 server error",
+        "args": [
+          500
+        ],
+        "expected": "Server Error"
+      },
+      {
+        "name": "a code we don't know",
+        "args": [
+          418
+        ],
+        "expected": "Unknown"
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "type": "draw",
+  "title": "Request (blue) and the server's answer: green = OK, orange = redirect, red = error",
+  "setup": "# Hidden painter: one row per request/response. The left cell (blue) is the\n# request you sent; the right cell is the server's answer, colored by its status:\n# green = OK, orange = a redirect (Moved Permanently), red = an error\n# (Not Found / Forbidden / Server Error). Driven by the student's build_request()\n# and status_text().\ndef __status_color(code):\n    text = status_text(code)\n    if text == \"OK\":\n        return \"green\"\n    if text == \"Moved Permanently\":\n        return \"orange\"\n    if text in (\"Not Found\", \"Forbidden\", \"Server Error\"):\n        return \"red\"\n    return \"gray\"\n\n\ndef __row(method, path, code):\n    try:\n        sent = build_request(method, path)\n        req_color = \"blue\" if sent else \"gray\"\n        resp_color = __status_color(code)\n    except Exception:\n        req_color, resp_color = \"gray\", \"gray\"\n    return [req_color, resp_color]\n\n\ndef __show_exchanges(exchanges=None):\n    if exchanges is None:\n        exchanges = [\n            [\"GET\", \"/index.html\", 200],\n            [\"GET\", \"/moved\", 301],\n            [\"GET\", \"/secret\", 403],\n            [\"GET\", \"/missing\", 404],\n        ]\n    return [__row(m, p, c) for m, p, c in exchanges]",
+  "resultFn": "__show_exchanges",
+  "demoArgs": [
+    [
+      [
+        "GET",
+        "/index.html",
+        200
+      ],
+      [
+        "GET",
+        "/moved",
+        301
+      ],
+      [
+        "GET",
+        "/secret",
+        403
+      ],
+      [
+        "GET",
+        "/missing",
+        404
+      ]
+    ]
+  ]
+}

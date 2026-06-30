@@ -1,0 +1,10 @@
+{
+  "type": "draw",
+  "title": "Your message chopped into numbered packets \u2014 each color is one packet, the short last one is the leftover",
+  "setup": "# Hidden painter: draws each packet as its own row. The first cell shows the\n# packet's number; the rest are colored squares, one per character, and each\n# packet gets its own color \u2014 so you can watch the message split into numbered\n# envelopes. The last packet is usually shorter: that's the leftover chunk.\n# Driven by the student's chop(), so a wrong chop changes the picture.\nPALETTE = [\"blue\", \"green\", \"orange\", \"purple\", \"pink\"]\n\n\ndef __show_packets(message=\"HELLO INTERNET\", size=4):\n    try:\n        chunks = chop(message, size)\n    except Exception:\n        chunks = []\n    grid = []\n    for i, chunk in enumerate(chunks):\n        color = PALETTE[i % len(PALETTE)]\n        row = [str(i + 1)]                 # the packet number\n        for _ch in chunk:\n            row.append(color)              # one colored cell per character\n        while len(row) < size + 1:         # pad short packets so rows line up\n            row.append(\"\")\n        grid.append(row)\n    if not grid:\n        grid = [[\"\"]]\n    return grid",
+  "resultFn": "__show_packets",
+  "demoArgs": [
+    "HELLO INTERNET",
+    4
+  ]
+}

@@ -1,0 +1,146 @@
+[
+  {
+    "entry": "to_octets",
+    "cases": [
+      {
+        "name": "a normal address",
+        "args": [
+          "192.168.1.5"
+        ],
+        "expected": [
+          192,
+          168,
+          1,
+          5
+        ]
+      },
+      {
+        "name": "all zeros",
+        "args": [
+          "0.0.0.0"
+        ],
+        "expected": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "the biggest octets",
+        "args": [
+          "255.255.255.255"
+        ],
+        "expected": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "name": "Fort Knocks' address",
+        "args": [
+          "93.184.7.42"
+        ],
+        "expected": [
+          93,
+          184,
+          7,
+          42
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "to_ip",
+    "cases": [
+      {
+        "name": "rebuild a normal address",
+        "args": [
+          [
+            192,
+            168,
+            1,
+            5
+          ]
+        ],
+        "expected": "192.168.1.5"
+      },
+      {
+        "name": "rebuild all zeros",
+        "args": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "expected": "0.0.0.0"
+      },
+      {
+        "name": "round-trips back to the address",
+        "args": [
+          [
+            93,
+            184,
+            7,
+            42
+          ]
+        ],
+        "expected": "93.184.7.42"
+      }
+    ]
+  },
+  {
+    "entry": "same_network",
+    "cases": [
+      {
+        "name": "same first 3 octets -> neighbors",
+        "args": [
+          "192.168.1.5",
+          "192.168.1.9",
+          3
+        ],
+        "expected": true
+      },
+      {
+        "name": "3rd octet differs -> different network",
+        "args": [
+          "192.168.1.5",
+          "192.168.40.5",
+          3
+        ],
+        "expected": false
+      },
+      {
+        "name": "only need first octet to match",
+        "args": [
+          "10.0.0.1",
+          "10.255.255.9",
+          1
+        ],
+        "expected": true
+      },
+      {
+        "name": "first octet differs -> far apart",
+        "args": [
+          "10.0.0.1",
+          "192.168.0.1",
+          1
+        ],
+        "expected": false
+      },
+      {
+        "name": "identical machines match at full length",
+        "args": [
+          "192.168.1.5",
+          "192.168.1.5",
+          4
+        ],
+        "expected": true
+      }
+    ]
+  }
+]

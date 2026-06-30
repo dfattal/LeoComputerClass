@@ -1,0 +1,59 @@
+# Packets
+
+> Welcome, {{FIRST_NAME}}. 🌍 You're about to do something you've done a thousand times — type a web address and hit enter — except this time you'll trace **every single hop** your request makes across the planet until the page comes back. It all starts with one move: chopping your message into tiny pieces.
+
+## Phase 1: Send a Message
+
+---
+
+## Why not just send the whole thing?
+
+Imagine mailing a friend your favorite 300-page book. You *could* try to stuff all 300 pages into one envelope. But it'd be huge, the post office might drop it, and if even one corner got wet the whole thing is ruined.
+
+So you don't. You tear out the pages, put a few in each envelope, and **number them**: envelope 1, envelope 2, envelope 3... Your friend gets a pile of small envelopes and puts the pages back in order.
+
+The internet works *exactly* like this. Your message — a click, a photo, a whole web page — gets chopped into small numbered envelopes called **packets**. 📦
+
+## Why bother chopping?
+
+- **Small things are easy to carry.** A router can pass along a little packet fast. A giant blob would clog the wire.
+- **If one packet gets lost, you only resend that one** — not the whole message. (You'll build that rescue in a later lesson.)
+- **Different packets can take different roads** and still arrive. The numbers let the other side reassemble them in order.
+
+## Chopping a message
+
+Say each packet can hold **4 characters**, and your message is `HELLO INTERNET`. You walk through the message 4 characters at a time:
+
+```python
+chop("HELLO INTERNET", 4)
+# -> ['HELL', 'O IN', 'TERN', 'ET']
+```
+
+`HELL`, then `O IN`, then `TERN`, and finally `ET`. Notice the last packet is **short** — only 2 characters were left over. That's totally normal: the last packet holds the leftovers.
+
+## Putting it back together
+
+On the other end, your friend has all the packets in order. Snapping them back into the original message is just gluing the pieces:
+
+```python
+reassemble(['HELL', 'O IN', 'TERN', 'ET'])
+# -> "HELLO INTERNET"
+```
+
+Chop on one side, reassemble on the other. That round trip is the heartbeat of the whole internet.
+
+## See it on the canvas 📦
+
+Press **Run**. The panel draws your message as a stack of packets — one row each. The first cell is the **packet number**, and the rest are colored squares, one per character. Every packet gets its own color:
+
+🟦 packet 1 · 🟩 packet 2 · 🟧 packet 3 · 🟪 packet 4
+
+Watch the last packet come out **shorter** than the others — that's the leftover chunk. Change the message in your code and the packets change with it.
+
+## What you'll build
+
+- **`chop(message, size)`** — cut a message into packets of length `size`.
+- **`packet_count(message, size)`** — how many packets that takes.
+- **`reassemble(chunks)`** — glue the packets back into the original message.
+
+You just learned the first thing that happens to *everything* you send online. Next: every machine needs an address, or your packets have nowhere to go. 🏠

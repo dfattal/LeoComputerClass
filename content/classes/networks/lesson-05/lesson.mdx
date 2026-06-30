@@ -1,0 +1,60 @@
+# DNS
+
+> Stop and think, {{FIRST_NAME}}: you typed `fortknocks.com`, but every single thing you've built needs a *number* — an address like `93.184.7.42`. So how did the name become a number? 📖
+
+## Phase 2: Find the Way
+
+---
+
+## Machines don't know names
+
+Here's a secret the internet keeps very well hidden: **machines have no idea what `fortknocks.com` means.** They only understand addresses — numbers. Names like `fortknocks.com` are for *humans*, because nobody wants to memorize `93.184.7.42` for every site they visit.
+
+So before anything else can happen, your computer has to turn the name into a number. It does this by looking the name up in the internet's giant phonebook: **DNS**, the Domain Name System. 📖
+
+```python
+table = [["fortknocks.com", "93.184.7.42"], ["leo.net", "10.0.0.7"]]
+
+resolve("fortknocks.com", table)  # -> "93.184.7.42"
+resolve("ghost.com", table)       # -> ""    (not in the phonebook)
+```
+
+Give it a name, it hands back the address. If the name isn't listed, you get nothing back — an empty string.
+
+## Asking is slow, so remember the answer
+
+Here's the problem: the real DNS phonebook lives on other machines across the internet. Asking it means sending packets out and waiting for the answer — slow! And you visit the same sites over and over.
+
+So your computer keeps a **cache**: a little notebook of names it has *already* looked up. Next time you need one, it checks the notebook first.
+
+```python
+cache = [["fortknocks.com", "93.184.7.42"]]   # already looked this up
+
+is_cached("fortknocks.com", cache)  # -> True   (we know this one!)
+is_cached("leo.net", cache)         # -> False  (have to ask)
+```
+
+A **cache hit** means the answer was in your notebook — instant. A **cache miss** means you have to ask the full phonebook. The smart lookup tries the cache first, then falls back to the phonebook:
+
+```python
+resolve_cached("fortknocks.com", table, cache)  # -> ["93.184.7.42", True]   (HIT!)
+resolve_cached("leo.net", table, cache)         # -> ["10.0.0.7", False]     (miss)
+```
+
+Notice it returns a **list**: `[the address, was_it_a_hit]`. The first time you visit a site is a little slow; every visit after that is lightning fast. That's the cache earning its keep. ⚡
+
+## See it on the canvas 📖
+
+Press **Run**. Each row is one DNS lookup, top to bottom like a call log:
+
+🟩 **green** = cache hit (we already knew it — instant!) · 🟧 **orange** = miss, had to ask the phonebook · 🟥 **red** = name not found anywhere
+
+Watch `fortknocks.com` come back **green** both times — it's cached. `leo.net` is **orange** the first time you meet it. And `ghost.com`, which isn't in the phonebook at all, lights up **red**.
+
+## What you'll build
+
+- **`resolve(name, table)`** — look a name up in the phonebook.
+- **`is_cached(name, cache)`** — have we seen this name before?
+- **`resolve_cached(name, table, cache)`** — cache first, phonebook second; return `[ip, hit]`.
+
+The name is finally a number. Your packet knows the building, the apartment, and the way there. Now it's time to actually *knock on the door and ask for the page.* Next: HTTP. 💬

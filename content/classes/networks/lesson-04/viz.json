@@ -1,0 +1,14 @@
+{
+  "type": "draw",
+  "title": "One machine, three numbered doors (22, 80, 443). Each packet lights the door it enters \u2014 or glows red if the port is closed",
+  "setup": "# Hidden painter: one machine with three numbered doors [22, 80, 443]. Each row\n# is an incoming packet aimed at a port. The door it enters lights up green; if\n# no door has that number the packet is turned away and the last cell glows red\n# (blocked). Driven by the student's route_to_app() / is_open().\nDOOR_PORTS = [22, 80, 443]\nPORT_MAP_DEMO = [\n    [22, \"login\"],\n    [80, \"web\"],\n    [443, \"secure web\"],\n]\n\n\ndef __row(port):\n    try:\n        open_here = is_open(port, PORT_MAP_DEMO)\n    except Exception:\n        open_here = False\n    row = [\"green\" if (d == port and open_here) else \"gray\" for d in DOOR_PORTS]\n    row.append(\"red\" if not open_here else \"\")   # blocked indicator\n    return row\n\n\ndef __show_doors(incoming=None):\n    if incoming is None:\n        incoming = [80, 443, 22, 8080]\n    return [__row(p) for p in incoming]",
+  "resultFn": "__show_doors",
+  "demoArgs": [
+    [
+      80,
+      443,
+      22,
+      8080
+    ]
+  ]
+}

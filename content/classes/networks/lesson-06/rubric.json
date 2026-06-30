@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "build_request returns '<METHOD> <PATH> HTTP/1.1'; parse_request splits a line and returns [method, path]; status_text maps 200/301/403/404/500 to their words."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "build_request and parse_request are exact inverses (build then parse gives back the method and path); status_text returns 'Unknown' for unrecognized codes."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "Clear string building (spaces in the right places); parse_request reads the first two tokens; a return on every path."
+  }
+]

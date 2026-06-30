@@ -1,0 +1,66 @@
+# Addresses
+
+> Your packets are packed and ready, {{FIRST_NAME}} — but a packet with no address is like a letter with no envelope. Where does it even go? 🏠 Time to give every machine on the internet a home.
+
+## Phase 1: Send a Message
+
+---
+
+## Every machine has an address
+
+In the real world, a letter finds your friend because of their address: house number, street, city. The internet does the exact same thing. Every machine has an **IP address** that looks like this:
+
+```text
+192.168.1.5
+```
+
+Four numbers, separated by dots. Each number is called an **octet**, and each one goes from **0 to 255**. So the smallest address is `0.0.0.0` and the biggest is `255.255.255.255`.
+
+To work with an address, the first thing you do is split it into its four numbers:
+
+```python
+to_octets("192.168.1.5")   # -> [192, 168, 1, 5]
+```
+
+And you can glue the numbers back into an address whenever you need to:
+
+```python
+to_ip([192, 168, 1, 5])    # -> "192.168.1.5"
+```
+
+## The front is the neighborhood
+
+Here's the clever part. An address has two halves:
+
+- The **front** octets say which **network** you're on — your neighborhood. 🏘️
+- The **back** octets say which exact **machine** — your house on that street.
+
+How many octets count as "the neighborhood" is the **prefix**. If the prefix is `3`, then the first 3 octets are the network and the last one is the house.
+
+Two machines are on the **same network** when their network parts match:
+
+```python
+same_network("192.168.1.5", "192.168.1.9", 3)   # -> True
+#            first 3 octets match -> neighbors!
+
+same_network("192.168.1.5", "192.168.40.5", 3)  # -> False
+#            3rd octet differs -> different networks
+```
+
+Why does this matter? If two machines are on the same network, they can talk **directly**. If they're on different networks, their packets need a **router** to carry them across — and that's the whole next lesson. 🚦
+
+## See it on the canvas 🟩
+
+Press **Run**. Each row compares two machines, octet by octet:
+
+🟩 **green** = this network octet matches · 🟥 **red** = it differs · ⬜ **gray** = the host part (we ignore it for "same network?")
+
+A row that's green all the way across its network part means the two machines are neighbors. The moment you see one red octet in the network part, they're on different networks — and they'll need a router to reach each other.
+
+## What you'll build
+
+- **`to_octets(ip)`** — split a dotted address into its four numbers.
+- **`to_ip(octets)`** — glue four numbers back into a dotted address.
+- **`same_network(a, b, prefix)`** — do two machines share a network?
+
+Now every machine has an address. But what if the machine you want is on the *other side of the planet*? Next: how a packet hops its way there. 🚦

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "matches treats '' as a catch-all and uses prefix + '.' so '10' does not match '100...'; next_hop returns the gateway of the longest matching prefix; default_route returns the '' rule's gateway."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "Longest-prefix match really wins (10.0.0.5 -> R2, not R1); an unknown address falls through to the default; default_route returns '' when there is no default rule."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "next_hop reuses matches rather than re-checking prefixes by hand; clear names; a return on every path."
+  }
+]

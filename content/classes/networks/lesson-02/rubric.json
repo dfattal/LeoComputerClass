@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "to_octets splits on dots and returns a list of ints; to_ip joins numbers back into a dotted string; same_network compares the first `prefix` octets and returns a bool."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "Handles 0.0.0.0 and 255.255.255.255; returns ints not strings; a prefix of 1 only checks the first octet; identical addresses match at any prefix."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "same_network reuses to_octets instead of re-splitting by hand; clear names; a return on every path."
+  }
+]

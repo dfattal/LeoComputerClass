@@ -1,0 +1,41 @@
+## Your mission
+
+Speak HTTP: build the request line a browser sends, read one back apart, and translate the server's status codes into plain words.
+
+### Exercise 1 — `build_request(method, path)`
+
+Build the one-line request. The shape is always `"<METHOD> <PATH> HTTP/1.1"`.
+
+```python
+build_request("GET", "/index.html")   # -> "GET /index.html HTTP/1.1"
+build_request("GET", "/pages/about")  # -> "GET /pages/about HTTP/1.1"
+build_request("POST", "/login")       # -> "POST /login HTTP/1.1"
+```
+
+**Hint:** Glue the pieces together with spaces: `method + " " + path + " HTTP/1.1"` (or an f-string).
+
+### Exercise 2 — `parse_request(line)`
+
+The server's side: take a request line and pull out the method and path. Return them as a list `[method, path]`.
+
+```python
+parse_request("GET /index.html HTTP/1.1")  # -> ["GET", "/index.html"]
+parse_request("POST /login HTTP/1.1")      # -> ["POST", "/login"]
+```
+
+**Hint:** `line.split(" ")` breaks the line into pieces: `['GET', '/index.html', 'HTTP/1.1']`. You want the first two — `parts[0]` and `parts[1]`.
+
+### Exercise 3 — `status_text(code)`
+
+Translate a status code into its human words. Return `"Unknown"` for any code you don't recognize.
+
+```python
+status_text(200)  # -> "OK"
+status_text(301)  # -> "Moved Permanently"
+status_text(403)  # -> "Forbidden"
+status_text(404)  # -> "Not Found"
+status_text(500)  # -> "Server Error"
+status_text(418)  # -> "Unknown"
+```
+
+**Hint:** A chain of `if code == ...: return ...` lines, then `return "Unknown"` at the end for everything else.

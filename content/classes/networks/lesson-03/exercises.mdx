@@ -1,0 +1,43 @@
+## Your mission
+
+Teach a router to forward packets. First decide whether a rule applies, then pick the best rule, then find the catch-all default. A routing table is a list of `[prefix, gateway]` pairs.
+
+### Exercise 1 — `matches(prefix, dest)`
+
+Does a routing rule apply to a destination address? The empty prefix `""` is the catch-all and matches **everything**. Otherwise, it matches when `dest` equals the prefix, or starts with the prefix **followed by a dot**.
+
+```python
+matches("10", "10.0.0.5")        # -> True
+matches("10.0", "10.0.0.5")      # -> True
+matches("192.168.1", "10.0.0.5") # -> False
+matches("", "8.8.8.8")           # -> True    (catch-all)
+matches("10", "100.0.0.1")       # -> False   (100 is NOT 10!)
+```
+
+**Hint:** Return `True` right away if `prefix == ""`. Otherwise `return dest == prefix or dest.startswith(prefix + ".")`. The `+ "."` is what stops `"10"` from matching `"100..."`.
+
+### Exercise 2 — `next_hop(dest, table)`
+
+Walk every `[prefix, gateway]` rule. Among the ones that **match**, keep the gateway with the **longest** prefix (the most specific road). Return that gateway.
+
+```python
+table = [["", "R0"], ["10", "R1"], ["10.0", "R2"], ["192.168.1", "R3"]]
+
+next_hop("10.0.0.5", table)      # -> "R2"   (longest match wins)
+next_hop("10.9.9.9", table)      # -> "R1"
+next_hop("192.168.1.20", table)  # -> "R3"
+next_hop("8.8.8.8", table)       # -> "R0"   (falls back to default)
+```
+
+**Hint:** Track `best_gateway` and `best_len` (start it at `-1`). For each rule, if it `matches` AND `len(prefix)` beats `best_len`, update both. Reuse `matches`!
+
+### Exercise 3 — `default_route(table)`
+
+Find the catch-all: the gateway whose prefix is `""`. Return `""` if there isn't one.
+
+```python
+default_route([["", "R0"], ["10", "R1"]])   # -> "R0"
+default_route([["10", "R1"], ["20", "R2"]])  # -> ""
+```
+
+**Hint:** Loop the rules; when `prefix == ""`, return that gateway. If the loop finishes, `return ""`.

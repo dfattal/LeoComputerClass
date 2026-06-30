@@ -1,0 +1,40 @@
+## Your mission
+
+Build the heart of TCP: number the packets, watch the receipts (ACKs) come back, and figure out exactly which ones to resend. `sent` and `acked` are lists of sequence numbers.
+
+### Exercise 1 — `missing_acks(sent, acked)`
+
+Return the sequence numbers that were **sent but never acked** — the packets to resend — in sorted order.
+
+```python
+missing_acks([1, 2, 3, 4, 5], [1, 2, 4])  # -> [3, 5]
+missing_acks([1, 2, 3], [1, 2, 3])         # -> []
+missing_acks([1, 2, 3], [])                # -> [1, 2, 3]
+missing_acks([10, 11, 12], [12, 10])       # -> [11]
+```
+
+**Hint:** Keep each seq from `sent` that is **not** in `acked`: `sorted([seq for seq in sent if seq not in acked])`.
+
+### Exercise 2 — `all_received(sent, acked)`
+
+Did everything make it? Return `True` when nothing is missing.
+
+```python
+all_received([1, 2, 3], [1, 2, 3])  # -> True
+all_received([1, 2, 3], [1, 2])     # -> False
+all_received([1, 2, 3], [])         # -> False
+```
+
+**Hint:** Reuse `missing_acks`. Nothing missing means the list is empty: `return missing_acks(sent, acked) == []`.
+
+### Exercise 3 — `resend_count(sent, acked)`
+
+How many packets need sending again?
+
+```python
+resend_count([1, 2, 3, 4, 5], [1, 2, 4])  # -> 2
+resend_count([1, 2, 3], [1, 2, 3])         # -> 0
+resend_count([1, 2, 3], [])                # -> 3
+```
+
+**Hint:** Reuse `missing_acks` once more — the count is just its length: `return len(missing_acks(sent, acked))`.

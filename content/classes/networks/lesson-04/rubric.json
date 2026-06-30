@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "well_known maps 22/80/443/53 to their programs and everything else to 'unknown'; route_to_app returns the app behind the matching door or 'closed'; is_open returns a bool."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "An unknown port returns 'unknown'; a port not in the map returns 'closed' and is_open returns False; the matching door returns its exact app name."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "is_open reuses route_to_app instead of scanning the map again; clear names; a return on every path."
+  }
+]

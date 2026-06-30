@@ -1,0 +1,57 @@
+# Ports & Sockets
+
+> Your packet crossed the planet and landed on the right machine, {{FIRST_NAME}}. But that machine is running a dozen programs at once. Which one is the packet *for*? 🚪
+
+## Phase 2: Find the Way
+
+---
+
+## The address got you to the building
+
+Think about a giant apartment building. The street address gets a letter to the *building* — but inside there are hundreds of apartments. You need an **apartment number** to reach the right person.
+
+A computer is exactly like that building. The IP address delivered your packet to the right machine. But that machine is running a web server, an email server, a login service, a game... all at the same time. To reach the right one, every packet also carries a **port number** — the apartment number. 🚪
+
+## Famous doors everyone knows
+
+Some port numbers are so common that the whole world agreed on them. You've been using them your whole life without knowing:
+
+```python
+well_known(80)    # -> "web"         (regular websites)
+well_known(443)   # -> "secure web"  (the 🔒 padlock sites!)
+well_known(22)    # -> "login"       (logging into a faraway machine)
+well_known(53)    # -> "dns"         (the internet's phonebook — next lesson!)
+well_known(9999)  # -> "unknown"     (not a famous one)
+```
+
+That padlock in your browser? It means you're talking to port **443**, the secure web. Now you know what it actually is.
+
+## Which door on THIS machine?
+
+A specific machine only opens the doors it needs. It keeps a little map of `[port, app]` pairs — which door leads to which program:
+
+```python
+port_map = [[22, "login"], [80, "web"], [443, "secure web"]]
+
+route_to_app(80, port_map)    # -> "web"
+route_to_app(22, port_map)    # -> "login"
+route_to_app(8080, port_map)  # -> "closed"   (no program behind door 8080!)
+```
+
+If a packet shows up at a port with **no program waiting**, there's nobody home. The packet is turned away — that port is **closed**.
+
+## See it on the canvas 🚪
+
+Press **Run**. The machine has three numbered doors: **22, 80, 443**. Each row is an incoming packet aimed at some port:
+
+🟩 **green** = the door this packet enters · 🟥 **red** = nobody's home, the packet is **blocked**
+
+Three packets find their door. But the packet aimed at port `8080` — which this machine never opened — gets turned away and lights up red. (Fun fact: a closed port is your first line of defense. In the White Hat class, finding *open* doors is step one of breaking in.) 🛡️
+
+## What you'll build
+
+- **`well_known(port)`** — the standard program for a famous port number.
+- **`route_to_app(port, port_map)`** — which program a packet reaches on this machine.
+- **`is_open(port, port_map)`** — is anyone listening on that port?
+
+Your packet now knows the building *and* the apartment. But wait — you never typed a number. You typed `fortknocks.com`. How did a *name* become an address? Next: DNS, the internet's phonebook. 📖

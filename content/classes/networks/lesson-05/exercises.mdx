@@ -1,0 +1,42 @@
+## Your mission
+
+Turn names into addresses with the internet's phonebook — then make it fast with a cache. Both the phonebook (`table`) and the notebook (`cache`) are lists of `[name, ip]` pairs.
+
+### Exercise 1 — `resolve(name, table)`
+
+Look `name` up in the phonebook. Return its ip, or `""` if the name isn't listed.
+
+```python
+table = [["fortknocks.com", "93.184.7.42"], ["leo.net", "10.0.0.7"], ["bank.com", "8.8.4.4"]]
+
+resolve("fortknocks.com", table)  # -> "93.184.7.42"
+resolve("leo.net", table)         # -> "10.0.0.7"
+resolve("ghost.com", table)       # -> ""
+```
+
+**Hint:** Loop `for entry_name, ip in table:` and return `ip` when `entry_name == name`. If the loop ends, `return ""`.
+
+### Exercise 2 — `is_cached(name, cache)`
+
+Has this name been looked up before? `cache` is a list of `[name, ip]` pairs we already know. Return `True` if `name` is in it.
+
+```python
+cache = [["fortknocks.com", "93.184.7.42"]]
+
+is_cached("fortknocks.com", cache)  # -> True
+is_cached("leo.net", cache)         # -> False
+```
+
+**Hint:** Same loop shape as `resolve`, but you only care *whether* it's there: return `True` on a match, `False` after the loop.
+
+### Exercise 3 — `resolve_cached(name, table, cache)`
+
+The smart lookup. If the name is in the cache, return `[ip, True]` (a hit). Otherwise look it up in the full phonebook and return `[ip, False]` (a miss). The ip is `""` if it's nowhere.
+
+```python
+resolve_cached("fortknocks.com", table, cache)  # -> ["93.184.7.42", True]
+resolve_cached("leo.net", table, cache)         # -> ["10.0.0.7", False]
+resolve_cached("ghost.com", table, cache)       # -> ["", False]
+```
+
+**Hint:** Reuse both helpers! `if is_cached(name, cache): return [resolve(name, cache), True]`, otherwise `return [resolve(name, table), False]`. Remember it returns a **list**, not a dict.

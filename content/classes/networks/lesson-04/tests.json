@@ -1,0 +1,199 @@
+[
+  {
+    "entry": "well_known",
+    "cases": [
+      {
+        "name": "80 is the web",
+        "args": [
+          80
+        ],
+        "expected": "web"
+      },
+      {
+        "name": "443 is the secure web",
+        "args": [
+          443
+        ],
+        "expected": "secure web"
+      },
+      {
+        "name": "22 is login",
+        "args": [
+          22
+        ],
+        "expected": "login"
+      },
+      {
+        "name": "53 is dns",
+        "args": [
+          53
+        ],
+        "expected": "dns"
+      },
+      {
+        "name": "9999 is unknown",
+        "args": [
+          9999
+        ],
+        "expected": "unknown"
+      }
+    ]
+  },
+  {
+    "entry": "route_to_app",
+    "cases": [
+      {
+        "name": "port 80 -> web",
+        "args": [
+          80,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": "web"
+      },
+      {
+        "name": "port 22 -> login",
+        "args": [
+          22,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": "login"
+      },
+      {
+        "name": "port 443 -> secure web",
+        "args": [
+          443,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": "secure web"
+      },
+      {
+        "name": "port 8080 is closed here",
+        "args": [
+          8080,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": "closed"
+      }
+    ]
+  },
+  {
+    "entry": "is_open",
+    "cases": [
+      {
+        "name": "80 is open",
+        "args": [
+          80,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": true
+      },
+      {
+        "name": "22 is open",
+        "args": [
+          22,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": true
+      },
+      {
+        "name": "8080 is closed",
+        "args": [
+          8080,
+          [
+            [
+              22,
+              "login"
+            ],
+            [
+              80,
+              "web"
+            ],
+            [
+              443,
+              "secure web"
+            ]
+          ]
+        ],
+        "expected": false
+      }
+    ]
+  }
+]

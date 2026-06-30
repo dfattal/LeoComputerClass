@@ -1,0 +1,10 @@
+{
+  "type": "draw",
+  "title": "The whole journey: DNS \u00b7 REQUEST \u00b7 PAGE \u00b7 DONE. Green = that step worked. The name becomes a page in one run",
+  "setup": "# Hidden painter: the whole journey as four lights, left to right \u2014\n# DNS, REQUEST, PAGE, DONE. Each lights GREEN when that step produced a result\n# and RED when it didn't. Type a name that isn't in the phonebook and watch the\n# very first light go red \u2014 the trip breaks at step one. Driven by the student's\n# load_page().\nTABLE_DEMO = [\n    [\"fortknocks.com\", \"93.184.7.42\"],\n    [\"leo.net\", \"10.0.0.7\"],\n]\nPACKETS_DEMO = [\"FORT \", \"KNOCKS\", \" HOME\"]\n\n\ndef __show_journey(name=\"fortknocks.com\", path=\"/index.html\"):\n    try:\n        ip, request, page = load_page(name, path, TABLE_DEMO, PACKETS_DEMO)\n    except Exception:\n        ip, request, page = \"\", \"\", \"\"\n    dns = \"green\" if ip != \"\" else \"red\"\n    req = \"green\" if request != \"\" else \"red\"\n    pg = \"green\" if page != \"\" else \"red\"\n    done = \"green\" if (ip != \"\" and request != \"\" and page != \"\") else \"red\"\n    return [[dns, req, pg, done]]",
+  "resultFn": "__show_journey",
+  "demoArgs": [
+    "fortknocks.com",
+    "/index.html"
+  ]
+}

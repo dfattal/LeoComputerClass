@@ -1,0 +1,58 @@
+# Routing
+
+> A packet has an address, {{FIRST_NAME}} — but the machine you want is thousands of miles away. No single wire reaches that far. So how does your packet *get* there? It hops. 🚦
+
+## Phase 2: Find the Way
+
+---
+
+## Nobody knows the whole way
+
+Here's the surprising thing: **no router knows the full path to your destination.** That sounds impossible — but think about driving across the country with no map app. You don't need the whole route memorized. At each intersection, you just need to know *which road points closer to where you're going.* The next intersection handles the next step.
+
+Routers work the exact same way. Your packet travels in **hops**: router → router → router, each one passing it a little closer, until it arrives. 🛣️
+
+## The routing table
+
+Each router keeps a small cheat sheet called a **routing table**. It's a list of rules, and each rule is a `[prefix, gateway]` pair:
+
+```python
+[
+  ["",          "R0"],   # default: anything I don't recognize -> R0
+  ["10",        "R1"],   # addresses starting 10.x.x.x -> R1
+  ["10.0",      "R2"],   # but 10.0.x.x specifically -> R2
+  ["192.168.1", "R3"],   # addresses on 192.168.1.x -> R3
+]
+```
+
+A rule **matches** a destination when the address starts with that prefix. The `""` prefix is the **catch-all default** — it matches everything, for packets the router doesn't have a special rule for.
+
+## The most specific road wins
+
+Watch this destination: `10.0.0.5`. Look at the table — **two** rules match it:
+
+- `"10"` → R1 (yes, it starts with 10)
+- `"10.0"` → R2 (yes, it starts with 10.0)
+
+So which one wins? The **longer, more specific** prefix. `"10.0"` is more exact than `"10"`, so the packet goes to **R2**. This rule is called **longest-prefix match**, and it's how every router on earth makes its decision.
+
+```python
+next_hop("10.0.0.5", table)      # -> "R2"   (most specific!)
+next_hop("10.9.9.9", table)      # -> "R1"   (only "10" matches)
+next_hop("192.168.1.20", table)  # -> "R3"
+next_hop("8.8.8.8", table)       # -> "R0"   (nothing special -> default)
+```
+
+## See it on the canvas 🚦
+
+Press **Run**. The four cells in each row are the router's doors: **R0, R1, R2, R3**. For each destination, the door the packet is handed to lights up 🟩 **green**; the rest stay gray.
+
+Watch `10.0.0.5` light up **R2** even though R1 also matched — that's longest-prefix match in action. And `8.8.8.8`, which matches no special rule, falls through to the **R0** default. Change a rule in your table and watch the doors light differently.
+
+## What you'll build
+
+- **`matches(prefix, dest)`** — does a rule apply to this destination?
+- **`next_hop(dest, table)`** — the gateway from the longest matching rule.
+- **`default_route(table)`** — the catch-all door for unknown packets.
+
+Your packet now knows how to cross the planet, one hop at a time. But when it finally lands on the right machine, that machine runs *dozens* of programs. Which one gets the packet? Next: ports. 🚪

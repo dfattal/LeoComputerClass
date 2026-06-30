@@ -1,0 +1,42 @@
+## Your mission
+
+Chop a message into numbered packets, count them, and snap them back together. Three little functions — and you've built the round trip that carries everything on the internet.
+
+### Exercise 1 — `chop(message, size)`
+
+Cut `message` into pieces of length `size`, left to right. Return the list of pieces. The last one can be shorter (it holds the leftovers), and an empty message makes **zero** packets.
+
+```python
+chop("HELLO INTERNET", 4)  # -> ['HELL', 'O IN', 'TERN', 'ET']
+chop("PACKET", 3)          # -> ['PAC', 'KET']
+chop("HI", 4)              # -> ['HI']      (smaller than one packet)
+chop("ABCDEF", 2)          # -> ['AB', 'CD', 'EF']   (even split)
+chop("", 4)                # -> []          (nothing to send)
+```
+
+**Hint:** Step through the message `size` characters at a time with `range(0, len(message), size)`, and grab the slice `message[i:i+size]` each time.
+
+### Exercise 2 — `packet_count(message, size)`
+
+How many packets will this message take? Chop it and count the pieces.
+
+```python
+packet_count("HELLO INTERNET", 4)  # -> 4
+packet_count("PACKET", 3)          # -> 2
+packet_count("HI", 4)              # -> 1
+packet_count("", 4)                # -> 0
+```
+
+**Hint:** You already wrote the chopper. Reuse it: `return len(chop(message, size))`.
+
+### Exercise 3 — `reassemble(chunks)`
+
+The other side has all the packets in order. Glue them back into the original message.
+
+```python
+reassemble(['HELL', 'O IN', 'TERN', 'ET'])  # -> "HELLO INTERNET"
+reassemble(['PAC', 'KET'])                  # -> "PACKET"
+reassemble([])                              # -> ""
+```
+
+**Hint:** One line — joining a list of strings with nothing between them: `return "".join(chunks)`.

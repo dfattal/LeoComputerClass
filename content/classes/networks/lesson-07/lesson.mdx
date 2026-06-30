@@ -1,0 +1,56 @@
+# Reliability
+
+> Time for a scary secret, {{FIRST_NAME}}: the internet loses packets *all the time.* Wires hiccup, routers get overwhelmed, packets just... vanish. So how does a whole web page ever arrive in one piece? 📦✅
+
+## Phase 3: Speak the Language
+
+---
+
+## The internet is not reliable
+
+Back in lesson 1 you chopped a message into packets, and each one travels on its own across the world. That's powerful — but it means any single packet can get **lost** along the way. A page made of 50 packets where packet #37 vanished would be broken and full of holes.
+
+You'd think fixing this would be complicated. It's not. The fix is called **TCP**, and it's one of the most elegant ideas in all of computing. Here it is:
+
+1. **Number every packet.** Packet 1, packet 2, packet 3...
+2. **The other side sends back a receipt** for each number it got — a little "got it!" called an **ACK** (short for *acknowledgement*).
+3. **Whatever number you never got a receipt for, you send again.**
+
+That's the whole thing. Numbering plus receipts plus resending. 🎯
+
+## Spot the missing ones
+
+Say you sent packets `1, 2, 3, 4, 5`. The receipts come back for `1, 2, 4`. Which packets got lost?
+
+```python
+missing_acks([1, 2, 3, 4, 5], [1, 2, 4])  # -> [3, 5]
+```
+
+Packets **3** and **5** never got a receipt — so you resend exactly those two. Not the whole page. Not packets 1, 2, and 4 again. Just the two that are actually missing. That's why the internet is fast *and* reliable at the same time.
+
+```python
+all_received([1, 2, 3], [1, 2, 3])  # -> True   (every receipt came back!)
+all_received([1, 2, 3], [1, 2])     # -> False  (packet 3 is missing)
+
+resend_count([1, 2, 3, 4, 5], [1, 2, 4])  # -> 2   (resend two)
+```
+
+When `all_received` is finally `True`, the page is complete — every packet arrived, and TCP can hand the finished page to your browser. ✅
+
+## See it on the canvas 📦
+
+Press **Run**. Each cell is one packet you sent, in order:
+
+🟩 **green** = acked (it arrived safely) · 🟥 **red** = lost, needs resending
+
+You'll see packets 3 and 5 glow **red** — the ones whose receipts never came back. In real life, TCP would fire those two off again, wait for *their* receipts, and only then call the page done. Change which packets are acked and watch the red cells move.
+
+## What you'll build
+
+- **`missing_acks(sent, acked)`** — which packet numbers to resend.
+- **`all_received(sent, acked)`** — did the whole thing arrive?
+- **`resend_count(sent, acked)`** — how many need sending again.
+
+You now have every single piece of the puzzle: chopping, addresses, routing, ports, DNS, HTTP, and reliability. Next lesson, you put them **all together** and watch one web address make the entire journey. 🌍
+
+> One thing to keep in the back of your mind, {{FIRST_NAME}}: everything you've built sends data in the *open*. A sneaky machine on the path can read it — or even drop your packets on purpose. Plugging those holes is exactly what the White Hat class is about. You're building the map they'll defend. 🛡️

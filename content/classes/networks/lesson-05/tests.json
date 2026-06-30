@@ -1,0 +1,196 @@
+[
+  {
+    "entry": "resolve",
+    "cases": [
+      {
+        "name": "fortknocks.com is in the phonebook",
+        "args": [
+          "fortknocks.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ]
+        ],
+        "expected": "93.184.7.42"
+      },
+      {
+        "name": "leo.net resolves too",
+        "args": [
+          "leo.net",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ]
+        ],
+        "expected": "10.0.0.7"
+      },
+      {
+        "name": "an unknown name gives ''",
+        "args": [
+          "ghost.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ]
+        ],
+        "expected": ""
+      }
+    ]
+  },
+  {
+    "entry": "is_cached",
+    "cases": [
+      {
+        "name": "fortknocks.com is already cached",
+        "args": [
+          "fortknocks.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ]
+          ]
+        ],
+        "expected": true
+      },
+      {
+        "name": "leo.net is not cached yet",
+        "args": [
+          "leo.net",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ]
+          ]
+        ],
+        "expected": false
+      }
+    ]
+  },
+  {
+    "entry": "resolve_cached",
+    "cases": [
+      {
+        "name": "cached name is a HIT",
+        "args": [
+          "fortknocks.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ],
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ]
+          ]
+        ],
+        "expected": [
+          "93.184.7.42",
+          true
+        ]
+      },
+      {
+        "name": "uncached name is a MISS but resolves",
+        "args": [
+          "leo.net",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ],
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ]
+          ]
+        ],
+        "expected": [
+          "10.0.0.7",
+          false
+        ]
+      },
+      {
+        "name": "unknown name: empty ip, and a miss",
+        "args": [
+          "ghost.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ],
+            [
+              "bank.com",
+              "8.8.4.4"
+            ]
+          ],
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ]
+          ]
+        ],
+        "expected": [
+          "",
+          false
+        ]
+      }
+    ]
+  }
+]

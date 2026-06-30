@@ -1,0 +1,63 @@
+# HTTP
+
+> You made it, {{FIRST_NAME}}. Your packet crossed the planet, found the right machine, the right door. Now you have to actually *ask for the page* — and the web has its own polite little language for that. 💬
+
+## Phase 3: Speak the Language
+
+---
+
+## You have to ask
+
+Reaching the server is like walking up to a librarian's desk. You're there — but nothing happens until you *say what you want.* On the web, you say it in a language called **HTTP**, and a request is just **one line**:
+
+```text
+GET /index.html HTTP/1.1
+```
+
+That line has two important parts:
+
+- A **method** — what you want to do. `GET` means "give me this." (There's also `POST` for "here's some data," like logging in.)
+- A **path** — *which* page. `/index.html` is the home page; `/pages/about` is a deeper one.
+
+```python
+build_request("GET", "/index.html")  # -> "GET /index.html HTTP/1.1"
+build_request("POST", "/login")      # -> "POST /login HTTP/1.1"
+```
+
+The server, on its side, does the opposite — it **reads** that line and pulls out what you asked for:
+
+```python
+parse_request("GET /index.html HTTP/1.1")  # -> ["GET", "/index.html"]
+```
+
+Build on one side, parse on the other. (Sound familiar? Chop and reassemble, to_octets and to_ip... the internet is full of these matched pairs.)
+
+## The server answers with a code
+
+The server doesn't just send the page — it first sends back a **status code**, a little number telling you how it went. You've seen these your whole life:
+
+```python
+status_text(200)  # -> "OK"                 ✅ here's your page
+status_text(301)  # -> "Moved Permanently"  ➡️ the page moved, go here instead
+status_text(403)  # -> "Forbidden"          🚫 you're not allowed
+status_text(404)  # -> "Not Found"          ❓ no such page (the famous one!)
+status_text(500)  # -> "Server Error"       💥 the server broke
+```
+
+That dreaded **404** page when a link is broken? That's just the server sending the number `404`. Now you know exactly what it means.
+
+## See it on the canvas 💬
+
+Press **Run**. Each row is one request and its answer. The left cell (🟦 blue) is the request you sent; the right cell is the server's reply, colored by its status:
+
+🟩 **green** = OK · 🟧 **orange** = a redirect (moved) · 🟥 **red** = an error (forbidden, not found, broke)
+
+You'll see a clean `200` come back green, a `301` redirect in orange, and the `403`/`404` errors light up red. Every request gets an answer — that's the whole conversation of the web.
+
+## What you'll build
+
+- **`build_request(method, path)`** — the request line a browser sends.
+- **`parse_request(line)`** — the server reading that line back apart.
+- **`status_text(code)`** — turning a status number into its human words.
+
+You can now speak to a server and understand its reply. But the internet *loses packets* all the time — so how does the whole page ever arrive in one piece? Next: reliability. 📦✅

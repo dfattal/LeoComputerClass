@@ -1,0 +1,51 @@
+## Your mission
+
+Rebuild the three headline steps of the journey, then write the **conductor** that runs them in order. This is the whole stack in one function.
+
+### Exercise 1 — `resolve(name, dns_table)`
+
+The DNS step. Turn a name into an address using the phonebook (a list of `[name, ip]` pairs). Return the ip, or `""` if it's not found.
+
+```python
+dns_table = [["fortknocks.com", "93.184.7.42"], ["leo.net", "10.0.0.7"]]
+
+resolve("fortknocks.com", dns_table)  # -> "93.184.7.42"
+resolve("ghost.com", dns_table)       # -> ""
+```
+
+**Hint:** Loop the pairs; return the `ip` when the name matches, else `""` at the end. (Same as the DNS lesson!)
+
+### Exercise 2 — `build_request(method, path)`
+
+The HTTP step. Build the request line `"<METHOD> <PATH> HTTP/1.1"`.
+
+```python
+build_request("GET", "/index.html")  # -> "GET /index.html HTTP/1.1"
+```
+
+**Hint:** Glue with spaces: `method + " " + path + " HTTP/1.1"`.
+
+### Exercise 3 — `reassemble(packets)`
+
+The reassembly step. Glue the page's packets back together in order.
+
+```python
+reassemble(["FORT ", "KNOCKS", " HOME"])  # -> "FORT KNOCKS HOME"
+reassemble([])                            # -> ""
+```
+
+**Hint:** `return "".join(packets)`. (Yes — exactly your lesson 1 function!)
+
+### Exercise 4 — `load_page(name, path, dns_table, packets)`
+
+The conductor. Run all three steps in order and return a list `[ip, request, page]`.
+
+```python
+load_page("fortknocks.com", "/index.html", dns_table, packets)
+# -> ["93.184.7.42", "GET /index.html HTTP/1.1", "FORT KNOCKS HOME"]
+
+load_page("ghost.com", "/index.html", dns_table, packets)
+# -> ["", "GET /index.html HTTP/1.1", "FORT KNOCKS HOME"]   (DNS failed)
+```
+
+**Hint:** Call your own three functions and collect their results: `ip = resolve(...)`, `request = build_request("GET", path)`, `page = reassemble(packets)`, then `return [ip, request, page]`.

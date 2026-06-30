@@ -1,0 +1,44 @@
+## Your mission
+
+Sort traffic by its port number — the "apartment number" that tells one machine which of its many programs a packet is for. A machine's open doors are a list of `[port, app]` pairs.
+
+### Exercise 1 — `well_known(port)`
+
+Return the standard program for a famous port number, or `"unknown"` if it isn't one of them.
+
+```python
+well_known(22)    # -> "login"
+well_known(80)    # -> "web"
+well_known(443)   # -> "secure web"
+well_known(53)    # -> "dns"
+well_known(9999)  # -> "unknown"
+```
+
+**Hint:** A few `if port == ...: return ...` lines, then `return "unknown"` at the end for everything else.
+
+### Exercise 2 — `route_to_app(port, port_map)`
+
+`port_map` is a list of `[door_port, app]` pairs. Find the door whose number matches `port` and return its program. If no door matches, return `"closed"`.
+
+```python
+port_map = [[22, "login"], [80, "web"], [443, "secure web"]]
+
+route_to_app(80, port_map)    # -> "web"
+route_to_app(22, port_map)    # -> "login"
+route_to_app(8080, port_map)  # -> "closed"
+```
+
+**Hint:** Loop `for door_port, app in port_map:` and return `app` when `door_port == port`. If the loop ends with no match, `return "closed"`.
+
+### Exercise 3 — `is_open(port, port_map)`
+
+Is any program listening on this port? Return `True` if a door matches, `False` if it's closed.
+
+```python
+port_map = [[22, "login"], [80, "web"], [443, "secure web"]]
+
+is_open(80, port_map)    # -> True
+is_open(8080, port_map)  # -> False
+```
+
+**Hint:** Reuse `route_to_app`. A port is open when it's *not* `"closed"`: `return route_to_app(port, port_map) != "closed"`.

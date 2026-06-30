@@ -1,0 +1,14 @@
+{
+  "type": "draw",
+  "title": "A log of DNS lookups: green = cache hit (instant), orange = had to ask the phonebook, red = name not found",
+  "setup": "# Hidden painter: one row per lookup (top to bottom, a call log). The cell glows\n# GREEN when the name was already in the cache (a fast hit), ORANGE when we had\n# to ask the full phonebook (a miss, but found), and RED when the name isn't\n# anywhere. Driven by the student's is_cached() / resolve().\nTABLE_DEMO = [\n    [\"fortknocks.com\", \"93.184.7.42\"],\n    [\"leo.net\", \"10.0.0.7\"],\n    [\"bank.com\", \"8.8.4.4\"],\n]\nCACHE_DEMO = [\n    [\"fortknocks.com\", \"93.184.7.42\"],\n]\n\n\ndef __row(name):\n    try:\n        hit = is_cached(name, CACHE_DEMO)\n        ip = resolve(name, TABLE_DEMO)\n    except Exception:\n        hit, ip = False, \"\"\n    if hit:\n        return [\"green\"]\n    if ip != \"\":\n        return [\"orange\"]\n    return [\"red\"]\n\n\ndef __show_lookups(names=None):\n    if names is None:\n        names = [\"fortknocks.com\", \"leo.net\", \"fortknocks.com\", \"ghost.com\"]\n    return [__row(n) for n in names]",
+  "resultFn": "__show_lookups",
+  "demoArgs": [
+    [
+      "fortknocks.com",
+      "leo.net",
+      "fortknocks.com",
+      "ghost.com"
+    ]
+  ]
+}

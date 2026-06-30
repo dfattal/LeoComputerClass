@@ -192,6 +192,19 @@ export const classes: ClassDef[] = [
     language: "python",
     level: "advanced",
   },
+  {
+    slug: "networks",
+    name: "Networks & the Internet",
+    tagline: "How a Webpage Actually Arrives",
+    description:
+      "You type a web address, hit enter — and a page from a computer on the other side of the planet shows up in less than a second. How?! In this class you trace every single hop your request makes: you'll chop a message into packets, give machines addresses, route a packet across a map of the internet, knock on the right port, look up a name in the DNS phonebook, speak the HTTP language, and resend whatever gets lost — until the page comes back. You're talking to the same server the White Hat class breaks into, Fort Knocks, so by the end you'll understand the internet well enough to defend it. Real networking is just a stack of small, clever ideas stacked on top of each other. Let's build the whole stack, one layer at a time.",
+    accentColor: "blue",
+    heroImage: "/hero-networks.webp",
+    studentName: "friend",
+    contentDir: "networks",
+    language: "python",
+    level: "advanced",
+  },
 ];
 
 export function getClassBySlug(slug: string): ClassDef | undefined {

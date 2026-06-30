@@ -1,0 +1,25 @@
+{
+  "type": "draw",
+  "title": "Two machines per row, compared octet by octet. Green network part = same network; one red octet = different networks",
+  "setup": "# Hidden painter: each row compares two machines, octet by octet. The first\n# `prefix` octets are the NETWORK part: green if they match, red if they don't.\n# Octets past the prefix are the HOST part (gray \u2014 we don't care about them for\n# \"same network?\"). A row that's all green across its network part means the two\n# machines are neighbors. Driven by the student's to_octets().\nMATCH = \"green\"\nDIFFER = \"red\"\nHOST = \"gray\"\n\n\ndef __row(a, b, prefix):\n    try:\n        oa = to_octets(a)\n        ob = to_octets(b)\n    except Exception:\n        return [\"gray\", \"gray\", \"gray\", \"gray\"]\n    row = []\n    for i in range(4):\n        if i < prefix:\n            row.append(MATCH if oa[i] == ob[i] else DIFFER)\n        else:\n            row.append(HOST)\n    return row\n\n\ndef __show_networks(cases=None):\n    if cases is None:\n        cases = [\n            [\"192.168.1.5\", \"192.168.1.9\", 3],\n            [\"192.168.1.5\", \"192.168.40.5\", 3],\n            [\"10.0.0.1\", \"192.168.0.1\", 1],\n        ]\n    return [__row(a, b, p) for a, b, p in cases]",
+  "resultFn": "__show_networks",
+  "demoArgs": [
+    [
+      [
+        "192.168.1.5",
+        "192.168.1.9",
+        3
+      ],
+      [
+        "192.168.1.5",
+        "192.168.40.5",
+        3
+      ],
+      [
+        "10.0.0.1",
+        "192.168.0.1",
+        1
+      ]
+    ]
+  ]
+}

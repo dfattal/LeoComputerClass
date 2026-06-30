@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "resolve returns the ip or ''; build_request returns the HTTP request line; reassemble joins the packets; load_page runs all three in order and returns [ip, request, page]."
+  },
+  {
+    "criterion": "Putting it together",
+    "weight": 25,
+    "description": "load_page calls the other three functions (it does not re-implement them) and reports each step's result; a name that won't resolve yields ['', request, page] so the journey breaks at DNS."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "The conductor reuses the steps rather than duplicating logic; clear variable names (ip, request, page); a return on every path."
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "missing_acks returns the sorted seq numbers in sent but not in acked; all_received is True only when nothing is missing; resend_count is the number of missing packets."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "All acked gives [] / True / 0; none acked returns the full list / False / the full count; out-of-order acks still work and the result is sorted."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "all_received and resend_count reuse missing_acks instead of re-scanning; clear names; a return on every path."
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "chop cuts the message into size-length pieces with a shorter leftover at the end; packet_count returns how many pieces; reassemble joins the pieces back into the original message."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "An empty message gives zero packets (chop -> [], packet_count -> 0); a message shorter than one packet gives a single short packet; reassemble([]) is the empty string."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "packet_count reuses chop instead of re-counting by hand; clear names; a return on every path."
+  }
+]

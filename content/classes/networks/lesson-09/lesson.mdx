@@ -1,0 +1,71 @@
+# The Big Picture: What Really Happens
+
+## Looking back at the journey you traced
+
+---
+
+## You built the whole internet
+
+Look how far you've come, {{FIRST_NAME}}. You chopped messages into **packets**, gave machines **addresses**, **routed** packets hop by hop across the planet, sorted traffic by **ports**, turned names into numbers with **DNS**, spoke **HTTP** to ask for a page, and made the whole thing reliable with **ACKs and resends**. Then you snapped it all together so one web address could make the entire trip.
+
+Under all of it is one quiet, powerful idea — the idea that makes the internet possible. Here's the story of where it came from.
+
+---
+
+## It started as a science experiment (the 1960s)
+
+In the 1960s there was no internet. Computers were giant, rare, and completely **isolated** — each one an island. Researchers in the US wanted a way to share these expensive machines over long distances, so they built an experimental network called **ARPANET**. In 1969 it connected just **four** computers at four universities. The very first message they tried to send was the word "LOGIN" — and the system **crashed** after two letters, so the real first message in internet history was just "LO". 😅
+
+But it worked. Computers that had never talked could now send each other data.
+
+---
+
+## The big idea: packets, not phone calls
+
+The old telephone network worked by opening **one solid wire** between two people for the whole call. ARPANET did something radically different and cleverer: **packet switching** — exactly what you built in lesson 1. Chop everything into little numbered packets, let each one find its own way across the network, and reassemble them at the end.
+
+Why was this such a big deal? Because there's no single fragile wire to cut. If one path goes down, packets just take another. The network heals around damage. That little idea — *small numbered pieces, each routed on its own* — is the seed the entire internet grew from.
+
+---
+
+## TCP/IP: the rulebook everyone agreed on (1970s–80s)
+
+A network of four computers is easy. But how do you connect *thousands* of different machines, built by different people, that all speak differently? You need a shared **rulebook** that everyone follows.
+
+Two researchers, **Vint Cerf** and **Bob Kahn**, wrote that rulebook: **TCP/IP**. You've been building its pieces this whole class:
+
+- **IP** is the part that gives every machine an **address** and **routes** packets hop by hop. (Lessons 2 and 3.)
+- **TCP** is the part that numbers packets, sends **ACKs**, and **resends** the lost ones so nothing is missing. (Lesson 7.)
+
+On **January 1, 1983**, the whole network switched over to TCP/IP at once. That's the day a bunch of separate networks became *one* network of networks — *the* internet. The reason your phone can talk to a server built by total strangers is that everyone, everywhere, agreed to follow these same rules.
+
+---
+
+## The Web came later (1989)
+
+Here's something that surprises people: **the internet and the web are not the same thing.** The internet — packets, addresses, TCP/IP — already existed for years before the web. The internet is the *roads*; the web is one *thing you can drive on them*.
+
+In 1989, a scientist named **Tim Berners-Lee** invented the **World Wide Web**: web pages, links between them, and **HTTP** — the polite request language you built in lesson 6 — to fetch them. He gave it away for free, on purpose, so anyone could use it. Email, video calls, and games all ride on the same internet roads too. The web is just the most famous passenger.
+
+---
+
+## So — what really happens when you press enter?
+
+You can now answer this from the *inside*, because you built every step:
+
+1. **DNS** turns the name you typed into an address. 📖
+2. Your request is **chopped into packets**, each stamped with that address. 📦
+3. Routers **route** each packet hop by hop until it arrives. 🚦
+4. The **port** number hands it to the right program. 🚪
+5. Your browser sends an **HTTP request** asking for the page; the server answers with a **status code** and the page. 💬
+6. The page comes back in packets, which you **reassemble** — and any lost ones get **resent**. ✅
+
+A name becomes a page, in less than a second, every single time. That's not magic. That's the stack of layers you built, each doing one small job and trusting the one below it.
+
+---
+
+## One last thing to think about
+
+You traced this whole journey in code. Now explain it in your own words — that's the real test of understanding. Head to the exercise. No code this time. Just you, telling the story of what happens when you press enter. 🌍
+
+> And remember: everything here moves in the *open* by default. Now that you know exactly how a request travels — through DNS, across routers, into ports — you're ready to learn how someone could **listen in, lie, or break in**, and how to stop them. That's the White Hat class. You just built the map. 🛡️

@@ -1,0 +1,17 @@
+[
+  {
+    "criterion": "Correctness",
+    "weight": 60,
+    "description": "resolve returns the ip for a name or '' when absent; is_cached returns a bool; resolve_cached checks the cache first and returns [ip, True] on a hit or [ip, False] on a miss."
+  },
+  {
+    "criterion": "Edge cases",
+    "weight": 25,
+    "description": "An unknown name resolves to '' everywhere; resolve_cached on an uncached name is a miss ([ip, False]); resolve_cached on a name found nowhere returns ['', False]. Returns a list, not a dict."
+  },
+  {
+    "criterion": "Clean code",
+    "weight": 15,
+    "description": "resolve_cached reuses resolve and is_cached instead of looping the lists again; clear names; a return on every path."
+  }
+]

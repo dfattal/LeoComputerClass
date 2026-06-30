@@ -1,0 +1,176 @@
+[
+  {
+    "entry": "missing_acks",
+    "cases": [
+      {
+        "name": "packets 3 and 5 were lost",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ],
+        "expected": [
+          3,
+          5
+        ]
+      },
+      {
+        "name": "everything arrived",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": []
+      },
+      {
+        "name": "nothing got through",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          []
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "out-of-order acks still work",
+        "args": [
+          [
+            10,
+            11,
+            12
+          ],
+          [
+            12,
+            10
+          ]
+        ],
+        "expected": [
+          11
+        ]
+      }
+    ]
+  },
+  {
+    "entry": "all_received",
+    "cases": [
+      {
+        "name": "all acked -> True",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": true
+      },
+      {
+        "name": "one missing -> False",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": false
+      },
+      {
+        "name": "none acked -> False",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          []
+        ],
+        "expected": false
+      }
+    ]
+  },
+  {
+    "entry": "resend_count",
+    "cases": [
+      {
+        "name": "two to resend",
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ],
+        "expected": 2
+      },
+      {
+        "name": "nothing to resend",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": 0
+      },
+      {
+        "name": "resend all three",
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          []
+        ],
+        "expected": 3
+      }
+    ]
+  }
+]

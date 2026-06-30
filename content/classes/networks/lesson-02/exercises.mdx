@@ -1,0 +1,39 @@
+## Your mission
+
+Give machines addresses, then figure out who's a neighbor. Split an address into numbers, rebuild it, and compare two machines to see if they share a network.
+
+### Exercise 1 — `to_octets(ip)`
+
+Split a dotted address string into its four numbers. Return a list of **ints** (not strings!).
+
+```python
+to_octets("192.168.1.5")        # -> [192, 168, 1, 5]
+to_octets("0.0.0.0")            # -> [0, 0, 0, 0]
+to_octets("255.255.255.255")    # -> [255, 255, 255, 255]
+```
+
+**Hint:** `ip.split(".")` gives you `['192', '168', '1', '5']` — strings. Turn each one into a number with `int(...)`.
+
+### Exercise 2 — `to_ip(octets)`
+
+The other direction: glue a list of four numbers back into a dotted address string.
+
+```python
+to_ip([192, 168, 1, 5])   # -> "192.168.1.5"
+to_ip([0, 0, 0, 0])       # -> "0.0.0.0"
+```
+
+**Hint:** Turn each number into a string, then join them with a dot: `".".join(str(n) for n in octets)`.
+
+### Exercise 3 — `same_network(a, b, prefix)`
+
+Are two machines on the same network? Compare the **first `prefix` octets** of each address. Return `True` if all of them match, `False` if any differ.
+
+```python
+same_network("192.168.1.5", "192.168.1.9", 3)    # -> True   (first 3 match)
+same_network("192.168.1.5", "192.168.40.5", 3)   # -> False  (3rd octet differs)
+same_network("10.0.0.1", "10.255.255.9", 1)      # -> True   (only need 1st)
+same_network("10.0.0.1", "192.168.0.1", 1)       # -> False  (1st octet differs)
+```
+
+**Hint:** Reuse `to_octets` on both addresses, then compare the first `prefix` of each with a slice: `oa[:prefix] == ob[:prefix]`.

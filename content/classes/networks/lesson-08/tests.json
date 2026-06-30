@@ -1,0 +1,136 @@
+[
+  {
+    "entry": "resolve",
+    "cases": [
+      {
+        "name": "fortknocks.com resolves",
+        "args": [
+          "fortknocks.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ]
+          ]
+        ],
+        "expected": "93.184.7.42"
+      },
+      {
+        "name": "an unknown name gives ''",
+        "args": [
+          "ghost.com",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ]
+          ]
+        ],
+        "expected": ""
+      }
+    ]
+  },
+  {
+    "entry": "build_request",
+    "cases": [
+      {
+        "name": "GET the home page",
+        "args": [
+          "GET",
+          "/index.html"
+        ],
+        "expected": "GET /index.html HTTP/1.1"
+      }
+    ]
+  },
+  {
+    "entry": "reassemble",
+    "cases": [
+      {
+        "name": "packets become the page",
+        "args": [
+          [
+            "FORT ",
+            "KNOCKS",
+            " HOME"
+          ]
+        ],
+        "expected": "FORT KNOCKS HOME"
+      },
+      {
+        "name": "no packets -> empty page",
+        "args": [
+          []
+        ],
+        "expected": ""
+      }
+    ]
+  },
+  {
+    "entry": "load_page",
+    "cases": [
+      {
+        "name": "the whole journey, end to end",
+        "args": [
+          "fortknocks.com",
+          "/index.html",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ]
+          ],
+          [
+            "FORT ",
+            "KNOCKS",
+            " HOME"
+          ]
+        ],
+        "expected": [
+          "93.184.7.42",
+          "GET /index.html HTTP/1.1",
+          "FORT KNOCKS HOME"
+        ]
+      },
+      {
+        "name": "a name that won't resolve breaks step one",
+        "args": [
+          "ghost.com",
+          "/index.html",
+          [
+            [
+              "fortknocks.com",
+              "93.184.7.42"
+            ],
+            [
+              "leo.net",
+              "10.0.0.7"
+            ]
+          ],
+          [
+            "FORT ",
+            "KNOCKS",
+            " HOME"
+          ]
+        ],
+        "expected": [
+          "",
+          "GET /index.html HTTP/1.1",
+          "FORT KNOCKS HOME"
+        ]
+      }
+    ]
+  }
+]
